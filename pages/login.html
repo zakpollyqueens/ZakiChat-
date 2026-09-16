@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Sign in to ZakiChat.">
+<title>Sign In | ZakiChat</title>
+<link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/auth.css">
+</head>
+<body class="auth-page">
+
+<main class="auth-shell">
+
+  <a href="../index.html" class="auth-brand">
+    <img src="../static/images/icon.jpg" alt="ZakiChat logo">
+    <span>Zaki<span>Chat</span></span>
+  </a>
+
+  <section class="auth-card">
+    <div class="auth-heading">
+      <span class="section-label">WELCOME BACK</span>
+      <h1>Sign in to ZakiChat</h1>
+      <p>Continue your conversations and stay connected.</p>
+    </div>
+
+    <form id="loginForm" class="auth-form">
+
+      <label for="email">Email address</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+        required
+      >
+
+      <label for="password">Password</label>
+      <div class="password-field">
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+          required
+        >
+        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">Show</button>
+      </div>
+
+      <div class="auth-row">
+        <label class="remember">
+          <input type="checkbox" id="remember">
+          <span>Remember me</span>
+        </label>
+
+        <a href="#" id="forgotPassword">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="button button-primary auth-submit">
+        Sign In
+      </button>
+
+      <p id="loginMessage" class="auth-message" role="status"></p>
+    </form>
+
+    <div class="auth-divider">
+      <span>OR</span>
+    </div>
+
+    <p class="auth-switch">
+      Don't have an account?
+      <a href="signup.html">Create one</a>
+    </p>
+  </section>
+
+  <p class="auth-footer">
+    © 2026 ZakiChat · A Zakmolanitech Solutions project
+  </p>
+
+</main>
+
+<script src="../static/js/auth.js"></script>
+</body>
+</html>
