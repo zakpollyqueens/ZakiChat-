@@ -82,21 +82,6 @@
             }
           }
         )
-        .on(
-          "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: "public",
-            table: "messages",
-            filter:
-              `conversation_id=eq.${conversationId}`
-          },
-          payload => {
-            if (typeof callback === "function") {
-              callback(payload.new, payload);
-            }
-          }
-        )
         .subscribe(status => {
           console.log(
             "ZakiChat message realtime:",
@@ -143,19 +128,6 @@
           payload => {
             if (typeof callback === "function") {
               callback(payload.old, payload);
-            }
-          }
-        )
-        .on(
-          "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: "public",
-            table: "messages"
-          },
-          payload => {
-            if (typeof callback === "function") {
-              callback(payload.new, payload);
             }
           }
         )

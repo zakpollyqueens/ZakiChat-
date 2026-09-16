@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.ZakiRealtime.subscribeToMessages(
       conversationId,
-      async message => {
+      async (message, payload) => {
         if (!message?.id) return;
 
         if (!messagesPanel) return;

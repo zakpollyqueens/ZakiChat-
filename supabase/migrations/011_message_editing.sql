@@ -1,8 +1,8 @@
 alter table public.messages
-add column if not exists edited_at timestamptz;
+  add column if not exists edited_at timestamptz;
 
 create index if not exists messages_edited_at_idx
-on public.messages(edited_at);
+  on public.messages(edited_at);
 
 create or replace function public.enforce_message_content_edit()
 returns trigger
