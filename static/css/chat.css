@@ -49,3 +49,200 @@
 .send-button{color:#03120e;background:var(--primary)}
 @media(max-width:850px){.app-shell{grid-template-columns:1fr}.chat-main{display:none}.sidebar{border-right:0}}
 @media(min-width:851px){.bottom-nav{margin-top:auto}}
+
+.message-actions{
+  position:absolute;
+  right:8px;
+  top:-38px;
+  display:flex;
+  gap:4px;
+  padding:4px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#091727;
+  box-shadow:0 8px 24px rgba(0,0,0,.28);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(4px);
+  transition:.16s ease;
+  z-index:5;
+}
+
+.bubble:hover .message-actions,
+.bubble:focus-within .message-actions{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+
+.message-action{
+  border:0;
+  border-radius:7px;
+  padding:5px 8px;
+  color:var(--muted);
+  background:transparent;
+  cursor:pointer;
+  font:inherit;
+  font-size:.68rem;
+}
+
+.message-action:hover{
+  color:var(--white);
+  background:rgba(255,255,255,.08);
+}
+
+.message-delete:hover{
+  color:#ff8f9c;
+}
+
+.message-text{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.message-edit-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px clamp(12px,4vw,50px);
+  border-top:1px solid var(--line);
+  background:#091727;
+}
+
+.message-edit-info{
+  min-width:0;
+  display:flex;
+  flex-direction:colum
+cd ~/downloads/ZakiChat-
+
+cat > supabase/migrations/011_message_editing.sql <<'EOF'
+alter table public.messages
+add column if not exists edited_at timestamptz;
+
+create index if not exists messages_edited_at_idx
+on public.messages(edited_at);
+
+create or replace function public.enforce_message_content_edit()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  if new.content is distinct from old.content then
+    if old.sender_id <> auth.uid() then
+      raise exception 'Only the message sender can edit message content';
+    end if;
+    new.edited_at = now();
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists messages_enforce_content_edit
+on public.messages;
+
+create trigger messages_enforce_content_edit
+before update on public.messages
+for each row
+execute function public.enforce_message_content_edit();
+
+.message-actions{
+  position:absolute;
+  right:8px;
+  top:-38px;
+  display:flex;
+  gap:4px;
+  padding:4px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#091727;
+  box-shadow:0 8px 24px rgba(0,0,0,.28);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(4px);
+  transition:.16s ease;
+  z-index:5;
+}
+
+.bubble:hover .message-actions,
+.bubble:focus-within .message-actions{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+
+.message-action{
+  border:0;
+  border-radius:7px;
+  padding:5px 8px;
+  color:var(--muted);
+  background:transparent;
+  cursor:pointer;
+  font:inherit;
+  font-size:.68rem;
+}
+
+.message-action:hover{
+  color:var(--white);
+  background:rgba(255,255,255,.08);
+}
+
+.message-delete:hover{
+  color:#ff8f9c;
+}
+
+.message-text{
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+.message-edit-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px clamp(12px,4vw,50px);
+  border-top:1px solid var(--line);
+  background:#091727;
+}
+
+.message-edit-info{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.message-edit-info strong{
+  color:var(--primary);
+  font-size:.72rem;
+}
+
+.message-edit-info span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--muted);
+  font-size:.72rem;
+}
+
+.edit-cancel-button{
+  width:32px;
+  height:32px;
+  border:0;
+  border-radius:9px;
+  color:var(--muted);
+  background:transparent;
+  cursor:pointer;
+  font-size:1.25rem;
+}
+
+#refresh-chat.is-refreshing{
+  animation:zakichat-refresh-spin .7s linear infinite;
+}
+
+@keyframes zakichat-refresh-spin{
+  to{transform:rotate(360deg)}
+}

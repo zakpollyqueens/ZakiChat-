@@ -1,6 +1,15 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!window.supabase || !window.ZakiChatConfig) {
-    console.error("ZakiChat: Supabase configuration unavailable.");
+  "use strict";
+
+  if (
+    !window.supabase ||
+    !window.ZakiChatConfig ||
+    !window.ZakiMessages ||
+    !window.ZakiRealtime
+  ) {
+    console.error(
+      "ZakiChat: required modules are unavailable."
+    );
     return;
   }
 
@@ -9,23 +18,60 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.ZakiChatConfig.supabaseKey
   );
 
-  const messagesPanel = document.querySelector(".messages-panel");
-  const composer = document.querySelector(".message-composer");
-  const messageInput = composer?.querySelector("input");
-  const chatUserName = document.querySelector(".chat-user strong");
-  const chatUserStatus = document.querySelector(".chat-user span");
-  const chatAvatar = document.querySelector(".chat-user .conversation-avatar");
+  window.ZakiMessages.init(
+    window.ZakiChatConfig
+  );
 
-  const params = new URLSearchParams(window.location.search);
-  const targetUserId = params.get("user");
+  window.ZakiRealtime.init(
+    window.ZakiChatConfig
+  );
+
+  const messagesPanel =
+    document.querySelector(".messages-panel");
+
+  const composer =
+    document.querySelector(".message-composer");
+
+  const messageInput =
+    composer?.querySelector("input");
+
+  const chatUserName =
+    document.querySelector(".chat-user strong");
+
+  const chatUserStatus =
+    document.querySelector(".chat-user span");
+
+  const chatAvatar =
+    document.querySelector(
+      ".chat-user .conversation-avatar"
+    );
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const targetUserId =
+    params.get("user");
 
   let currentUser = null;
   let targetProfile = null;
   let conversationId = null;
-  let realtimeChannel = null;
+  let editingMessageId = null;
 
-  function escapeText(value) {
-    return String(value ?? "");
+  function formatTime(value) {
+    if (!value) return "";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "";
+    }
+
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
   }
 
   function initials(profile) {
@@ -37,24 +83,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     return name
       .split(/\s+/)
       .slice(0, 2)
-      .map(word => word.charAt(0).toUpperCase())
+      .map(word =>
+        word.charAt(0).toUpperCase()
+      )
       .join("") || "Z";
   }
 
-  function formatTime(value) {
-    if (!value) return "";
-
-    return new Date(value).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  }
-
-  function showStatus(text, error = false) {
+  function showStatus(
+    text,
+    error = false
+  ) {
     if (!chatUserStatus) return;
 
     chatUserStatus.textContent = text;
-    chatUserStatus.style.color = error ? "#ff8f9c" : "";
+
+    chatUserStatus.style.color =
+      error ? "#ff8f9c" : "";
   }
 
   function updateHeader() {
@@ -73,12 +117,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (targetProfile.avatar_url) {
         chatAvatar.style.backgroundImage =
           `url("${targetProfile.avatar_url}")`;
-        chatAvatar.style.backgroundSize = "cover";
-        chatAvatar.style.backgroundPosition = "center";
+
+        chatAvatar.style.backgroundSize =
+          "cover";
+
+        chatAvatar.style.backgroundPosition =
+          "center";
+
         chatAvatar.textContent = "";
       } else {
         chatAvatar.style.backgroundImage = "";
-        chatAvatar.textContent = initials(targetProfile);
+        chatAvatar.textContent =
+          initials(targetProfile);
       }
     }
 
@@ -86,7 +136,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       targetProfile.is_online
         ? "online"
         : targetProfile.last_seen
-          ? `last seen ${formatTime(targetProfile.last_seen)}`
+          ? `last seen ${formatTime(
+              targetProfile.last_seen
+            )}`
           : "offline"
     );
   }
@@ -97,40 +149,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     messagesPanel.innerHTML = "";
   }
 
-  function renderMessage(message) {
-    if (!messagesPanel) return;
-
-    const bubble = document.createElement("div");
-
-    const mine = message.sender_id === currentUser.id;
-
-    bubble.className =
-      `bubble ${mine ? "sent-bubble" : "received-bubble"}`;
-
-    bubble.dataset.messageId = message.id;
-
-    const content = document.createTextNode(
-      escapeText(message.content)
-    );
-
-    const meta = document.createElement("small");
-    meta.textContent =
-      `${formatTime(message.created_at)}${mine ? " ✓" : ""}`;
-
-    bubble.appendChild(content);
-    bubble.appendChild(meta);
-
-    messagesPanel.appendChild(bubble);
-  }
-
   function scrollToBottom() {
     if (!messagesPanel) return;
 
-    messagesPanel.scrollTop = messagesPanel.scrollHeight;
+    messagesPanel.scrollTop =
+      messagesPanel.scrollHeight;
+  }
+
+  function renderMessages(messages) {
+    if (!messagesPanel) return;
+
+    window.ZakiMessages.renderInto(
+      messagesPanel,
+      messages,
+      currentUser.id
+    );
+
+    scrollToBottom();
   }
 
   async function loadTargetProfile() {
-    const { data, error } = await db
+    const {
+      data,
+      error
+    } = await db
       .from("profiles")
       .select(`
         id,
@@ -145,21 +187,30 @@ document.addEventListener("DOMContentLoaded", async () => {
       .eq("id", targetUserId)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     if (!data) {
-      throw new Error("ZakiChat user not found.");
+      throw new Error(
+        "ZakiChat user not found."
+      );
     }
 
     targetProfile = data;
+
     updateHeader();
   }
 
   async function getConversation() {
-    const { data, error } = await db.rpc(
+    const {
+      data,
+      error
+    } = await db.rpc(
       "get_or_create_direct_conversation",
       {
-        p_other_user_id: targetUserId
+        p_other_user_id:
+          targetUserId
       }
     );
 
@@ -168,7 +219,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (!data) {
-      throw new Error("Unable to create conversation.");
+      throw new Error(
+        "Unable to create conversation."
+      );
     }
 
     conversationId = data;
@@ -177,424 +230,313 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadMessages() {
     if (!conversationId) return;
 
-    const { data, error } = await db
-      .from("messages")
-      .select(`
-        id,
-        conversation_id,
-        sender_id,
-        content,
-        created_at,
-        read_at
-      `)
-      .eq("conversation_id", conversationId)
-      .order("created_at", {
-        ascending: true
-      });
-
-    if (error) throw error;
-
-    clearMessages();
-
-    (data || []).forEach(renderMessage);
-
-    scrollToBottom();
-
-    await markMessagesRead(data || []);
-  }
-
-  async function markMessagesRead(messages) {
-    const unreadIds = messages
-      .filter(
-        message =>
-          message.sender_id !== currentUser.id &&
-          !message.read_at
-      )
-      .map(message => message.id);
-
-    if (!unreadIds.length) return;
-
-    const { error } = await db
-      .from("messages")
-      .update({
-        read_at: new Date().toISOString()
-      })
-      .in("id", unreadIds);
-
-    if (error) {
-      console.warn(
-        "Unable to mark messages as read:",
-        error
-      );
-    }
-  }
-
-  function subscribeToMessages() {
-    if (!conversationId) return;
-
-    realtimeChannel = db
-      .channel(`messages:${conversationId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `conversation_id=eq.${conversationId}`
-        },
-        payload => {
-          const message = payload.new;
-
-          if (!message?.id) return;
-
-          const existing = document.querySelector(
-            `[data-message-id="${message.id}"]`
-          );
-
-          if (existing) return;
-
-          renderMessage(message);
-          scrollToBottom();
-
-          if (message.sender_id !== currentUser.id) {
-            markMessagesRead([message]);
-          }
-        }
-      )
-      .subscribe(status => {
-        console.log(
-          "ZakiChat realtime:",
-          status
-        );
-      });
-  }
-
-  async function sendMessage() {
-    if (!currentUser || !conversationId) return;
-
-    const content =
-      messageInput?.value.trim() || "";
-
-    if (!content) return;
-
-    if (messageInput) {
-      messageInput.disabled = true;
-    }
-
-    try {
-      const { data, error } = await db
-        .
-cd ~/downloads/ZakiChat-
-
-cat > static/js/chat.js <<'EOF'
-document.addEventListener("DOMContentLoaded", async () => {
-  if (!window.supabase || !window.ZakiChatConfig) {
-    console.error("ZakiChat: Supabase configuration unavailable.");
-    return;
-  }
-
-  const db = window.supabase.createClient(
-    window.ZakiChatConfig.supabaseUrl,
-    window.ZakiChatConfig.supabaseKey
-  );
-
-  const messagesPanel = document.querySelector(".messages-panel");
-  const composer = document.querySelector(".message-composer");
-  const messageInput = composer?.querySelector("input");
-  const chatUserName = document.querySelector(".chat-user strong");
-  const chatUserStatus = document.querySelector(".chat-user span");
-  const chatAvatar = document.querySelector(".chat-user .conversation-avatar");
-
-  const params = new URLSearchParams(window.location.search);
-  const targetUserId = params.get("user");
-
-  let currentUser = null;
-  let targetProfile = null;
-  let conversationId = null;
-  let realtimeChannel = null;
-
-  function escapeText(value) {
-    return String(value ?? "");
-  }
-
-  function initials(profile) {
-    const name =
-      profile?.full_name ||
-      profile?.username ||
-      "Z";
-
-    return name
-      .split(/\s+/)
-      .slice(0, 2)
-      .map(word => word.charAt(0).toUpperCase())
-      .join("") || "Z";
-  }
-
-  function formatTime(value) {
-    if (!value) return "";
-
-    return new Date(value).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  }
-
-  function showStatus(text, error = false) {
-    if (!chatUserStatus) return;
-
-    chatUserStatus.textContent = text;
-    chatUserStatus.style.color = error ? "#ff8f9c" : "";
-  }
-
-  function updateHeader() {
-    if (!targetProfile) return;
-
-    const name =
-      targetProfile.full_name ||
-      targetProfile.username ||
-      "ZakiChat User";
-
-    if (chatUserName) {
-      chatUserName.textContent = name;
-    }
-
-    if (chatAvatar) {
-      if (targetProfile.avatar_url) {
-        chatAvatar.style.backgroundImage =
-          `url("${targetProfile.avatar_url}")`;
-        chatAvatar.style.backgroundSize = "cover";
-        chatAvatar.style.backgroundPosition = "center";
-        chatAvatar.textContent = "";
-      } else {
-        chatAvatar.style.backgroundImage = "";
-        chatAvatar.textContent = initials(targetProfile);
-      }
-    }
-
-    showStatus(
-      targetProfile.is_online
-        ? "online"
-        : targetProfile.last_seen
-          ? `last seen ${formatTime(targetProfile.last_seen)}`
-          : "offline"
-    );
-  }
-
-  function clearMessages() {
-    if (!messagesPanel) return;
-
-    messagesPanel.innerHTML = "";
-  }
-
-  function renderMessage(message) {
-    if (!messagesPanel) return;
-
-    const bubble = document.createElement("div");
-
-    const mine = message.sender_id === currentUser.id;
-
-    bubble.className =
-      `bubble ${mine ? "sent-bubble" : "received-bubble"}`;
-
-    const content = document.createTextNode(
-      escapeText(message.content)
-    );
-
-    const meta = document.createElement("small");
-    meta.textContent =
-      `${formatTime(message.created_at)}${mine ? " ✓" : ""}`;
-
-    bubble.appendChild(content);
-    bubble.appendChild(meta);
-
-    messagesPanel.appendChild(bubble);
-  }
-
-  function scrollToBottom() {
-    if (!messagesPanel) return;
-
-    messagesPanel.scrollTop = messagesPanel.scrollHeight;
-  }
-
-  async function loadTargetProfile() {
-    const { data, error } = await db
-      .from("profiles")
-      .select(`
-        id,
-        username,
-        full_name,
-        phone,
-        avatar_url,
-        bio,
-        is_online,
-        last_seen
-      `)
-      .eq("id", targetUserId)
-      .maybeSingle();
-
-    if (error) throw error;
-
-    if (!data) {
-      throw new Error("ZakiChat user not found.");
-    }
-
-    targetProfile = data;
-    updateHeader();
-  }
-
-  async function getConversation() {
-    const { data, error } = await db.rpc(
-      "get_or_create_direct_conversation",
-      {
-        p_other_user_id: targetUserId
-      }
+    const {
+      data,
+      error
+    } = await window.ZakiMessages.load(
+      conversationId
     );
 
     if (error) {
       throw error;
     }
 
-    if (!data) {
-      throw new Error("Unable to create conversation.");
-    }
-
-    conversationId = data;
-  }
-
-  async function loadMessages() {
-    if (!conversationId) return;
-
-    const { data, error } = await db
-      .from("messages")
-      .select(`
-        id,
-        conversation_id,
-        sender_id,
-        content,
-        created_at,
-        read_at
-      `)
-      .eq("conversation_id", conversationId)
-      .order("created_at", {
-        ascending: true
-      });
-
-    if (error) throw error;
-
     clearMessages();
 
-    (data || []).forEach(renderMessage);
+    renderMessages(data || []);
 
-    scrollToBottom();
-
-    await markMessagesRead(data || []);
-  }
-
-  async function markMessagesRead(messages) {
-    const unreadIds = messages
-      .filter(
-        message =>
-          message.sender_id !== currentUser.id &&
-          !message.read_at
-      )
-      .map(message => message.id);
-
-    if (!unreadIds.length) return;
-
-    const { error } = await db
-      .from("messages")
-      .update({
-        read_at: new Date().toISOString()
-      })
-      .in("id", unreadIds);
-
-    if (error) {
-      console.warn(
-        "Unable to mark messages as read:",
-        error
-      );
-    }
+    await window.ZakiMessages.markRead(
+      conversationId,
+      currentUser.id
+    );
   }
 
   function subscribeToMessages() {
     if (!conversationId) return;
 
-    realtimeChannel = db
-      .channel(`messages:${conversationId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-          filter: `conversation_id=eq.${conversationId}`
-        },
-        payload => {
-          const message = payload.new;
+    window.ZakiRealtime.subscribeToMessages(
+      conversationId,
+      async message => {
+        if (!message?.id) return;
 
-          if (!message?.id) return;
+        if (!messagesPanel) return;
 
-          const existing = document.querySelector(
-            `[data-message-id="${message.id}"]`
+        if (payload?.eventType === "DELETE") {
+          window.ZakiMessages.removeMessage(
+            messagesPanel,
+            message.id
           );
 
-          if (existing) return;
-
-          renderMessage(message);
-          scrollToBottom();
-
-          if (message.sender_id !== currentUser.id) {
-            markMessagesRead([message]);
+          if (editingMessageId === message.id) {
+            cancelEdit();
           }
+
+          return;
         }
-      )
-      .subscribe(status => {
-        console.log(
-          "ZakiChat realtime:",
-          status
-        );
-      });
+
+        if (payload?.eventType === "UPDATE") {
+          window.ZakiMessages.updateMessage(
+            messagesPanel,
+            message,
+            currentUser.id
+          );
+
+          return;
+        }
+
+        const added =
+          window.ZakiMessages.appendIfMissing(
+            messagesPanel,
+            message,
+            currentUser.id
+          );
+
+        if (added) {
+          scrollToBottom();
+        }
+
+        if (
+          message.sender_id !==
+          currentUser.id
+        ) {
+          await window.ZakiMessages.markRead(
+            conversationId,
+            currentUser.id
+          );
+        }
+      }
+    );
   }
 
-  async function sendMessage() {
-    if (!currentUser || !conversationId) return;
+  function enterEditMode(messageId) {
+    if (!messagesPanel || !messageInput) return;
 
+    const bubble =
+      messagesPanel.querySelector(
+        `[data-message-id="${messageId}"]`
+      );
+
+    if (!bubble) return;
+
+    const text =
+      bubble.querySelector(".message-text")?.textContent || "";
+
+    editingMessageId = messageId;
+    messageInput.value = text;
+    messageInput.focus();
+    messageInput.setSelectionRange(
+      messageInput.value.length,
+      messageInput.value.length
+    );
+
+    const bar =
+      document.querySelector("#message-edit-bar");
+
+    const preview =
+      document.querySelector("#message-edit-preview");
+
+    const button =
+      document.querySelector("#send-message-button");
+
+    if (bar) bar.hidden = false;
+    if (preview) preview.textContent = text;
+    if (button) {
+      button.textContent = "✓";
+      button.setAttribute(
+        "aria-label",
+        "Save edited message"
+      );
+      button.title = "Save edited message";
+    }
+  }
+
+  function cancelEdit() {
+    editingMessageId = null;
+
+    const bar =
+      document.querySelector("#message-edit-bar");
+
+    const preview =
+      document.querySelector("#message-edit-preview");
+
+    const button =
+      document.querySelector("#send-message-button");
+
+    if (bar) bar.hidden = true;
+    if (preview) preview.textContent = "";
+
+    if (button) {
+      button.textContent = "➤";
+      button.setAttribute(
+        "aria-label",
+        "Send message"
+      );
+      button.title = "Send message";
+    }
+
+    if (messageInput) {
+      messageInput.value = "";
+      messageInput.focus();
+    }
+  }
+
+  async function saveEditedMessage() {
     const content =
       messageInput?.value.trim() || "";
 
-    if (!content) return;
+    if (!editingMessageId || !content) return;
 
-    if (messageInput) {
-      messageInput.disabled = true;
-    }
+    messageInput.disabled = true;
 
     try {
-      const { data, error } = await db
-        .from("messages")
-        .insert({
-          conversation_id: conversationId,
-          sender_id: currentUser.id,
+      const { data, error } =
+        await window.ZakiMessages.edit(
+          editingMessageId,
+          currentUser.id,
           content
-        })
-        .select()
-        .single();
+        );
 
       if (error) throw error;
+
+      if (data && messagesPanel) {
+        window.ZakiMessages.updateMessage(
+          messagesPanel,
+          data,
+          currentUser.id
+        );
+      }
+
+      cancelEdit();
+    } catch (error) {
+      console.error("Failed to edit message:", error);
+      alert(
+        error?.message ||
+        "Unable to edit the message right now."
+      );
+    } finally {
+      messageInput.disabled = false;
+      messageInput.focus();
+    }
+  }
+
+  async function deleteMessage(messageId) {
+    if (!messageId || !currentUser) return;
+
+    const bubble =
+      messagesPanel?.querySelector(
+        `[data-message-id="${messageId}"]`
+      );
+
+    if (
+      !bubble ||
+      !bubble.classList.contains("sent-bubble")
+    ) {
+      return;
+    }
+
+    if (!window.confirm("Delete this message?")) {
+      return;
+    }
+
+    try {
+      const { error } =
+        await window.ZakiMessages.delete(
+          messageId,
+          currentUser.id
+        );
+
+      if (error) throw error;
+
+      window.ZakiMessages.removeMessage(
+        messagesPanel,
+        messageId
+      );
+
+      if (editingMessageId === messageId) {
+        cancelEdit();
+      }
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+      alert(
+        error?.message ||
+        "Unable to delete the message right now."
+      );
+    }
+  }
+
+  async function refreshChat() {
+    if (!conversationId) return;
+
+    const button =
+      document.querySelector("#refresh-chat");
+
+    if (button) {
+      button.disabled = true;
+      button.classList.add("is-refreshing");
+    }
+
+    try {
+      await loadMessages();
+    } catch (error) {
+      console.error("Refresh failed:", error);
+      alert("Unable to refresh the chat right now.");
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.classList.remove("is-refreshing");
+      }
+    }
+  }
+
+  async function sendMessage() {
+    if (
+      !currentUser ||
+      !conversationId
+    ) {
+      return;
+    }
+
+    if (editingMessageId) {
+      await saveEditedMessage();
+      return;
+    }
+
+    const content =
+      messageInput?.value.trim() || "";
+
+    if (!content) return;
+
+    if (messageInput) {
+      messageInput.disabled = true;
+    }
+
+    try {
+      const {
+        data,
+        error
+      } = await window.ZakiMessages.send(
+        conversationId,
+        currentUser.id,
+        content
+      );
+
+      if (error) {
+        throw error;
+      }
 
       if (messageInput) {
         messageInput.value = "";
       }
 
-      /*
-       * Realtime normally renders the inserted message.
-       * This fallback makes the sender see it immediately
-       * if the realtime subscription has not fired yet.
-       */
-      if (data) {
-        renderMessage(data);
+      if (data && messagesPanel) {
+        window.ZakiMessages.appendIfMissing(
+          messagesPanel,
+          data,
+          currentUser.id
+        );
+
         scrollToBottom();
       }
-
     } catch (error) {
       console.error(
         "Failed to send message:",
@@ -604,7 +546,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert(
         "Unable to send the message right now."
       );
-
     } finally {
       if (messageInput) {
         messageInput.disabled = false;
@@ -612,6 +553,35 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   }
+
+  messagesPanel?.addEventListener("click", async event => {
+    const button =
+      event.target.closest("[data-message-action]");
+
+    if (!button) return;
+
+    const action =
+      button.dataset.messageAction;
+
+    const messageId =
+      button.dataset.messageId;
+
+    if (action === "edit") {
+      enterEditMode(messageId);
+    }
+
+    if (action === "delete") {
+      await deleteMessage(messageId);
+    }
+  });
+
+  document
+    .querySelector("#cancel-message-edit")
+    ?.addEventListener("click", cancelEdit);
+
+  document
+    .querySelector("#refresh-chat")
+    ?.addEventListener("click", refreshChat);
 
   composer?.addEventListener(
     "submit",
@@ -638,10 +608,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   window.addEventListener(
     "beforeunload",
-    async () => {
-      if (realtimeChannel) {
-        await db.removeChannel(
-          realtimeChannel
+    () => {
+      if (window.ZakiRealtime) {
+        window.ZakiRealtime.unsubscribe(
+          `messages:${conversationId}`
         );
       }
     }
@@ -657,7 +627,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentUser = user || null;
 
     if (!currentUser) {
-      showStatus("Please sign in", true);
+      showStatus(
+        "Please sign in",
+        true
+      );
       return;
     }
 
@@ -668,22 +641,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         const notice =
           document.createElement("div");
 
-        notice.className = "empty-messages";
+        notice.className =
+          "empty-messages";
+
         notice.textContent =
           "Open a chat from your Contacts.";
 
-        messagesPanel.appendChild(notice);
+        messagesPanel.appendChild(
+          notice
+        );
       }
 
-      showStatus("No conversation selected");
+      showStatus(
+        "No conversation selected"
+      );
+
       return;
     }
 
-    if (targetUserId === currentUser.id) {
+    if (
+      targetUserId ===
+      currentUser.id
+    ) {
       showStatus(
         "You cannot chat with yourself",
         true
       );
+
       return;
     }
 
@@ -694,7 +678,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadMessages();
 
     subscribeToMessages();
-
   } catch (error) {
     console.error(
       "ZakiChat chat initialization failed:",

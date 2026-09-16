@@ -38,15 +38,11 @@
       <button>Groups</button>
     </nav>
 
-    <div class="conversation-list">
-
-      <a href="#" class="conversation active">
-        <div class="conversation-avatar gradient-avatar">S</div>
-        <div class="conversation-info">
-          <div class="conversation-line">
-            <strong>Sarah</strong>
-            <time>10:42</time>
-          </div>
+    <div class="conversation-list" id="conversation-list">
+      <div class="conversation-loading">
+        Loading conversations...
+      </div>
+    </div>
           <div class="conversation-line">
             <span>Hey! How are you?</span>
             <b class="unread-count">2</b>
@@ -117,42 +113,50 @@
       </div>
 
       <div class="chat-actions">
-        <button class="icon-button" aria-label="Search">⌕</button>
+        <button
+          class="icon-button"
+          type="button"
+          id="refresh-chat"
+          aria-label="Refresh chat"
+          title="Refresh chat"
+        >↻</button>
+        <button class="icon-button" type="button" aria-label="Search">⌕</button>
         <button class="icon-button" aria-label="More options">⋮</button>
       </div>
     </header>
 
-    <section class="messages-panel">
+    <section class="messages-panel"></section>
 
-      <div class="date-divider"><span>Today</span></div>
-
-      <div class="bubble received-bubble">
-        Hey! Welcome to ZakiChat 👋
-        <small>10:40</small>
+    <div
+      class="message-edit-bar"
+      id="message-edit-bar"
+      hidden
+    >
+      <div class="message-edit-info">
+        <strong>Editing message</strong>
+        <span id="message-edit-preview"></span>
       </div>
 
-      <div class="bubble sent-bubble">
-        Thank you! I'm excited to try it.
-        <small>10:41 ✓✓</small>
-      </div>
-
-      <div class="bubble received-bubble">
-        Let's stay connected.
-        <small>10:42</small>
-      </div>
-
-      <div class="bubble sent-bubble">
-        Absolutely! 🚀
-        <small>10:42 ✓✓</small>
-      </div>
-
-    </section>
+      <button
+        type="button"
+        class="edit-cancel-button"
+        id="cancel-message-edit"
+        aria-label="Cancel editing"
+        title="Cancel editing"
+      >×</button>
+    </div>
 
     <form class="message-composer">
       <button type="button" class="composer-button" aria-label="Attach file">＋</button>
       <input type="text" placeholder="Write a message..." aria-label="Message">
       <button type="button" class="composer-button" aria-label="Emoji">☺</button>
-      <button type="submit" class="send-button" aria-label="Send message">➤</button>
+      <button
+        type="submit"
+        class="send-button"
+        id="send-message-button"
+        aria-label="Send message"
+        title="Send message"
+      >➤</button>
     </form>
 
   </main>
@@ -161,8 +165,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../static/js/config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../static/js/config.js"></script>
+<script src="../static/js/conversations.js"></script>
+<script src="../static/js/realtime.js"></script>
+<script src="../static/js/conversation-list.js"></script>
 <script src="../static/js/chat.js"></script>
 </body>
 </html>
