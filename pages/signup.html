@@ -18,75 +18,293 @@
     <span>Zaki<span>Chat</span></span>
   </a>
 
-  <section class="auth-card">
+  <section class="auth-card signup-card">
 
     <div class="auth-heading">
       <span class="section-label">JOIN ZAKICHAT</span>
       <h1>Create your account</h1>
-      <p>Start connecting with people, groups and communities.</p>
+      <p id="signupStepDescription">
+        Set up your ZakiChat account in a few simple steps.
+      </p>
     </div>
 
-    <form id="signupForm" class="auth-form">
+    <div class="signup-progress" aria-label="Signup progress">
+      <div class="signup-progress-track">
+        <div id="signupProgressBar" class="signup-progress-bar"></div>
+      </div>
+      <div class="signup-progress-meta">
+        <span id="signupStepLabel">Step 1 of 5</span>
+        <span id="signupStepPercent">20%</span>
+      </div>
+    </div>
 
-      <label for="displayName">Display name</label>
-      <input
-        id="displayName"
-        name="displayName"
-        type="text"
-        autocomplete="name"
-        placeholder="Your name"
-        maxlength="80"
-        required
-      >
+    <form id="signupForm" class="auth-form" novalidate>
 
-      <label for="email">Email address</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        autocomplete="email"
-        placeholder="you@example.com"
-        required
-      >
+      <!-- STEP 1 -->
+      <section class="signup-step active" data-step="1">
+        <div class="signup-step-heading">
+          <span class="signup-step-number">01</span>
+          <div>
+            <h2>Choose your username</h2>
+            <p>This is how people can identify you on ZakiChat.</p>
+          </div>
+        </div>
 
-      <label for="password">Password</label>
-      <div class="password-field">
+        <label for="username">Username</label>
         <input
-          id="password"
-          name="password"
-          type="password"
-          autocomplete="new-password"
-          placeholder="Create a password"
-          minlength="8"
+          id="username"
+          name="username"
+          type="text"
+          autocomplete="username"
+          placeholder="Choose a username"
+          maxlength="30"
+          minlength="3"
+          pattern="[A-Za-z0-9_.]+"
           required
         >
-        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">Show</button>
-      </div>
 
-      <label for="confirmPassword">Confirm password</label>
-      <div class="password-field">
+        <small class="auth-help">
+          Use 3–30 characters: letters, numbers, underscores or dots.
+        </small>
+
+        <div class="signup-tip">
+          <strong>Tip:</strong>
+          Choose a username you will be comfortable using on ZakiChat.
+        </div>
+
+        <div class="signup-actions">
+          <button type="button" class="button button-primary auth-submit next-step">
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="signup-step" data-step="2" hidden>
+        <div class="signup-step-heading">
+          <span class="signup-step-number">02</span>
+          <div>
+            <h2>Your profile</h2>
+            <p>Tell us a little about the account owner.</p>
+          </div>
+        </div>
+
+        <label for="displayName">Full name</label>
         <input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          autocomplete="new-password"
-          placeholder="Repeat your password"
-          minlength="8"
+          id="displayName"
+          name="displayName"
+          type="text"
+          autocomplete="name"
+          placeholder="Your full name"
+          maxlength="80"
           required
         >
-        <button type="button" class="password-toggle" id="toggleConfirmPassword" aria-label="Show password">Show</button>
-      </div>
 
-      <label class="terms-check">
-        <input type="checkbox" id="terms" required>
-        <span>I agree to the ZakiChat terms and privacy rules.</span>
-      </label>
+        <label for="phone">Phone number</label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          autocomplete="tel"
+          placeholder="+256 7XX XXX XXX"
+          maxlength="25"
+          required
+        >
 
-      <button type="submit" class="button button-primary auth-submit">
-        Create Account
-      </button>
+        <label for="location">Location</label>
+        <input
+          id="location"
+          name="location"
+          type="text"
+          autocomplete="address-level2"
+          placeholder="City / town / country"
+          maxlength="120"
+          required
+        >
 
-      <p id="signupMessage" class="auth-message" role="status"></p>
+        <small class="auth-help">
+          Use a general location such as your town, city or country. Do not enter a street address.
+        </small>
+
+        <div class="signup-actions">
+          <button type="button" class="button auth-secondary previous-step">
+            Back
+          </button>
+          <button type="button" class="button button-primary next-step">
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="signup-step" data-step="3" hidden>
+        <div class="signup-step-heading">
+          <span class="signup-step-number">03</span>
+          <div>
+            <h2>Add your recovery email</h2>
+            <p>Your email connects you to your ZakiChat account.</p>
+          </div>
+        </div>
+
+        <label for="email">Recovery email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+          required
+        >
+
+        <div class="signup-info-box">
+          <strong>Why do we need your email?</strong>
+          <p>
+            This email is linked to your ZakiChat account and can be used
+            to verify your account and recover access to it.
+          </p>
+          <p>
+            Your ZakiChat data is stored securely in the cloud and remains
+            associated with your account. If you reinstall ZakiChat later,
+            signing in to this same account lets you access your existing
+            cloud data.
+          </p>
+        </div>
+
+        <div class="signup-actions">
+          <button type="button" class="button auth-secondary previous-step">
+            Back
+          </button>
+          <button type="button" class="button button-primary next-step">
+            Continue
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="signup-step" data-step="4" hidden>
+        <div class="signup-step-heading">
+          <span class="signup-step-number">04</span>
+          <div>
+            <h2>Secure your account</h2>
+            <p>Create a password that only you know.</p>
+          </div>
+        </div>
+
+        <label for="password">Password</label>
+        <div class="password-field">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Create a password"
+            minlength="8"
+            required
+          >
+          <button
+            type="button"
+            class="password-toggle"
+            id="togglePassword"
+            aria-label="Show password"
+          >Show</button>
+        </div>
+
+        <small class="auth-help">
+          Use at least 8 characters.
+        </small>
+
+        <label for="confirmPassword">Confirm password</label>
+        <div class="password-field">
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            placeholder="Repeat your password"
+            minlength="8"
+            required
+          >
+          <button
+            type="button"
+            class="password-toggle"
+            id="toggleConfirmPassword"
+            aria-label="Show password"
+          >Show</button>
+        </div>
+
+        <label class="terms-check">
+          <input type="checkbox" id="terms" required>
+          <span>I agree to the ZakiChat terms and privacy rules.</span>
+        </label>
+
+        <div class="signup-actions">
+          <button type="button" class="button auth-secondary previous-step">
+            Back
+          </button>
+          <button type="submit" class="button button-primary auth-submit">
+            Create Account
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 5 -->
+      <section class="signup-step" data-step="5" hidden>
+        <div class="signup-step-heading">
+          <span class="signup-step-number">05</span>
+          <div>
+            <h2>Verify your email</h2>
+            <p>Enter the six-digit code sent to your recovery email.</p>
+          </div>
+        </div>
+
+        <div class="verification-icon" aria-hidden="true">
+          ✉
+        </div>
+
+        <p id="verificationDescription" class="verification-description">
+          We sent a verification code to your email address.
+        </p>
+
+        <label for="verificationCode">Verification code</label>
+        <input
+          id="verificationCode"
+          name="verificationCode"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          placeholder="000000"
+          maxlength="6"
+          minlength="6"
+          pattern="[0-9]{6}"
+          class="verification-code"
+          aria-label="Six digit verification code"
+        >
+
+        <button
+          type="button"
+          id="verifyAccount"
+          class="button button-primary auth-submit"
+        >
+          Verify Account
+        </button>
+
+        <button
+          type="button"
+          id="resendVerification"
+          class="auth-link-button"
+        >
+          Resend verification code
+        </button>
+
+        <div class="signup-actions verification-back">
+          <button type="button" class="button auth-secondary previous-step">
+            Back
+          </button>
+        </div>
+      </section>
+
+      <p id="signupMessage" class="auth-message" role="status" aria-live="polite"></p>
+
     </form>
 
     <div class="auth-divider">
