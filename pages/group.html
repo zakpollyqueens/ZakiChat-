@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>Group | ZakiChat</title>
+
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/groups.css">
+</head>
+
+<body>
+
+<main class="group-chat-page">
+
+  <header class="group-chat-header">
+
+    <a href="groups.html" class="group-back" aria-label="Back to groups">
+      ←
+    </a>
+
+    <div class="group-chat-identity">
+      <div class="group-chat-avatar" id="groupAvatar">ZG</div>
+
+      <div>
+        <strong id="groupTitle">ZakiChat Group</strong>
+        <span id="groupMembers">Group members</span>
+      </div>
+    </div>
+
+    <button
+      class="group-menu-button"
+      id="groupMenuButton"
+      type="button"
+      aria-label="Group menu">
+      ⋮
+    </button>
+
+  </header>
+
+
+  <section class="group-messages" id="groupMessages">
+
+    <div class="group-date-divider">
+      <span>Today</span>
+    </div>
+
+    <div class="group-message received">
+      <div class="group-message-avatar">JM</div>
+
+      <div class="group-message-content">
+        <strong>James</strong>
+        <p>Welcome to the group 👋</p>
+        <small>10:24</small>
+      </div>
+    </div>
+
+    <div class="group-message received">
+      <div class="group-message-avatar">AK</div>
+
+      <div class="group-message-content">
+        <strong>Anna</strong>
+        <p>Great to be here!</p>
+        <small>10:26</small>
+      </div>
+    </div>
+
+    <div class="group-message sent">
+
+      <div class="group-message-content">
+        <p>Welcome everyone. Let's build something amazing 🚀</p>
+        <small>10:28 ✓✓</small>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <form class="group-composer" id="groupComposer">
+
+    <button
+      class="group-attach-button"
+      type="button"
+      id="groupAttachButton"
+      aria-label="Attach">
+      ＋
+    </button>
+
+    <input
+      id="groupMessageInput"
+      type="text"
+      maxlength="2000"
+      autocomplete="off"
+      placeholder="Type a message...">
+
+    <button
+      class="group-send-button"
+      type="submit"
+      aria-label="Send message">
+      ➤
+    </button>
+
+  </form>
+
+</main>
+
+
+<script src="../static/js/group.js"></script>
+
+</body>
+</html>
