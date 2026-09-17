@@ -1,0 +1,149 @@
+.notifications-page {
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+
+.notifications-shell {
+  width: min(100%, 900px);
+  margin: 0 auto;
+  padding: 28px 18px 35px;
+}
+
+.notifications-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.notifications-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  opacity: .7;
+}
+
+.notifications-header h1 {
+  margin: 0 0 6px;
+}
+
+.notifications-header p {
+  margin: 0;
+  opacity: .72;
+}
+
+.notifications-action {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.notifications-list {
+  display: grid;
+  gap: 10px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.035);
+  transition:
+    transform .18s ease,
+    background .18s ease;
+}
+
+.notification-card.is-unread {
+  background: rgba(70,170,255,.09);
+  border-color: rgba(70,170,255,.2);
+}
+
+.notification-card[role="button"] {
+  cursor: pointer;
+}
+
+.notification-card[role="button"]:hover {
+  transform: translateY(-1px);
+}
+
+.notification-card-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(70,170,255,.13);
+  font-size: 18px;
+}
+
+.notification-card-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.notification-card-content h2 {
+  margin: 0 0 5px;
+  font-size: 15px;
+}
+
+.notification-card-content p {
+  margin: 0 0 7px;
+  line-height: 1.5;
+  opacity: .78;
+  overflow-wrap: anywhere;
+}
+
+.notification-card-content time {
+  font-size: 11px;
+  opacity: .55;
+}
+
+.notifications-empty {
+  padding: 70px 20px;
+  text-align: center;
+  opacity: .78;
+}
+
+.notifications-empty-icon {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.notifications-empty h2 {
+  margin: 0 0 8px;
+}
+
+.notifications-empty p {
+  margin: 0;
+}
+
+.notifications-error {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255,59,48,.1);
+  color: #ffb3ad;
+  font-size: 13px;
+}
+
+@media (max-width: 620px) {
+  .notifications-header {
+    flex-direction: column;
+  }
+
+  .notifications-action {
+    width: 100%;
+  }
+}

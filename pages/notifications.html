@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Updates | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/notifications.css">
+</head>
+
+<body class="notifications-page">
+
+  <main class="notifications-shell">
+    <header class="notifications-header">
+      <div>
+        <span class="notifications-eyebrow">ZAKICHAT</span>
+        <h1>Updates</h1>
+        <p>Your latest notifications and message activity.</p>
+      </div>
+
+      <button
+        id="markAllReadButton"
+        class="notifications-action"
+        type="button"
+      >
+        Mark all as read
+      </button>
+    </header>
+
+    <section
+      id="notificationsList"
+      class="notifications-list"
+      aria-live="polite"
+    ></section>
+
+    <div
+      id="notificationsEmpty"
+      class="notifications-empty"
+      hidden
+    >
+      <div class="notifications-empty-icon">🔔</div>
+      <h2>You're all caught up</h2>
+      <p>New notifications will appear here.</p>
+    </div>
+
+    <div
+      id="notificationsError"
+      class="notifications-error"
+      hidden
+    ></div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main app navigation">
+    <a href="chats.html">
+      <span>💬</span>
+      Chats
+    </a>
+
+    <a href="contacts.html">
+      <span>👥</span>
+      Contacts
+    </a>
+
+    <a href="groups.html">
+      <span>👨‍👩‍👧</span>
+      Groups
+    </a>
+
+    <a
+      class="selected"
+      href="notifications.html"
+      aria-current="page"
+    >
+      <span>🔔</span>
+      Updates
+    </a>
+
+    <a href="settings.html">
+      <span>⚙️</span>
+      Settings
+    </a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/realtime.js"></script>
+  <script src="../static/js/notification-badge.js"></script>
+  <script src="../static/js/notifications.js"></script>
+
+</body>
+</html>
