@@ -1049,6 +1049,15 @@ document.addEventListener(
           return;
         }
 
+        if (action === "forward") {
+          if (window.ZakiForward) {
+            await window.ZakiForward.open(
+              messageId
+            );
+          }
+          return;
+        }
+
         if (action === "edit") {
           enterEditMode(
             messageId

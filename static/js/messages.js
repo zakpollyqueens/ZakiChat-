@@ -323,6 +323,142 @@
       };
     },
 
+    async forward(
+      sourceMessageId,
+      targetConversationId,
+      senderId
+    ) {
+      if (!this.db) {
+        return {
+          data: null,
+          error: new Error(
+            "Messages client is not initialized."
+          )
+        };
+      }
+
+      if (
+        !sourceMessageId ||
+        !targetConversationId ||
+        !senderId
+      ) {
+        return {
+          data: null,
+          error: new Error(
+            "Missing forwarding information."
+          )
+        };
+      }
+
+      const {
+        data: source,
+        error: sourceError
+      } =
+        await this.db
+          .from("messages")
+          .select(`
+            id,
+            sender_id,
+            content,
+            message_type,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size
+          `)
+          .eq("id", sourceMessageId)
+          .maybeSingle();
+
+      if (sourceError) {
+        return {
+          data: null,
+          error: sourceError
+        };
+      }
+
+      if (!source) {
+        return {
+          data: null,
+          error: new Error(
+            "The original message could not be found."
+          )
+        };
+      }
+
+      if (source.message_type !== "text") {
+        return {
+          data: null,
+          error: new Error(
+            "Forwarding attachments is not available yet."
+          )
+        };
+      }
+
+      if (!String(source.content || "").trim()) {
+        return {
+          data: null,
+          error: new Error(
+            "This message cannot be forwarded."
+          )
+        };
+      }
+
+      const payload = {
+        conversation_id:
+          targetConversationId,
+        sender_id:
+          senderId,
+        content:
+          String(source.content).trim(),
+        message_type:
+          "text",
+        forwarded_from_message_id:
+          source.id,
+        forwarded_from_user_id:
+          source.sender_id
+      };
+
+      const {
+        data,
+        error
+      } =
+        await this.db
+          .from("messages")
+          .insert(payload)
+          .select(`
+            id,
+            conversation_id,
+            sender_id,
+            content,
+            message_type,
+            created_at,
+            updated_at,
+            edited_at,
+            read_at,
+            reply_to_message_id,
+            deleted_at,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size,
+            forwarded_from_message_id,
+            forwarded_from_user_id
+          `)
+          .single();
+
+      if (error) {
+        return {
+          data: null,
+          error
+        };
+      }
+
+      return {
+        data,
+        error: null
+      };
+    },
+
     async sendAttachment(
       conversationId,
       senderId,
@@ -900,6 +1036,16 @@
               aria-label="Reply to message"
               title="Reply"
             >↩</button>
+
+            <button
+              type="button"
+              data-message-action="forward"
+              data-message-id="${this.escapeText(
+                message.id
+              )}"
+              aria-label="Forward message"
+              title="Forward"
+            >↗</button>
 
             ${
               mine &&
