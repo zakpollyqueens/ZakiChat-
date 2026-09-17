@@ -433,11 +433,16 @@
     );
 
     try {
+      const confirmationRedirectUrl =
+        window.location.origin +
+        window.location.pathname;
+
       const { data, error } =
         await supabaseClient.auth.signUp({
           email: signupState.email,
           password,
           options: {
+            emailRedirectTo: confirmationRedirectUrl,
             data: {
               username: signupState.username,
               full_name: signupState.displayName,
@@ -470,9 +475,9 @@
 
       if (verificationDescription) {
         verificationDescription.textContent =
-          "We sent a six-digit verification code to " +
+          "We sent a secure confirmation link to " +
           signupState.email +
-          ". Enter it below to activate your ZakiChat account.";
+          ". Open the email and tap the link to activate your ZakiChat account.";
       }
 
       if (data.session) {
@@ -494,13 +499,9 @@
 
       showMessage(
         message,
-        "Your account was created. Check your email for the verification code.",
+        "Your account was created. Check your email and tap the confirmation link.",
         "success"
       );
-
-      document
-        .getElementById("verificationCode")
-        ?.focus();
 
     } catch (error) {
       console.error(
@@ -535,57 +536,20 @@
     }
   }
 
-  async function verifySignupAccount() {
-    const codeInput =
-      document.getElementById(
-        "verificationCode"
-      );
-
-    const button =
-      document.getElementById(
-        "verifyAccount"
-      );
-
+  async function handleEmailVerificationReturn() {
     const message =
-      document.getElementById(
-        "signupMessage"
-      );
-
-    const code =
-      codeInput.value.trim();
-
-    if (!/^\d{6}$/.test(code)) {
-      showMessage(
-        message,
-        "Enter the six-digit verification code from your email.",
-        "error"
-      );
-      codeInput.focus();
-      return;
-    }
-
-    setLoading(
-      button,
-      true,
-      "Verify Account"
-    );
+      document.getElementById("signupMessage");
 
     try {
       const { data, error } =
-        await supabaseClient.auth.verifyOtp({
-          email: signupState.email,
-          token: code,
-          type: "email"
-        });
+        await supabaseClient.auth.getSession();
 
       if (error) {
         throw error;
       }
 
       if (!data.session) {
-        throw new Error(
-          "Email verification succeeded, but no session was created."
-        );
+        return false;
       }
 
       showMessage(
@@ -599,28 +563,19 @@
         500
       );
 
+      return true;
+
     } catch (error) {
       console.error(
-        "Email verification error:",
+        "Email verification return error:",
         error
       );
 
-      showMessage(
-        message,
-        error.message ||
-          "That verification code is invalid or expired.",
-        "error"
-      );
-
-      setLoading(
-        button,
-        false,
-        "Verify Account"
-      );
+      return false;
     }
   }
 
-  async function resendVerificationCode() {
+  async function resendVerificationEmail() {
     const button =
       document.getElementById(
         "resendVerification"
@@ -644,10 +599,17 @@
     button.textContent = "Sending...";
 
     try {
+      const confirmationRedirectUrl =
+        window.location.origin +
+        window.location.pathname;
+
       const { error } =
         await supabaseClient.auth.resend({
           type: "signup",
-          email: signupState.email
+          email: signupState.email,
+          options: {
+            emailRedirectTo: confirmationRedirectUrl
+          }
         });
 
       if (error) {
@@ -656,26 +618,27 @@
 
       showMessage(
         message,
-        "A new verification code has been sent to your email.",
+        "A new confirmation email has been sent. Tap the link inside it to verify your account.",
         "success"
       );
 
     } catch (error) {
       console.error(
-        "Verification resend error:",
+        "Confirmation email resend error:",
         error
       );
 
       showMessage(
         message,
         error.message ||
-          "Unable to resend the verification code.",
+          "Unable to resend the confirmation email.",
         "error"
       );
+
     } finally {
       button.disabled = false;
       button.textContent =
-        "Resend verification code";
+        "Resend confirmation email";
     }
   }
 
@@ -851,18 +814,6 @@
       );
     }
 
-    const verifyButton =
-      document.getElementById(
-        "verifyAccount"
-      );
-
-    if (verifyButton) {
-      verifyButton.addEventListener(
-        "click",
-        verifySignupAccount
-      );
-    }
-
     const resendButton =
       document.getElementById(
         "resendVerification"
@@ -871,36 +822,7 @@
     if (resendButton) {
       resendButton.addEventListener(
         "click",
-        resendVerificationCode
-      );
-    }
-
-    const codeInput =
-      document.getElementById(
-        "verificationCode"
-      );
-
-    if (codeInput) {
-      codeInput.addEventListener(
-        "input",
-        function () {
-          this.value =
-            this.value
-              .replace(/\D/g, "")
-              .slice(0, 6);
-        }
-      );
-
-      codeInput.addEventListener(
-        "keydown",
-        function (event) {
-          if (
-            event.key === "Enter"
-          ) {
-            event.preventDefault();
-            verifySignupAccount();
-          }
-        }
+        resendVerificationEmail
       );
     }
 
@@ -982,5 +904,12 @@
 
   if (isSignupPage) {
     setupSignupPage();
+
+    /*
+     * When the user taps the Supabase confirmation link,
+     * Supabase restores the verified session on this page.
+     * Once that session exists, continue into ZakiChat.
+     */
+    handleEmailVerificationReturn();
   }
 })();

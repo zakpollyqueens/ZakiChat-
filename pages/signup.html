@@ -252,8 +252,8 @@
         <div class="signup-step-heading">
           <span class="signup-step-number">05</span>
           <div>
-            <h2>Verify your email</h2>
-            <p>Enter the six-digit code sent to your recovery email.</p>
+            <h2>Check your email</h2>
+            <p>Tap the secure confirmation link we sent to your email.</p>
           </div>
         </div>
 
@@ -262,38 +262,24 @@
         </div>
 
         <p id="verificationDescription" class="verification-description">
-          We sent a verification code to your email address.
+          We sent a secure confirmation link to your email address.
+          Open the email and tap the link to verify your ZakiChat account.
         </p>
 
-        <label for="verificationCode">Verification code</label>
-        <input
-          id="verificationCode"
-          name="verificationCode"
-          type="text"
-          inputmode="numeric"
-          autocomplete="one-time-code"
-          placeholder="000000"
-          maxlength="6"
-          minlength="6"
-          pattern="[0-9]{6}"
-          class="verification-code"
-          aria-label="Six digit verification code"
-        >
-
-        <button
-          type="button"
-          id="verifyAccount"
-          class="button button-primary auth-submit"
-        >
-          Verify Account
-        </button>
+        <div class="verification-link-card">
+          <strong>Almost there!</strong>
+          <span>
+            Check your inbox and spam folder. You do not need to enter
+            a verification code.
+          </span>
+        </div>
 
         <button
           type="button"
           id="resendVerification"
-          class="auth-link-button"
+          class="button button-primary auth-submit"
         >
-          Resend verification code
+          Resend confirmation email
         </button>
 
         <div class="signup-actions verification-back">

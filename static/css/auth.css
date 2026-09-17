@@ -534,3 +534,24 @@
     width: 100%;
   }
 }
+
+.verification-link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  background: rgba(255,255,255,.05);
+}
+
+.verification-link-card strong {
+  font-size: 15px;
+}
+
+.verification-link-card span {
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255,255,255,.68);
+}
