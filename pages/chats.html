@@ -43,53 +43,6 @@
         Loading conversations...
       </div>
     </div>
-          <div class="conversation-line">
-            <span>Hey! How are you?</span>
-            <b class="unread-count">2</b>
-          </div>
-        </div>
-      </a>
-
-      <a href="#" class="conversation">
-        <div class="conversation-avatar">B</div>
-        <div class="conversation-info">
-          <div class="conversation-line">
-            <strong>Brian</strong>
-            <time>09:58</time>
-          </div>
-          <div class="conversation-line">
-            <span>See you tomorrow 👍</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="#" class="conversation">
-        <div class="conversation-avatar group-avatar">T</div>
-        <div class="conversation-info">
-          <div class="conversation-line">
-            <strong>Tech Team</strong>
-            <time>09:31</time>
-          </div>
-          <div class="conversation-line">
-            <span>David: New project update</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="#" class="conversation">
-        <div class="conversation-avatar">J</div>
-        <div class="conversation-info">
-          <div class="conversation-line">
-            <strong>John</strong>
-            <time>Yesterday</time>
-          </div>
-          <div class="conversation-line">
-            <span>Thanks!</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
 
     <nav class="bottom-nav" aria-label="Main app navigation">
       <a class="selected" href="chats.html"><span>💬</span>Chats</a>
@@ -168,7 +121,38 @@
     <form class="message-composer">
       <button type="button" class="composer-button" id="attach-file-button" aria-label="Attach file" title="Attach file">＋</button>
       <input type="text" placeholder="Write a message..." aria-label="Message">
-      <button type="button" class="composer-button" aria-label="Emoji">☺</button>
+      <button
+        type="button"
+        class="composer-button"
+        id="emoji-button"
+        aria-label="Emoji"
+        title="Emoji"
+      >😊</button>
+
+      <div
+        class="emoji-picker"
+        id="emoji-picker"
+        hidden
+        aria-label="Emoji picker"
+      >
+        <div class="emoji-picker-tabs" role="tablist" aria-label="Emoji categories">
+          <button type="button" class="emoji-tab active" data-category="smileys" title="Smileys">😀</button>
+          <button type="button" class="emoji-tab" data-category="people" title="People">👋</button>
+          <button type="button" class="emoji-tab" data-category="animals" title="Animals">🐶</button>
+          <button type="button" class="emoji-tab" data-category="food" title="Food">🍕</button>
+          <button type="button" class="emoji-tab" data-category="activities" title="Activities">⚽</button>
+          <button type="button" class="emoji-tab" data-category="travel" title="Travel">🚗</button>
+          <button type="button" class="emoji-tab" data-category="objects" title="Objects">💡</button>
+          <button type="button" class="emoji-tab" data-category="symbols" title="Symbols">❤️</button>
+        </div>
+
+        <div
+          class="emoji-grid"
+          id="emoji-grid"
+          role="grid"
+          aria-label="Available emojis"
+        ></div>
+      </div>
       <button
         type="submit"
         class="send-button"
@@ -191,5 +175,6 @@
 <script src="../static/js/media.js"></script>
 <script src="../static/js/messages.js"></script>
 <script src="../static/js/chat.js"></script>
+<script src="../static/js/emoji-picker.js"></script>
 </body>
 </html>
