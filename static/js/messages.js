@@ -21,8 +21,14 @@
     },
 
     escapeText(value) {
-      const div = document.createElement("div");
-      div.textContent = value == null ? "" : String(value);
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        value == null
+          ? ""
+          : String(value);
+
       return div.innerHTML;
     },
 
@@ -42,30 +48,46 @@
     },
 
     getMessageType(message) {
-      return message?.message_type || "text";
+      return (
+        message?.message_type ||
+        "text"
+      );
     },
 
-    getReadMark(message, currentUserId) {
-      if (!message || message.sender_id !== currentUserId) {
+    getReadMark(
+      message,
+      currentUserId
+    ) {
+      if (
+        !message ||
+        message.sender_id !==
+          currentUserId
+      ) {
         return "";
       }
 
-      if (message.read_at) {
-        return "✓✓";
-      }
-
-      return "✓";
+      return message.read_at
+        ? "✓✓"
+        : "✓";
     },
 
-    async attachReplyPreviews(messages) {
-      if (!this.db || !Array.isArray(messages)) {
+    async attachReplyPreviews(
+      messages
+    ) {
+      if (
+        !this.db ||
+        !Array.isArray(messages)
+      ) {
         return messages || [];
       }
 
       const replyIds = [
         ...new Set(
           messages
-            .map(message => message.reply_to_message_id)
+            .map(
+              message =>
+                message.reply_to_message_id
+            )
             .filter(Boolean)
         )
       ];
@@ -93,34 +115,63 @@
         return messages;
       }
 
-      const replyMap = new Map(
-        (data || []).map(message => [
-          message.id,
-          message
-        ])
-      );
+      const replyMap =
+        new Map(
+          (data || []).map(
+            message => [
+              message.id,
+              message
+            ]
+          )
+        );
 
-      return messages.map(message => {
-        if (!message.reply_to_message_id) {
-          return message;
+      return messages.map(
+        message => {
+          if (
+            !message.reply_to_message_id
+          ) {
+            return message;
+          }
+
+          const repliedTo =
+            replyMap.get(
+              message.reply_to_message_id
+            );
+
+          return {
+            ...message,
+            reply_to_content:
+              repliedTo?.deleted_at
+                ? "Message deleted"
+                : repliedTo?.content ||
+                  "Message unavailable"
+          };
         }
-
-        const repliedTo =
-          replyMap.get(message.reply_to_message_id);
-
-        return {
-          ...message,
-          reply_to_content:
-            repliedTo?.deleted_at
-              ? "Message deleted"
-              : repliedTo?.content ||
-                "Message unavailable"
-        };
-      });
+      );
     },
 
-    async load(conversationId) {
-      if (!this.db || !conversationId) {
+    async enrichAttachments(
+      messages
+    ) {
+      if (
+        !window.ZakiMedia ||
+        !Array.isArray(messages)
+      ) {
+        return messages || [];
+      }
+
+      return window.ZakiMedia.enrichMessages(
+        messages
+      );
+    },
+
+    async load(
+      conversationId
+    ) {
+      if (
+        !this.db ||
+        !conversationId
+      ) {
         return {
           data: [],
           error: new Error(
@@ -143,12 +194,22 @@
             edited_at,
             read_at,
             reply_to_message_id,
-            deleted_at
+            deleted_at,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size
           `)
-          .eq("conversation_id", conversationId)
-          .order("created_at", {
-            ascending: true
-          });
+          .eq(
+            "conversation_id",
+            conversationId
+          )
+          .order(
+            "created_at",
+            {
+              ascending: true
+            }
+          );
 
       if (error) {
         return {
@@ -157,8 +218,15 @@
         };
       }
 
-      const messages =
-        await this.attachReplyPreviews(data || []);
+      let messages =
+        await this.attachReplyPreviews(
+          data || []
+        );
+
+      messages =
+        await this.enrichAttachments(
+          messages
+        );
 
       return {
         data: messages,
@@ -181,10 +249,24 @@
         };
       }
 
+      const text =
+        String(content || "").trim();
+
+      if (!text) {
+        return {
+          data: null,
+          error: new Error(
+            "Message cannot be empty."
+          )
+        };
+      }
+
       const payload = {
-        conversation_id: conversationId,
-        sender_id: senderId,
-        content: content.trim(),
+        conversation_id:
+          conversationId,
+        sender_id:
+          senderId,
+        content: text,
         message_type: "text"
       };
 
@@ -208,7 +290,11 @@
             edited_at,
             read_at,
             reply_to_message_id,
-            deleted_at
+            deleted_at,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size
           `)
           .single();
 
@@ -219,11 +305,120 @@
         };
       }
 
+      const enrichedReplies =
+        await this.attachReplyPreviews([
+          data
+        ]);
+
       const enriched =
-        await this.attachReplyPreviews([data]);
+        await this.enrichAttachments(
+          enrichedReplies
+        );
 
       return {
-        data: enriched[0] || data,
+        data:
+          enriched[0] ||
+          data,
+        error: null
+      };
+    },
+
+    async sendAttachment(
+      conversationId,
+      senderId,
+      attachment,
+      replyToMessageId = null
+    ) {
+      if (!this.db) {
+        return {
+          data: null,
+          error: new Error(
+            "Messages client is not initialized."
+          )
+        };
+      }
+
+      if (!attachment?.path) {
+        return {
+          data: null,
+          error: new Error(
+            "Attachment information is missing."
+          )
+        };
+      }
+
+      const payload = {
+        conversation_id:
+          conversationId,
+        sender_id:
+          senderId,
+        content:
+          attachment.name ||
+          "Attachment",
+        message_type:
+          attachment.message_type ||
+          "file",
+        attachment_path:
+          attachment.path,
+        attachment_name:
+          attachment.name ||
+          "Attachment",
+        attachment_mime_type:
+          attachment.mime_type ||
+          "application/octet-stream",
+        attachment_size:
+          attachment.size || 0
+      };
+
+      if (replyToMessageId) {
+        payload.reply_to_message_id =
+          replyToMessageId;
+      }
+
+      const { data, error } =
+        await this.db
+          .from("messages")
+          .insert(payload)
+          .select(`
+            id,
+            conversation_id,
+            sender_id,
+            content,
+            message_type,
+            created_at,
+            updated_at,
+            edited_at,
+            read_at,
+            reply_to_message_id,
+            deleted_at,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size
+          `)
+          .single();
+
+      if (error) {
+        return {
+          data: null,
+          error
+        };
+      }
+
+      const replies =
+        await this.attachReplyPreviews([
+          data
+        ]);
+
+      const enriched =
+        await this.enrichAttachments(
+          replies
+        );
+
+      return {
+        data:
+          enriched[0] ||
+          data,
         error: null
       };
     },
@@ -242,15 +437,31 @@
         };
       }
 
+      const text =
+        String(content || "").trim();
+
+      if (!text) {
+        return {
+          data: null,
+          error: new Error(
+            "Message cannot be empty."
+          )
+        };
+      }
+
       const { data, error } =
         await this.db
           .from("messages")
           .update({
-            content: content.trim()
+            content: text
           })
           .eq("id", messageId)
           .eq("sender_id", senderId)
           .is("deleted_at", null)
+          .eq(
+            "message_type",
+            "text"
+          )
           .select(`
             id,
             conversation_id,
@@ -262,7 +473,11 @@
             edited_at,
             read_at,
             reply_to_message_id,
-            deleted_at
+            deleted_at,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size
           `)
           .single();
 
@@ -273,11 +488,20 @@
         };
       }
 
+      const replies =
+        await this.attachReplyPreviews([
+          data
+        ]);
+
       const enriched =
-        await this.attachReplyPreviews([data]);
+        await this.enrichAttachments(
+          replies
+        );
 
       return {
-        data: enriched[0] || data,
+        data:
+          enriched[0] ||
+          data,
         error: null
       };
     },
@@ -286,7 +510,11 @@
       conversationId,
       currentUserId
     ) {
-      if (!this.db || !conversationId || !currentUserId) {
+      if (
+        !this.db ||
+        !conversationId ||
+        !currentUserId
+      ) {
         return {
           error: new Error(
             "Messages client is not initialized."
@@ -298,12 +526,25 @@
         await this.db
           .from("messages")
           .update({
-            read_at: new Date().toISOString()
+            read_at:
+              new Date().toISOString()
           })
-          .eq("conversation_id", conversationId)
-          .neq("sender_id", currentUserId)
-          .is("read_at", null)
-          .is("deleted_at", null);
+          .eq(
+            "conversation_id",
+            conversationId
+          )
+          .neq(
+            "sender_id",
+            currentUserId
+          )
+          .is(
+            "read_at",
+            null
+          )
+          .is(
+            "deleted_at",
+            null
+          );
 
       return { error };
     },
@@ -327,11 +568,21 @@
           .update({
             deleted_at:
               new Date().toISOString(),
-            content: "Message deleted"
+            content:
+              "Message deleted"
           })
-          .eq("id", messageId)
-          .eq("sender_id", currentUserId)
-          .is("deleted_at", null)
+          .eq(
+            "id",
+            messageId
+          )
+          .eq(
+            "sender_id",
+            currentUserId
+          )
+          .is(
+            "deleted_at",
+            null
+          )
           .select(`
             id,
             conversation_id,
@@ -343,7 +594,11 @@
             edited_at,
             read_at,
             reply_to_message_id,
-            deleted_at
+            deleted_at,
+            attachment_path,
+            attachment_name,
+            attachment_mime_type,
+            attachment_size
           `)
           .single();
 
@@ -354,17 +609,28 @@
         };
       }
 
+      const replies =
+        await this.attachReplyPreviews([
+          data
+        ]);
+
       const enriched =
-        await this.attachReplyPreviews([data]);
+        await this.enrichAttachments(
+          replies
+        );
 
       return {
-        data: enriched[0] || data,
+        data:
+          enriched[0] ||
+          data,
         error: null
       };
     },
 
     getReplyPreview(message) {
-      if (!message?.reply_to_message_id) {
+      if (
+        !message?.reply_to_message_id
+      ) {
         return "";
       }
 
@@ -374,21 +640,158 @@
       );
     },
 
+    getAttachmentIcon(type) {
+      if (type === "image") return "🖼️";
+      if (type === "video") return "🎥";
+      if (type === "audio") return "🎵";
+      return "📎";
+    },
+
+    formatFileSize(size) {
+      if (!size || size < 1) {
+        return "";
+      }
+
+      const units = [
+        "B",
+        "KB",
+        "MB",
+        "GB"
+      ];
+
+      let value = Number(size);
+      let index = 0;
+
+      while (
+        value >= 1024 &&
+        index < units.length - 1
+      ) {
+        value /= 1024;
+        index++;
+      }
+
+      return `${value < 10 && index > 0
+        ? value.toFixed(1)
+        : Math.round(value)
+      } ${units[index]}`;
+    },
+
+    renderAttachment(
+      message
+    ) {
+      const type =
+        this.getMessageType(
+          message
+        );
+
+      const url =
+        message.attachment_url;
+
+      const name =
+        message.attachment_name ||
+        "Attachment";
+
+      if (!message.attachment_path) {
+        return "";
+      }
+
+      if (!url) {
+        return `
+          <div class="message-attachment attachment-unavailable">
+            <span>${this.escapeText(
+              this.getAttachmentIcon(type)
+            )}</span>
+            <span>
+              ${this.escapeText(name)}
+            </span>
+          </div>
+        `;
+      }
+
+      if (type === "image") {
+        return `
+          <a
+            class="message-attachment attachment-image"
+            href="${this.escapeText(url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="${this.escapeText(url)}"
+              alt="${this.escapeText(name)}"
+              loading="lazy"
+            >
+          </a>
+        `;
+      }
+
+      if (type === "video") {
+        return `
+          <div class="message-attachment attachment-video">
+            <video
+              controls
+              preload="metadata"
+              src="${this.escapeText(url)}"
+            ></video>
+          </div>
+        `;
+      }
+
+      if (type === "audio") {
+        return `
+          <div class="message-attachment attachment-audio">
+            <div class="attachment-file-name">
+              🎵 ${this.escapeText(name)}
+            </div>
+            <audio
+              controls
+              preload="metadata"
+              src="${this.escapeText(url)}"
+            ></audio>
+          </div>
+        `;
+      }
+
+      return `
+        <a
+          class="message-attachment attachment-file"
+          href="${this.escapeText(url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="attachment-file-icon">📎</span>
+          <span class="attachment-file-info">
+            <strong>${this.escapeText(name)}</strong>
+            <small>${this.escapeText(
+              this.formatFileSize(
+                message.attachment_size
+              )
+            )}</small>
+          </span>
+        </a>
+      `;
+    },
+
     renderMessage(
       message,
       currentUserId
     ) {
       const mine =
-        message.sender_id === currentUserId;
+        message.sender_id ===
+        currentUserId;
 
       const deleted =
         Boolean(message.deleted_at);
 
       const messageType =
-        this.getMessageType(message);
+        this.getMessageType(
+          message
+        );
 
       const bubble =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       bubble.className =
         `message-bubble ${
@@ -407,7 +810,9 @@
         message.id;
 
       const replyPreview =
-        this.getReplyPreview(message);
+        this.getReplyPreview(
+          message
+        );
 
       let html = "";
 
@@ -422,22 +827,42 @@
         `;
       }
 
+      if (
+        !deleted &&
+        message.attachment_path
+      ) {
+        html += this.renderAttachment(
+          message
+        );
+      }
+
       const displayedContent =
         deleted
           ? "Message deleted"
-          : message.content || "";
+          : message.attachment_path
+            ? (
+                message.content &&
+                message.content !==
+                  message.attachment_name
+                  ? message.content
+                  : ""
+              )
+            : message.content || "";
 
-      html += `
-        <div class="message-text">
-          ${this.escapeText(
-            displayedContent
-          )}
-        </div>
-      `;
+      if (displayedContent) {
+        html += `
+          <div class="message-text">
+            ${this.escapeText(
+              displayedContent
+            )}
+          </div>
+        `;
+      }
 
       const edited =
         message.edited_at &&
-        !deleted
+        !deleted &&
+        messageType === "text"
           ? `<span class="message-edited">edited</span>`
           : "";
 
@@ -477,7 +902,8 @@
             >↩</button>
 
             ${
-              mine
+              mine &&
+              messageType === "text"
                 ? `
                   <button
                     type="button"
@@ -488,7 +914,13 @@
                     aria-label="Edit message"
                     title="Edit"
                   >✎</button>
+                `
+                : ""
+            }
 
+            ${
+              mine
+                ? `
                   <button
                     type="button"
                     data-message-action="delete"
@@ -505,7 +937,8 @@
         `;
       }
 
-      bubble.innerHTML = html;
+      bubble.innerHTML =
+        html;
 
       return bubble;
     },
@@ -514,12 +947,13 @@
       messages,
       currentUserId
     ) {
-      return (messages || []).map(
-        message =>
-          this.renderMessage(
-            message,
-            currentUserId
-          )
+      return (
+        messages || []
+      ).map(message =>
+        this.renderMessage(
+          message,
+          currentUserId
+        )
       );
     },
 
@@ -532,14 +966,13 @@
 
       container.innerHTML = "";
 
-      const rendered =
-        this.render(
-          messages,
-          currentUserId
+      this.render(
+        messages,
+        currentUserId
+      ).forEach(element => {
+        container.appendChild(
+          element
         );
-
-      rendered.forEach(element => {
-        container.appendChild(element);
       });
     },
 
@@ -548,7 +981,10 @@
       message,
       currentUserId
     ) {
-      if (!container || !message?.id) {
+      if (
+        !container ||
+        !message?.id
+      ) {
         return false;
       }
 
@@ -562,13 +998,12 @@
         return false;
       }
 
-      const element =
+      container.appendChild(
         this.renderMessage(
           message,
           currentUserId
-        );
-
-      container.appendChild(element);
+        )
+      );
 
       return true;
     },
@@ -579,31 +1014,29 @@
       currentUserId
     ) {
       if (!container || !message?.id) {
-        return;
+        return false;
       }
 
-      const existing =
-        container.querySelector(
-          `[data-message-id="${CSS.escape(
-            message.id
-          )}"]`
-        );
+      const existing = container.querySelector(
+        `[data-message-id="${CSS.escape(message.id)}"]`
+      );
 
-      const replacement =
-        this.renderMessage(
+      if (!existing) {
+        return this.appendIfMissing(
+          container,
           message,
           currentUserId
         );
-
-      if (existing) {
-        existing.replaceWith(
-          replacement
-        );
-      } else {
-        container.appendChild(
-          replacement
-        );
       }
+
+      const replacement = this.renderMessage(
+        message,
+        currentUserId
+      );
+
+      existing.replaceWith(replacement);
+
+      return true;
     },
 
     removeMessage(
@@ -611,20 +1044,22 @@
       messageId
     ) {
       if (!container || !messageId) {
-        return;
+        return false;
       }
 
-      const element =
-        container.querySelector(
-          `[data-message-id="${CSS.escape(
-            messageId
-          )}"]`
-        );
+      const existing = container.querySelector(
+        `[data-message-id="${CSS.escape(messageId)}"]`
+      );
 
-      element?.remove();
+      if (!existing) {
+        return false;
+      }
+
+      existing.remove();
+
+      return true;
     }
   };
 
-  window.ZakiMessages =
-    ZakiMessages;
+  window.ZakiMessages = ZakiMessages;
 })();
