@@ -740,3 +740,33 @@
     flex:0 0 36px;
   }
 }
+
+/* Typing indicator */
+
+.chat-user-status.is-typing{
+  color:var(--primary);
+  font-weight:600;
+}
+
+.chat-user-status.is-typing::after{
+  content:"";
+  display:inline-block;
+  width:5px;
+  height:5px;
+  margin-left:4px;
+  vertical-align:middle;
+  border-radius:50%;
+  background:currentColor;
+  animation:typingPulse 1s ease-in-out infinite;
+}
+
+@keyframes typingPulse{
+  0%,100%{
+    opacity:.3;
+    transform:scale(.8);
+  }
+  50%{
+    opacity:1;
+    transform:scale(1);
+  }
+}

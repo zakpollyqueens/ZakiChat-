@@ -108,6 +108,24 @@ document.addEventListener(
         "#send-message-button"
       );
 
+    if (messageInput) {
+      messageInput.addEventListener(
+        "input",
+        function () {
+          if (
+            window.ZakiTyping &&
+            currentUser &&
+            conversationId
+          ) {
+            window.ZakiTyping.handleInput(
+              db,
+              messageInput.value
+            );
+          }
+        }
+      );
+    }
+
     const params =
       new URLSearchParams(
         window.location.search
@@ -792,6 +810,10 @@ document.addEventListener(
 
       const replyId =
         replyingToMessageId;
+
+      if (window.ZakiTyping) {
+        window.ZakiTyping.stopTyping();
+      }
 
       if (messageInput) {
         messageInput.disabled =
