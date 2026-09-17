@@ -56,7 +56,6 @@
           name="username"
           type="text"
           autocomplete="username"
-          placeholder="Choose a username"
           maxlength="30"
           minlength="3"
           pattern="[A-Za-z0-9_.]+"
@@ -95,7 +94,6 @@
           name="displayName"
           type="text"
           autocomplete="name"
-          placeholder="Your full name"
           maxlength="80"
           required
         >
@@ -106,7 +104,6 @@
           name="phone"
           type="tel"
           autocomplete="tel"
-          placeholder="+256 7XX XXX XXX"
           maxlength="25"
           required
         >
@@ -117,7 +114,6 @@
           name="location"
           type="text"
           autocomplete="address-level2"
-          placeholder="City / town / country"
           maxlength="120"
           required
         >
@@ -152,7 +148,6 @@
           name="email"
           type="email"
           autocomplete="email"
-          placeholder="you@example.com"
           required
         >
 
@@ -197,7 +192,6 @@
             name="password"
             type="password"
             autocomplete="new-password"
-            placeholder="Create a password"
             minlength="8"
             required
           >
@@ -210,7 +204,7 @@
         </div>
 
         <small class="auth-help">
-          Use at least 8 characters.
+          Create a secure password with at least 8 characters.
         </small>
 
         <label for="confirmPassword">Confirm password</label>
@@ -220,7 +214,6 @@
             name="confirmPassword"
             type="password"
             autocomplete="new-password"
-            placeholder="Repeat your password"
             minlength="8"
             required
           >
@@ -231,6 +224,10 @@
             aria-label="Show password"
           >Show</button>
         </div>
+
+        <small class="auth-help">
+          Enter the same password again to confirm it.
+        </small>
 
         <label class="terms-check">
           <input type="checkbox" id="terms" required>

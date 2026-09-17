@@ -555,3 +555,65 @@
   line-height: 1.55;
   color: rgba(255,255,255,.68);
 }
+
+/* =========================================================
+   ZakiChat — Clean Auth Field Guidance
+   ========================================================= */
+
+.auth-form > label{
+  gap:8px;
+  margin-top:2px;
+}
+
+.auth-form > .auth-help{
+  margin-top:-3px;
+  margin-bottom:2px;
+  padding-left:3px;
+  color:rgba(160,181,201,.62);
+  font-size:.72rem;
+  line-height:1.45;
+  transition:
+    color .25s ease,
+    transform .25s ease,
+    opacity .25s ease;
+}
+
+.auth-form > input:focus + .auth-help,
+.auth-form > .password-field:focus-within + .auth-help{
+  color:rgba(139,220,255,.82);
+  transform:translateY(-1px);
+}
+
+.auth-form input:not([type="checkbox"]){
+  min-height:50px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.025)
+    );
+}
+
+.auth-form input:not([type="checkbox"]):focus{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(39,211,162,.07),
+      rgba(24,174,240,.045)
+    );
+}
+
+.auth-form input::placeholder{
+  color:transparent;
+  opacity:0;
+}
+
+.auth-form > label{
+  color:#e5eef7;
+  letter-spacing:.01em;
+  transition:color .25s ease;
+}
+
+.auth-form > label:focus-within{
+  color:#8bdcff;
+}
