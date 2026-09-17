@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <title>People | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/search.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+</head>
+
+<body class="people-page">
+
+  <main class="people-shell">
+
+    <header class="people-topbar">
+      <a
+        class="people-back"
+        href="chats.html"
+        aria-label="Back to chats"
+      >
+        ←
+      </a>
+
+      <div>
+        <span class="eyebrow">ZAKICHAT</span>
+        <h1>People</h1>
+        <p>Find people on ZakiChat.</p>
+      </div>
+    </header>
+
+    <section class="people-search-card">
+
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+
+        <input
+          type="search"
+          id="peopleSearch"
+          autocomplete="off"
+          spellcheck="false"
+          maxlength="80"
+          placeholder="Search username, name or phone..."
+          aria-label="Search people"
+        >
+
+        <button
+          type="button"
+          id="clearSearch"
+          class="clear-search"
+          aria-label="Clear search"
+          hidden
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="search-hints">
+        <span>@username</span>
+        <span>Full name</span>
+        <span>Phone number</span>
+      </div>
+
+    </section>
+
+    <section class="people-results-section">
+
+      <div class="results-heading">
+        <div>
+          <span class="section-label">DISCOVER</span>
+          <h2 id="resultsTitle">People</h2>
+        </div>
+
+        <span
+          class="result-count"
+          id="resultCount"
+          hidden
+        >
+          0
+        </span>
+      </div>
+
+      <div
+        class="people-status"
+        id="peopleStatus"
+        aria-live="polite"
+      >
+        <div class="status-icon">⌕</div>
+        <h3>Find people on ZakiChat</h3>
+        <p>
+          Search using a username, name or phone number.
+        </p>
+      </div>
+
+      <div
+        class="people-results"
+        id="peopleResults"
+        aria-live="polite"
+      ></div>
+
+    </section>
+
+    <section class="people-info-card">
+      <div class="info-icon">🔒</div>
+
+      <div>
+        <h3>Search privacy</h3>
+        <p>
+          People search uses information users have placed
+          on their ZakiChat profiles. Your account password
+          and private authentication data are never exposed.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite"
+    hidden
+  ></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/search.js"></script>
+  <script src="../static/js/presence.js"></script>
+
+</body>
+</html>
