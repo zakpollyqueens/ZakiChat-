@@ -4,13 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
+<meta name="description" content="Manage your ZakiChat contacts.">
 <title>Contacts | ZakiChat</title>
+
 <link rel="stylesheet" href="../static/css/main.css">
 <link rel="stylesheet" href="../static/css/contacts.css">
-
 </head>
 
 <body>
+
 <main class="contacts-page">
   <section class="contacts-shell">
 
@@ -19,97 +21,366 @@
         <img src="../static/images/icon.jpg" alt="ZakiChat">
         <div>
           <h1>Contacts</h1>
-          <p>Find and connect with people on ZakiChat.</p>
+          <p>Find people and connect with them on ZakiChat.</p>
         </div>
       </div>
 
-      <button class="add-contact-btn" id="openAddContact" type="button">
+      <button
+        class="add-contact-btn"
+        id="openAddContact"
+        type="button"
+      >
         <span>＋</span>
         <span class="label">Add Contact</span>
       </button>
     </header>
 
-    <div class="contact-search">
-      <span>⌕</span>
-      <input id="contactSearch" type="search" placeholder="Search contacts, phone or email">
-    </div>
+    <section class="contacts-tools">
 
-    <section id="contactList">
-      <div class="contact-card">
-        <div class="contact-avatar">ZM</div>
-        <div class="contact-info">
-          <strong>Zakmolanitech Solutions</strong>
-          <span>+256 742 956 448</span>
-        </div>
-        <div class="contact-actions">
-          <button class="contact-action primary" type="button">Chat</button>
-        </div>
+      <div class="contact-search">
+        <span aria-hidden="true">⌕</span>
+        <input
+          id="contactSearch"
+          type="search"
+          autocomplete="off"
+          placeholder="Search your contacts..."
+          aria-label="Search contacts"
+        >
+        <button
+          id="clearSearch"
+          class="clear-search"
+          type="button"
+          aria-label="Clear search"
+          hidden
+        >
+          ×
+        </button>
       </div>
 
-      <div class="empty-contacts" id="emptyContacts" style="display:none">
-        <strong>No contacts found</strong>
-        Try another name, phone number or email.
+      <div class="contact-tools-row">
+
+        <button
+          class="tool-btn"
+          id="findPeopleBtn"
+          type="button"
+        >
+          <span>🔎</span>
+          <span>Find people</span>
+        </button>
+
+        <button
+          class="tool-btn"
+          id="importContactsBtn"
+          type="button"
+        >
+          <span>📱</span>
+          <span>Phone contacts</span>
+        </button>
+
+        <button
+          class="tool-btn"
+          id="inviteBtn"
+          type="button"
+        >
+          <span>📤</span>
+          <span>Invite</span>
+        </button>
+
       </div>
+
+    </section>
+
+    <section class="section-heading">
+      <div>
+        <h2>My contacts</h2>
+        <span id="contactCount">0 contacts</span>
+      </div>
+    </section>
+
+    <section id="contactList" class="contact-list">
+
+      <div class="contacts-loading" id="contactsLoading">
+        <div class="loading-spinner"></div>
+        <span>Loading contacts...</span>
+      </div>
+
+    </section>
+
+    <section
+      class="empty-contacts"
+      id="emptyContacts"
+      hidden
+    >
+      <div class="empty-icon">👥</div>
+      <strong id="emptyTitle">No contacts yet</strong>
+      <span id="emptyText">
+        Add someone using their phone number or username.
+      </span>
+
+      <button
+        class="empty-add-btn"
+        id="emptyAddBtn"
+        type="button"
+      >
+        ＋ Add your first contact
+      </button>
     </section>
 
   </section>
 </main>
 
-<div class="modal-backdrop" id="contactModal" aria-hidden="true">
-  <section class="add-modal" role="dialog" aria-modal="true" aria-labelledby="addContactTitle">
-    <button class="modal-close" id="closeAddContact" type="button" aria-label="Close">×</button>
 
-    <h2 id="addContactTitle">Add a new contact</h2>
-    <p>Save someone using their international phone number or their ZakiChat email.</p>
+<!-- Add contact modal -->
+<div
+  class="modal-backdrop"
+  id="contactModal"
+  aria-hidden="true"
+>
+  <section
+    class="add-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="addContactTitle"
+  >
+
+    <button
+      class="modal-close"
+      id="closeAddContact"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <div class="modal-icon">👤＋</div>
+
+    <h2 id="addContactTitle">Add a contact</h2>
+
+    <p>
+      Find a ZakiChat user using their international phone number
+      or username.
+    </p>
 
     <form class="contact-form" id="addContactForm">
 
       <label class="form-label">
-        Country
+        Phone number
+
         <div class="country-row">
-          <select class="country-select" id="countryCode">
-            <option value="+256">🇺🇬 Uganda (+256)</option>
-            <option value="+254">🇰🇪 Kenya (+254)</option>
-            <option value="+255">🇹🇿 Tanzania (+255)</option>
-            <option value="+250">🇷🇼 Rwanda (+250)</option>
-            <option value="+1">🇺🇸 United States (+1)</option>
-            <option value="+44">🇬🇧 United Kingdom (+44)</option>
-            <option value="+27">🇿🇦 South Africa (+27)</option>
-            <option value="+91">🇮🇳 India (+91)</option>
-            <option value="+86">🇨🇳 China (+86)</option>
-            <option value="+971">🇦🇪 UAE (+971)</option>
+          <select
+            class="country-select"
+            id="countryCode"
+            aria-label="Country code"
+          >
+            <option value="+256">🇺🇬 +256</option>
+            <option value="+254">🇰🇪 +254</option>
+            <option value="+255">🇹🇿 +255</option>
+            <option value="+250">🇷🇼 +250</option>
+            <option value="+27">🇿🇦 +27</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+86">🇨🇳 +86</option>
+            <option value="+971">🇦🇪 +971</option>
           </select>
 
-          <input class="contact-input" id="phoneNumber" type="tel"
-                 inputmode="tel" autocomplete="tel"
-                 placeholder="Phone number">
+          <input
+            class="contact-input"
+            id="phoneNumber"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            placeholder="Phone number"
+          >
         </div>
       </label>
 
-      <div class="or-divider"><span>OR</span></div>
+      <div class="or-divider">
+        <span>OR</span>
+      </div>
 
       <label class="form-label">
-        ZakiChat email
-        <input class="contact-input" id="contactEmail" type="email"
-               autocomplete="email" placeholder="friend@example.com">
+        ZakiChat username
+
+        <div class="username-input">
+          <span>@</span>
+          <input
+            class="contact-input"
+            id="contactUsername"
+            type="text"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+            placeholder="username"
+          >
+        </div>
       </label>
 
       <label class="form-label">
         Contact name
-        <input class="contact-input" id="contactName" type="text"
-               autocomplete="name" placeholder="Friend's name">
+        <span class="optional-label">Optional</span>
+
+        <input
+          class="contact-input"
+          id="contactName"
+          type="text"
+          autocomplete="name"
+          placeholder="How you want to save them"
+        >
       </label>
 
-      <div class="form-message" id="formMessage"></div>
+      <div
+        class="form-message"
+        id="formMessage"
+        role="status"
+      ></div>
 
-      <button class="save-contact" type="submit">＋ Save Contact</button>
+      <div class="modal-actions">
+
+        <button
+          class="secondary-modal-btn"
+          id="modalInviteBtn"
+          type="button"
+        >
+          Invite
+        </button>
+
+        <button
+          class="save-contact"
+          id="saveContactBtn"
+          type="submit"
+        >
+          Find & Save
+        </button>
+
+      </div>
+
     </form>
+  </section>
+</div>
+
+
+<!-- Find people modal -->
+<div
+  class="modal-backdrop"
+  id="peopleModal"
+  aria-hidden="true"
+>
+  <section
+    class="add-modal people-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="peopleTitle"
+  >
+
+    <button
+      class="modal-close"
+      id="closePeopleModal"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <div class="modal-icon">🔎</div>
+
+    <h2 id="peopleTitle">Find people</h2>
+
+    <p>
+      Search ZakiChat using a username, name, or phone number.
+    </p>
+
+    <div class="people-search">
+      <span>⌕</span>
+      <input
+        id="peopleSearchInput"
+        type="search"
+        autocomplete="off"
+        placeholder="Search username, name or phone..."
+      >
+    </div>
+
+    <div
+      id="peopleResults"
+      class="people-results"
+    >
+      <div class="people-hint">
+        Start typing to find ZakiChat users.
+      </div>
+    </div>
+
+  </section>
+</div>
+
+
+<!-- Invite modal -->
+<div
+  class="modal-backdrop"
+  id="inviteModal"
+  aria-hidden="true"
+>
+  <section
+    class="add-modal invite-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="inviteTitle"
+  >
+
+    <button
+      class="modal-close"
+      id="closeInviteModal"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <div class="modal-icon">📤</div>
+
+    <h2 id="inviteTitle">Invite to ZakiChat</h2>
+
+    <p>
+      Share ZakiChat with someone who is not using it yet.
+    </p>
+
+    <div class="invite-preview" id="invitePreview">
+      You're invited to join ZakiChat.
+    </div>
+
+    <div class="invite-actions">
+
+      <button
+        class="invite-action primary"
+        id="shareInviteBtn"
+        type="button"
+      >
+        📤 Share
+      </button>
+
+      <button
+        class="invite-action"
+        id="copyInviteBtn"
+        type="button"
+      >
+        📋 Copy link
+      </button>
+
+    </div>
+
+    <div
+      class="form-message"
+      id="inviteMessage"
+      role="status"
+    ></div>
+
   </section>
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../static/js/config.js"></script>
+<script src="../static/js/auth-guard.js"></script>
 <script src="../static/js/contacts.js"></script>
+
 </body>
 </html>
