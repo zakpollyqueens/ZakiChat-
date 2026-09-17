@@ -225,6 +225,21 @@
             }
           }
         )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "notifications",
+            filter:
+              `user_id=eq.${userId}`
+          },
+          payload => {
+            if (typeof callback === "function") {
+              callback(payload.new, payload);
+            }
+          }
+        )
         .subscribe(status => {
           console.log(
             "ZakiChat notification realtime:",
