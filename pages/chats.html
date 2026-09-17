@@ -171,7 +171,37 @@
 <script src="../static/js/auth-guard.js"></script>
 <script src="../static/js/conversations.js"></script>
 <script src="../static/js/realtime.js"></script>
+<script src="../static/js/notification-badge.js"></script>
 <script src="../static/js/conversation-list.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!window.ZakiNotificationBadge || !window.ZakiChatConfig) return;
+
+  const client =
+    window.ZakiChatAuth?.client ||
+    window.supabase.createClient(
+      window.ZakiChatConfig.supabaseUrl,
+      window.ZakiChatConfig.supabaseKey,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storageKey: "zakichat-auth"
+        }
+      }
+    );
+
+  const { data } = await client.auth.getSession();
+
+  if (data?.session?.user?.id) {
+    window.ZakiNotificationBadge.init(
+      window.ZakiChatConfig,
+      data.session.user.id
+    );
+  }
+});
+</script>
 <script src="../static/js/media.js"></script>
 <script src="../static/js/messages.js"></script>
 <script src="../static/js/reactions.js"></script>
