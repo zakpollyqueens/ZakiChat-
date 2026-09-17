@@ -8,6 +8,7 @@ document.addEventListener(
       !window.ZakiChatConfig ||
       !window.ZakiMessages ||
       !window.ZakiRealtime ||
+      !window.ZakiReactions ||
       !window.ZakiMedia
     ) {
       console.error(
@@ -45,6 +46,17 @@ document.addEventListener(
       document.querySelector(
         ".message-composer"
       );
+
+    if (
+      window.ZakiReactions &&
+      messagesPanel
+    ) {
+      window.ZakiReactions.init(
+        db,
+        null,
+        messagesPanel
+      );
+    }
 
     const messageInput =
       composer?.querySelector(
@@ -1211,6 +1223,18 @@ document.addEventListener(
 
       currentUser =
         user || null;
+
+      if (
+        currentUser &&
+        window.ZakiReactions &&
+        messagesPanel
+      ) {
+        window.ZakiReactions.init(
+          db,
+          currentUser.id,
+          messagesPanel
+        );
+      }
 
       if (!currentUser) {
         showStatus(
