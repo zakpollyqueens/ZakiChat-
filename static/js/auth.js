@@ -575,7 +575,7 @@
         await supabaseClient.auth.verifyOtp({
           email: signupState.email,
           token: code,
-          type: "signup"
+          type: "email"
         });
 
       if (error) {
