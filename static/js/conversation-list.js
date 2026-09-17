@@ -1,127 +1,199 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  "use strict";
+
   if (!window.supabase || !window.ZakiChatConfig) {
-    console.error("ZakiChat: Supabase configuration unavailable.");
+    console.error(
+      "ZakiChat: Supabase configuration unavailable."
+    );
     return;
   }
 
-  const list = document.querySelector("#conversation-list");
+  const list =
+    document.querySelector("#conversation-list");
 
   if (!list) {
-    console.error("ZakiChat: conversation list not found.");
+    console.error(
+      "ZakiChat: conversation list not found."
+    );
     return;
   }
 
-  const db = window.supabase.createClient(
-    window.ZakiChatConfig.supabaseUrl,
-    window.ZakiChatConfig.supabaseKey
-  );
+  const db =
+    window.supabase.createClient(
+      window.ZakiChatConfig.supabaseUrl,
+      window.ZakiChatConfig.supabaseKey
+    );
 
-  window.ZakiRealtime.init(
-    window.ZakiChatConfig
-  );
+  if (window.ZakiRealtime) {
+    window.ZakiRealtime.init(
+      window.ZakiChatConfig
+    );
+  }
 
   let currentUser = null;
   let refreshTimer = null;
   let refreshing = false;
+  let refreshAgain = false;
+  let destroyed = false;
 
   function initials(conversation) {
     const name =
-      window.ZakiConversations.getDisplayName(conversation);
+      window.ZakiConversations
+        .getDisplayName(conversation);
 
-    return name
-      .split(/\s+/)
-      .slice(0, 2)
-      .map(word => word.charAt(0).toUpperCase())
-      .join("") || "Z";
+    return (
+      name
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(word =>
+          word.charAt(0).toUpperCase()
+        )
+        .join("") || "Z"
+    );
   }
 
   function renderAvatar(conversation) {
-    const avatar = document.createElement("div");
+    const avatar =
+      document.createElement("div");
 
-    avatar.className = "conversation-avatar";
+    avatar.className =
+      "conversation-avatar";
 
     const url =
-      window.ZakiConversations.getAvatar(conversation);
+      window.ZakiConversations
+        .getAvatar(conversation);
 
     if (url) {
-      avatar.style.backgroundImage = `url("${url}")`;
-      avatar.style.backgroundSize = "cover";
-      avatar.style.backgroundPosition = "center";
+      avatar.style.backgroundImage =
+        `url("${url}")`;
+      avatar.style.backgroundSize =
+        "cover";
+      avatar.style.backgroundPosition =
+        "center";
+      avatar.setAttribute(
+        "aria-hidden",
+        "true"
+      );
     } else {
-      avatar.textContent = initials(conversation);
+      avatar.textContent =
+        initials(conversation);
     }
 
-    if (conversation.type === "group") {
-      avatar.classList.add("group-avatar");
+    if (
+      conversation.type === "group"
+    ) {
+      avatar.classList.add(
+        "group-avatar"
+      );
     }
 
     return avatar;
   }
 
-  function renderConversation(conversation) {
-    const link = document.createElement("a");
+  function renderConversation(
+    conversation
+  ) {
+    const link =
+      document.createElement("a");
 
-    link.href =
+    const destination =
       conversation.type === "group"
-        ? `group.html?id=${encodeURIComponent(conversation.id)}`
+        ? `group.html?id=${encodeURIComponent(
+            conversation.id
+          )}`
         : `chats.html?user=${encodeURIComponent(
             conversation.profile?.id || ""
           )}`;
 
+    link.href = destination;
     link.className = "conversation";
 
-    if (conversation.profile?.is_online) {
+    if (
+      conversation.profile?.is_online
+    ) {
       link.dataset.online = "true";
     }
 
-    const avatar = renderAvatar(conversation);
+    if (
+      window.ZakiConversations
+        .selectedConversationId ===
+      conversation.id
+    ) {
+      link.classList.add("active");
+    }
 
-    const info = document.createElement("div");
-    info.className = "conversation-info";
+    const avatar =
+      renderAvatar(conversation);
 
-    const firstLine = document.createElement("div");
-    firstLine.className = "conversation-line";
+    const info =
+      document.createElement("div");
 
-    const name = document.createElement("strong");
+    info.className =
+      "conversation-info";
+
+    const firstLine =
+      document.createElement("div");
+
+    firstLine.className =
+      "conversation-line";
+
+    const name =
+      document.createElement("strong");
 
     name.textContent =
-      window.ZakiConversations.getDisplayName(
-        conversation
-      );
+      window.ZakiConversations
+        .getDisplayName(
+          conversation
+        );
 
-    const time = document.createElement("span");
+    const time =
+      document.createElement("time");
 
     time.textContent =
-      window.ZakiConversations.getTime(
-        conversation
-      );
+      window.ZakiConversations
+        .getTime(conversation);
 
     firstLine.appendChild(name);
     firstLine.appendChild(time);
 
-    const secondLine = document.createElement("div");
-    secondLine.className = "conversation-line";
+    const secondLine =
+      document.createElement("div");
 
-    const preview = document.createElement("span");
+    secondLine.className =
+      "conversation-line";
 
-    preview.className = "conversation-preview";
+    const preview =
+      document.createElement("span");
+
+    preview.className =
+      "conversation-preview";
 
     preview.textContent =
-      window.ZakiConversations.getPreview(
-        conversation
-      );
+      window.ZakiConversations
+        .getPreview(conversation);
 
     secondLine.appendChild(preview);
 
-    if (conversation.unreadCount > 0) {
-      const badge = document.createElement("span");
+    if (
+      conversation.unreadCount > 0
+    ) {
+      const badge =
+        document.createElement("span");
 
-      badge.className = "unread-badge";
+      badge.className =
+        "unread-badge";
 
       badge.textContent =
         conversation.unreadCount > 99
           ? "99+"
-          : String(conversation.unreadCount);
+          : String(
+              conversation.unreadCount
+            );
+
+      badge.setAttribute(
+        "aria-label",
+        `${conversation.unreadCount} unread messages`
+      );
 
       secondLine.appendChild(badge);
     }
@@ -132,11 +204,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     link.appendChild(avatar);
     link.appendChild(info);
 
-    link.addEventListener("click", () => {
-      window.ZakiConversations.select(
-        conversation.id
-      );
-    });
+    link.addEventListener(
+      "click",
+      () => {
+        window.ZakiConversations.select(
+          conversation.id
+        );
+      }
+    );
 
     return link;
   }
@@ -145,24 +220,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     list.innerHTML = "";
 
     if (!conversations.length) {
-      const empty = document.createElement("div");
+      const empty =
+        document.createElement("div");
 
-      empty.className = "conversation-empty";
-      empty.textContent = "No conversations yet.";
+      empty.className =
+        "conversation-empty";
+
+      empty.textContent =
+        "No conversations yet.";
 
       list.appendChild(empty);
+
       return;
     }
 
-    conversations.forEach(conversation => {
-      list.appendChild(
-        renderConversation(conversation)
-      );
-    });
+    conversations.forEach(
+      conversation => {
+        list.appendChild(
+          renderConversation(
+            conversation
+          )
+        );
+      }
+    );
   }
 
   async function refresh() {
-    if (!currentUser || refreshing) {
+    if (
+      destroyed ||
+      !currentUser
+    ) {
+      return;
+    }
+
+    if (refreshing) {
+      refreshAgain = true;
       return;
     }
 
@@ -172,7 +264,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const {
         data,
         error
-      } = await window.ZakiConversations.load();
+      } =
+        await window.ZakiConversations
+          .load();
 
       if (error) {
         console.error(
@@ -182,7 +276,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      render(data || []);
+      if (!destroyed) {
+        render(data || []);
+      }
     } catch (error) {
       console.error(
         "ZakiChat conversation refresh failed:",
@@ -190,44 +286,80 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     } finally {
       refreshing = false;
+
+      if (
+        refreshAgain &&
+        !destroyed
+      ) {
+        refreshAgain = false;
+        scheduleRefresh();
+      }
     }
   }
 
   function scheduleRefresh() {
-    clearTimeout(refreshTimer);
-
-    refreshTimer = setTimeout(() => {
-      refresh();
-    }, 250);
-  }
-
-  function subscribeToRealtime() {
-    if (!currentUser || !window.ZakiRealtime) {
+    if (destroyed) {
       return;
     }
 
+    clearTimeout(refreshTimer);
+
+    refreshTimer =
+      setTimeout(() => {
+        refreshTimer = null;
+        refresh();
+      }, 250);
+  }
+
+  function subscribeToRealtime() {
+    if (
+      !currentUser ||
+      !window.ZakiRealtime
+    ) {
+      return;
+    }
+
+    /*
+     * Message changes affect:
+     * - latest message
+     * - preview
+     * - time
+     * - unread count
+     */
     window.ZakiRealtime.subscribeToAllMessages(
       () => {
         scheduleRefresh();
       }
     );
 
+    /*
+     * Membership changes affect which
+     * conversations belong to this user.
+     */
     window.ZakiRealtime.subscribe(
       "conversation-list-members",
       "conversation_members",
       `user_id=eq.${currentUser.id}`,
       () => {
         scheduleRefresh();
-      }
+      },
+      "*"
     );
 
+    /*
+     * Conversation metadata changes affect:
+     * - title
+     * - avatar
+     * - updated_at
+     */
     window.ZakiRealtime.subscribe(
       "conversation-list-conversations",
       "conversations",
-      "*",
+      null,
       () => {
         scheduleRefresh();
-      }
+      },
+      "*"
     );
   }
 
@@ -236,20 +368,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       data: {
         user
       }
-    } = await db.auth.getUser();
+    } =
+      await db.auth.getUser();
 
-    currentUser = user || null;
+    currentUser =
+      user || null;
 
     if (!currentUser) {
       list.innerHTML = "";
 
-      const notice = document.createElement("div");
+      const notice =
+        document.createElement("div");
 
-      notice.className = "conversation-empty";
+      notice.className =
+        "conversation-empty";
+
       notice.textContent =
         "Please sign in to view your conversations.";
 
       list.appendChild(notice);
+
       return;
     }
 
@@ -261,7 +399,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const {
       data,
       error
-    } = await window.ZakiConversations.load();
+    } =
+      await window.ZakiConversations
+        .load();
 
     if (error) {
       console.error(
@@ -271,13 +411,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       list.innerHTML = "";
 
-      const notice = document.createElement("div");
+      const notice =
+        document.createElement("div");
 
-      notice.className = "conversation-empty";
+      notice.className =
+        "conversation-empty";
+
       notice.textContent =
         "Unable to load conversations.";
 
       list.appendChild(notice);
+
       return;
     }
 
@@ -286,10 +430,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     subscribeToRealtime();
   }
 
-  await load();
+  function cleanup() {
+    if (destroyed) {
+      return;
+    }
 
-  window.addEventListener("beforeunload", () => {
+    destroyed = true;
+
     clearTimeout(refreshTimer);
+
+    refreshTimer = null;
+    refreshAgain = false;
 
     if (window.ZakiRealtime) {
       window.ZakiRealtime.unsubscribe(
@@ -304,5 +455,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         "conversation-list-conversations"
       );
     }
-  });
+  }
+
+  await load();
+
+  window.addEventListener(
+    "beforeunload",
+    cleanup
+  );
 });

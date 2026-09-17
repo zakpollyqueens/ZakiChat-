@@ -86,12 +86,17 @@
               this.currentUser.id
           );
 
-        let profile =
+        const profile =
           otherMember?.profiles || null;
 
         let latestMessage = null;
         let unreadCount = 0;
 
+        /*
+         * Only non-deleted messages are used for:
+         * - latest message preview
+         * - unread count
+         */
         const latestResult =
           await this.db
             .from("messages")
@@ -101,12 +106,16 @@
               content,
               message_type,
               created_at,
-              read_at
+              read_at,
+              edited_at,
+              reply_to_message_id,
+              deleted_at
             `)
             .eq(
               "conversation_id",
               conversation.id
             )
+            .is("deleted_at", null)
             .order("created_at", {
               ascending: false
             })
@@ -132,7 +141,8 @@
               "sender_id",
               this.currentUser.id
             )
-            .is("read_at", null);
+            .is("read_at", null)
+            .is("deleted_at", null);
 
         if (!unreadResult.error) {
           unreadCount =
@@ -178,9 +188,7 @@
         return "Conversation";
       }
 
-      if (
-        conversation.type === "group"
-      ) {
+      if (conversation.type === "group") {
         return (
           conversation.title ||
           "Group"
@@ -199,9 +207,7 @@
         return "";
       }
 
-      if (
-        conversation.type === "group"
-      ) {
+      if (conversation.type === "group") {
         return (
           conversation.avatar_url || ""
         );
@@ -246,7 +252,9 @@
         conversation?.updated_at ||
         conversation?.created_at;
 
-      if (!value) return "";
+      if (!value) {
+        return "";
+      }
 
       const date =
         new Date(value);
@@ -291,7 +299,9 @@
     },
 
     findByUserId(userId) {
-      if (!userId) return null;
+      if (!userId) {
+        return null;
+      }
 
       return (
         this.conversations.find(
