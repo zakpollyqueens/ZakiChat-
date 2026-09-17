@@ -1,0 +1,152 @@
+.settings-page {
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+
+.settings-shell {
+  width: min(760px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 40px;
+}
+
+.settings-header {
+  margin-bottom: 30px;
+}
+
+.settings-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  color: rgba(139, 220, 255, .82);
+}
+
+.settings-header h1 {
+  margin: 0;
+  font-size: clamp(30px, 6vw, 42px);
+  line-height: 1.05;
+}
+
+.settings-header p {
+  margin: 10px 0 0;
+  color: rgba(220, 230, 242, .7);
+}
+
+.settings-section {
+  margin-top: 26px;
+}
+
+.settings-section-heading {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.settings-section-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .07);
+  font-size: 20px;
+}
+
+.settings-section-heading h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.settings-section-heading p {
+  margin: 5px 0 0;
+  color: rgba(220, 230, 242, .66);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.settings-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .045);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, .16);
+}
+
+.settings-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.settings-card-copy strong {
+  font-size: 15px;
+}
+
+.settings-status {
+  color: rgba(220, 230, 242, .64);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.settings-toggle {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: rgba(139, 220, 255, .14);
+  color: #dff7ff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    opacity .18s ease;
+}
+
+.settings-toggle:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(139, 220, 255, .2);
+}
+
+.settings-toggle.enabled {
+  background: rgba(80, 200, 120, .16);
+}
+
+.settings-toggle:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.settings-message {
+  min-height: 20px;
+  margin: 10px 4px 0;
+  color: rgba(139, 220, 255, .8);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+@media (max-width: 560px) {
+  .settings-shell {
+    width: min(100% - 22px, 760px);
+    padding-top: 24px;
+  }
+
+  .settings-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .settings-toggle {
+    width: 100%;
+  }
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Settings | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/settings.css">
+</head>
+
+<body class="settings-page">
+
+  <main class="settings-shell">
+
+    <header class="settings-header">
+      <span class="settings-eyebrow">ZAKICHAT</span>
+      <h1>Settings</h1>
+      <p>Manage your ZakiChat experience.</p>
+    </header>
+
+    <section class="settings-section">
+      <div class="settings-section-heading">
+        <span class="settings-section-icon">🔔</span>
+
+        <div>
+          <h2>Notifications</h2>
+          <p>Choose whether ZakiChat can show browser notifications.</p>
+        </div>
+      </div>
+
+      <div class="settings-card">
+
+        <div class="settings-card-copy">
+          <strong>Browser notifications</strong>
+
+          <span
+            id="notificationStatus"
+            class="settings-status"
+          >
+            Checking notification permission…
+          </span>
+        </div>
+
+        <button
+          id="notificationToggle"
+          class="settings-toggle"
+          type="button"
+        >
+          Enable notifications
+        </button>
+
+      </div>
+
+      <p
+        id="notificationMessage"
+        class="settings-message"
+        aria-live="polite"
+      ></p>
+    </section>
+
+    <section class="settings-section">
+      <div class="settings-section-heading">
+        <span class="settings-section-icon">ℹ️</span>
+
+        <div>
+          <h2>About notifications</h2>
+          <p>
+            Notifications can alert you when new ZakiChat
+            messages arrive while the app is running.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main app navigation">
+
+    <a href="chats.html">
+      <span>💬</span>
+      Chats
+    </a>
+
+    <a href="contacts.html">
+      <span>👥</span>
+      Contacts
+    </a>
+
+    <a href="groups.html">
+      <span>👨‍👩‍👧</span>
+      Groups
+    </a>
+
+    <a href="notifications.html">
+      <span>🔔</span>
+      Updates
+    </a>
+
+    <a
+      class="selected"
+      href="settings.html"
+      aria-current="page"
+    >
+      <span>⚙️</span>
+      Settings
+    </a>
+
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/realtime.js"></script>
+  <script src="../static/js/service-worker.js"></script>
+  <script src="../static/js/browser-notifications.js"></script>
+  <script src="../static/js/settings.js"></script>
+
+</body>
+</html>
