@@ -71,6 +71,8 @@
 
   let currentUser = null;
   let originalProfile = null;
+  let viewedUserId = null;
+  let isOwnProfile = true;
   let saving = false;
 
   function showMessage(text, type) {
@@ -286,6 +288,111 @@
     };
   }
 
+  function getRequestedProfileId() {
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const requestedId =
+      String(
+        params.get("user") || ""
+      ).trim();
+
+    return requestedId || null;
+  }
+
+  function setViewMode() {
+    if (isOwnProfile) return;
+
+    document.title =
+      "Profile | ZakiChat";
+
+    const heading =
+      document.querySelector(
+        ".profile-topbar h1"
+      );
+
+    if (heading) {
+      heading.textContent = "Profile";
+    }
+
+    const sectionHeading =
+      document.querySelector(
+        ".section-heading h3"
+      );
+
+    const sectionDescription =
+      document.querySelector(
+        ".section-heading p"
+      );
+
+    if (sectionHeading) {
+      sectionHeading.textContent =
+        "About this person";
+    }
+
+    if (sectionDescription) {
+      sectionDescription.textContent =
+        "View this ZakiChat user's profile information.";
+    }
+
+    if (form) {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          event.preventDefault();
+        }
+      );
+    }
+
+    [
+      usernameInput,
+      fullNameInput,
+      phoneInput,
+      locationInput,
+      bioInput,
+      avatarUrlVisible
+    ].forEach(function (input) {
+      if (!input) return;
+
+      input.readOnly = true;
+      input.setAttribute(
+        "aria-readonly",
+        "true"
+      );
+    });
+
+    if (avatarEditButton) {
+      avatarEditButton.hidden = true;
+    }
+
+    if (saveButton) {
+      saveButton.hidden = true;
+    }
+
+    if (saveTopButton) {
+      saveTopButton.hidden = true;
+    }
+
+    if (cancelButton) {
+      cancelButton.hidden = true;
+    }
+
+    if (logoutButton) {
+      logoutButton.hidden = true;
+    }
+
+    const infoCard =
+      document.querySelector(
+        ".profile-info-card"
+      );
+
+    if (infoCard) {
+      infoCard.hidden = true;
+    }
+  }
+
   async function loadProfile() {
     clearMessage();
 
@@ -306,6 +413,18 @@
     currentUser =
       sessionData.session.user;
 
+    viewedUserId =
+      getRequestedProfileId();
+
+    isOwnProfile =
+      !viewedUserId ||
+      viewedUserId === currentUser.id;
+
+    const profileId =
+      isOwnProfile
+        ? currentUser.id
+        : viewedUserId;
+
     const {
       data: profile,
       error
@@ -314,7 +433,7 @@
       .select(
         "id,username,full_name,phone,avatar_url,bio,is_online,last_seen,location,created_at,updated_at"
       )
-      .eq("id", currentUser.id)
+      .eq("id", profileId)
       .maybeSingle();
 
     if (error) {
@@ -324,7 +443,7 @@
       );
 
       showMessage(
-        "We could not load your profile. Please try again.",
+        "We could not load this profile. Please try again.",
         "error"
       );
 
@@ -333,7 +452,7 @@
 
     if (!profile) {
       showMessage(
-        "Your profile has not been created yet.",
+        "This profile could not be found.",
         "error"
       );
 
@@ -344,10 +463,20 @@
       JSON.parse(JSON.stringify(profile));
 
     fillForm(profile);
+
+    if (!isOwnProfile) {
+      setViewMode();
+    }
   }
 
   async function saveProfile() {
-    if (saving || !currentUser) return;
+    if (
+      saving ||
+      !currentUser ||
+      !isOwnProfile
+    ) {
+      return;
+    }
 
     clearMessage();
 
@@ -565,7 +694,10 @@
       );
     }
 
-    if (avatarEditButton) {
+    if (
+      avatarEditButton &&
+      isOwnProfile
+    ) {
       avatarEditButton.addEventListener(
         "click",
         focusAvatarUrl
@@ -600,7 +732,10 @@
       );
     }
 
-    if (logoutButton) {
+    if (
+      logoutButton &&
+      isOwnProfile
+    ) {
       logoutButton.addEventListener(
         "click",
         logout

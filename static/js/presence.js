@@ -123,44 +123,18 @@
   function handlePageExit() {
     if (!currentUser) return;
 
-    const url =
-      window.ZakiChatConfig.supabaseUrl +
-      "/rest/v1/profiles?id=eq." +
-      encodeURIComponent(currentUser.id);
-
-    const payload = JSON.stringify({
-      is_online: false,
-      last_seen: new Date().toISOString()
-    });
-
-    try {
-      if (
-        navigator.sendBeacon &&
-        window.ZakiChatConfig.supabaseKey
-      ) {
-        const blob = new Blob(
-          [payload],
-          {
-            type: "application/json"
-          }
-        );
-
-        const sent =
-          navigator.sendBeacon(
-            url,
-            blob
-          );
-
-        if (sent) return;
-      }
-    } catch (error) {
+    /*
+     * Page termination does not reliably allow asynchronous
+     * Supabase requests to finish. The normal authenticated
+     * heartbeat and visibility handlers keep presence accurate
+     * during normal use. This is only a best-effort final update.
+     */
+    markOffline().catch(function (error) {
       console.warn(
-        "Presence beacon failed:",
+        "Final presence update failed:",
         error
       );
-    }
-
-    markOffline();
+    });
   }
 
   function subscribeToPresence() {
