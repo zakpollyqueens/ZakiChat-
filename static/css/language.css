@@ -1,0 +1,111 @@
+.language-page .settings-header {
+  position: relative;
+}
+
+.settings-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-size: 22px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.language-panel {
+  margin-top: 28px;
+}
+
+.language-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.language-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.language-list {
+  display: grid;
+  gap: 10px;
+}
+
+.language-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px 17px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 17px;
+  background: rgba(255,255,255,0.045);
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.language-option:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.08);
+}
+
+.language-option.selected {
+  border-color: rgba(80,170,255,0.55);
+  background: rgba(80,170,255,0.12);
+}
+
+.language-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.language-copy strong {
+  font-size: 16px;
+}
+
+.language-copy small {
+  opacity: 0.62;
+  font-size: 12px;
+}
+
+.language-check {
+  min-width: 24px;
+  font-size: 19px;
+}
+
+.language-empty {
+  padding: 28px;
+  text-align: center;
+  opacity: 0.65;
+}
+
+html[dir="rtl"] .settings-back {
+  transform: scaleX(-1);
+}
+
+@media (max-width: 600px) {
+  .language-option {
+    padding: 14px;
+  }
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Security | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/settings.css">
+  <link rel="stylesheet" href="../static/css/security.css">
+</head>
+
+<body class="settings-page security-page">
+
+  <main class="settings-shell">
+
+    <header class="settings-header">
+      <a
+        class="security-back"
+        href="settings.html"
+      >
+        ← Settings
+      </a>
+
+      <span class="settings-eyebrow">
+        ZAKICHAT SECURITY
+      </span>
+
+      <h1>Security</h1>
+
+      <p>
+        Protect access to your ZakiChat account on this device.
+      </p>
+    </header>
+
+    <section class="settings-section">
+
+      <div class="settings-section-heading">
+        <span class="settings-section-icon">🔐</span>
+
+        <div>
+          <h2>App Lock</h2>
+
+          <p>
+            Require a PIN or password before ZakiChat can be opened.
+          </p>
+        </div>
+      </div>
+
+      <div class="settings-card security-card">
+        <div class="settings-card-copy">
+          <strong>App Lock</strong>
+
+          <span
+            id="appLockStatus"
+            class="settings-status"
+          >
+            Checking…
+          </span>
+        </div>
+
+        <button
+          id="appLockToggle"
+          class="settings-toggle"
+          type="button"
+        >
+          Enable
+        </button>
+      </div>
+
+      <p
+        id="securityMessage"
+        class="settings-message"
+        aria-live="polite"
+      ></p>
+
+    </section>
+
+    <section
+      id="appLockOptions"
+      class="settings-section security-options"
+      hidden
+    >
+
+      <div class="settings-section-heading">
+        <span class="settings-section-icon">🛡️</span>
+
+        <div>
+          <h2>Lock options</h2>
+
+          <p>
+            Choose how ZakiChat should protect this account.
+          </p>
+        </div>
+      </div>
+
+      <div class="security-option-card">
+
+        <label for="lockMethod">
+          Lock method
+        </label>
+
+        <select
+          id="lockMethod"
+          class="security-select"
+        >
+          <option value="pin">PIN</option>
+          <option value="password">Password</option>
+        </select>
+
+      </div>
+
+      <div
+        id="secretField"
+        class="security-option-card"
+      >
+
+        <label for="lockSecret">
+          Create PIN
+        </label>
+
+        <input
+          id="lockSecret"
+          type="password"
+          autocomplete="new-password"
+          inputmode="numeric"
+        >
+
+        <small>
+          Your PIN/password is never stored directly.
+        </small>
+
+      </div>
+
+      <div class="security-option-card">
+
+        <label for="autoLock">
+          Auto-lock
+        </label>
+
+        <select
+          id="autoLock"
+          class="security-select"
+        >
+          <option value="immediately">
+            Immediately
+          </option>
+
+          <option value="1">
+            After 1 minute
+          </option>
+
+          <option value="5">
+            After 5 minutes
+          </option>
+
+          <option value="15">
+            After 15 minutes
+          </option>
+        </select>
+
+      </div>
+
+      <button
+        id="saveAppLock"
+        class="security-primary-button"
+        type="button"
+      >
+        Save App Lock
+      </button>
+
+      <button
+        id="disableAppLock"
+        class="security-danger-button"
+        type="button"
+      >
+        Disable App Lock
+      </button>
+
+    </section>
+
+    <section class="settings-section">
+
+      <div class="settings-section-heading">
+        <span class="settings-section-icon">👆</span>
+
+        <div>
+          <h2>Biometric unlock</h2>
+
+          <p>
+            Fingerprint and face authentication can be added
+            using your device's supported platform authenticator.
+          </p>
+        </div>
+      </div>
+
+      <div class="security-info-card">
+
+        <strong>
+          Coming with secure device authentication
+        </strong>
+
+        <p>
+          Biometric authentication will use your device and browser's
+          secure authentication system. ZakiChat will never access or
+          store your fingerprint or face data.
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="settings-section">
+
+      <div class="settings-section-heading">
+        <span class="settings-section-icon">ℹ️</span>
+
+        <div>
+          <h2>Important</h2>
+
+          <p>
+            App Lock protects access to the ZakiChat interface on this
+            device. It does not replace your Supabase account password
+            and does not encrypt your entire device.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/i18n.js"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/security.js"></script>
+  <script src="../static/js/security-page.js"></script>
+
+</body>
+</html>

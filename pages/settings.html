@@ -27,6 +27,30 @@
 
     <section class="settings-section">
       <div class="settings-section-heading">
+        <span class="settings-section-icon">🌐</span>
+        <div>
+          <h2>App language</h2>
+          <p>Choose the language used throughout ZakiChat.</p>
+        </div>
+      </div>
+
+      <a
+        class="settings-card settings-link-card"
+        href="language.html"
+      >
+        <div class="settings-card-copy">
+          <strong>Language</strong>
+          <span id="currentLanguageLabel" class="settings-status">
+            English
+          </span>
+        </div>
+
+        <span aria-hidden="true">›</span>
+      </a>
+    </section>
+
+    <section class="settings-section">
+      <div class="settings-section-heading">
         <span class="settings-section-icon">🔔</span>
 
         <div>
@@ -115,7 +139,7 @@
   </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../static/js/config.js"></script>
+  <script src="../static/js/i18n.js"></script>\n  <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
 <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>

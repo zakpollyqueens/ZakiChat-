@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ZakiChat | App Language</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/settings.css">
+  <link rel="stylesheet" href="../static/css/language.css">
+</head>
+
+<body class="settings-page language-page">
+  <main class="settings-shell">
+
+    <header class="settings-header language-header">
+      <a
+        class="settings-back"
+        href="settings.html"
+        aria-label="Back to Settings"
+      >←</a>
+
+      <span class="settings-eyebrow">ZAKICHAT</span>
+
+      <h1 data-i18n="language.title">
+        App language
+      </h1>
+
+      <p data-i18n="language.description">
+        Select your preferred language for ZakiChat.
+      </p>
+    </header>
+
+    <section class="language-panel">
+
+      <div class="language-search">
+        <span aria-hidden="true">🔎</span>
+
+        <input
+          id="languageSearch"
+          type="search"
+          autocomplete="off"
+          data-i18n-placeholder="language.search"
+          placeholder="Search languages"
+          aria-label="Search languages"
+        >
+      </div>
+
+      <div
+        id="languageList"
+        class="language-list"
+        role="listbox"
+        aria-label="Available languages"
+      ></div>
+
+    </section>
+
+    <p
+      id="languageMessage"
+      class="settings-message"
+      aria-live="polite"
+    ></p>
+
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main app navigation">
+    <a href="chats.html">
+      <span>💬</span>
+      <span data-i18n="nav.chats">Chats</span>
+    </a>
+
+    <a href="contacts.html">
+      <span>👥</span>
+      <span data-i18n="nav.contacts">Contacts</span>
+    </a>
+
+    <a href="groups.html">
+      <span>👨‍👩‍👧</span>
+      <span data-i18n="nav.groups">Groups</span>
+    </a>
+
+    <a href="notifications.html">
+      <span>🔔</span>
+      <span data-i18n="nav.updates">Updates</span>
+    </a>
+
+    <a
+      class="selected"
+      href="settings.html"
+      aria-current="page"
+    >
+      <span>⚙️</span>
+      <span data-i18n="nav.settings">Settings</span>
+    </a>
+  </nav>
+
+  <script src="../static/js/i18n.js"></script>
+  <script src="../static/js/language.js"></script>
+</body>
+</html>
