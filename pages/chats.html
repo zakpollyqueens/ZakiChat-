@@ -24,7 +24,48 @@
         <strong>ZakiChat</strong>
       </a>
 
-      <button class="icon-button" aria-label="More options">⋮</button>
+      <div class="top-actions">
+        <button
+          type="button"
+          class="icon-button"
+          id="top-search-button"
+          aria-label="Search"
+          title="Search"
+        >⌕</button>
+
+        <button
+          type="button"
+          class="icon-button"
+          id="top-more-button"
+          aria-label="More options"
+          aria-expanded="false"
+          aria-controls="top-more-menu"
+          title="More options"
+        >⋮</button>
+
+        <div
+          class="top-more-wrapper"
+          id="top-more-wrapper"
+        >
+          <div
+            class="top-more-menu"
+            id="top-more-menu"
+            hidden
+            role="menu"
+            aria-label="ZakiChat menu"
+          >
+            <a href="notifications.html" role="menuitem">🔔 <span>Notifications</span></a>
+            <button type="button" role="menuitem" id="menu-search">⌕ <span>Search</span></button>
+            <a href="people.html" role="menuitem">👤 <span>New Contact</span></a>
+            <a href="groups.html" role="menuitem">👥 <span>New Group</span></a>
+            <a href="security.html" role="menuitem">🔒 <span>Security</span></a>
+            <button type="button" role="menuitem" id="menu-appearance">🎨 <span>Appearance</span></button>
+            <a href="language.html" role="menuitem">🌐 <span>Language</span></a>
+            <a href="settings.html" role="menuitem">⚙ <span>Settings</span></a>
+            <a href="../index.html" role="menuitem">ℹ <span>About</span></a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="search-box">
@@ -45,12 +86,67 @@
     </div>
 
     <nav class="bottom-nav" aria-label="Main app navigation">
-      <a class="selected" href="chats.html"><span>💬</span>Chats</a>
-      <a href="contacts.html"><span>👥</span>Contacts</a>
-      <a href="groups.html"><span>👨‍👩‍👧</span>Groups</a>
-      <a href="notifications.html"><span>🔔</span>Updates</a>
-      <a href="settings.html"><span>⚙️</span>Settings</a>
+      <a
+        class="selected"
+        href="chats.html"
+        aria-current="page"
+      >
+        <span class="bottom-nav-icon" aria-hidden="true">💬</span>
+        <span>Chats</span>
+      </a>
+
+      <a
+        href="updates.html"
+        class="bottom-nav-item"
+      >
+        <span class="bottom-nav-icon" aria-hidden="true">🔄</span>
+        <span>Updates</span>
+      </a>
+
+      <a
+        href="calls.html"
+        class="bottom-nav-item"
+      >
+        <span class="bottom-nav-icon" aria-hidden="true">📞</span>
+        <span>Calls</span>
+      </a>
     </nav>
+
+    <div class="quick-create">
+      <button
+        type="button"
+        class="quick-create-button"
+        id="quick-create-button"
+        aria-label="Create new"
+        aria-expanded="false"
+        aria-controls="quick-create-menu"
+        title="Create new"
+      >
+        <span aria-hidden="true">＋</span>
+      </button>
+
+      <div
+        class="quick-create-menu"
+        id="quick-create-menu"
+        hidden
+        aria-label="Create new"
+      >
+        <a href="contacts.html" class="quick-create-item">
+          <span aria-hidden="true">💬</span>
+          <span>New Chat</span>
+        </a>
+
+        <a href="people.html" class="quick-create-item">
+          <span aria-hidden="true">👤</span>
+          <span>New Contact</span>
+        </a>
+
+        <a href="groups.html" class="quick-create-item">
+          <span aria-hidden="true">👥</span>
+          <span>New Group</span>
+        </a>
+      </div>
+    </div>
 
   </aside>
 
@@ -207,5 +303,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 <script src="../static/js/chat.js"></script>
 <script src="../static/js/emoji-picker.js"></script>
 <script src="../static/js/chat-search.js"></script>
+<script src="../static/js/quick-create.js"></script>
 </body>
 </html>

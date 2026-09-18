@@ -796,3 +796,671 @@
   box-sizing: border-box;
   z-index: 2;
 }
+
+
+/* ZakiChat main navigation foundation */
+
+.bottom-nav {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid var(--line);
+  background: rgba(7, 17, 31, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.bottom-nav a {
+  position: relative;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 7px 8px;
+  border-radius: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: .68rem;
+  font-weight: 700;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-icon {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  font-size: 1.08rem;
+  transition:
+    transform .18s ease,
+    filter .18s ease;
+}
+
+.bottom-nav a:hover {
+  color: var(--white);
+  background: rgba(255,255,255,.055);
+  transform: translateY(-1px);
+}
+
+.bottom-nav a:active {
+  transform: scale(.94);
+}
+
+.bottom-nav a.selected {
+  color: var(--white);
+  background: rgba(21,158,126,.14);
+  box-shadow:
+    inset 0 0 0 1px rgba(21,158,126,.18),
+    0 5px 18px rgba(0,0,0,.12);
+}
+
+.bottom-nav a.selected .bottom-nav-icon {
+  transform: translateY(-1px) scale(1.06);
+}
+
+.bottom-nav a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav a,
+  .bottom-nav-icon {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   ZakiChat floating create button
+   ========================================================= */
+
+.quick-create {
+  position: absolute;
+  right: 18px;
+  bottom: 82px;
+  z-index: 30;
+}
+
+.quick-create-button {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #03120e;
+  background: var(--primary);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, .32),
+    0 0 0 1px rgba(255,255,255,.08);
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.65rem;
+  line-height: 1;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.quick-create-button:hover {
+  transform: translateY(-3px) scale(1.04);
+  filter: brightness(1.08);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, .38),
+    0 0 0 5px rgba(21,158,126,.12);
+}
+
+.quick-create-button:active {
+  transform: scale(.92);
+}
+
+.quick-create-button:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 4px;
+}
+
+.quick-create-menu {
+  position: absolute;
+  right: 0;
+  bottom: 68px;
+  width: 190px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(8, 21, 34, .97);
+  box-shadow: 0 18px 45px rgba(0,0,0,.38);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.quick-create-menu[hidden] {
+  display: none;
+}
+
+.quick-create-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 44px;
+  padding: 9px 11px;
+  border-radius: 11px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: .78rem;
+  font-weight: 700;
+  transition:
+    background .16s ease,
+    transform .16s ease,
+    color .16s ease;
+}
+
+.quick-create-item:hover {
+  color: var(--white);
+  background: rgba(255,255,255,.07);
+  transform: translateX(-2px);
+}
+
+.quick-create-item:active {
+  transform: scale(.97);
+}
+
+.quick-create-item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.quick-create-item span:first-child {
+  width: 26px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+@media (max-width: 850px) {
+  .quick-create {
+    right: 16px;
+    bottom: 76px;
+  }
+
+  .quick-create-button {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-create-button,
+  .quick-create-item {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   ZakiChat application shell
+   ========================================================= */
+
+.chat-page{
+  min-height:100vh;
+  overflow:hidden;
+  background:#050b13;
+}
+
+.app-shell{
+  width:100%;
+  height:100vh;
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:minmax(300px,380px) minmax(0,1fr);
+  overflow:hidden;
+  background:#050b13;
+}
+
+.sidebar{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border-right:1px solid var(--line);
+  background:#07111f;
+}
+
+.sidebar-top{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  background:#081522;
+}
+
+.app-brand{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--white);
+}
+
+.app-brand img{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  border-radius:12px;
+  object-fit:cover;
+  box-shadow:0 0 0 1px rgba(39,211,162,.18);
+}
+
+.app-brand strong{
+  font-size:1.05rem;
+  letter-spacing:-.02em;
+}
+
+.search-box{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:12px 14px 8px;
+  height:43px;
+  padding:0 13px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#0b1a2b;
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+
+.search-box:focus-within{
+  border-color:rgba(39,211,162,.45);
+  box-shadow:0 0 0 3px rgba(39,211,162,.08);
+}
+
+.search-box>span{
+  flex:0 0 auto;
+  color:var(--muted);
+  font-size:1.05rem;
+}
+
+.search-box input{
+  min-width:0;
+  flex:1;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--text);
+  font:inherit;
+  font-size:.8rem;
+}
+
+.search-box input::placeholder{
+  color:#70859b;
+}
+
+.chat-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+  padding:5px 14px 10px;
+}
+
+.chat-tabs button{
+  min-height:34px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  font:inherit;
+  font-size:.72rem;
+  font-weight:750;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    transform .18s ease;
+}
+
+.chat-tabs button:hover{
+  color:var(--white);
+  background:rgba(255,255,255,.05);
+}
+
+.chat-tabs button:active{
+  transform:scale(.96);
+}
+
+.chat-tabs button.active{
+  color:#03120e;
+  background:var(--primary);
+  box-shadow:0 5px 16px rgba(39,211,162,.13);
+}
+
+.chat-main{
+  min-width:0;
+  min-height:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:#06101c;
+}
+
+.chat-header{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 18px;
+  border-bottom:1px solid var(--line);
+  background:#081522;
+}
+
+.chat-user{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.chat-user>div:last-child{
+  min-width:0;
+}
+
+.chat-user strong{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--white);
+  font-size:.9rem;
+}
+
+.chat-user span{
+  display:block;
+  margin-top:1px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--muted);
+  font-size:.68rem;
+}
+
+.chat-actions{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.icon-button{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  border:1px solid transparent;
+  border-radius:11px;
+  color:var(--muted);
+  background:transparent;
+  cursor:pointer;
+  font:inherit;
+  font-size:1.05rem;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.icon-button:hover{
+  color:var(--white);
+  border-color:var(--line);
+  background:rgba(255,255,255,.055);
+}
+
+.icon-button:active{
+  transform:scale(.92);
+}
+
+.icon-button:focus-visible{
+  outline:2px solid var(--primary);
+  outline-offset:2px;
+}
+
+#refresh-chat.is-refreshing{
+  animation:zakichat-spin .75s linear infinite;
+}
+
+@keyframes zakichat-spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+.empty-messages,
+.conversation-loading{
+  color:var(--muted);
+  text-align:center;
+}
+
+.empty-messages{
+  margin:auto;
+  padding:30px;
+  max-width:380px;
+  font-size:.82rem;
+}
+
+/* Keep the conversation area visually separate from the shell. */
+
+.conversation-list{
+  scrollbar-width:thin;
+  scrollbar-color:#1c3955 transparent;
+}
+
+.messages-panel{
+  scrollbar-width:thin;
+  scrollbar-color:#1c3955 transparent;
+}
+
+@media(max-width:850px){
+
+  .chat-page{
+    overflow:hidden;
+  }
+
+  .app-shell{
+    display:block;
+    height:100vh;
+  }
+
+  .sidebar{
+    width:100%;
+    height:100vh;
+    border-right:0;
+  }
+
+  .chat-main{
+    display:none;
+  }
+
+  .sidebar-top{
+    min-height:66px;
+    padding:10px 13px;
+  }
+
+  .search-box{
+    margin:10px 12px 7px;
+  }
+
+  .chat-tabs{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .conversation{
+    padding:12px 14px;
+  }
+
+  .quick-create{
+    right:16px;
+    bottom:76px;
+  }
+
+}
+
+@media(min-width:851px){
+
+  .conversation-list{
+    min-height:0;
+  }
+
+  .bottom-nav{
+    margin-top:auto;
+  }
+
+}
+
+@media(max-width:420px){
+
+  .app-brand strong{
+    font-size:1rem;
+  }
+
+  .conversation-avatar{
+    width:46px;
+    height:46px;
+    flex-basis:46px;
+  }
+
+  .bottom-nav{
+    padding:7px;
+  }
+
+  .bottom-nav a{
+    min-height:53px;
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  .icon-button,
+  .chat-tabs button{
+    transition:none;
+  }
+
+  #refresh-chat.is-refreshing{
+    animation:none;
+  }
+
+}
+
+/* =========================================================
+   ZakiChat top application menu
+   ========================================================= */
+
+.top-actions{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:3px;
+}
+
+.top-more-wrapper{
+  position:relative;
+}
+
+.top-more-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:0;
+  z-index:100;
+  width:220px;
+  padding:7px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:15px;
+  background:#0b1828;
+  box-shadow:0 18px 45px rgba(0,0,0,.45);
+  animation:zakichat-menu-in .16s ease-out;
+}
+
+.top-more-menu a,
+.top-more-menu button{
+  width:100%;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 12px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--text);
+  text-decoration:none;
+  cursor:pointer;
+  font:inherit;
+  font-size:.78rem;
+  text-align:left;
+  transition:
+    background .16s ease,
+    color .16s ease,
+    transform .16s ease;
+}
+
+.top-more-menu a:hover,
+.top-more-menu button:hover{
+  background:rgba(39,211,162,.10);
+  color:var(--primary);
+}
+
+.top-more-menu a:active,
+.top-more-menu button:active{
+  transform:scale(.98);
+}
+
+.top-more-menu a span,
+.top-more-menu button span{
+  flex:1;
+}
+
+@keyframes zakichat-menu-in{
+  from{
+    opacity:0;
+    transform:translateY(-5px) scale(.97);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@media(max-width:850px){
+
+  .top-more-menu{
+    position:fixed;
+    top:62px;
+    right:10px;
+    width:min(230px,calc(100vw - 20px));
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  .top-more-menu{
+    animation:none;
+  }
+
+}
