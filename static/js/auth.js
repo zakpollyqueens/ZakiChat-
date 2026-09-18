@@ -51,6 +51,51 @@
     button.textContent = loading ? "Please wait..." : normalText;
   }
 
+  /* INTERNATIONAL PHONE INPUT */
+  let signupPhoneInput = null;
+
+  function setupInternationalPhoneInput() {
+    const input = document.getElementById("phone");
+
+    if (!input || !window.intlTelInput) {
+      return;
+    }
+
+    signupPhoneInput = window.intlTelInput(input, {
+      initialCountry: "ug",
+      separateDialCode: true,
+      nationalMode: true,
+      autoPlaceholder: "polite",
+      formatOnDisplay: true,
+      loadUtils: () =>
+        import(
+          "https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/js/utils.js"
+        )
+    });
+
+    input.addEventListener("blur", function () {
+      if (
+        signupPhoneInput &&
+        input.value.trim() &&
+        signupPhoneInput.isValidNumber()
+      ) {
+        input.classList.remove("input-error");
+      }
+    });
+  }
+
+  function getSignupPhoneE164() {
+    if (!signupPhoneInput) {
+      return "";
+    }
+
+    if (!signupPhoneInput.isValidNumber()) {
+      return "";
+    }
+
+    return signupPhoneInput.getNumber();
+  }
+
   function setupPasswordToggle(buttonId, inputId) {
     const button = document.getElementById(buttonId);
     const input = document.getElementById(inputId);
@@ -178,7 +223,7 @@
   }
 
   function updateSignupProgress() {
-    const total = 5;
+    const total = 6;
     const step = signupState.step;
     const percent = Math.round((step / total) * 100);
 
@@ -208,7 +253,7 @@
 
     signupState.step = Math.max(
       1,
-      Math.min(5, step)
+      Math.min(6, step)
     );
 
     steps.forEach(function (section) {
@@ -327,8 +372,19 @@
     signupState.displayName =
       displayName.value.trim();
 
-    signupState.phone =
-      phone.value.trim();
+    const phoneE164 = getSignupPhoneE164();
+
+    if (!phoneE164) {
+      showMessage(
+        message,
+        "Please enter a valid mobile phone number.",
+        "error"
+      );
+      phone.focus();
+      return false;
+    }
+
+    signupState.phone = phoneE164;
 
     signupState.location =
       location.value.trim();
@@ -426,29 +482,22 @@
     const password =
       document.getElementById("password").value;
 
-    setLoading(
-      button,
-      true,
-      "Create Account"
-    );
+    setLoading(button, true, "Create Account");
 
     try {
-      const confirmationRedirectUrl =
-        window.location.origin +
-        window.location.pathname;
-
       const { data, error } =
         await supabaseClient.auth.signUp({
-          email: signupState.email,
+          phone: signupState.phone,
           password,
           options: {
-            emailRedirectTo: confirmationRedirectUrl,
+            channel: "sms",
             data: {
               username: signupState.username,
               full_name: signupState.displayName,
               display_name: signupState.displayName,
               phone: signupState.phone,
-              location: signupState.location
+              location: signupState.location,
+              recovery_email: signupState.email
             }
           }
         });
@@ -457,49 +506,21 @@
         throw error;
       }
 
-      /*
-       * Supabase may return a session immediately when
-       * email confirmation is disabled.
-       *
-       * Our intended production configuration is email
-       * confirmation enabled, so normally the user reaches
-       * the verification step here without a session.
-       */
-
       signupState.accountCreated = true;
 
-      const verificationDescription =
-        document.getElementById(
-          "verificationDescription"
-        );
+      const otpDescription =
+        document.getElementById("otpDescription");
 
-      if (verificationDescription) {
-        verificationDescription.textContent =
-          "We sent a secure confirmation link to " +
-          signupState.email +
-          ". Open the email and tap the link to activate your ZakiChat account.";
-      }
-
-      if (data.session) {
-        showMessage(
-          message,
-          "Account created successfully.",
-          "success"
-        );
-
-        setTimeout(
-          redirectToChats,
-          400
-        );
-
-        return;
+      if (otpDescription) {
+        otpDescription.textContent =
+          "A 6-digit verification code has been sent to your phone.";
       }
 
       showSignupStep(5);
 
       showMessage(
         message,
-        "Your account was created. Check your email and tap the confirmation link.",
+        "Your account was created. A verification code has been sent to your phone.",
         "success"
       );
 
@@ -513,11 +534,7 @@
         error.message ||
         "Unable to create your account.";
 
-      if (
-        /duplicate|unique|username/i.test(
-          errorMessage
-        )
-      ) {
+      if (/duplicate|unique|username/i.test(errorMessage)) {
         errorMessage =
           "That username may already be in use. Please choose another username.";
       }
@@ -528,88 +545,57 @@
         "error"
       );
 
-      setLoading(
-        button,
-        false,
-        "Create Account"
-      );
+    } finally {
+      setLoading(button, false, "Create Account");
     }
   }
 
-  async function handleEmailVerificationReturn() {
-    const message =
-      document.getElementById("signupMessage");
-
-    try {
-      const { data, error } =
-        await supabaseClient.auth.getSession();
-
-      if (error) {
-        throw error;
-      }
-
-      if (!data.session) {
-        return false;
-      }
-
+  async function sendSignupOtp() {
+    if (!signupState.accountCreated) {
       showMessage(
         message,
-        "Email verified successfully. Opening ZakiChat...",
-        "success"
-      );
-
-      setTimeout(
-        redirectToChats,
-        500
-      );
-
-      return true;
-
-    } catch (error) {
-      console.error(
-        "Email verification return error:",
-        error
-      );
-
-      return false;
-    }
-  }
-
-  async function resendVerificationEmail() {
-    const button =
-      document.getElementById(
-        "resendVerification"
-      );
-
-    const message =
-      document.getElementById(
-        "signupMessage"
-      );
-
-    if (!signupState.email) {
-      showMessage(
-        message,
-        "Your signup email is missing. Please start signup again.",
+        "Please create your account first.",
         "error"
       );
       return;
     }
 
-    button.disabled = true;
-    button.textContent = "Sending...";
+    showSignupStep(6);
+
+    const otpInput =
+      document.getElementById("otpCode");
+
+    if (otpInput) {
+      setTimeout(() => otpInput.focus(), 50);
+    }
+  }
+
+  async function resendSignupOtp() {
+    const button =
+      document.getElementById("resendOtpButton");
+
+    const message =
+      document.getElementById("signupMessage");
+
+    if (!signupState.accountCreated || !signupState.phone) {
+      showMessage(
+        message,
+        "Please create your account first.",
+        "error"
+      );
+      return;
+    }
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Sending...";
+    }
 
     try {
-      const confirmationRedirectUrl =
-        window.location.origin +
-        window.location.pathname;
-
       const { error } =
         await supabaseClient.auth.resend({
-          type: "signup",
-          email: signupState.email,
-          options: {
-            emailRedirectTo: confirmationRedirectUrl
-          }
+          type: "sms",
+          phone: signupState.phone
         });
 
       if (error) {
@@ -618,31 +604,95 @@
 
       showMessage(
         message,
-        "A new confirmation email has been sent. Tap the link inside it to verify your account.",
+        "A new verification code has been sent to your phone.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Resend OTP error:", error);
+
+      showMessage(
+        message,
+        error?.message ||
+          "Unable to resend the verification code. Please try again.",
+        "error"
+      );
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Resend code";
+      }
+    }
+  }
+
+  async function verifySignupOtp() {
+    const input =
+      document.getElementById("otpCode");
+
+    const button =
+      document.getElementById("verifyOtpButton");
+
+    const message =
+      document.getElementById("signupMessage");
+
+    const token = input.value.trim();
+
+    if (!/^[0-9]{6}$/.test(token)) {
+      showMessage(
+        message,
+        "Please enter the 6-digit verification code.",
+        "error"
+      );
+      input.focus();
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Verifying...";
+
+    try {
+      const { data, error } =
+        await supabaseClient.auth.verifyOtp({
+          phone: signupState.phone,
+          token,
+          type: "sms"
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data.session) {
+        throw new Error(
+          "Verification succeeded, but no session was created."
+        );
+      }
+
+      showMessage(
+        message,
+        "Phone verified successfully. Opening ZakiChat...",
         "success"
       );
 
+      setTimeout(redirectToChats, 500);
+
     } catch (error) {
-      console.error(
-        "Confirmation email resend error:",
-        error
-      );
+      console.error("OTP verification error:", error);
 
       showMessage(
         message,
         error.message ||
-          "Unable to resend the confirmation email.",
+          "The verification code is invalid or expired.",
         "error"
       );
 
     } finally {
       button.disabled = false;
-      button.textContent =
-        "Resend confirmation email";
+      button.textContent = "Verify phone";
     }
   }
 
   function handleSignupNext() {
+
     const step = signupState.step;
 
     if (step === 1) {
@@ -663,6 +713,11 @@
       if (validateEmail()) {
         showSignupStep(4);
       }
+      return;
+    }
+
+    if (step === 5) {
+      sendSignupOtp();
     }
   }
 
@@ -814,15 +869,48 @@
       );
     }
 
-    const resendButton =
-      document.getElementById(
-        "resendVerification"
-      );
+    const sendOtpButton =
+      document.getElementById("sendOtpButton");
 
-    if (resendButton) {
-      resendButton.addEventListener(
+    if (sendOtpButton) {
+      sendOtpButton.addEventListener(
         "click",
-        resendVerificationEmail
+        sendSignupOtp
+      );
+    }
+
+    const verifyOtpButton =
+      document.getElementById("verifyOtpButton");
+
+    if (verifyOtpButton) {
+      verifyOtpButton.addEventListener(
+        "click",
+        verifySignupOtp
+      );
+    }
+
+    const resendOtpButton =
+      document.getElementById("resendOtpButton");
+
+    if (resendOtpButton) {
+      resendOtpButton.addEventListener(
+        "click",
+        resendSignupOtp
+      );
+    }
+
+    const otpInput =
+      document.getElementById("otpCode");
+
+    if (otpInput) {
+      otpInput.addEventListener(
+        "input",
+        function () {
+          otpInput.value =
+            otpInput.value
+              .replace(/[^0-9]/g, "")
+              .slice(0, 6);
+        }
       );
     }
 
@@ -898,6 +986,10 @@
     }
   );
 
+  if (isSignupPage) {
+    setupInternationalPhoneInput();
+  }
+
   if (isLoginPage) {
     setupLoginPage();
   }
@@ -905,11 +997,5 @@
   if (isSignupPage) {
     setupSignupPage();
 
-    /*
-     * When the user taps the Supabase confirmation link,
-     * Supabase restores the verified session on this page.
-     * Once that session exists, continue into ZakiChat.
-     */
-    handleEmailVerificationReturn();
   }
 })();

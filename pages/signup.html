@@ -8,6 +8,10 @@
 <link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
 <link rel="stylesheet" href="../static/css/main.css">
 <link rel="stylesheet" href="../static/css/auth.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/css/intlTelInput.css"
+>
 </head>
 <body class="auth-page">
 
@@ -33,7 +37,7 @@
         <div id="signupProgressBar" class="signup-progress-bar"></div>
       </div>
       <div class="signup-progress-meta">
-        <span id="signupStepLabel">Step 1 of 5</span>
+        <span id="signupStepLabel">Step 1 of 6</span>
         <span id="signupStepPercent">20%</span>
       </div>
     </div>
@@ -99,14 +103,22 @@
         >
 
         <label for="phone">Phone number</label>
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          autocomplete="tel"
-          maxlength="25"
-          required
-        >
+
+        <div class="phone-input-wrap">
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            inputmode="tel"
+            required
+            aria-describedby="phoneHelp"
+          >
+        </div>
+
+        <small class="auth-help" id="phoneHelp">
+          Select your country and enter your mobile number.
+        </small>
 
         <label for="location">Location</label>
         <input
@@ -249,34 +261,84 @@
         <div class="signup-step-heading">
           <span class="signup-step-number">05</span>
           <div>
-            <h2>Check your email</h2>
-            <p>Tap the secure confirmation link we sent to your email.</p>
+            <h2>Verify your phone</h2>
+            <p>We'll send a 6-digit verification code to your phone.</p>
           </div>
         </div>
 
         <div class="verification-icon" aria-hidden="true">
-          ✉
+          ✓
         </div>
 
-        <p id="verificationDescription" class="verification-description">
-          We sent a secure confirmation link to your email address.
-          Open the email and tap the link to verify your ZakiChat account.
+        <p id="otpDescription" class="verification-description">
+          Your phone number will receive a secure 6-digit verification code.
         </p>
 
         <div class="verification-link-card">
-          <strong>Almost there!</strong>
+          <strong>Phone verification</strong>
           <span>
-            Check your inbox and spam folder. You do not need to enter
-            a verification code.
+            The code is generated and verified by ZakiChat's authentication
+            service. Never share your verification code with anyone.
           </span>
         </div>
 
         <button
           type="button"
-          id="resendVerification"
+          id="sendOtpButton"
           class="button button-primary auth-submit"
         >
-          Resend confirmation email
+          Enter verification code
+        </button>
+
+        <div class="signup-actions verification-back">
+          <button type="button" class="button auth-secondary previous-step">
+            Back
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 6 -->
+      <section class="signup-step" data-step="6" hidden>
+        <div class="signup-step-heading">
+          <span class="signup-step-number">06</span>
+          <div>
+            <h2>Enter your verification code</h2>
+            <p>Enter the 6-digit code sent to your phone.</p>
+          </div>
+        </div>
+
+        <label for="otpCode">Verification code</label>
+        <input
+          id="otpCode"
+          name="otpCode"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          pattern="[0-9]{6}"
+          maxlength="6"
+          minlength="6"
+          required
+          aria-describedby="otpHelp"
+        >
+
+        <small class="auth-help" id="otpHelp">
+          Enter the 6-digit code you received by SMS.
+        </small>
+
+        <button
+          type="button"
+          id="verifyOtpButton"
+          class="button button-primary auth-submit"
+        >
+          Verify phone
+        </button>
+
+        <button
+          type="button"
+          id="resendOtpButton"
+          class="button auth-secondary"
+        >
+          Resend code
         </button>
 
         <div class="signup-actions verification-back">
@@ -307,6 +369,7 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/js/intlTelInput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../static/js/config.js"></script>
 <script src="../static/js/auth.js"></script>
