@@ -6,6 +6,23 @@
     userId: null,
 
     async init() {
+      if (window.ZakiChatI18n) {
+        window.ZakiChatI18n.applyTranslations();
+
+        const label =
+          document.getElementById("currentLanguageLabel");
+
+        if (label) {
+          const language =
+            window.ZakiChatI18n.getLanguage(
+              window.ZakiChatI18n.getCurrentLanguage()
+            );
+
+          label.textContent =
+            language.nativeName;
+        }
+      }
+
       if (!window.ZakiChatConfig || !window.supabase) {
         return;
       }
