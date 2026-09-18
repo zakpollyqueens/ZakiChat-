@@ -1,152 +1,333 @@
-.settings-page {
-  min-height: 100vh;
-  padding-bottom: 90px;
+/* =========================================================
+   ZakiChat Settings Hub
+   ========================================================= */
+
+.settings-page{
+  min-height:100vh;
+  padding-bottom:92px;
+  background:#050b13;
+  color:var(--text);
 }
 
-.settings-shell {
-  width: min(760px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 32px 0 40px;
+.settings-shell{
+  width:min(760px,calc(100% - 28px));
+  margin:0 auto;
+  padding:18px 0 32px;
 }
 
-.settings-header {
-  margin-bottom: 30px;
+.settings-header{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:18px;
 }
 
-.settings-eyebrow {
-  display: inline-block;
-  margin-bottom: 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .18em;
-  color: rgba(139, 220, 255, .82);
+.settings-back{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:var(--text);
+  background:#0b1828;
+  text-decoration:none;
+  font-size:20px;
+  transition:.18s ease;
 }
 
-.settings-header h1 {
-  margin: 0;
-  font-size: clamp(30px, 6vw, 42px);
-  line-height: 1.05;
+.settings-back:hover{
+  color:var(--primary);
+  border-color:rgba(39,211,162,.35);
+  background:#102338;
 }
 
-.settings-header p {
-  margin: 10px 0 0;
-  color: rgba(220, 230, 242, .7);
+.settings-back span:last-child{
+  display:none;
 }
 
-.settings-section {
-  margin-top: 26px;
+.settings-title{
+  min-width:0;
 }
 
-.settings-section-heading {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  margin-bottom: 14px;
+.settings-eyebrow{
+  display:block;
+  margin-bottom:4px;
+  color:var(--primary);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.18em;
 }
 
-.settings-section-icon {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
-  place-items: center;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, .07);
-  font-size: 20px;
+.settings-title h1{
+  margin:0;
+  font-size:clamp(28px,6vw,38px);
+  line-height:1.05;
 }
 
-.settings-section-heading h2 {
-  margin: 0;
-  font-size: 19px;
+.settings-title p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:.78rem;
 }
 
-.settings-section-heading p {
-  margin: 5px 0 0;
-  color: rgba(220, 230, 242, .66);
-  font-size: 14px;
-  line-height: 1.5;
+/* Profile */
+
+.settings-profile-card{
+  margin-bottom:22px;
+  overflow:hidden;
+  border:1px solid rgba(39,211,162,.16);
+  border-radius:18px;
+  background:linear-gradient(
+    135deg,
+    rgba(39,211,162,.12),
+    rgba(24,174,240,.08)
+  );
 }
 
-.settings-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 18px;
-  border: 1px solid rgba(255, 255, 255, .08);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, .045);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, .16);
+.settings-profile-link{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-height:78px;
+  padding:12px 15px;
+  color:var(--text);
+  text-decoration:none;
 }
 
-.settings-card-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  min-width: 0;
+.settings-profile-avatar{
+  width:52px;
+  height:52px;
+  flex:0 0 52px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  background:linear-gradient(135deg,#27d3a2,#087db0);
+  color:#03120e;
+  font-size:1.2rem;
+  font-weight:900;
 }
 
-.settings-card-copy strong {
-  font-size: 15px;
+.settings-profile-copy{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
 }
 
-.settings-status {
-  color: rgba(220, 230, 242, .64);
-  font-size: 13px;
-  line-height: 1.45;
+.settings-profile-copy strong{
+  font-size:.92rem;
 }
 
-.settings-toggle {
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 12px;
-  padding: 11px 15px;
-  background: rgba(139, 220, 255, .14);
-  color: #dff7ff;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
+.settings-profile-copy span{
+  color:var(--muted);
+  font-size:.7rem;
+  line-height:1.4;
+}
+
+/* Groups */
+
+.settings-group{
+  margin-top:22px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:#081522;
+}
+
+.settings-group h2{
+  margin:0;
+  padding:13px 15px 9px;
+  color:var(--primary);
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.settings-item{
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 14px;
+  border-top:1px solid rgba(255,255,255,.055);
+  color:var(--text);
+  text-decoration:none;
   transition:
-    transform .18s ease,
     background .18s ease,
-    opacity .18s ease;
+    transform .18s ease;
 }
 
-.settings-toggle:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background: rgba(139, 220, 255, .2);
+.settings-item:hover{
+  background:rgba(39,211,162,.055);
 }
 
-.settings-toggle.enabled {
-  background: rgba(80, 200, 120, .16);
+.settings-item:active{
+  transform:scale(.995);
 }
 
-.settings-toggle:disabled {
-  opacity: .55;
-  cursor: not-allowed;
+.settings-item-icon{
+  width:39px;
+  height:39px;
+  flex:0 0 39px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:#102338;
+  font-size:18px;
 }
 
-.settings-message {
-  min-height: 20px;
-  margin: 10px 4px 0;
-  color: rgba(139, 220, 255, .8);
-  font-size: 13px;
-  line-height: 1.45;
+.settings-item-copy{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
 }
 
-@media (max-width: 560px) {
-  .settings-shell {
-    width: min(100% - 22px, 760px);
-    padding-top: 24px;
+.settings-item-copy strong{
+  font-size:.78rem;
+  font-weight:750;
+}
+
+.settings-item-copy small{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--muted);
+  font-size:.65rem;
+  line-height:1.4;
+}
+
+.settings-chevron{
+  flex:0 0 auto;
+  color:#71869b;
+  font-size:1.3rem;
+}
+
+.settings-notification-item{
+  border-top:1px solid rgba(255,255,255,.055);
+}
+
+/* Notification control */
+
+.settings-toggle{
+  flex:0 0 auto;
+  min-width:78px;
+  border:0;
+  border-radius:10px;
+  padding:9px 12px;
+  background:rgba(39,211,162,.13);
+  color:var(--primary);
+  font:inherit;
+  font-size:.66rem;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.settings-toggle:hover:not(:disabled){
+  background:rgba(39,211,162,.2);
+  transform:translateY(-1px);
+}
+
+.settings-toggle.enabled{
+  background:rgba(39,211,162,.2);
+}
+
+.settings-toggle:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.settings-message{
+  min-height:18px;
+  margin:5px 14px 7px;
+  color:var(--muted);
+  font-size:.64rem;
+}
+
+/* Bottom navigation */
+
+.settings-page .bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:80;
+  max-width:none;
+  margin:0;
+  padding:7px max(8px,env(safe-area-inset-right))
+           calc(7px + env(safe-area-inset-bottom))
+           max(8px,env(safe-area-inset-left));
+  border-top:1px solid var(--line);
+  background:rgba(5,11,19,.96);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.settings-page .bottom-nav a{
+  min-height:54px;
+}
+
+/* Mobile */
+
+@media(max-width:560px){
+
+  .settings-shell{
+    width:calc(100% - 20px);
+    padding-top:12px;
   }
 
-  .settings-card {
-    align-items: flex-start;
-    flex-direction: column;
+  .settings-header{
+    gap:10px;
   }
 
-  .settings-toggle {
-    width: 100%;
+  .settings-back{
+    width:39px;
+    height:39px;
+    flex-basis:39px;
   }
+
+  .settings-title h1{
+    font-size:28px;
+  }
+
+  .settings-item{
+    min-height:61px;
+    padding:9px 11px;
+  }
+
+  .settings-item-icon{
+    width:36px;
+    height:36px;
+    flex-basis:36px;
+    font-size:16px;
+  }
+
+  .settings-item-copy small{
+    white-space:normal;
+  }
+
+  .settings-toggle{
+    min-width:72px;
+  }
+
+}
+
+/* Accessibility */
+
+@media(prefers-reduced-motion:reduce){
+
+  .settings-item,
+  .settings-back,
+  .settings-toggle{
+    transition:none;
+  }
+
 }

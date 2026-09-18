@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Settings | ZakiChat</title>
 
@@ -20,56 +17,93 @@
   <main class="settings-shell">
 
     <header class="settings-header">
-      <span class="settings-eyebrow">ZAKICHAT</span>
-      <h1>Settings</h1>
-      <p>Manage your ZakiChat experience.</p>
+      <a class="settings-back" href="chats.html" aria-label="Back to Chats">
+        <span aria-hidden="true">←</span>
+        <span>Chats</span>
+      </a>
+
+      <div class="settings-title">
+        <span class="settings-eyebrow">ZAKICHAT</span>
+        <h1>Settings</h1>
+        <p>Manage your account and ZakiChat experience.</p>
+      </div>
     </header>
 
-    <section class="settings-section">
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">🌐</span>
-        <div>
-          <h2>App language</h2>
-          <p>Choose the language used throughout ZakiChat.</p>
-        </div>
-      </div>
+    <!-- Profile -->
+    <section class="settings-profile-card">
+      <a href="profile.html" class="settings-profile-link">
+        <div class="settings-profile-avatar">Z</div>
 
-      <a
-        class="settings-card settings-link-card"
-        href="language.html"
-      >
-        <div class="settings-card-copy">
-          <strong>Language</strong>
-          <span id="currentLanguageLabel" class="settings-status">
-            English
-          </span>
+        <div class="settings-profile-copy">
+          <strong>My Profile</strong>
+          <span>Profile photo, name and personal information</span>
         </div>
 
-        <span aria-hidden="true">›</span>
+        <span class="settings-chevron" aria-hidden="true">›</span>
       </a>
     </section>
 
-    <section class="settings-section">
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">🔔</span>
+    <!-- Personalization -->
+    <section class="settings-group">
+      <h2>Personalization</h2>
 
-        <div>
-          <h2>Notifications</h2>
-          <p>Choose whether ZakiChat can show browser notifications.</p>
-        </div>
-      </div>
+      <a class="settings-item" href="#appearance">
+        <span class="settings-item-icon">🎨</span>
+        <span class="settings-item-copy">
+          <strong>Appearance</strong>
+          <small>Theme, colors, fonts and chat appearance</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
 
-      <div class="settings-card">
+      <a class="settings-item" href="language.html">
+        <span class="settings-item-icon">🌐</span>
+        <span class="settings-item-copy">
+          <strong>Language</strong>
+          <small id="currentLanguageLabel">English</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
+    </section>
 
-        <div class="settings-card-copy">
+    <!-- Security and privacy -->
+    <section class="settings-group">
+      <h2>Security & Privacy</h2>
+
+      <a class="settings-item" href="security.html">
+        <span class="settings-item-icon">🔒</span>
+        <span class="settings-item-copy">
+          <strong>Security</strong>
+          <small>App Lock, password and device security</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
+
+      <a class="settings-item" href="#privacy">
+        <span class="settings-item-icon">🔐</span>
+        <span class="settings-item-copy">
+          <strong>Privacy</strong>
+          <small>Control your visibility and communication privacy</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
+    </section>
+
+    <!-- Notifications -->
+    <section class="settings-group">
+      <h2>Notifications</h2>
+
+      <div class="settings-item settings-notification-item">
+        <span class="settings-item-icon">🔔</span>
+
+        <div class="settings-item-copy">
           <strong>Browser notifications</strong>
 
-          <span
+          <small
             id="notificationStatus"
-            class="settings-status"
           >
             Checking notification permission…
-          </span>
+          </small>
         </div>
 
         <button
@@ -77,9 +111,8 @@
           class="settings-toggle"
           type="button"
         >
-          Enable notifications
+          Enable
         </button>
-
       </div>
 
       <p
@@ -87,61 +120,85 @@
         class="settings-message"
         aria-live="polite"
       ></p>
+
+      <a class="settings-item" href="notifications.html">
+        <span class="settings-item-icon">📬</span>
+        <span class="settings-item-copy">
+          <strong>Notification Center</strong>
+          <small>View and manage your ZakiChat notifications</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
     </section>
 
-    <section class="settings-section">
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">ℹ️</span>
+    <!-- Account -->
+    <section class="settings-group">
+      <h2>Account</h2>
 
-        <div>
-          <h2>About notifications</h2>
-          <p>
-            Notifications can alert you when new ZakiChat
-            messages arrive while the app is running.
-          </p>
-        </div>
-      </div>
+      <a class="settings-item" href="#account">
+        <span class="settings-item-icon">👤</span>
+        <span class="settings-item-copy">
+          <strong>Account</strong>
+          <small>Sessions, account information and account controls</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
+
+      <a class="settings-item" href="contacts.html">
+        <span class="settings-item-icon">👥</span>
+        <span class="settings-item-copy">
+          <strong>Contacts</strong>
+          <small>Manage people and conversations</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
+    </section>
+
+    <!-- About -->
+    <section class="settings-group settings-about">
+      <h2>About</h2>
+
+      <a class="settings-item" href="#about">
+        <span class="settings-item-icon">ℹ️</span>
+        <span class="settings-item-copy">
+          <strong>About ZakiChat</strong>
+          <small>ZakiChat version and application information</small>
+        </span>
+        <span class="settings-chevron">›</span>
+      </a>
     </section>
 
   </main>
 
+  <!-- Main application navigation -->
   <nav class="bottom-nav" aria-label="Main app navigation">
 
     <a href="chats.html">
-      <span>💬</span>
-      Chats
-    </a>
-
-    <a href="contacts.html">
-      <span>👥</span>
-      Contacts
-    </a>
-
-    <a href="groups.html">
-      <span>👨‍👩‍👧</span>
-      Groups
-    </a>
-
-    <a href="notifications.html">
-      <span>🔔</span>
-      Updates
+      <span class="bottom-nav-icon" aria-hidden="true">💬</span>
+      <span>Chats</span>
     </a>
 
     <a
-      class="selected"
       href="settings.html"
+      class="selected"
       aria-current="page"
     >
-      <span>⚙️</span>
-      Settings
+      <span class="bottom-nav-icon" aria-hidden="true">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <a href="calls.html">
+      <span class="bottom-nav-icon" aria-hidden="true">📞</span>
+      <span>Calls</span>
     </a>
 
   </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../static/js/i18n.js"></script>\n  <script src="../static/js/config.js"></script>
+  <script src="../static/js/i18n.js"></script>
+  <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
-<script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/realtime.js"></script>
   <script src="../static/js/service-worker.js"></script>
