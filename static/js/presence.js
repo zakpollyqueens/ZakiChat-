@@ -6,22 +6,15 @@
     return;
   }
 
-  const { createClient } = window.supabase;
-
   const supabaseClient =
-    window.ZakiChatAuth?.client ||
-    createClient(
-      window.ZakiChatConfig.supabaseUrl,
-      window.ZakiChatConfig.supabaseKey,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true,
-          storageKey: "zakichat-auth"
-        }
-      }
+    window.ZakiChatAuth?.client;
+
+  if (!supabaseClient) {
+    console.error(
+      "ZakiChat presence: centralized Supabase client unavailable."
     );
+    return;
+  }
 
   const HEARTBEAT_INTERVAL = 30000;
 

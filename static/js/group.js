@@ -14,10 +14,15 @@
       return;
     }
 
-    const db = window.supabase.createClient(
-      config.supabaseUrl,
-      config.supabaseKey
-    );
+    const db =
+      window.ZakiChatAuth?.client;
+
+    if (!db) {
+      console.error(
+        "ZakiChat Group: centralized Supabase client unavailable."
+      );
+      return;
+    }
 
     window.ZakiMessages.init(config);
     window.ZakiRealtime.init(config);

@@ -9,10 +9,15 @@
     return;
   }
 
-  const db = window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-  );
+  const db =
+    window.ZakiChatAuth?.client;
+
+  if (!db) {
+    console.error(
+      "Groups: centralized Supabase client unavailable."
+    );
+    return;
+  };
 
   const state = {
     user: null,

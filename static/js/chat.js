@@ -18,12 +18,14 @@ document.addEventListener(
     }
 
     const db =
-      window.supabase.createClient(
-        window.ZakiChatConfig
-          .supabaseUrl,
-        window.ZakiChatConfig
-          .supabaseKey
+      window.ZakiChatAuth?.client;
+
+    if (!db) {
+      console.error(
+        "ZakiChat Chat: centralized Supabase client unavailable."
       );
+      return;
+    }
 
     window.ZakiMessages.init(
       window.ZakiChatConfig

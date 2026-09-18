@@ -11,19 +11,14 @@
       this.userId = userId;
 
       this.db =
-        window.ZakiChatAuth?.client ||
-        window.supabase.createClient(
-          config.supabaseUrl,
-          config.supabaseKey,
-          {
-            auth: {
-              persistSession: true,
-              autoRefreshToken: true,
-              detectSessionInUrl: true,
-              storageKey: "zakichat-auth"
-            }
-          }
+        window.ZakiChatAuth?.client;
+
+      if (!this.db) {
+        console.error(
+          "ZakiChat Notification Badge: centralized Supabase client unavailable."
         );
+        return;
+      }
 
       this.render(0);
       this.load();

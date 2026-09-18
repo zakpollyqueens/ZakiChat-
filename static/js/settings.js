@@ -11,19 +11,14 @@
       }
 
       this.client =
-        window.ZakiChatAuth?.client ||
-        window.supabase.createClient(
-          window.ZakiChatConfig.supabaseUrl,
-          window.ZakiChatConfig.supabaseKey,
-          {
-            auth: {
-              persistSession: true,
-              autoRefreshToken: true,
-              detectSessionInUrl: true,
-              storageKey: "zakichat-auth"
-            }
-          }
+        window.ZakiChatAuth?.client;
+
+      if (!this.client) {
+        console.error(
+          "ZakiChat Settings: centralized Supabase client unavailable."
         );
+        return;
+      }
 
       const { data } =
         await this.client.auth.getSession();

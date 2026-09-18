@@ -6,18 +6,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  const db = window.supabase.createClient(
-    window.ZakiChatConfig.supabaseUrl,
-    window.ZakiChatConfig.supabaseKey,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-        storageKey: "zakichat-auth"
-      }
-    }
-  );
+  const db =
+    window.ZakiChatAuth?.client;
+
+  if (!db) {
+    console.error(
+      "ZakiChat: centralized Supabase client unavailable."
+    );
+    return;
+  };
 
   const $ = id => document.getElementById(id);
 

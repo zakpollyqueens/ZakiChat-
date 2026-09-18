@@ -19,10 +19,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const db =
-    window.supabase.createClient(
-      window.ZakiChatConfig.supabaseUrl,
-      window.ZakiChatConfig.supabaseKey
+    window.ZakiChatAuth?.client;
+
+  if (!db) {
+    console.error(
+      "ZakiChat Conversation List: centralized Supabase client unavailable."
     );
+    return;
+  }
 
   if (window.ZakiRealtime) {
     window.ZakiRealtime.init(

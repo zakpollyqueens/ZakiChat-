@@ -15,10 +15,15 @@
         return null;
       }
 
-      this.db = window.supabase.createClient(
-        config.supabaseUrl,
-        config.supabaseKey
-      );
+      this.db =
+        window.ZakiChatAuth?.client;
+
+      if (!this.db) {
+        console.error(
+          "ZakiChat Conversations: centralized Supabase client unavailable."
+        );
+        return null;
+      }
 
       this.currentUser = user;
 

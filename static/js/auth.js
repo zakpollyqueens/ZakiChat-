@@ -6,24 +6,15 @@
     return;
   }
 
-  const { createClient } = window.supabase;
+  const supabaseClient =
+    window.ZakiChatAuth?.client;
 
-  const supabaseClient = createClient(
-    window.ZakiChatConfig.supabaseUrl,
-    window.ZakiChatConfig.supabaseKey,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-        storageKey: "zakichat-auth"
-      }
-    }
-  );
-
-  window.ZakiChatAuth = Object.freeze({
-    client: supabaseClient
-  });
+  if (!supabaseClient) {
+    console.error(
+      "ZakiChat authentication client is unavailable."
+    );
+    return;
+  }
 
   const page = window.location.pathname.toLowerCase();
   const isLoginPage = page.endsWith("/login.html");
