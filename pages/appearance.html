@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#07111f">
+
+  <title>Appearance | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/appearance.css">
+</head>
+
+<body class="appearance-page">
+
+  <main class="appearance-shell">
+
+    <header class="appearance-header">
+      <a class="appearance-back" href="settings.html" aria-label="Back to Settings">
+        <span aria-hidden="true">←</span>
+        <span>Settings</span>
+      </a>
+
+      <div class="appearance-title">
+        <span class="appearance-eyebrow">ZAKICHAT</span>
+        <h1>Appearance</h1>
+        <p>Personalize how ZakiChat looks and feels.</p>
+      </div>
+    </header>
+
+    <!-- Theme -->
+    <section class="appearance-card">
+      <div class="appearance-card-heading">
+        <div>
+          <span class="appearance-icon">🌗</span>
+          <h2>Theme</h2>
+        </div>
+        <p>Choose the look you prefer.</p>
+      </div>
+
+      <div class="theme-options" role="radiogroup" aria-label="Theme">
+        <button type="button" class="theme-option" data-theme-choice="light">
+          <span class="theme-preview theme-preview-light"></span>
+          <strong>Light</strong>
+          <small>Bright interface</small>
+        </button>
+
+        <button type="button" class="theme-option" data-theme-choice="dark">
+          <span class="theme-preview theme-preview-dark"></span>
+          <strong>Dark</strong>
+          <small>Dark interface</small>
+        </button>
+
+        <button type="button" class="theme-option" data-theme-choice="system">
+          <span class="theme-preview theme-preview-system"></span>
+          <strong>System</strong>
+          <small>Follow device</small>
+        </button>
+      </div>
+    </section>
+
+    <!-- Wallpaper -->
+    <section class="appearance-card">
+      <div class="appearance-card-heading">
+        <div>
+          <span class="appearance-icon">🖼️</span>
+          <h2>Wallpaper</h2>
+        </div>
+        <p>Use any picture stored on your device.</p>
+      </div>
+
+      <div class="wallpaper-preview" id="wallpaperPreview">
+        <div class="wallpaper-preview-content">
+          <span>💬</span>
+          <strong>ZakiChat</strong>
+          <small>Your wallpaper preview</small>
+        </div>
+      </div>
+
+      <div class="appearance-actions">
+        <label class="appearance-button primary-button" for="wallpaperInput">
+          Choose Picture
+        </label>
+
+        <button
+          type="button"
+          id="removeWallpaper"
+          class="appearance-button secondary-button"
+        >
+          Remove Wallpaper
+        </button>
+
+        <input
+          id="wallpaperInput"
+          type="file"
+          accept="image/*"
+          hidden
+        >
+      </div>
+
+      <p id="wallpaperStatus" class="appearance-status" aria-live="polite"></p>
+    </section>
+
+    <!-- Font -->
+    <section class="appearance-card">
+      <div class="appearance-card-heading">
+        <div>
+          <span class="appearance-icon">🔤</span>
+          <h2>Font</h2>
+        </div>
+        <p>Customize the text style used by ZakiChat.</p>
+      </div>
+
+      <label class="appearance-label" for="fontFamily">
+        Font family
+      </label>
+
+      <select id="fontFamily" class="appearance-select">
+        <option value="Inter, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif">
+          Inter / System
+        </option>
+        <option value="Arial, Helvetica, sans-serif">
+          Arial
+        </option>
+        <option value="Trebuchet MS, Arial, sans-serif">
+          Trebuchet MS
+        </option>
+        <option value="Georgia, serif">
+          Georgia
+        </option>
+        <option value="Verdana, Geneva, sans-serif">
+          Verdana
+        </option>
+        <option value="monospace">
+          Monospace
+        </option>
+      </select>
+
+      <label class="appearance-label" for="fontSize">
+        Font size
+      </label>
+
+      <div class="font-size-control">
+        <input
+          id="fontSize"
+          type="range"
+          min="13"
+          max="22"
+          step="1"
+          value="16"
+        >
+
+        <output id="fontSizeValue" for="fontSize">16px</output>
+      </div>
+
+      <div id="fontPreview" class="font-preview">
+        <strong>ZakiChat Preview</strong>
+        <p>This is how your messages and interface text will look.</p>
+      </div>
+    </section>
+
+    <!-- Chat appearance -->
+    <section class="appearance-card">
+      <div class="appearance-card-heading">
+        <div>
+          <span class="appearance-icon">💬</span>
+          <h2>Chat appearance</h2>
+        </div>
+        <p>More chat customization options are coming.</p>
+      </div>
+
+      <div class="coming-feature">
+        <span>✨</span>
+        <div>
+          <strong>More customization</strong>
+          <p>
+            Chat bubble styles, message background opacity,
+            accent colors and spacing can be added here.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/i18n.js"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/appearance.js"></script>
+
+</body>
+</html>
