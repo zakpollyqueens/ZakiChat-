@@ -260,6 +260,180 @@
       );
     },
 
+    isLocked() {
+      return Boolean(this.locked);
+    },
+
+    lock() {
+      if (!this.isEnabled()) {
+        this.locked = false;
+        return false;
+      }
+
+      if (this.autoLockTimer) {
+        clearTimeout(this.autoLockTimer);
+        this.autoLockTimer = null;
+      }
+
+      this.locked = true;
+      this.unlocking = false;
+
+      window.dispatchEvent(
+        new CustomEvent("zakichat:app-locked")
+      );
+
+      return true;
+    },
+
+    async unlock(secret) {
+      if (!this.isEnabled()) {
+        this.locked = false;
+        return true;
+      }
+
+      if (this.unlocking) {
+        return false;
+      }
+
+      this.unlocking = true;
+
+      try {
+        const valid =
+          await this.verifySecret(secret);
+
+        if (!valid) {
+          return false;
+        }
+
+        this.locked = false;
+
+        window.dispatchEvent(
+          new CustomEvent("zakichat:app-unlocked")
+        );
+
+        this.markActivity();
+
+        return true;
+      } finally {
+        this.unlocking = false;
+      }
+    },
+
+    markActivity() {
+      if (!this.isEnabled() || this.locked) {
+        return;
+      }
+
+      if (this.autoLockTimer) {
+        clearTimeout(this.autoLockTimer);
+        this.autoLockTimer = null;
+      }
+
+      const setting =
+        this.config?.autoLock || "immediately";
+
+      if (setting === "immediately") {
+        return;
+      }
+
+      const minutes = Number(setting);
+
+      if (
+        !Number.isFinite(minutes) ||
+        minutes <= 0
+      ) {
+        return;
+      }
+
+      this.autoLockTimer =
+        setTimeout(() => {
+          this.lock();
+        }, minutes * 60 * 1000);
+    },
+
+    startAutoLock() {
+      if (this.activityHandler) {
+        return;
+      }
+
+      this.activityHandler = () => {
+        this.markActivity();
+      };
+
+      [
+        "click",
+        "keydown",
+        "touchstart",
+        "pointerdown"
+      ].forEach(eventName => {
+        document.addEventListener(
+          eventName,
+          this.activityHandler,
+          {
+            passive: true
+          }
+        );
+      });
+
+      this.visibilityHandler = () => {
+        if (
+          document.visibilityState ===
+          "hidden"
+        ) {
+          if (
+            this.isEnabled() &&
+            this.config?.autoLock ===
+              "immediately"
+          ) {
+            this.lock();
+          }
+
+          return;
+        }
+
+        this.markActivity();
+      };
+
+      document.addEventListener(
+        "visibilitychange",
+        this.visibilityHandler
+      );
+
+      this.markActivity();
+    },
+
+    stopAutoLock() {
+      if (this.autoLockTimer) {
+        clearTimeout(this.autoLockTimer);
+        this.autoLockTimer = null;
+      }
+
+      if (this.activityHandler) {
+        [
+          "click",
+          "keydown",
+          "touchstart",
+          "pointerdown"
+        ].forEach(eventName => {
+          document.removeEventListener(
+            eventName,
+            this.activityHandler
+          );
+        });
+
+        this.activityHandler = null;
+      }
+
+      if (this.visibilityHandler) {
+        document.removeEventListener(
+          "visibilitychange",
+          this.visibilityHandler
+        );
+
+        this.visibilityHandler = null;
+      }
+    },
+
     async init() {
       if (
         !window.ZakiChatAuth?.client
