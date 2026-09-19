@@ -1,13 +1,24 @@
 /* =========================================================
    ZakiChat Updates / Notifications
    Responsive presentation layer.
-   Existing notification JavaScript remains untouched.
+   Notification data and realtime logic remain untouched.
    ========================================================= */
 
 .notifications-page {
   min-height: 100vh;
-  padding-bottom: 105px;
+  padding-bottom: 104px;
   overflow-x: hidden;
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(74, 144, 226, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(120, 80, 220, 0.10),
+      transparent 32%
+    );
 }
 
 .notifications-shell {
@@ -36,22 +47,22 @@
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 2px;
-  opacity: .58;
+  opacity: 0.58;
 }
 
 .notifications-header h1 {
   margin: 0;
-  font-size: clamp(28px, 5vw, 38px);
+  font-size: clamp(29px, 5vw, 40px);
   line-height: 1.08;
-  letter-spacing: -.7px;
+  letter-spacing: -0.8px;
 }
 
 .notifications-header p {
   max-width: 560px;
-  margin: 8px 0 0;
+  margin: 9px 0 0;
   font-size: 14px;
   line-height: 1.55;
-  opacity: .68;
+  opacity: 0.68;
 }
 
 /* ---------- Action ---------- */
@@ -66,34 +77,41 @@
   min-height: 42px;
   padding: 10px 16px;
 
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 999px;
 
-  background: rgba(255,255,255,.055);
+  background: rgba(255, 255, 255, 0.055);
   color: inherit;
 
   cursor: pointer;
   font: inherit;
   font-size: 12px;
   font-weight: 750;
-
   white-space: nowrap;
 
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.06);
+
   transition:
-    transform .18s ease,
-    background .18s ease,
-    border-color .18s ease,
-    opacity .18s ease;
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
 }
 
 .notifications-action:hover {
   transform: translateY(-1px);
-  background: rgba(255,255,255,.09);
-  border-color: rgba(255,255,255,.16);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .notifications-action:active {
   transform: translateY(0);
+}
+
+.notifications-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .notifications-action:focus-visible {
@@ -105,7 +123,7 @@
 
 .notifications-list {
   display: grid;
-  gap: 10px;
+  gap: 11px;
 }
 
 /* ---------- Notification cards ---------- */
@@ -119,26 +137,25 @@
 
   width: 100%;
   min-width: 0;
-
   padding: 16px;
 
-  border: 1px solid rgba(255,255,255,.075);
+  border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 18px;
 
-  background: rgba(255,255,255,.035);
+  background: rgba(255, 255, 255, 0.035);
 
   box-shadow:
-    0 8px 30px rgba(0,0,0,.06);
+    0 10px 30px rgba(0, 0, 0, 0.055);
 
   transition:
-    transform .18s ease,
-    background .18s ease,
-    border-color .18s ease;
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .notification-card.is-unread {
-  background: rgba(70,170,255,.085);
-  border-color: rgba(70,170,255,.2);
+  background: rgba(70, 170, 255, 0.085);
+  border-color: rgba(70, 170, 255, 0.21);
 }
 
 .notification-card[role="button"] {
@@ -147,11 +164,17 @@
 
 .notification-card[role="button"]:hover {
   transform: translateY(-1px);
-  background: rgba(255,255,255,.055);
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .notification-card[role="button"]:active {
   transform: translateY(0);
+}
+
+.notification-card[role="button"]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 /* ---------- Icon ---------- */
@@ -159,18 +182,21 @@
 .notification-card-icon {
   width: 44px;
   height: 44px;
-
   flex: 0 0 44px;
 
   display: grid;
   place-items: center;
 
-  border: 1px solid rgba(255,255,255,.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 50%;
 
-  background: rgba(70,170,255,.13);
+  background: rgba(70, 170, 255, 0.13);
 
   font-size: 18px;
+  line-height: 1;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025);
 }
 
 /* ---------- Content ---------- */
@@ -195,8 +221,7 @@
 
   font-size: 13px;
   line-height: 1.55;
-
-  opacity: .76;
+  opacity: 0.76;
 
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -208,7 +233,7 @@
   font-size: 11px;
   line-height: 1.3;
 
-  opacity: .5;
+  opacity: 0.5;
 }
 
 /* ---------- Empty state ---------- */
@@ -226,19 +251,19 @@
   display: grid;
   place-items: center;
 
-  width: 76px;
-  height: 76px;
+  width: 78px;
+  height: 78px;
   margin-bottom: 18px;
 
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 50%;
 
-  background: rgba(255,255,255,.04);
+  background: rgba(255, 255, 255, 0.045);
 
   font-size: 32px;
 
   box-shadow:
-    0 14px 40px rgba(0,0,0,.08);
+    0 14px 40px rgba(0, 0, 0, 0.08);
 }
 
 .notifications-empty h2 {
@@ -255,7 +280,7 @@
   font-size: 13px;
   line-height: 1.55;
 
-  opacity: .62;
+  opacity: 0.62;
 }
 
 /* ---------- Error ---------- */
@@ -264,10 +289,10 @@
   margin-top: 18px;
   padding: 14px 16px;
 
-  border: 1px solid rgba(255,90,90,.2);
+  border: 1px solid rgba(255, 90, 90, 0.2);
   border-radius: 14px;
 
-  background: rgba(255,70,70,.07);
+  background: rgba(255, 70, 70, 0.07);
 
   font-size: 13px;
   line-height: 1.5;
@@ -275,9 +300,7 @@
   overflow-wrap: anywhere;
 }
 
-/* ---------- Bottom navigation ----------
-   Intentionally preserves the existing navigation.
-   ---------- */
+/* ---------- Bottom navigation ---------- */
 
 .notifications-page .bottom-nav {
   z-index: 50;
@@ -365,6 +388,7 @@
   }
 
   .notification-card {
+    gap: 9px;
     padding: 11px;
   }
 
