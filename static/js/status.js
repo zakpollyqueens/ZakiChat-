@@ -1838,3 +1838,224 @@ showComposerError(message) {
   );
 
 })();
+
+
+/*
+ * ============================================================
+ * ZAKICHAT NEW RELEASES
+ * ============================================================
+ *
+ * Release types are intentionally separate:
+ *
+ * latest  = FREE DOWNLOAD
+ * upgrade = PAID UPGRADE
+ *
+ * Future data will be supplied by the Admin Dashboard through
+ * the secure ZakiChat backend.
+ *
+ * Payment authorization MUST be enforced server-side.
+ * Frontend JavaScript must never be the authority for payment.
+ * ============================================================
+ */
+
+(function () {
+  'use strict';
+
+  const fallbackLatestRelease = {
+    version: 'zc-vr15',
+    description:
+      'The latest publicly available ZakiChat version is available for free download.',
+    channel: 'Stable',
+    releaseDate: null,
+    downloadUrl: '#'
+  };
+
+  const fallbackPaidUpgrades = [
+  {
+    id: 'personal_monthly',
+    title: 'Customized Personal',
+    description:
+      'Premium Personal features with larger file transfers and additional customized features.',
+    accountType: 'Personal',
+    price: '$2',
+    billingInterval: 'Monthly',
+    features: [
+      'Larger file transfers',
+      'Files up to 100 MB',
+      'Customized Personal experience',
+      'Additional premium features as released'
+    ],
+    upgradeUrl: '#'
+  },
+  {
+    id: 'business_monthly',
+    title: 'Customized Business',
+    description:
+      'Business features for profiles, teams, employee groups, meetings and business communication.',
+    accountType: 'Business',
+    price: '$10',
+    billingInterval: 'Monthly',
+    features: [
+      'Upgraded Business profile',
+      'Business chat and communication',
+      'Employee and team groups',
+      'Business meetings',
+      'Business-focused communication features'
+    ],
+    upgradeUrl: '#'
+  }
+];
+
+  function setReleaseText(id, value) {
+    const element = document.getElementById(id);
+
+    if (element && value !== undefined && value !== null) {
+      element.textContent = value;
+    }
+  }
+
+  function formatReleaseDate(value) {
+    if (!value) {
+      return '—';
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  function escapeReleaseHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function renderLatestRelease(release) {
+    const data = release || fallbackLatestRelease;
+
+    setReleaseText(
+      'updatesLatestVersion',
+      data.version || 'zc-vr15'
+    );
+
+    setReleaseText(
+      'updatesLatestDescription',
+      data.description || ''
+    );
+
+    setReleaseText(
+      'updatesLatestChannel',
+      data.channel || 'Stable'
+    );
+
+    setReleaseText(
+      'updatesLatestDate',
+      formatReleaseDate(data.releaseDate)
+    );
+
+    const button = document.getElementById(
+      'updatesLatestDownload'
+    );
+
+    if (button) {
+      button.href = data.downloadUrl || '#';
+    }
+  }
+
+  function renderPaidUpgrades(upgrades) {
+    const container = document.getElementById(
+      'updatesUpgradeList'
+    );
+
+    if (!container) {
+      return;
+    }
+
+    if (!Array.isArray(upgrades) || upgrades.length === 0) {
+      return;
+    }
+
+    container.innerHTML = upgrades
+      .map(function (upgrade) {
+        return `
+          <article class="release-upgrade-item">
+
+            <h4>
+              ${escapeReleaseHtml(
+                upgrade.title || upgrade.version || 'ZakiChat Upgrade'
+              )}
+            </h4>
+
+            <p>
+              ${escapeReleaseHtml(
+                upgrade.description || ''
+              )}
+            </p>
+
+            <span class="upgrade-price">
+              Upgrade fee:
+              ${escapeReleaseHtml(
+                upgrade.price || 'See upgrade details'
+              )}
+            </span>
+
+            <a
+              class="release-upgrade-button"
+              href="${escapeReleaseHtml(
+                upgrade.upgradeUrl || '#'
+              )}"
+            >
+              Upgrade Now
+            </a>
+
+          </article>
+        `;
+      })
+      .join('');
+  }
+
+  async function loadAdminPublishedReleases() {
+
+    /*
+     * Future implementation:
+     *
+     * const response = await fetch('/api/public/releases');
+     *
+     * The backend will return separately:
+     *
+     * {
+     *   latest: {...},
+     *   upgrades: [...]
+     * }
+     *
+     * This information will come from the Admin Dashboard.
+     *
+     * No admin credentials or secret keys belong here.
+     */
+
+    renderLatestRelease(fallbackLatestRelease);
+
+    renderPaidUpgrades(fallbackPaidUpgrades);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded',
+      loadAdminPublishedReleases
+    );
+  } else {
+    loadAdminPublishedReleases();
+  }
+
+})();
