@@ -1780,3 +1780,141 @@
     font-size: .95rem;
   }
 }
+
+/* =========================================================
+   ZakiChat top actions — responsive interaction
+   ========================================================= */
+
+.top-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.top-actions .icon-button,
+.top-actions .updates-indicator {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.top-actions .icon-button {
+  cursor: pointer;
+}
+
+.top-actions .icon-button:active,
+.top-actions .updates-indicator:active {
+  transform: scale(.92);
+}
+
+.top-more-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.top-more-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  width: min(230px, calc(100vw - 24px));
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(8, 21, 34, .98);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .38);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.top-more-menu[hidden] {
+  display: none;
+}
+
+.top-more-menu a,
+.top-more-menu button {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.top-more-menu a:hover,
+.top-more-menu button:hover {
+  background: rgba(255, 255, 255, .07);
+  color: var(--white);
+}
+
+.top-more-menu a:active,
+.top-more-menu button:active {
+  transform: scale(.98);
+}
+
+.top-more-menu a:focus-visible,
+.top-more-menu button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+@media (max-width: 700px) {
+  .top-actions {
+    gap: 4px;
+  }
+
+  .top-actions .icon-button,
+  .top-actions .updates-indicator {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    flex-basis: 38px;
+    border-radius: 11px;
+  }
+
+  .top-more-menu {
+    right: -2px;
+    width: min(220px, calc(100vw - 20px));
+  }
+}
+
+@media (max-width: 480px) {
+  .top-actions {
+    gap: 2px;
+  }
+
+  .top-actions .icon-button,
+  .top-actions .updates-indicator {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    flex-basis: 36px;
+    border-radius: 10px;
+  }
+
+  .top-more-menu {
+    top: calc(100% + 6px);
+    right: -4px;
+    width: min(210px, calc(100vw - 16px));
+  }
+}
