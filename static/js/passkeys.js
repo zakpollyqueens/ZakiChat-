@@ -556,11 +556,35 @@
     }
   );
 
-  document.addEventListener(
-    "DOMContentLoaded",
-    async function () {
-      setSupportStatus();
+    async function initializePasskeysPage() {
+    setSupportStatus();
+
+    try {
+      await waitForClient();
+
       await refreshPasskeys();
+    } catch (error) {
+      console.error(
+        "ZakiChat passkey initialization error:",
+        error
+      );
+
+      renderEmpty(
+        error?.message ||
+          "Unable to initialize the passkey service."
+      );
     }
-  );
+  }
+
+  if (
+    document.readyState === "loading"
+  ) {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializePasskeysPage,
+      { once: true }
+    );
+  } else {
+    initializePasskeysPage();
+  }
 })();
