@@ -565,3 +565,137 @@
     flex-basis: 32px;
   }
 }
+
+/* ============================================================
+   CHANNELS IN UPDATES
+   ============================================================ */
+
+.channels-updates-section {
+  margin-top: 34px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(127, 127, 127, 0.16);
+  background: var(--card-bg, rgba(255, 255, 255, 0.04));
+}
+
+.channels-updates-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.channels-updates-heading h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.channels-updates-heading p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  opacity: 0.62;
+}
+
+.channels-open-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 127, 127, 0.18);
+  background: rgba(127, 127, 127, 0.08);
+  color: inherit;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.channels-open-button:hover {
+  background: rgba(127, 127, 127, 0.14);
+}
+
+.channels-updates-grid {
+  display: grid;
+  gap: 9px;
+}
+
+.channels-updates-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 13px;
+  border-radius: 15px;
+  border: 1px solid rgba(127, 127, 127, 0.13);
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+}
+
+.channels-updates-card:hover {
+  background: rgba(127, 127, 127, 0.06);
+}
+
+.channels-updates-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(127, 127, 127, 0.12);
+  font-size: 21px;
+}
+
+.channels-updates-card-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.channels-updates-card-content strong,
+.channels-updates-card-content span {
+  display: block;
+}
+
+.channels-updates-card-content strong {
+  font-size: 14px;
+}
+
+.channels-updates-card-content span {
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  opacity: 0.62;
+}
+
+.channels-updates-arrow {
+  flex: 0 0 auto;
+  font-size: 25px;
+  opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .channels-updates-heading {
+    align-items: flex-start;
+  }
+
+  .channels-open-button {
+    min-height: 36px;
+    padding: 0 13px;
+  }
+
+  .channels-updates-card {
+    padding: 12px;
+  }
+
+  .channels-updates-icon {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+}
