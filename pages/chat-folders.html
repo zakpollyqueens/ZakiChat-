@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Folders | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/chat-folders.css">
+</head>
+
+<body>
+  <main class="chat-folders-page">
+    <header class="chat-folders-header">
+      <a href="settings.html" class="back-button" aria-label="Back to Settings">‹</a>
+
+      <div>
+        <h1>Chat Folders</h1>
+        <p>Organize your conversations into custom folders.</p>
+      </div>
+    </header>
+
+    <section class="folders-card">
+      <div class="folders-intro">
+        <span class="folders-icon">🗂️</span>
+
+        <div>
+          <h2>Your folders</h2>
+          <p>Create folders to keep important conversations easy to find.</p>
+        </div>
+      </div>
+
+      <div id="foldersList" class="folders-list"></div>
+
+      <button type="button" id="createFolderButton" class="create-folder-button">
+        <span>＋</span>
+        <span>Create new folder</span>
+      </button>
+    </section>
+
+    <div id="folderDialog" class="folder-dialog" hidden>
+      <div class="folder-dialog-backdrop" data-close-dialog></div>
+
+      <div class="folder-dialog-card" role="dialog" aria-modal="true" aria-labelledby="folderDialogTitle">
+        <h2 id="folderDialogTitle">Create folder</h2>
+
+        <label for="folderName">Folder name</label>
+        <input
+          type="text"
+          id="folderName"
+          maxlength="40"
+          placeholder="e.g. Family, Work, School"
+          autocomplete="off"
+        >
+
+        <div class="folder-dialog-actions">
+          <button type="button" id="cancelFolderButton" class="secondary-button">
+            Cancel
+          </button>
+
+          <button type="button" id="saveFolderButton" class="primary-button">
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../static/js/chat-folders.js"></script>
+</body>
+</html>

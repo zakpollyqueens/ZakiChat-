@@ -1,0 +1,239 @@
+.chat-folders-page {
+  width: min(100% - 32px, 760px);
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.chat-folders-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 30px;
+  line-height: 1;
+  background: var(--card-background, rgba(255,255,255,.08));
+  color: inherit;
+}
+
+.chat-folders-header h1 {
+  margin: 0 0 5px;
+  font-size: 28px;
+}
+
+.chat-folders-header p {
+  margin: 0;
+  opacity: .7;
+}
+
+.folders-card {
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--card-background, rgba(255,255,255,.06));
+  border: 1px solid var(--border-color, rgba(255,255,255,.1));
+}
+
+.folders-intro {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-color, rgba(255,255,255,.1));
+}
+
+.folders-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(127,127,127,.12);
+  font-size: 23px;
+}
+
+.folders-intro h2 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+
+.folders-intro p {
+  margin: 0;
+  opacity: .7;
+  font-size: 14px;
+}
+
+.folders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 0;
+}
+
+.folder-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(127,127,127,.08);
+}
+
+.folder-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.folder-symbol {
+  font-size: 22px;
+}
+
+.folder-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folder-meta {
+  margin-top: 3px;
+  font-size: 12px;
+  opacity: .6;
+}
+
+.delete-folder-button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  opacity: .65;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 8px;
+}
+
+.create-folder-button {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent-color, #4f8cff);
+  color: white;
+}
+
+.create-folder-button span:first-child {
+  font-size: 22px;
+}
+
+.empty-folders {
+  text-align: center;
+  padding: 24px 12px;
+  opacity: .65;
+  font-size: 14px;
+}
+
+.folder-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.folder-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+.folder-dialog-card {
+  position: relative;
+  width: min(100%, 420px);
+  padding: 22px;
+  border-radius: 20px;
+  background: var(--background-color, #111);
+  border: 1px solid var(--border-color, rgba(255,255,255,.12));
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.folder-dialog-card h2 {
+  margin: 0 0 18px;
+}
+
+.folder-dialog-card label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 14px;
+  opacity: .75;
+}
+
+.folder-dialog-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, rgba(255,255,255,.15));
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+.folder-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.secondary-button,
+.primary-button {
+  border: 0;
+  border-radius: 11px;
+  padding: 11px 17px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.secondary-button {
+  background: rgba(127,127,127,.12);
+  color: inherit;
+}
+
+.primary-button {
+  background: var(--accent-color, #4f8cff);
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .chat-folders-page {
+    width: min(100% - 20px, 760px);
+    padding-top: 18px;
+  }
+
+  .folders-card {
+    padding: 16px;
+  }
+
+  .chat-folders-header h1 {
+    font-size: 24px;
+  }
+}
