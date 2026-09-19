@@ -1,0 +1,210 @@
+.data-storage-page {
+  width: min(100% - 32px, 760px);
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.data-storage-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 30px;
+  line-height: 1;
+  background: var(--card-background, rgba(255,255,255,.08));
+  color: inherit;
+}
+
+.data-storage-header h1 {
+  margin: 0 0 5px;
+  font-size: 28px;
+}
+
+.data-storage-header p {
+  margin: 0;
+  opacity: .7;
+}
+
+.storage-card {
+  margin-bottom: 16px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--card-background, rgba(255,255,255,.06));
+  border: 1px solid var(--border-color, rgba(255,255,255,.1));
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.section-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(127,127,127,.12);
+  font-size: 21px;
+}
+
+.section-heading h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.section-heading p {
+  margin: 0;
+  font-size: 13px;
+  opacity: .65;
+}
+
+.setting-row,
+.usage-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border-color, rgba(255,255,255,.1));
+}
+
+.setting-copy {
+  min-width: 0;
+}
+
+.setting-copy strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.setting-copy small {
+  display: block;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: .65;
+}
+
+.toggle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 28px;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(127,127,127,.28);
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.toggle-slider::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  top: 3px;
+  left: 3px;
+  border-radius: 50%;
+  background: white;
+  transition: .2s ease;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: var(--accent-color, #4f8cff);
+}
+
+.toggle input:checked + .toggle-slider::after {
+  transform: translateX(20px);
+}
+
+.storage-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.storage-summary > div {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(127,127,127,.08);
+}
+
+.storage-summary strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.storage-summary span {
+  font-size: 12px;
+  opacity: .6;
+}
+
+.storage-action {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 13px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  background: rgba(127,127,127,.12);
+  color: inherit;
+}
+
+.storage-note {
+  margin: 12px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: .55;
+}
+
+.usage-row {
+  padding: 14px 0;
+}
+
+.usage-row strong {
+  opacity: .7;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .data-storage-page {
+    width: min(100% - 20px, 760px);
+    padding-top: 18px;
+  }
+
+  .data-storage-header h1 {
+    font-size: 24px;
+  }
+
+  .storage-card {
+    padding: 16px;
+  }
+
+  .storage-summary {
+    grid-template-columns: 1fr;
+  }
+}

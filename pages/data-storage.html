@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data & Storage | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/data-storage.css">
+</head>
+
+<body>
+  <main class="data-storage-page">
+
+    <header class="data-storage-header">
+      <a href="settings.html" class="back-button" aria-label="Back to Settings">‹</a>
+
+      <div>
+        <h1>Data & Storage</h1>
+        <p>Manage mobile data, media downloads and storage usage.</p>
+      </div>
+    </header>
+
+    <section class="storage-card">
+      <div class="section-heading">
+        <span class="section-icon">📊</span>
+        <div>
+          <h2>Data Saver</h2>
+          <p>Reduce mobile data usage when using ZakiChat.</p>
+        </div>
+      </div>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Use less data for calls</strong>
+          <small>Reduce data usage during voice and video calls.</small>
+        </span>
+
+        <span class="toggle">
+          <input type="checkbox" id="callDataSaver">
+          <span class="toggle-slider"></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="storage-card">
+      <div class="section-heading">
+        <span class="section-icon">📥</span>
+        <div>
+          <h2>Media Auto-Download</h2>
+          <p>Choose when ZakiChat can automatically download media.</p>
+        </div>
+      </div>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Mobile data</strong>
+          <small>Automatically download supported media on mobile data.</small>
+        </span>
+
+        <span class="toggle">
+          <input type="checkbox" id="mobileAutoDownload">
+          <span class="toggle-slider"></span>
+        </span>
+      </label>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Wi-Fi</strong>
+          <small>Automatically download supported media over Wi-Fi.</small>
+        </span>
+
+        <span class="toggle">
+          <input type="checkbox" id="wifiAutoDownload">
+          <span class="toggle-slider"></span>
+        </span>
+      </label>
+    </section>
+
+    <section class="storage-card">
+      <div class="section-heading">
+        <span class="section-icon">🗃️</span>
+        <div>
+          <h2>Storage Usage</h2>
+          <p>Review how much device storage ZakiChat uses.</p>
+        </div>
+      </div>
+
+      <div class="storage-summary">
+        <div>
+          <strong id="storageUsed">Calculating…</strong>
+          <span>Estimated app data</span>
+        </div>
+
+        <div>
+          <strong id="mediaCount">0</strong>
+          <span>Saved media items</span>
+        </div>
+      </div>
+
+      <button type="button" id="clearCachedData" class="storage-action">
+        Clear cached data
+      </button>
+
+      <p class="storage-note">
+        Clearing cached data removes locally cached ZakiChat data from this browser/device.
+        It does not delete your account or cloud conversations.
+      </p>
+    </section>
+
+    <section class="storage-card">
+      <div class="section-heading">
+        <span class="section-icon">📶</span>
+        <div>
+          <h2>Network Usage</h2>
+          <p>Keep data usage under control while using ZakiChat.</p>
+        </div>
+      </div>
+
+      <div class="usage-row">
+        <span>Mobile data</span>
+        <strong id="mobileUsage">Not available</strong>
+      </div>
+
+      <div class="usage-row">
+        <span>Wi-Fi</span>
+        <strong id="wifiUsage">Not available</strong>
+      </div>
+
+      <p class="storage-note">
+        Detailed network statistics will become available when supported by the
+        ZakiChat client.
+      </p>
+    </section>
+
+  </main>
+
+  <script src="../static/js/data-storage.js"></script>
+</body>
+</html>
