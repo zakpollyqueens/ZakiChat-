@@ -2,23 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Passkeys | ZakiChat</title>
 
-  <link rel="stylesheet" href="../static/css/main.css">
-  <link rel="stylesheet" href="../static/css/responsive.css">
-  <link rel="stylesheet" href="../static/css/passkeys.css">
+  <link
+    rel="stylesheet"
+    href="../static/css/main.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="../static/css/responsive.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="../static/css/passkeys.css"
+  >
 </head>
 
 <body>
   <main class="passkeys-page">
 
     <header class="passkeys-header">
-      <a href="settings.html" class="back-button" aria-label="Back to Settings">‹</a>
+      <a
+        href="settings.html"
+        class="back-button"
+        aria-label="Back to Settings"
+      >‹</a>
 
       <div>
         <h1>Passkeys</h1>
-        <p>Use a device-based credential to sign in securely.</p>
+
+        <p>
+          Use your device's security features
+          for secure ZakiChat authentication.
+        </p>
       </div>
     </header>
 
@@ -27,9 +50,12 @@
 
       <div>
         <h2>Simple, secure sign-in</h2>
+
         <p>
-          Passkeys use your device's built-in security features, such as
-          biometrics, a screen lock or a security key.
+          Passkeys use your device's built-in
+          security features, such as a screen
+          lock, biometric verification or a
+          security key.
         </p>
       </div>
     </section>
@@ -38,36 +64,64 @@
       <div class="status-row">
         <div>
           <h2>Passkey support</h2>
-          <p id="supportStatus">Checking this device…</p>
+
+          <p id="supportStatus">
+            Checking this device…
+          </p>
         </div>
 
-        <span id="supportBadge" class="status-badge">Checking</span>
+        <span
+          id="supportBadge"
+          class="status-badge"
+        >
+          Checking
+        </span>
       </div>
 
-      <button type="button" id="addPasskeyButton" class="primary-button">
+      <button
+        type="button"
+        id="addPasskeyButton"
+        class="primary-button"
+      >
         Add a passkey
       </button>
     </section>
 
     <section class="passkey-card">
       <div class="section-heading">
-        <span class="section-icon">🛡️</span>
+        <span class="section-icon">
+          🛡️
+        </span>
 
         <div>
           <h2>Your passkeys</h2>
-          <p>Passkeys registered for this ZakiChat account.</p>
+
+          <p>
+            Passkeys registered for this
+            ZakiChat account.
+          </p>
         </div>
       </div>
 
-      <div id="passkeysList" class="passkeys-list">
+      <div
+        id="passkeysList"
+        class="passkeys-list"
+      >
         <div class="empty-passkeys">
-          No passkeys have been registered on this device.
+          Loading your passkeys…
         </div>
       </div>
     </section>
 
-    <div id="passkeyDialog" class="passkey-dialog" hidden>
-      <div class="dialog-backdrop" data-close-dialog></div>
+    <div
+      id="passkeyDialog"
+      class="passkey-dialog"
+      hidden
+    >
+      <div
+        class="dialog-backdrop"
+        data-close-dialog
+      ></div>
 
       <div
         class="dialog-card"
@@ -75,14 +129,19 @@
         aria-modal="true"
         aria-labelledby="dialogTitle"
       >
-        <h2 id="dialogTitle">Passkey registration</h2>
+        <h2 id="dialogTitle">
+          Passkey
+        </h2>
 
         <p id="dialogMessage">
-          Passkey registration requires the ZakiChat authentication server
-          to provide a WebAuthn registration challenge.
+          Preparing…
         </p>
 
-        <button type="button" id="closeDialogButton" class="primary-button">
+        <button
+          type="button"
+          id="closeDialogButton"
+          class="primary-button"
+        >
           Close
         </button>
       </div>
@@ -90,6 +149,35 @@
 
   </main>
 
-  <script src="../static/js/passkeys.js"></script>
+  <!-- Supabase -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <!-- ZakiChat configuration -->
+  <script
+    src="../static/js/config.js"
+  ></script>
+
+  <!-- Account/session manager -->
+  <script
+    src="../static/js/account-manager.js"
+  ></script>
+
+  <!-- Centralized Supabase client -->
+  <script
+    src="../static/js/supabase-client.js"
+  ></script>
+
+  <!-- Page authentication guard -->
+  <script
+    src="../static/js/auth-guard.js"
+  ></script>
+
+  <!-- Passkey functionality -->
+  <script
+    src="../static/js/passkeys.js"
+  ></script>
+
 </body>
 </html>
