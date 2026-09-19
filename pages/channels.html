@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="ZakiChat Channels. Discover, follow and create channels.">
+<meta name="theme-color" content="#07111f">
+<title>Channels | ZakiChat</title>
+
+<link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
+
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/responsive.css">
+<link rel="stylesheet" href="../static/css/channels.css">
+</head>
+
+<body class="channels-page">
+
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+      <a href="../index.html" class="app-brand">
+        <img src="../static/images/icon.jpg" alt="ZakiChat">
+        <strong>ZakiChat</strong>
+      </a>
+
+      <div class="top-actions">
+
+        <a
+          href="status.html"
+          class="updates-indicator"
+          aria-label="Updates"
+          title="Updates"
+        >
+          <span class="updates-indicator-icon" aria-hidden="true">◌</span>
+        </a>
+
+        <button
+          type="button"
+          class="icon-button"
+          id="channels-more-button"
+          aria-label="More options"
+          aria-expanded="false"
+          aria-controls="channels-more-menu"
+          title="More options"
+        >⋮</button>
+
+        <div class="top-more-wrapper">
+
+          <div
+            class="top-more-menu"
+            id="channels-more-menu"
+            hidden
+            role="menu"
+            aria-label="ZakiChat menu"
+          >
+
+            <a href="notifications.html" role="menuitem">
+              🔔 <span>Notifications</span>
+            </a>
+
+            <a href="people.html" role="menuitem">
+              👤 <span>New Contact</span>
+            </a>
+
+            <a href="groups.html" role="menuitem">
+              👥 <span>New Group</span>
+            </a>
+
+            <a href="security.html" role="menuitem">
+              🔒 <span>Security</span>
+            </a>
+
+            <a href="appearance.html" role="menuitem">
+              🎨 <span>Appearance</span>
+            </a>
+
+            <a href="language.html" role="menuitem">
+              🌐 <span>Language</span>
+            </a>
+
+            <a href="settings.html" role="menuitem">
+              ⚙ <span>Settings</span>
+            </a>
+
+            <a href="../index.html" role="menuitem">
+              ℹ <span>About</span>
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="channels-sidebar-card">
+
+      <a href="chats.html" class="channels-back-link">
+        <span aria-hidden="true">←</span>
+        <span>Back to Chats</span>
+      </a>
+
+      <div class="channels-sidebar-title">
+        <span class="channels-sidebar-icon" aria-hidden="true">📢</span>
+        <div>
+          <strong>Channels</strong>
+          <span>Follow updates from creators</span>
+        </div>
+      </div>
+
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main app navigation">
+
+      <a href="chats.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon" aria-hidden="true">💬</span>
+        <span>Chats</span>
+      </a>
+
+      <a href="settings.html" class="bottom-nav-item">
+        <span class="bottom-nav-icon" aria-hidden="true">⚙</span>
+        <span>Settings</span>
+      </a>
+
+      <a href="status.html" class="bottom-nav-item selected" aria-current="page">
+        <span class="bottom-nav-icon" aria-hidden="true">🔔</span>
+        <span>Updates</span>
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+  <main class="channels-main">
+
+    <header class="channels-header">
+
+      <div>
+        <span class="channels-eyebrow">UPDATES</span>
+        <h1>Channels</h1>
+        <p>Discover channels and stay connected with the updates you care about.</p>
+      </div>
+
+      <div class="channels-header-actions">
+
+        <button
+          type="button"
+          class="channels-icon-button"
+          id="refresh-channels"
+          aria-label="Refresh channels"
+          title="Refresh channels"
+        >↻</button>
+
+        <button
+          type="button"
+          class="channels-primary-button"
+          id="open-create-channel"
+        >
+          <span aria-hidden="true">＋</span>
+          Create channel
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <section class="channels-search-section">
+
+      <label class="channels-search">
+        <span aria-hidden="true">⌕</span>
+
+        <input
+          type="search"
+          id="channel-search"
+          placeholder="Search channels"
+          autocomplete="off"
+          aria-label="Search channels"
+        >
+
+        <button
+          type="button"
+          id="clear-channel-search"
+          class="channels-search-clear"
+          aria-label="Clear search"
+          title="Clear search"
+          hidden
+        >×</button>
+
+      </label>
+
+    </section>
+
+
+    <section class="channels-section">
+
+      <div class="channels-section-heading">
+
+        <div>
+          <h2>My Channels</h2>
+          <p>Channels you manage or follow.</p>
+        </div>
+
+      </div>
+
+      <div id="my-channels-list" class="channel-list">
+
+        <div class="channels-loading">
+          Loading your channels...
+        </div>
+
+      </div>
+
+      <div
+        id="my-channels-empty"
+        class="channels-empty"
+        hidden
+      >
+        <div class="channels-empty-icon" aria-hidden="true">📢</div>
+        <strong>No channels yet</strong>
+        <span>Create a channel or follow a public channel to see it here.</span>
+      </div>
+
+    </section>
+
+
+    <section class="channels-section">
+
+      <div class="channels-section-heading">
+
+        <div>
+          <h2>Discover Channels</h2>
+          <p>Explore public channels on ZakiChat.</p>
+        </div>
+
+      </div>
+
+      <div id="discover-channels-list" class="channel-list">
+
+        <div class="channels-loading">
+          Loading channels...
+        </div>
+
+      </div>
+
+      <div
+        id="discover-channels-empty"
+        class="channels-empty"
+        hidden
+      >
+        <div class="channels-empty-icon" aria-hidden="true">🔎</div>
+        <strong>No channels found</strong>
+        <span>Try another search.</span>
+      </div>
+
+    </section>
+
+
+    <section
+      id="channel-view"
+      class="channel-view"
+      hidden
+    >
+
+      <div class="channel-view-header">
+
+        <button
+          type="button"
+          class="channels-icon-button"
+          id="close-channel-view"
+          aria-label="Back to channels"
+          title="Back to channels"
+        >←</button>
+
+        <div class="channel-profile-summary">
+
+          <div
+            class="channel-avatar channel-avatar-large"
+            id="channel-view-avatar"
+          >
+            📢
+          </div>
+
+          <div>
+
+            <div class="channel-name-row">
+
+              <h2 id="channel-view-name">Channel</h2>
+
+              <span
+                id="channel-view-public"
+                class="channel-public-badge"
+                hidden
+              >Public</span>
+
+            </div>
+
+            <span id="channel-view-handle">@channel</span>
+
+          </div>
+
+        </div>
+
+        <div class="channel-view-actions">
+
+          <button
+            type="button"
+            class="channels-secondary-button"
+            id="channel-follow-button"
+          >
+            Follow
+          </button>
+
+          <button
+            type="button"
+            class="channels-icon-button"
+            id="channel-view-menu"
+            aria-label="Channel options"
+            title="Channel options"
+          >⋮</button>
+
+        </div>
+
+      </div>
+
+
+      <div class="channel-description" id="channel-view-description" hidden></div>
+
+
+      <div class="channel-stats">
+
+        <div>
+          <strong id="channel-member-count">0</strong>
+          <span>Followers</span>
+        </div>
+
+        <div>
+          <strong id="channel-post-count">0</strong>
+          <span>Posts</span>
+        </div>
+
+      </div>
+
+
+      <div
+        id="channel-owner-tools"
+        class="channel-owner-tools"
+        hidden
+      >
+
+        <div class="channel-owner-tools-title">
+          <strong>Channel management</strong>
+          <span>You manage this channel.</span>
+        </div>
+
+        <button
+          type="button"
+          class="channels-primary-button"
+          id="open-channel-post-composer"
+        >
+          ＋ New post
+        </button>
+
+      </div>
+
+
+      <div
+        id="channel-post-composer"
+        class="channel-post-composer"
+        hidden
+      >
+
+        <div class="channel-post-composer-heading">
+          <strong>Create a post</strong>
+
+          <button
+            type="button"
+            class="channels-icon-button"
+            id="close-channel-post-composer"
+            aria-label="Close composer"
+            title="Close composer"
+          >×</button>
+        </div>
+
+        <textarea
+          id="channel-post-content"
+          maxlength="10000"
+          placeholder="Write an update for your followers..."
+          aria-label="Channel post"
+        ></textarea>
+
+        <div class="channel-post-composer-footer">
+
+          <span id="channel-post-character-count">0 / 10000</span>
+
+          <button
+            type="button"
+            class="channels-primary-button"
+            id="publish-channel-post"
+          >
+            Publish
+          </button>
+
+        </div>
+
+        <div
+          id="channel-post-error"
+          class="channel-form-message error"
+          hidden
+        ></div>
+
+      </div>
+
+
+      <div
+        id="channel-posts-loading"
+        class="channels-loading"
+        hidden
+      >
+        Loading posts...
+      </div>
+
+      <div
+        id="channel-posts-list"
+        class="channel-posts-list"
+      ></div>
+
+      <div
+        id="channel-posts-empty"
+        class="channels-empty"
+        hidden
+      >
+        <div class="channels-empty-icon" aria-hidden="true">📝</div>
+        <strong>No posts yet</strong>
+        <span>This channel hasn't published anything yet.</span>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<div
+  class="channel-dialog-backdrop"
+  id="create-channel-dialog"
+  hidden
+>
+
+  <section
+    class="channel-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="create-channel-title"
+  >
+
+    <div class="channel-dialog-header">
+
+      <div>
+        <span class="channels-eyebrow">NEW CHANNEL</span>
+        <h2 id="create-channel-title">Create a channel</h2>
+      </div>
+
+      <button
+        type="button"
+        class="channels-icon-button"
+        id="close-create-channel"
+        aria-label="Close"
+        title="Close"
+      >×</button>
+
+    </div>
+
+
+    <form id="create-channel-form">
+
+      <label class="channel-field">
+
+        <span>Channel name</span>
+
+        <input
+          type="text"
+          id="channel-name-input"
+          maxlength="80"
+          placeholder="e.g. Zaki Technology"
+          required
+        >
+
+      </label>
+
+
+      <label class="channel-field">
+
+        <span>Handle</span>
+
+        <div class="channel-handle-input">
+
+          <span>@</span>
+
+          <input
+            type="text"
+            id="channel-handle-input"
+            maxlength="40"
+            placeholder="zakitech"
+            autocomplete="off"
+            required
+          >
+
+        </div>
+
+        <small>3–40 characters: lowercase letters, numbers and underscores.</small>
+
+      </label>
+
+
+      <label class="channel-field">
+
+        <span>Description</span>
+
+        <textarea
+          id="channel-description-input"
+          maxlength="1000"
+          placeholder="Tell people what this channel is about..."
+        ></textarea>
+
+      </label>
+
+
+      <label class="channel-checkbox">
+
+        <input
+          type="checkbox"
+          id="channel-public-input"
+          checked
+        >
+
+        <span>
+          <strong>Public channel</strong>
+          <small>Anyone on ZakiChat can discover and follow this channel.</small>
+        </span>
+
+      </label>
+
+
+      <div
+        id="create-channel-message"
+        class="channel-form-message"
+        hidden
+      ></div>
+
+
+      <div class="channel-dialog-actions">
+
+        <button
+          type="button"
+          class="channels-secondary-button"
+          id="cancel-create-channel"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="channels-primary-button"
+          id="create-channel-submit"
+        >
+          Create channel
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../static/js/appearance.js"></script>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/account-manager.js"></script>
+<script src="../static/js/supabase-client.js"></script>
+<script src="../static/js/auth-guard.js"></script>
+<script src="../static/js/realtime.js"></script>
+
+<script src="../static/js/channels.js"></script>
+
+</body>
+</html>
