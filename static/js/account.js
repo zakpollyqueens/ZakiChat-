@@ -1281,3 +1281,32 @@
   initialize();
 
 })();
+
+/* Account activation/deactivation controls */
+(function () {
+  const deactivateButton = document.getElementById("deactivateAccountButton");
+  const activateButton = document.getElementById("activateAccountButton");
+
+  function showStatus(message, type) {
+    const messageBox = document.getElementById("accountMessage");
+    if (!messageBox) return;
+
+    messageBox.textContent = message;
+    messageBox.className = "account-message " + (type || "");
+    messageBox.hidden = false;
+  }
+
+  deactivateButton?.addEventListener("click", function () {
+    showStatus(
+      "Account deactivation is not available yet because the account-status backend has not been enabled.",
+      "error"
+    );
+  });
+
+  activateButton?.addEventListener("click", function () {
+    showStatus(
+      "Account activation is not available yet because the account-status backend has not been enabled.",
+      "error"
+    );
+  });
+})();
