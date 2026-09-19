@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Settings | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/chat-settings.css">
+</head>
+
+<body class="chat-settings-page">
+
+  <main class="chat-settings-shell">
+
+    <header class="chat-settings-header">
+      <a class="back-button" href="settings.html" aria-label="Back to Settings">
+        ←
+      </a>
+
+      <div>
+        <p class="settings-eyebrow">ZAKICHAT • SETTINGS</p>
+        <h1>Chat Settings</h1>
+        <p>
+          Customize how your conversations behave and how chat content is displayed.
+        </p>
+      </div>
+    </header>
+
+    <section class="chat-settings-group">
+      <h2>Chat behavior</h2>
+
+      <label class="chat-setting-item">
+        <span class="chat-setting-icon">↵</span>
+        <span class="chat-setting-copy">
+          <strong>Enter key sends</strong>
+          <small>Press Enter to send a message instead of creating a new line.</small>
+        </span>
+        <input
+          type="checkbox"
+          id="enterKeySends"
+          class="chat-setting-toggle"
+        >
+      </label>
+
+      <label class="chat-setting-item">
+        <span class="chat-setting-icon">🔊</span>
+        <span class="chat-setting-copy">
+          <strong>In-chat sounds</strong>
+          <small>Play sounds when messages are sent or received.</small>
+        </span>
+        <input
+          type="checkbox"
+          id="inChatSounds"
+          class="chat-setting-toggle"
+          checked
+        >
+      </label>
+
+      <label class="chat-setting-item">
+        <span class="chat-setting-icon">🔗</span>
+        <span class="chat-setting-copy">
+          <strong>Link previews</strong>
+          <small>Show previews when a message contains a supported link.</small>
+        </span>
+        <input
+          type="checkbox"
+          id="linkPreviews"
+          class="chat-setting-toggle"
+          checked
+        >
+      </label>
+    </section>
+
+    <section class="chat-settings-group">
+      <h2>Media</h2>
+
+      <label class="chat-setting-item">
+        <span class="chat-setting-icon">🖼️</span>
+        <span class="chat-setting-copy">
+          <strong>Media visibility</strong>
+          <small>Allow received media to appear in your device gallery.</small>
+        </span>
+        <input
+          type="checkbox"
+          id="mediaVisibility"
+          class="chat-setting-toggle"
+          checked
+        >
+      </label>
+    </section>
+
+    <section class="chat-settings-group">
+      <h2>Disappearing messages</h2>
+
+      <button
+        type="button"
+        class="chat-setting-item chat-setting-button"
+        id="disappearingMessagesButton"
+      >
+        <span class="chat-setting-icon">⏱️</span>
+
+        <span class="chat-setting-copy">
+          <strong>Default disappearing messages</strong>
+          <small id="disappearingMessagesValue">Off</small>
+        </span>
+
+        <span class="chat-setting-chevron">›</span>
+      </button>
+    </section>
+
+    <p
+      id="chatSettingsStatus"
+      class="chat-settings-status"
+      aria-live="polite"
+      hidden
+    ></p>
+
+  </main>
+
+  <script src="../static/js/chat-settings.js"></script>
+</body>
+</html>
