@@ -1,0 +1,204 @@
+/* =========================================================
+   ZakiChat Privacy
+   ========================================================= */
+
+.privacy-page{
+  min-height:100vh;
+  padding-bottom:96px;
+}
+
+.privacy-hero{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+  padding:16px;
+  border:1px solid rgba(39,211,162,.18);
+  border-radius:18px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(39,211,162,.13),
+      rgba(24,174,240,.08)
+    );
+}
+
+.privacy-hero-icon{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:rgba(39,211,162,.14);
+  font-size:22px;
+}
+
+.privacy-hero strong{
+  display:block;
+  font-size:.88rem;
+}
+
+.privacy-hero p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:.68rem;
+  line-height:1.5;
+}
+
+.privacy-message{
+  margin:8px 4px;
+  min-height:20px;
+}
+
+.privacy-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:70px;
+  padding:11px 14px;
+  border-top:1px solid rgba(255,255,255,.055);
+}
+
+.privacy-copy{
+  min-width:0;
+  flex:1;
+}
+
+.privacy-copy strong{
+  display:block;
+  font-size:.78rem;
+  font-weight:750;
+}
+
+.privacy-copy small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:.64rem;
+  line-height:1.4;
+}
+
+.privacy-select{
+  width:auto;
+  min-width:118px;
+  max-width:145px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  outline:none;
+  background:#102338;
+  color:var(--text);
+  font:inherit;
+  font-size:.65rem;
+}
+
+.privacy-select:focus{
+  border-color:var(--primary);
+}
+
+.privacy-switch{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:72px;
+  justify-content:center;
+  border:0;
+  border-radius:11px;
+  padding:8px 10px;
+  background:rgba(39,211,162,.12);
+  color:var(--muted);
+  cursor:pointer;
+  font:inherit;
+  font-size:.65rem;
+  font-weight:800;
+}
+
+.privacy-switch span{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#71869b;
+}
+
+.privacy-switch.enabled{
+  color:var(--primary);
+  background:rgba(39,211,162,.18);
+}
+
+.privacy-switch.enabled span{
+  background:var(--primary);
+}
+
+.privacy-save-button{
+  width:100%;
+  margin-top:20px;
+  padding:13px 16px;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,#27d3a2,#087db0);
+  color:#03120e;
+  font:inherit;
+  font-size:.72rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.privacy-save-button:hover{
+  transform:translateY(-1px);
+}
+
+.privacy-save-button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.privacy-page .bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:80;
+  max-width:none;
+  margin:0;
+  padding:7px max(8px,env(safe-area-inset-right))
+           calc(7px + env(safe-area-inset-bottom))
+           max(8px,env(safe-area-inset-left));
+  border-top:1px solid var(--line);
+  background:rgba(5,11,19,.96);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+@media(max-width:560px){
+
+  .privacy-hero{
+    padding:14px;
+  }
+
+  .privacy-item{
+    align-items:flex-start;
+    min-height:76px;
+    padding:12px 11px;
+  }
+
+  .privacy-select{
+    min-width:108px;
+    max-width:125px;
+  }
+
+  .privacy-copy small{
+    font-size:.61rem;
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  .privacy-save-button{
+    transition:none;
+  }
+
+}

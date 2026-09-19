@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Privacy | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/settings.css">
+  <link rel="stylesheet" href="../static/css/privacy.css">
+</head>
+
+<body class="settings-page privacy-page">
+
+  <main class="settings-shell">
+
+    <header class="settings-header">
+      <a
+        class="settings-back"
+        href="settings.html"
+        aria-label="Back to Settings"
+      >
+        <span aria-hidden="true">←</span>
+        <span>Settings</span>
+      </a>
+
+      <div class="settings-title">
+        <span class="settings-eyebrow">
+          ZAKICHAT PRIVACY
+        </span>
+
+        <h1>Privacy</h1>
+
+        <p>
+          Control who can see your information and interact with you.
+        </p>
+      </div>
+    </header>
+
+    <section class="privacy-hero">
+      <div class="privacy-hero-icon">🔐</div>
+
+      <div>
+        <strong>Your privacy, your control</strong>
+
+        <p>
+          Choose who can see your activity, profile information and
+          communication details.
+        </p>
+      </div>
+    </section>
+
+    <p
+      id="privacyMessage"
+      class="settings-message privacy-message"
+      aria-live="polite"
+    ></p>
+
+    <section class="settings-group">
+
+      <h2>Visibility</h2>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Last seen</strong>
+          <small>Who can see when you were last active</small>
+        </div>
+
+        <select
+          id="lastSeenVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="contacts">My contacts</option>
+          <option value="nobody">Nobody</option>
+        </select>
+      </div>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Online status</strong>
+          <small>Who can see when you are online</small>
+        </div>
+
+        <select
+          id="onlineVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="same_as_last_seen">Same as last seen</option>
+        </select>
+      </div>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Profile photo</strong>
+          <small>Who can see your profile picture</small>
+        </div>
+
+        <select
+          id="profilePhotoVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="contacts">My contacts</option>
+          <option value="nobody">Nobody</option>
+        </select>
+      </div>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>About</strong>
+          <small>Who can see your profile bio</small>
+        </div>
+
+        <select
+          id="aboutVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="contacts">My contacts</option>
+          <option value="nobody">Nobody</option>
+        </select>
+      </div>
+
+    </section>
+
+    <section class="settings-group">
+
+      <h2>Updates</h2>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Status updates</strong>
+          <small>Who can view your status updates</small>
+        </div>
+
+        <select
+          id="statusVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="contacts">My contacts</option>
+          <option value="nobody">Nobody</option>
+        </select>
+      </div>
+
+    </section>
+
+    <section class="settings-group">
+
+      <h2>Messaging</h2>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Read receipts</strong>
+          <small>
+            Allow people to know when you have read their messages
+          </small>
+        </div>
+
+        <button
+          id="readReceiptsToggle"
+          class="privacy-switch"
+          type="button"
+          aria-pressed="true"
+        >
+          <span></span>
+          <b>On</b>
+        </button>
+      </div>
+
+    </section>
+
+    <section class="settings-group">
+
+      <h2>Communication</h2>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Groups</strong>
+          <small>Who can add you to groups</small>
+        </div>
+
+        <select
+          id="groupsVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="contacts">My contacts</option>
+        </select>
+      </div>
+
+      <div class="privacy-item">
+        <div class="privacy-copy">
+          <strong>Calls</strong>
+          <small>Who can start calls with you</small>
+        </div>
+
+        <select
+          id="callsVisibility"
+          class="privacy-select"
+        >
+          <option value="everyone">Everyone</option>
+          <option value="contacts">My contacts</option>
+        </select>
+      </div>
+
+    </section>
+
+    <section class="settings-group">
+
+      <h2>Privacy tools</h2>
+
+      <a
+        class="settings-item"
+        href="contacts.html"
+      >
+        <span class="settings-item-icon">🚫</span>
+
+        <span class="settings-item-copy">
+          <strong>Blocked contacts</strong>
+          <small>
+            Manage people you no longer want to communicate with
+          </small>
+        </span>
+
+        <span class="settings-chevron">›</span>
+      </a>
+
+    </section>
+
+    <button
+      id="savePrivacy"
+      class="privacy-save-button"
+      type="button"
+    >
+      Save Privacy Settings
+    </button>
+
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main app navigation">
+
+    <a href="chats.html">
+      <span class="bottom-nav-icon" aria-hidden="true">💬</span>
+      <span>Chats</span>
+    </a>
+
+    <a
+      href="settings.html"
+      class="selected"
+      aria-current="page"
+    >
+      <span class="bottom-nav-icon" aria-hidden="true">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <a href="status.html">
+      <span class="bottom-nav-icon" aria-hidden="true">◉</span>
+      <span>Updates</span>
+    </a>
+
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/i18n.js"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/privacy.js"></script>
+
+</body>
+</html>
