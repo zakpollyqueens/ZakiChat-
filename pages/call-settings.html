@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Call Settings | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/call-settings.css">
+</head>
+
+<body>
+  <main class="call-settings-page">
+
+    <header class="call-settings-header">
+      <a href="settings.html" class="back-button" aria-label="Back to Settings">‹</a>
+
+      <div>
+        <h1>Call Settings</h1>
+        <p>Manage your ZakiChat calling preferences.</p>
+      </div>
+    </header>
+
+    <section class="call-card intro-card">
+      <div class="call-icon">📞</div>
+
+      <div>
+        <h2>Calling preferences</h2>
+        <p>
+          Customize how ZakiChat handles calls on this device.
+          Calls remain available from individual conversations.
+        </p>
+      </div>
+    </section>
+
+    <section class="call-card">
+      <div class="section-heading">
+        <span class="section-icon">🎙️</span>
+
+        <div>
+          <h2>Audio & video</h2>
+          <p>Choose your default calling behavior.</p>
+        </div>
+      </div>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Use less data for calls</strong>
+          <small>Reduce call data usage when possible.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="lowDataCalls"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Camera starts enabled</strong>
+          <small>Start video calls with your camera enabled.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="cameraStartsEnabled"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Call sounds</strong>
+          <small>Play sounds for incoming and outgoing calls.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="callSounds"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
+    </section>
+
+    <section class="call-card">
+      <div class="section-heading">
+        <span class="section-icon">📲</span>
+
+        <div>
+          <h2>Incoming calls</h2>
+          <p>Control how incoming calls are presented.</p>
+        </div>
+      </div>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Allow incoming calls</strong>
+          <small>Allow contacts to start calls with you.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="allowIncomingCalls"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Vibrate for incoming calls</strong>
+          <small>Use device vibration for incoming call alerts.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="callVibration"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
+    </section>
+
+    <section class="call-card info-card">
+      <div class="info-icon">ℹ️</div>
+
+      <p>
+        These preferences are stored on this device. Actual call routing,
+        permissions and call controls will be enforced by the calling
+        service when the ZakiChat calling backend is connected.
+      </p>
+    </section>
+
+    <p id="callSettingsMessage" class="call-settings-message" hidden></p>
+
+  </main>
+
+  <script src="../static/js/call-settings.js"></script>
+</body>
+</html>
