@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.57.4",
+    "@simplewebauthn/server": "npm:@simplewebauthn/server@14.0.0"
+  }
+}
