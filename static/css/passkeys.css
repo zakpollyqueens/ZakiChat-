@@ -1,0 +1,233 @@
+.passkeys-page {
+  width: min(100% - 32px, 760px);
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.passkeys-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 30px;
+  line-height: 1;
+  background: var(--card-background, rgba(255,255,255,.08));
+  color: inherit;
+}
+
+.passkeys-header h1 {
+  margin: 0 0 5px;
+  font-size: 28px;
+}
+
+.passkeys-header p {
+  margin: 0;
+  opacity: .7;
+}
+
+.passkey-card {
+  margin-bottom: 16px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--card-background, rgba(255,255,255,.06));
+  border: 1px solid var(--border-color, rgba(255,255,255,.1));
+}
+
+.hero-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.passkey-icon {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: rgba(127,127,127,.12);
+  font-size: 23px;
+}
+
+.passkey-card h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.passkey-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: .65;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.status-badge {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(127,127,127,.12);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.supported {
+  background: rgba(80,180,100,.15);
+}
+
+.status-badge.unsupported {
+  background: rgba(180,100,80,.15);
+}
+
+.primary-button {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 13px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  background: var(--accent-color, #4f8cff);
+  color: white;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.section-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(127,127,127,.12);
+  font-size: 21px;
+}
+
+.section-heading h2 {
+  margin: 0 0 4px;
+}
+
+.section-heading p {
+  margin: 0;
+}
+
+.passkeys-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-passkeys {
+  padding: 22px 10px;
+  text-align: center;
+  font-size: 13px;
+  opacity: .6;
+}
+
+.passkey-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(127,127,127,.08);
+}
+
+.passkey-item-icon {
+  font-size: 22px;
+}
+
+.passkey-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.passkey-item-info strong,
+.passkey-item-info small {
+  display: block;
+}
+
+.passkey-item-info small {
+  margin-top: 3px;
+  font-size: 12px;
+  opacity: .6;
+}
+
+.remove-passkey-button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: .65;
+  padding: 8px;
+}
+
+.passkey-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+.dialog-card {
+  position: relative;
+  width: min(100%, 430px);
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--background-color, #111);
+  border: 1px solid var(--border-color, rgba(255,255,255,.12));
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.dialog-card h2 {
+  margin: 0 0 10px;
+}
+
+.dialog-card p {
+  margin-bottom: 18px;
+}
+
+@media (max-width: 600px) {
+  .passkeys-page {
+    width: min(100% - 20px, 760px);
+    padding-top: 18px;
+  }
+
+  .passkeys-header h1 {
+    font-size: 24px;
+  }
+
+  .passkey-card {
+    padding: 16px;
+  }
+}
