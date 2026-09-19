@@ -19,12 +19,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
 
       - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@4d7e1c1d4d1e8b5f0a8f7d8c6e6f0c3e3c6f4f1a
         with:
           version: latest
 
       - name: Deploy security-auth
-        run: supabase functions deploy security-auth --project-ref "$SUPABASE_PROJECT_ID"
+        run: supabase functions deploy security-auth --use-api --project-ref "$SUPABASE_PROJECT_ID"
