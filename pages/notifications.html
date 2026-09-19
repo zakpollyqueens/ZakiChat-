@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
+
   <title>Updates | ZakiChat</title>
 
   <link rel="stylesheet" href="../static/css/main.css">
@@ -17,11 +18,16 @@
 <body class="notifications-page">
 
   <main class="notifications-shell">
+
     <header class="notifications-header">
-      <div>
+      <div class="notifications-heading">
         <span class="notifications-eyebrow">ZAKICHAT</span>
+
         <h1>Updates</h1>
-        <p>Your latest notifications and message activity.</p>
+
+        <p>
+          Your latest notifications and message activity.
+        </p>
       </div>
 
       <button
@@ -29,6 +35,7 @@
         class="notifications-action"
         type="button"
       >
+        <span aria-hidden="true">✓</span>
         Mark all as read
       </button>
     </header>
@@ -37,6 +44,7 @@
       id="notificationsList"
       class="notifications-list"
       aria-live="polite"
+      aria-label="Notifications"
     ></section>
 
     <div
@@ -44,31 +52,46 @@
       class="notifications-empty"
       hidden
     >
-      <div class="notifications-empty-icon">🔔</div>
+      <div
+        class="notifications-empty-icon"
+        aria-hidden="true"
+      >
+        🔔
+      </div>
+
       <h2>You're all caught up</h2>
-      <p>New notifications will appear here.</p>
+
+      <p>
+        New notifications will appear here.
+      </p>
     </div>
 
     <div
       id="notificationsError"
       class="notifications-error"
+      role="alert"
       hidden
     ></div>
+
   </main>
 
-  <nav class="bottom-nav" aria-label="Main app navigation">
+  <!-- Existing navigation intentionally preserved -->
+  <nav
+    class="bottom-nav"
+    aria-label="Main app navigation"
+  >
     <a href="chats.html">
-      <span>💬</span>
+      <span aria-hidden="true">💬</span>
       Chats
     </a>
 
     <a href="contacts.html">
-      <span>👥</span>
+      <span aria-hidden="true">👥</span>
       Contacts
     </a>
 
     <a href="groups.html">
-      <span>👨‍👩‍👧</span>
+      <span aria-hidden="true">👨‍👩‍👧</span>
       Groups
     </a>
 
@@ -77,12 +100,12 @@
       href="notifications.html"
       aria-current="page"
     >
-      <span>🔔</span>
+      <span aria-hidden="true">🔔</span>
       Updates
     </a>
 
     <a href="settings.html">
-      <span>⚙️</span>
+      <span aria-hidden="true">⚙️</span>
       Settings
     </a>
   </nav>
@@ -90,7 +113,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
-<script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/realtime.js"></script>
   <script src="../static/js/notification-badge.js"></script>
