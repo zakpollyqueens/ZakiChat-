@@ -912,3 +912,162 @@
     width: 100%;
   }
 }
+
+/* =========================================================
+   ZAKICHAT UPDATES — MAIN BOTTOM NAVIGATION
+   Keep this navigation visually consistent with Chats.
+   ========================================================= */
+
+.status-page .bottom-nav,
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  width: min(94%, 520px);
+  min-height: 68px;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+
+  padding: 7px;
+  box-sizing: border-box;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 22px;
+
+  background: rgba(18, 20, 27, 0.94);
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, 0.35),
+    0 3px 12px rgba(0, 0, 0, 0.18);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.status-page .bottom-nav a,
+.bottom-nav a {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+
+  padding: 8px 6px;
+  border-radius: 16px;
+
+  color: rgba(255, 255, 255, 0.66);
+  text-decoration: none;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.15;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.status-page .bottom-nav a:hover,
+.bottom-nav a:hover {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.status-page .bottom-nav a:active,
+.bottom-nav a:active {
+  transform: scale(0.96);
+}
+
+.status-page .bottom-nav a.active,
+.status-page .bottom-nav a.selected,
+.status-page .bottom-nav a[aria-current="page"],
+.bottom-nav a.active,
+.bottom-nav a.selected,
+.bottom-nav a[aria-current="page"] {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.105);
+}
+
+.status-page .bottom-nav-icon,
+.bottom-nav .bottom-nav-icon {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  font-size: 1.15rem;
+  line-height: 1;
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.status-page .bottom-nav a.active .bottom-nav-icon,
+.status-page .bottom-nav a.selected .bottom-nav-icon,
+.status-page .bottom-nav a[aria-current="page"] .bottom-nav-icon,
+.bottom-nav a.active .bottom-nav-icon,
+.bottom-nav a.selected .bottom-nav-icon,
+.bottom-nav a[aria-current="page"] .bottom-nav-icon {
+  background: rgba(255, 255, 255, 0.10);
+  transform: translateY(-1px);
+}
+
+/* Leave enough room so page content isn't hidden behind the bar. */
+.status-page,
+body:has(.bottom-nav) {
+  padding-bottom: 98px;
+}
+
+/* Small-screen refinement */
+@media (max-width: 480px) {
+  .status-page .bottom-nav,
+  .bottom-nav {
+    bottom: 8px;
+    width: calc(100% - 20px);
+    min-height: 64px;
+    border-radius: 20px;
+    padding: 6px;
+  }
+
+  .status-page .bottom-nav a,
+  .bottom-nav a {
+    padding: 7px 4px;
+    font-size: 0.68rem;
+    border-radius: 14px;
+  }
+
+  .status-page .bottom-nav-icon,
+  .bottom-nav .bottom-nav-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 1.05rem;
+  }
+}
+
+/* Very narrow screens */
+@media (max-width: 350px) {
+  .status-page .bottom-nav,
+  .bottom-nav {
+    width: calc(100% - 12px);
+    bottom: 6px;
+  }
+
+  .status-page .bottom-nav a,
+  .bottom-nav a {
+    font-size: 0.63rem;
+  }
+}
