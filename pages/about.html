@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d18">
+
+  <title>About ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/about.css">
+</head>
+
+<body class="about-page">
+
+  <main class="about-shell">
+
+    <header class="about-header">
+      <a href="settings.html" class="back-button" aria-label="Back to Settings">
+        ←
+      </a>
+
+      <div>
+        <h1>About ZakiChat</h1>
+        <p>Application information, releases and official updates.</p>
+      </div>
+    </header>
+
+
+    <!-- ZAKICHAT BRAND -->
+    <section class="about-card brand-card">
+
+      <div class="brand-mark">Z</div>
+
+      <div class="brand-info">
+        <h2>ZakiChat</h2>
+        <p>Private communication made simple.</p>
+
+        <div class="version-badge">
+          Current version:
+          <strong id="current-version">zc-vr15</strong>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN PUBLISHED PUBLIC NOTICE -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Official</span>
+          <h2>Public Notice</h2>
+        </div>
+
+        <span class="live-indicator" id="notice-status">
+          Published
+        </span>
+      </div>
+
+      <div id="public-notice">
+
+        <h3 id="notice-title">
+          Welcome to ZakiChat
+        </h3>
+
+        <p id="notice-message">
+          Official ZakiChat announcements, important notices and
+          administration messages will appear here.
+        </p>
+
+        <small id="notice-date">
+          Official ZakiChat information
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- LATEST FREE VERSION -->
+    <section class="about-card public-section release-card free-release">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">Free Download</span>
+          <h2>Latest Version</h2>
+        </div>
+
+        <span class="release-version free">
+          FREE
+        </span>
+
+      </div>
+
+      <div class="release-content">
+
+        <div class="release-version-large" id="latest-free-version">
+          zc-vr15
+        </div>
+
+        <h3 id="latest-free-title">
+          ZakiChat zc-vr15
+        </h3>
+
+        <p id="latest-free-description">
+          The latest publicly available ZakiChat version is available
+          for free download.
+        </p>
+
+        <div class="release-meta">
+
+          <span>
+            Release date:
+            <strong id="latest-free-date">—</strong>
+          </span>
+
+          <span id="latest-free-channel">
+            Stable
+          </span>
+
+        </div>
+
+        <a
+          id="latest-download-button"
+          class="release-action free-action"
+          href="#"
+        >
+          Download Latest Version
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- PAID UPGRADES -->
+<section class="about-section upgrade-section" id="paid-upgrades">
+  <div class="section-heading">
+    <span class="section-kicker">PAID UPGRADE</span>
+    <h2>Customized ZakiChat Plans</h2>
+    <p>
+      Upgrade your account with monthly premium features.
+      The free latest application download is separate from these subscriptions.
+    </p>
+  </div>
+
+  <div class="upgrade-plans-grid">
+
+    <!-- PERSONAL PLUS -->
+    <article class="upgrade-plan-card personal-plan"
+             data-plan-id="personal_monthly"
+             data-account-type="personal"
+             data-price="2"
+             data-currency="USD"
+             data-billing-interval="monthly">
+
+      <div class="upgrade-plan-top">
+        <span class="upgrade-plan-badge">PERSONAL</span>
+        <span class="upgrade-plan-status">MONTHLY</span>
+      </div>
+
+      <h3>Customized Personal</h3>
+
+      <div class="upgrade-price">
+        <strong>$2</strong>
+        <span>/ month</span>
+      </div>
+
+      <p class="upgrade-plan-description">
+        Premium Personal features for users who want an upgraded ZakiChat experience.
+      </p>
+
+      <ul class="upgrade-feature-list">
+        <li>Larger file transfers</li>
+        <li>Support for files up to 100 MB</li>
+        <li>Customized Personal experience</li>
+        <li>Additional premium features as released</li>
+      </ul>
+
+      <div class="upgrade-plan-meta">
+        <span>Account type</span>
+        <strong>Personal</strong>
+      </div>
+
+      <div class="upgrade-plan-meta">
+        <span>Billing</span>
+        <strong>Monthly</strong>
+      </div>
+
+      <button
+        type="button"
+        class="upgrade-plan-button"
+        data-upgrade-plan="personal_monthly">
+        Upgrade Personal
+      </button>
+    </article>
+
+    <!-- BUSINESS -->
+    <article class="upgrade-plan-card business-plan"
+             data-plan-id="business_monthly"
+             data-account-type="business"
+             data-price="10"
+             data-currency="USD"
+             data-billing-interval="monthly">
+
+      <div class="upgrade-plan-top">
+        <span class="upgrade-plan-badge">BUSINESS</span>
+        <span class="upgrade-plan-status">MONTHLY</span>
+      </div>
+
+      <h3>Customized Business</h3>
+
+      <div class="upgrade-price">
+        <strong>$10</strong>
+        <span>/ month</span>
+      </div>
+
+      <p class="upgrade-plan-description">
+        A Business profile with tools designed for teams, business communication,
+        meetings and employee collaboration.
+      </p>
+
+      <ul class="upgrade-feature-list">
+        <li>Upgraded Business profile</li>
+        <li>Business chat and communication</li>
+        <li>Employee and team groups</li>
+        <li>Business meetings</li>
+        <li>Business-focused communication features</li>
+        <li>Additional Business features as released</li>
+      </ul>
+
+      <div class="upgrade-plan-meta">
+        <span>Account type</span>
+        <strong>Business</strong>
+      </div>
+
+      <div class="upgrade-plan-meta">
+        <span>Billing</span>
+        <strong>Monthly</strong>
+      </div>
+
+      <button
+        type="button"
+        class="upgrade-plan-button business-upgrade-button"
+        data-upgrade-plan="business_monthly">
+        Upgrade Business
+      </button>
+    </article>
+
+  </div>
+
+  <div class="upgrade-information-card">
+    <strong>Subscription information</strong>
+    <p>
+      Personal Plus and Business subscriptions are billed monthly.
+      If a premium subscription expires, premium access ends until the subscription
+      is renewed. Payment processing, entitlement activation and account switching
+      will be connected through the secure ZakiChat backend later.
+    </p>
+  </div>
+</section>
+
+<!-- WHAT'S NEW -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">Release Notes</span>
+          <h2>What's New</h2>
+        </div>
+
+      </div>
+
+      <div id="release-notes" class="release-notes">
+
+        <div class="note-item">
+          <span class="note-dot"></span>
+          <p>
+            Continued development of the ZakiChat communication platform.
+          </p>
+        </div>
+
+        <div class="note-item">
+          <span class="note-dot"></span>
+          <p>
+            Settings and account-management improvements.
+          </p>
+        </div>
+
+        <div class="note-item">
+          <span class="note-dot"></span>
+          <p>
+            Foundation prepared for future application releases.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- VERSION HISTORY -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">History</span>
+          <h2>Version History</h2>
+        </div>
+
+      </div>
+
+      <div id="version-history" class="version-history">
+
+        <article class="version-item">
+
+          <div class="version-number">
+            zc-vr15
+          </div>
+
+          <div class="version-details">
+
+            <h3>Current Version</h3>
+
+            <p>
+              Current ZakiChat starting release.
+            </p>
+
+          </div>
+
+          <span class="version-state current">
+            Current
+          </span>
+
+        </article>
+
+
+        <article class="version-item">
+
+          <div class="version-number">
+            zc-vr14
+          </div>
+
+          <div class="version-details">
+
+            <h3>Recent Version</h3>
+
+            <p>
+              Previous ZakiChat version.
+            </p>
+
+          </div>
+
+          <span class="version-state">
+            Previous
+          </span>
+
+        </article>
+
+
+        <article class="version-item">
+
+          <div class="version-number">
+            zc-vr13
+          </div>
+
+          <div class="version-details">
+
+            <h3>Former Version</h3>
+
+            <p>
+              Earlier ZakiChat version.
+            </p>
+
+          </div>
+
+          <span class="version-state">
+            Archived
+          </span>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADMIN PUBLISHED UPDATES -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">Administration</span>
+          <h2>Public Updates</h2>
+        </div>
+
+      </div>
+
+      <div id="public-updates" class="public-updates">
+
+        <div class="empty-public-update">
+
+          <strong>
+            No additional public updates
+          </strong>
+
+          <p>
+            Updates published by the ZakiChat administration will
+            appear here automatically.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- APPLICATION INFORMATION -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">Information</span>
+          <h2>About the Application</h2>
+        </div>
+
+      </div>
+
+      <div class="info-grid">
+
+        <div class="info-row">
+          <span>Application</span>
+          <strong>ZakiChat</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Current version</span>
+          <strong id="info-version">zc-vr15</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Platform</span>
+          <strong>Web / Mobile</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Developer</span>
+          <strong>Zakmolanitech Solutions</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Release channel</span>
+          <strong id="release-channel">Stable</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- LEGAL -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">Legal</span>
+          <h2>Legal & Policies</h2>
+        </div>
+
+      </div>
+
+      <div class="legal-links">
+
+        <a href="terms.html">
+          <span>Terms of Service</span>
+          <span>›</span>
+        </a>
+
+        <a href="privacy.html">
+          <span>Privacy Policy</span>
+          <span>›</span>
+        </a>
+
+        <a href="community-guidelines.html">
+          <span>Community Guidelines</span>
+          <span>›</span>
+        </a>
+
+        <a href="licenses.html">
+          <span>Licenses</span>
+          <span>›</span>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROJECT INFORMATION -->
+    <section class="about-card public-section">
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-kicker">ZakiChat</span>
+          <h2>Project Information</h2>
+        </div>
+
+      </div>
+
+      <p class="about-description">
+        ZakiChat is a communication platform developed as part of
+        Zakmolanitech Solutions.
+      </p>
+
+      <p class="about-description">
+        ZakiChat is continuously developed with new communication,
+        privacy, security and platform features.
+      </p>
+
+      <p class="about-description">
+        Official release information, announcements and future
+        version details may be published through the ZakiChat
+        administration system.
+      </p>
+
+    </section>
+
+
+    <footer class="about-footer">
+
+      <strong>ZakiChat</strong>
+
+      <span>
+        Version
+        <span id="footer-version">zc-vr15</span>
+      </span>
+
+      <span>
+        © <span id="current-year"></span>
+        Zakmolanitech Solutions
+      </span>
+
+    </footer>
+
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/about.js"></script>
+
+</body>
+</html>
