@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Step Verification | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/two-step-verification.css">
+</head>
+
+<body>
+  <main class="two-step-page">
+
+    <header class="two-step-header">
+      <a href="settings.html" class="back-button" aria-label="Back to Settings">‹</a>
+
+      <div>
+        <h1>Two-Step Verification</h1>
+        <p>Add an extra layer of protection to your account.</p>
+      </div>
+    </header>
+
+    <section class="security-card hero-card">
+      <div class="security-icon">🔐</div>
+
+      <div>
+        <h2>Extra account protection</h2>
+        <p>
+          Two-step verification adds an additional verification step when
+          protecting access to your ZakiChat account.
+        </p>
+      </div>
+    </section>
+
+    <section class="security-card">
+      <div class="status-row">
+        <div>
+          <h2>Two-step verification</h2>
+          <p id="verificationStatus">Not configured</p>
+        </div>
+
+        <span id="statusBadge" class="status-badge">Off</span>
+      </div>
+
+      <button type="button" id="setupButton" class="primary-button">
+        Set up two-step verification
+      </button>
+    </section>
+
+    <section class="security-card">
+      <h2>Recovery</h2>
+
+      <p class="card-description">
+        Recovery options help you regain access if you forget your
+        verification credentials.
+      </p>
+
+      <button type="button" id="recoveryButton" class="secondary-button">
+        Manage recovery options
+      </button>
+    </section>
+
+    <div id="setupDialog" class="setup-dialog" hidden>
+      <div class="dialog-backdrop" data-close-dialog></div>
+
+      <div
+        class="dialog-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dialogTitle"
+      >
+        <h2 id="dialogTitle">Two-step verification</h2>
+
+        <p>
+          The secure server-side verification flow is not connected yet.
+          This page is ready for the authentication integration.
+        </p>
+
+        <button type="button" id="closeDialogButton" class="primary-button">
+          Close
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="../static/js/two-step-verification.js"></script>
+</body>
+</html>
