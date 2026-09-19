@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050b13">
+
+  <title>Account | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/account.css">
+</head>
+
+<body class="account-page">
+
+  <main class="account-shell">
+
+    <header class="account-header">
+      <a
+        class="account-back"
+        href="settings.html"
+        aria-label="Back to Settings"
+      >
+        <span aria-hidden="true">←</span>
+      </a>
+
+      <div class="account-title">
+        <span class="account-eyebrow">ZAKICHAT</span>
+        <h1>Account</h1>
+        <p>Manage your account access and active sessions.</p>
+      </div>
+    </header>
+
+
+    <!-- Account identity -->
+    <section class="account-card account-identity-card">
+
+      <div class="account-avatar" id="accountAvatar">
+        <span id="accountAvatarInitials">?</span>
+      </div>
+
+      <div class="account-identity">
+        <strong id="accountDisplayName">Loading...</strong>
+        <span id="accountIdentifier">Checking account...</span>
+        <small id="accountUserId"></small>
+      </div>
+
+      <span class="account-status" id="accountStatus">
+        <i></i>
+        <span>Checking</span>
+      </span>
+
+    </section>
+
+
+    <!-- Account controls -->
+    <section class="account-section">
+
+      <div class="account-section-heading">
+        <span>ACCOUNT ACCESS</span>
+        <h2>Manage your account</h2>
+        <p>
+          Control which ZakiChat account is active on this device.
+        </p>
+      </div>
+
+
+      <div class="account-card account-actions-card">
+
+        <button
+          type="button"
+          class="account-action"
+          id="switchAccountButton"
+        >
+          <span class="account-action-icon">⇄</span>
+
+          <span class="account-action-copy">
+            <strong>Switch account</strong>
+            <small>
+              Sign out of this account and use another saved account.
+            </small>
+          </span>
+
+          <span class="account-action-chevron">›</span>
+        </button>
+
+
+        <button
+          type="button"
+          class="account-action"
+          id="signOutButton"
+        >
+          <span class="account-action-icon">↪</span>
+
+          <span class="account-action-copy">
+            <strong>Sign out</strong>
+            <small>
+              Sign out of this ZakiChat account on this device.
+            </small>
+          </span>
+
+          <span class="account-action-chevron">›</span>
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- Security notice -->
+    <section class="account-security-card">
+
+      <div class="account-security-icon">🔐</div>
+
+      <div>
+        <strong>Protected account controls</strong>
+
+        <p>
+          Sensitive account actions require you to verify the password
+          already associated with your ZakiChat account.
+          ZakiChat does not create or store a second password for this area.
+        </p>
+      </div>
+
+    </section>
+
+
+    <!-- Danger Zone -->
+    <section class="danger-zone">
+
+      <div class="danger-heading">
+        <span class="danger-label">⚠️ DANGER ZONE</span>
+
+        <h2>Irreversible account actions</h2>
+
+        <p>
+          These actions can permanently affect your ZakiChat account
+          and should only be used when you are certain.
+        </p>
+      </div>
+
+
+      <div class="danger-card">
+
+        <div class="danger-action-copy">
+          <strong>Delete account</strong>
+
+          <p>
+            Permanently delete your ZakiChat account and associated
+            account data. This action cannot be undone.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="danger-button"
+          id="deleteAccountButton"
+        >
+          Delete Account
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <div
+      class="account-message"
+      id="accountMessage"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+
+  </main>
+
+
+  <!-- Password verification modal -->
+  <div
+    class="account-modal"
+    id="passwordModal"
+    hidden
+    aria-hidden="true"
+  >
+
+    <div
+      class="account-modal-backdrop"
+      data-close-modal
+    ></div>
+
+    <section
+      class="account-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="passwordModalTitle"
+    >
+
+      <button
+        type="button"
+        class="modal-close"
+        id="closePasswordModal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="modal-icon">🔐</div>
+
+      <span class="modal-eyebrow">SECURITY CHECK</span>
+
+      <h2 id="passwordModalTitle">
+        Verify your password
+      </h2>
+
+      <p>
+        Enter the password you already use for this ZakiChat account.
+        Your password is verified securely and is not stored by this page.
+      </p>
+
+      <form id="passwordForm" novalidate>
+
+        <label class="password-field">
+          <span>Account password</span>
+
+          <input
+            type="password"
+            id="accountPassword"
+            autocomplete="current-password"
+            required
+          >
+        </label>
+
+        <div
+          class="modal-message"
+          id="passwordMessage"
+          role="alert"
+          aria-live="assertive"
+          hidden
+        ></div>
+
+        <button
+          type="submit"
+          class="verify-button"
+          id="verifyPasswordButton"
+        >
+          Verify password
+        </button>
+
+      </form>
+
+    </section>
+
+  </div>
+
+
+  <!-- Final delete confirmation modal -->
+  <div
+    class="account-modal"
+    id="deleteModal"
+    hidden
+    aria-hidden="true"
+  >
+
+    <div
+      class="account-modal-backdrop"
+      data-close-delete
+    ></div>
+
+    <section
+      class="account-modal-dialog danger-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="deleteModalTitle"
+    >
+
+      <button
+        type="button"
+        class="modal-close"
+        id="closeDeleteModal"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="modal-icon danger-modal-icon">⚠️</div>
+
+      <span class="modal-eyebrow danger-eyebrow">
+        FINAL CONFIRMATION
+      </span>
+
+      <h2 id="deleteModalTitle">
+        Delete your account?
+      </h2>
+
+      <p>
+        This is an irreversible action. Your account deletion request
+        will only continue after the server confirms your authorization.
+      </p>
+
+      <label class="confirm-field">
+        <span>
+          Type <strong>DELETE</strong> to continue
+        </span>
+
+        <input
+          type="text"
+          id="deleteConfirmation"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          placeholder="DELETE"
+        >
+      </label>
+
+      <div
+        class="modal-message"
+        id="deleteMessage"
+        role="alert"
+        aria-live="assertive"
+        hidden
+      ></div>
+
+      <div class="danger-modal-actions">
+
+        <button
+          type="button"
+          class="cancel-danger-button"
+          id="cancelDeleteButton"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="confirm-danger-button"
+          id="confirmDeleteButton"
+          disabled
+        >
+          Delete permanently
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <nav class="bottom-nav" aria-label="Main app navigation">
+
+    <a href="chats.html">
+      <span class="bottom-nav-icon" aria-hidden="true">💬</span>
+      <span>Chats</span>
+    </a>
+
+    <a
+      href="settings.html"
+      class="selected"
+      aria-current="page"
+    >
+      <span class="bottom-nav-icon" aria-hidden="true">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <a href="status.html">
+      <span class="bottom-nav-icon" aria-hidden="true">◉</span>
+      <span>Updates</span>
+    </a>
+
+  </nav>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/account.js"></script>
+
+</body>
+</html>

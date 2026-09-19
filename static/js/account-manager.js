@@ -231,7 +231,8 @@
   }
 
   async function switchAccount(
-    storageKey
+    storageKey,
+    currentClient = null
   ) {
     const account =
       readRegistry().find(
@@ -245,6 +246,45 @@
       );
     }
 
+    const currentAccount =
+      getActiveAccount();
+
+    /*
+     * Never switch to the requested account if it is
+     * already the active account.
+     */
+    if (
+      currentAccount &&
+      currentAccount.storageKey === storageKey
+    ) {
+      window.location.reload();
+      return;
+    }
+
+    /*
+     * Cleanly sign out the CURRENT local Supabase
+     * session before changing the active storage key.
+     *
+     * The account remains in the registry. Its own
+     * storage namespace is preserved so it can be
+     * selected again later.
+     */
+    if (currentClient) {
+      const {
+        error
+      } = await currentClient.auth.signOut({
+        scope: "local"
+      });
+
+      if (error) {
+        throw error;
+      }
+    }
+
+    /*
+     * Activate the selected account only after the
+     * current session has been locally signed out.
+     */
     setActiveStorageKey(
       storageKey
     );
