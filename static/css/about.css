@@ -636,3 +636,38 @@
   }
 }
 
+
+/* Showcase → upgrade destination highlight */
+
+.upgrade-plan-card.upgrade-plan-highlight {
+  animation: zc-upgrade-highlight 2.2s ease;
+}
+
+@keyframes zc-upgrade-highlight {
+  0% {
+    transform: translateY(0);
+  }
+
+  20% {
+    transform: translateY(-4px);
+  }
+
+  45% {
+    transform: translateY(0);
+  }
+
+  70% {
+    transform: translateY(-2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .upgrade-plan-card.upgrade-plan-highlight {
+    animation: none;
+    outline: 2px solid currentColor;
+  }
+}

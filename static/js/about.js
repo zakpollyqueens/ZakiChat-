@@ -424,3 +424,83 @@
     bindUpgradeButtons();
   }
 })();
+
+/*
+ * ============================================================
+ * SHOWCASE → UPGRADE ROUTING
+ * ============================================================
+ *
+ * A showcase item may open:
+ *
+ *   about.html?upgrade=personal_monthly#paid-upgrades
+ *   about.html?upgrade=business_monthly#paid-upgrades
+ *
+ * This only selects/highlights the relevant plan.
+ * Payment and entitlement activation remain backend-controlled.
+ * ============================================================
+ */
+(function () {
+  'use strict';
+
+  function focusUpgradePlan() {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const requestedPlan =
+      params.get('upgrade');
+
+    if (!requestedPlan) {
+      return;
+    }
+
+    const plan =
+      document.querySelector(
+        `[data-upgrade-plan="${CSS.escape(requestedPlan)}"]`
+      );
+
+    if (!plan) {
+      console.warn(
+        'Requested upgrade plan was not found:',
+        requestedPlan
+      );
+      return;
+    }
+
+    const card =
+      plan.closest('.upgrade-plan-card');
+
+    if (!card) {
+      return;
+    }
+
+    window.setTimeout(function () {
+      card.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
+      card.classList.add(
+        'upgrade-plan-highlight'
+      );
+
+      window.setTimeout(function () {
+        card.classList.remove(
+          'upgrade-plan-highlight'
+        );
+      }, 2200);
+    }, 150);
+  }
+
+  if (
+    document.readyState === 'loading'
+  ) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      focusUpgradePlan
+    );
+  } else {
+    focusUpgradePlan();
+  }
+
+})();

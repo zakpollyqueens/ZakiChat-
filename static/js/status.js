@@ -1885,7 +1885,7 @@ showComposerError(message) {
       'Customized Personal experience',
       'Additional premium features as released'
     ],
-    upgradeUrl: '#'
+    upgradeUrl: 'about.html?upgrade=personal_monthly#paid-upgrades'
   },
   {
     id: 'business_monthly',
@@ -1902,7 +1902,7 @@ showComposerError(message) {
       'Business meetings',
       'Business-focused communication features'
     ],
-    upgradeUrl: '#'
+    upgradeUrl: 'about.html?upgrade=business_monthly#paid-upgrades'
   }
 ];
 
@@ -2085,7 +2085,7 @@ showComposerError(message) {
         'Explore the customized Personal experience and larger file transfers.',
       category: 'Personal',
       image_url: '../static/images/showcase/personal-plus.svg',
-      target_url: '#'
+      target_url: 'about.html?upgrade=personal_monthly#paid-upgrades'
     },
     {
       id: 'demo-business',
@@ -2094,7 +2094,7 @@ showComposerError(message) {
         'Discover business profiles, teams, communication and meetings.',
       category: 'Business',
       image_url: '../static/images/showcase/business.svg',
-      target_url: '#'
+      target_url: 'about.html?upgrade=business_monthly#paid-upgrades'
     },
     {
       id: 'demo-security',
