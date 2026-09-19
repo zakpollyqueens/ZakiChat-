@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <meta
+    name="description"
+    content="ZakiChat Updates and call activity."
+  >
+
   <title>Updates | ZakiChat</title>
+
+  <link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
 
   <link rel="stylesheet" href="../static/css/main.css">
   <link rel="stylesheet" href="../static/css/responsive.css">
@@ -11,15 +19,30 @@
 </head>
 
 <body class="status-page">
+
   <main class="status-shell">
 
     <header class="status-header">
       <div>
         <span class="status-eyebrow">ZAKICHAT</span>
         <h1>Updates</h1>
-        <p>Share a status with your contacts.</p>
+        <p>Status updates, calls and other activity.</p>
       </div>
+
+      <button
+        id="refreshUpdatesButton"
+        class="status-refresh-button"
+        type="button"
+        aria-label="Refresh updates"
+        title="Refresh updates"
+      >
+        ↻
+      </button>
     </header>
+
+    <!-- =====================================================
+         MY STATUS
+         ===================================================== -->
 
     <section class="my-status-card">
       <div class="my-status-avatar" id="myStatusAvatar">+</div>
@@ -34,14 +57,23 @@
         class="status-add-button"
         type="button"
         aria-label="Add status"
+        title="Add status"
       >
         +
       </button>
     </section>
 
+    <!-- =====================================================
+         STATUS UPDATES
+         ===================================================== -->
+
     <section class="status-section">
       <div class="status-section-heading">
-        <h2>Recent updates</h2>
+        <div>
+          <span class="status-section-eyebrow">STATUS</span>
+          <h2>Recent updates</h2>
+        </div>
+
         <span id="statusCount">0</span>
       </div>
 
@@ -56,11 +88,94 @@
       <div id="statusError" class="status-error" hidden></div>
     </section>
 
+    <!-- =====================================================
+         CALLS
+         ===================================================== -->
+
+    <section class="calls-section" aria-labelledby="callsHeading">
+
+      <div class="calls-section-heading">
+
+        <div>
+          <span class="status-section-eyebrow">COMMUNICATION</span>
+
+          <div class="calls-title-row">
+            <h2 id="callsHeading">Calls</h2>
+
+            <span
+              id="missedCallBadge"
+              class="missed-call-badge"
+              hidden
+              aria-label="Missed calls"
+            >
+              0
+            </span>
+          </div>
+
+          <p>Voice and video call activity.</p>
+        </div>
+
+        <button
+          id="refreshCallsButton"
+          class="calls-refresh-button"
+          type="button"
+          aria-label="Refresh call history"
+          title="Refresh call history"
+        >
+          ↻
+        </button>
+
+      </div>
+
+      <div id="callsSummary" class="calls-summary">
+        <div class="calls-summary-card">
+          <span class="calls-summary-number" id="totalCallsCount">0</span>
+          <span class="calls-summary-label">Total calls</span>
+        </div>
+
+        <div class="calls-summary-card missed">
+          <span class="calls-summary-number" id="missedCallsCount">0</span>
+          <span class="calls-summary-label">Missed</span>
+        </div>
+
+        <div class="calls-summary-card">
+          <span class="calls-summary-number" id="outgoingCallsCount">0</span>
+          <span class="calls-summary-label">Outgoing</span>
+        </div>
+
+        <div class="calls-summary-card">
+          <span class="calls-summary-number" id="incomingCallsCount">0</span>
+          <span class="calls-summary-label">Incoming</span>
+        </div>
+      </div>
+
+      <div id="callsList" class="calls-list" aria-live="polite"></div>
+
+      <div id="callsLoading" class="calls-empty">
+        <div class="calls-empty-icon">📞</div>
+        <h3>Loading calls...</h3>
+        <p>Your call activity will appear here.</p>
+      </div>
+
+      <div id="callsEmpty" class="calls-empty" hidden>
+        <div class="calls-empty-icon">📞</div>
+        <h3>No calls yet</h3>
+        <p>Your voice and video calls will appear here.</p>
+      </div>
+
+      <div id="callsError" class="status-error" hidden></div>
+
+    </section>
+
   </main>
 
-  <!-- Create status dialog -->
+  <!-- =======================================================
+       CREATE STATUS DIALOG
+       ======================================================= -->
+
   <div id="statusComposer" class="status-dialog" hidden>
     <div class="status-dialog-card">
+
       <div class="status-dialog-header">
         <div>
           <span class="status-eyebrow">NEW UPDATE</span>
@@ -72,6 +187,7 @@
           class="status-close-button"
           type="button"
           aria-label="Close"
+          title="Close"
         >
           ×
         </button>
@@ -90,6 +206,7 @@
 
       <label class="status-media-picker">
         <span>📷 Add photo or video</span>
+
         <input
           id="statusMedia"
           type="file"
@@ -97,19 +214,37 @@
         >
       </label>
 
-      <div id="statusMediaPreview" class="status-media-preview" hidden></div>
+      <div
+        id="statusMediaPreview"
+        class="status-media-preview"
+        hidden
+      ></div>
 
-      <button id="publishStatusButton" class="status-primary-button" type="button">
+      <button
+        id="publishStatusButton"
+        class="status-primary-button"
+        type="button"
+      >
         Post status
       </button>
 
-      <p id="composerError" class="status-form-error" hidden></p>
+      <p
+        id="composerError"
+        class="status-form-error"
+        hidden
+      ></p>
+
     </div>
   </div>
 
-  <!-- Status viewer dialog -->
+  <!-- =======================================================
+       STATUS VIEWER
+       ======================================================= -->
+
   <div id="statusViewer" class="status-dialog" hidden>
+
     <div class="status-viewer-card">
+
       <div class="status-viewer-header">
         <div>
           <strong id="viewerName">Status</strong>
@@ -121,31 +256,58 @@
           class="status-close-button"
           type="button"
           aria-label="Close"
+          title="Close"
         >
           ×
         </button>
       </div>
 
-      <div id="viewerContent" class="status-viewer-content"></div>
+      <div
+        id="viewerContent"
+        class="status-viewer-content"
+      ></div>
+
     </div>
+
   </div>
 
-  <nav class="bottom-nav" aria-label="Main app navigation">
-    <a href="chats.html"><span>💬</span>Chats</a>
-    <a href="contacts.html"><span>👥</span>Contacts</a>
-    <a href="groups.html"><span>👨‍👩‍👧</span>Groups</a>
-    <a class="selected" href="status.html" aria-current="page">
-      <span>🔔</span>Updates
+  <!-- =======================================================
+       MAIN NAVIGATION
+       ======================================================= -->
+
+  <nav
+    class="bottom-nav"
+    aria-label="Main app navigation"
+  >
+    <a href="chats.html">
+      <span class="bottom-nav-icon" aria-hidden="true">💬</span>
+      <span>Chats</span>
     </a>
-    <a href="settings.html"><span>⚙️</span>Settings</a>
+
+    <a href="settings.html">
+      <span class="bottom-nav-icon" aria-hidden="true">⚙</span>
+      <span>Settings</span>
+    </a>
+
+    <a
+      class="selected"
+      href="status.html"
+      aria-current="page"
+    >
+      <span class="bottom-nav-icon" aria-hidden="true">🔔</span>
+      <span>Updates</span>
+    </a>
   </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="../static/js/appearance.js"></script>
   <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
   <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/realtime.js"></script>
   <script src="../static/js/status.js"></script>
+
 </body>
 </html>

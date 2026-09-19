@@ -6,17 +6,19 @@
 .status-shell {
   width: min(760px, 100%);
   margin: 0 auto;
-  padding: 24px 18px 30px;
+  padding: 24px 18px 40px;
 }
 
 .status-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 15px;
   margin-bottom: 22px;
 }
 
-.status-eyebrow {
+.status-eyebrow,
+.status-section-eyebrow {
   display: block;
   font-size: 11px;
   font-weight: 800;
@@ -35,6 +37,24 @@
   opacity: 0.68;
 }
 
+.status-refresh-button,
+.calls-refresh-button {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 1px solid rgba(127, 127, 127, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.status-refresh-button:hover,
+.calls-refresh-button:hover {
+  background: rgba(127, 127, 127, 0.08);
+}
+
 .my-status-card {
   display: flex;
   align-items: center;
@@ -43,18 +63,26 @@
   border-radius: 18px;
   border: 1px solid rgba(127, 127, 127, 0.18);
   background: var(--card-bg, rgba(255, 255, 255, 0.06));
-  margin-bottom: 28px;
+  margin-bottom: 30px;
 }
 
 .my-status-avatar {
   width: 54px;
   height: 54px;
+  flex: 0 0 54px;
   border-radius: 50%;
   display: grid;
   place-items: center;
+  overflow: hidden;
   font-size: 26px;
   font-weight: 700;
   background: rgba(127, 127, 127, 0.16);
+}
+
+.my-status-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .my-status-info {
@@ -82,19 +110,26 @@
   cursor: pointer;
 }
 
-.status-section-heading {
+.status-section {
+  margin-bottom: 34px;
+}
+
+.status-section-heading,
+.calls-section-heading {
   display: flex;
   align-items: center;
-  gap: 9px;
-  margin-bottom: 12px;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 13px;
 }
 
-.status-section-heading h2 {
+.status-section-heading h2,
+.calls-section-heading h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
 }
 
-.status-section-heading span {
+.status-section-heading > span {
   min-width: 24px;
   padding: 3px 7px;
   border-radius: 999px;
@@ -117,6 +152,7 @@
   border: 1px solid rgba(127, 127, 127, 0.16);
   border-radius: 16px;
   background: transparent;
+  color: inherit;
   text-align: left;
   cursor: pointer;
 }
@@ -131,9 +167,14 @@
   flex: 0 0 48px;
   display: grid;
   place-items: center;
+  overflow: hidden;
   border-radius: 50%;
   background: rgba(127, 127, 127, 0.16);
   font-weight: 700;
+}
+
+.status-unseen {
+  box-shadow: inset 3px 0 0 currentColor;
 }
 
 .status-item-info {
@@ -155,29 +196,209 @@
   opacity: 0.62;
 }
 
-.status-unseen {
-  box-shadow: inset 3px 0 0 currentColor;
-}
-
-.status-empty {
-  padding: 42px 20px;
+.status-empty,
+.calls-empty {
+  padding: 38px 20px;
   text-align: center;
   opacity: 0.68;
 }
 
-.status-empty-icon {
+.status-empty-icon,
+.calls-empty-icon {
   font-size: 38px;
   margin-bottom: 8px;
 }
 
-.status-empty h3 {
+.status-empty h3,
+.calls-empty h3 {
   margin: 0 0 6px;
 }
 
-.status-empty p {
+.status-empty p,
+.calls-empty p {
   margin: 0;
   font-size: 14px;
 }
+
+/* ============================================================
+   CALLS
+   ============================================================ */
+
+.calls-section {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(127, 127, 127, 0.16);
+  background: var(--card-bg, rgba(255, 255, 255, 0.04));
+}
+
+.calls-section-heading {
+  align-items: center;
+}
+
+.calls-section-heading p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  opacity: 0.62;
+}
+
+.calls-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.missed-call-badge {
+  min-width: 21px;
+  height: 21px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #d52f42;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.calls-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.calls-summary-card {
+  min-width: 0;
+  padding: 11px 8px;
+  border-radius: 13px;
+  text-align: center;
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.calls-summary-card.missed {
+  background: rgba(213, 47, 66, 0.09);
+}
+
+.calls-summary-number,
+.calls-summary-label {
+  display: block;
+}
+
+.calls-summary-number {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.calls-summary-label {
+  margin-top: 3px;
+  font-size: 11px;
+  opacity: 0.62;
+}
+
+.calls-list {
+  display: grid;
+  gap: 8px;
+}
+
+.call-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  border-radius: 15px;
+  border: 1px solid rgba(127, 127, 127, 0.13);
+  background: transparent;
+}
+
+.call-item.missed {
+  background: rgba(213, 47, 66, 0.05);
+}
+
+.call-avatar {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: rgba(127, 127, 127, 0.16);
+  font-weight: 800;
+}
+
+.call-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.call-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.call-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.call-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.64;
+}
+
+.call-direction.incoming {
+  color: #2aa876;
+}
+
+.call-direction.outgoing {
+  color: #3378d4;
+}
+
+.call-direction.missed {
+  color: #d52f42;
+  font-weight: 700;
+}
+
+.call-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.call-action-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(127, 127, 127, 0.17);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.call-action-button:hover {
+  background: rgba(127, 127, 127, 0.09);
+}
+
+.call-action-button.primary {
+  border-color: rgba(39, 211, 162, 0.28);
+  background: rgba(39, 211, 162, 0.08);
+}
+
+/* ============================================================
+   ERRORS
+   ============================================================ */
 
 .status-error,
 .status-form-error {
@@ -187,6 +408,14 @@
   color: #b42828;
   font-size: 13px;
 }
+
+.status-form-error {
+  margin-top: 12px;
+}
+
+/* ============================================================
+   STATUS DIALOGS
+   ============================================================ */
 
 .status-dialog {
   position: fixed;
@@ -224,6 +453,7 @@
 .status-close-button {
   border: 0;
   background: transparent;
+  color: inherit;
   font-size: 30px;
   line-height: 1;
   cursor: pointer;
@@ -258,36 +488,6 @@
   font-weight: 700;
 }
 
-.status-form-error {
-  margin-top: 12px;
-}
-
-.status-viewer-header span {
-  display: block;
-  margin-top: 4px;
-  font-size: 12px;
-  opacity: 0.6;
-}
-
-.status-viewer-content {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  padding: 22px;
-  border-radius: 17px;
-  background: rgba(127, 127, 127, 0.08);
-  line-height: 1.6;
-}
-
-@media (max-width: 600px) {
-  .status-shell {
-    padding: 18px 13px 24px;
-  }
-
-  .my-status-card {
-    padding: 13px;
-  }
-}
-
 .status-media-picker {
   display: block;
   padding: 13px 14px;
@@ -316,4 +516,52 @@
   width: 100%;
   max-height: 320px;
   object-fit: contain;
+}
+
+.status-viewer-header span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.status-viewer-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 22px;
+  border-radius: 17px;
+  background: rgba(127, 127, 127, 0.08);
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .status-shell {
+    padding: 18px 13px 28px;
+  }
+
+  .my-status-card {
+    padding: 13px;
+  }
+
+  .calls-section {
+    padding: 14px;
+  }
+
+  .calls-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .call-item {
+    align-items: flex-start;
+  }
+
+  .call-actions {
+    flex-direction: column;
+  }
+
+  .call-action-button {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
 }
