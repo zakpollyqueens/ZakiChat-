@@ -59,11 +59,9 @@
           </button>
 
           <input
-            type="url"
-            id="avatarUrl"
-            class="avatar-url-input"
-            placeholder="Profile image URL"
-            autocomplete="url"
+            type="file"
+            id="avatarFileInput"
+            accept="image/*"
             hidden
           >
         </div>
@@ -158,20 +156,7 @@
             </div>
           </label>
 
-          <label class="profile-field profile-field-full">
-            <span>Profile image URL</span>
-            <input
-              type="url"
-              id="avatarUrlVisible"
-              maxlength="500"
-              autocomplete="url"
-              placeholder="https://..."
-            >
-            <small>
-              An image URL can be used now; direct Supabase image upload
-              will be added with the storage layer.
-            </small>
-          </label>
+
 
         </div>
 

@@ -23,11 +23,8 @@
   const locationInput = document.getElementById("location");
   const bioInput = document.getElementById("bio");
 
-  const avatarUrlInput =
-    document.getElementById("avatarUrl");
-
-  const avatarUrlVisible =
-    document.getElementById("avatarUrlVisible");
+  const avatarFileInput =
+    document.getElementById("avatarFileInput");
 
   const avatar = document.getElementById("profileAvatar");
   const initials = document.getElementById("avatarInitials");
@@ -248,12 +245,6 @@
     bioInput.value =
       profile.bio || "";
 
-    const avatarUrl =
-      profile.avatar_url || "";
-
-    avatarUrlInput.value = avatarUrl;
-    avatarUrlVisible.value = avatarUrl;
-
     updateBioCount();
     updateHeader(profile);
   }
@@ -277,7 +268,7 @@
         bioInput.value.trim(),
 
       avatar_url:
-        avatarUrlVisible.value.trim()
+        originalProfile?.avatar_url || null
     };
   }
 
@@ -344,8 +335,7 @@
       fullNameInput,
       phoneInput,
       locationInput,
-      bioInput,
-      avatarUrlVisible
+      bioInput
     ].forEach(function (input) {
       if (!input) return;
 
@@ -614,16 +604,145 @@
     showToast("Changes cancelled");
   }
 
-  function focusAvatarUrl() {
-    if (!avatarUrlVisible) return;
+  function openAvatarPicker() {
+    if (
+      !avatarFileInput ||
+      !isOwnProfile ||
+      saving
+    ) {
+      return;
+    }
 
-    avatarUrlVisible.hidden = false;
-    avatarUrlVisible.focus();
+    avatarFileInput.value = "";
+    avatarFileInput.click();
+  }
 
-    avatarUrlVisible.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+  async function uploadAvatar(file) {
+    if (
+      !file ||
+      !currentUser ||
+      !isOwnProfile
+    ) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Please choose an image file.");
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      showToast(
+        "Profile photos must be 5 MB or smaller."
+      );
+      return;
+    }
+
+    if (avatarEditButton) {
+      avatarEditButton.disabled = true;
+    }
+
+    showMessage(
+      "Uploading your profile photo...",
+      "success"
+    );
+
+    try {
+      const extension =
+        file.name.includes(".")
+          ? file.name.split(".").pop().toLowerCase()
+          : "jpg";
+
+      const randomPart =
+        typeof crypto !== "undefined" &&
+        typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random()
+              .toString(36)
+              .slice(2)}`;
+
+      const path =
+        `${currentUser.id}/${Date.now()}-${randomPart}.${extension}`;
+
+      const {
+        error: uploadError
+      } = await supabaseClient.storage
+        .from("profile-avatars")
+        .upload(path, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const {
+        data: publicData
+      } = supabaseClient.storage
+        .from("profile-avatars")
+        .getPublicUrl(path);
+
+      const avatarUrl =
+        publicData?.publicUrl || "";
+
+      if (!avatarUrl) {
+        throw new Error(
+          "Could not create the profile photo URL."
+        );
+      }
+
+      const {
+        data,
+        error: profileError
+      } = await supabaseClient
+        .from("profiles")
+        .update({
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", currentUser.id)
+        .select()
+        .single();
+
+      if (profileError) {
+        await supabaseClient.storage
+          .from("profile-avatars")
+          .remove([path]);
+
+        throw profileError;
+      }
+
+      originalProfile =
+        JSON.parse(JSON.stringify(data));
+
+      fillForm(data);
+
+      showMessage(
+        "Your profile photo was updated successfully.",
+        "success"
+      );
+
+      showToast("Profile photo updated");
+    } catch (error) {
+      console.error(
+        "Profile photo upload failed:",
+        error
+      );
+
+      showMessage(
+        error.message ||
+        "Could not update your profile photo.",
+        "error"
+      );
+    } finally {
+      if (avatarEditButton) {
+        avatarEditButton.disabled = false;
+      }
+    }
   }
 
   async function logout() {
@@ -693,22 +812,20 @@
     ) {
       avatarEditButton.addEventListener(
         "click",
-        focusAvatarUrl
+        openAvatarPicker
       );
     }
 
-    if (avatarUrlVisible) {
-      avatarUrlVisible.addEventListener(
-        "input",
+    if (avatarFileInput) {
+      avatarFileInput.addEventListener(
+        "change",
         function () {
-          avatarUrlInput.value =
-            avatarUrlVisible.value.trim();
+          const file =
+            avatarFileInput.files?.[0] || null;
 
-          setAvatar(
-            avatarUrlVisible.value.trim(),
-            fullNameInput.value,
-            usernameInput.value
-          );
+          if (file) {
+            uploadAvatar(file);
+          }
         }
       );
     }
