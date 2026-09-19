@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -17,217 +18,418 @@
 
 <body class="settings-page security-page">
 
-  <main class="settings-shell">
+  <main class="settings-shell security-shell">
 
-    <header class="settings-header">
+    <!-- Header -->
+    <header class="security-header">
+
       <a
         class="security-back"
         href="settings.html"
+        aria-label="Back to Settings"
       >
-        ← Settings
+        <span class="security-back-icon" aria-hidden="true">←</span>
+        <span>Settings</span>
       </a>
 
-      <span class="settings-eyebrow">
-        ZAKICHAT SECURITY
-      </span>
+      <div class="security-heading">
 
-      <h1>Security</h1>
+        <div class="security-heading-icon" aria-hidden="true">
+          🔐
+        </div>
 
-      <p>
-        Protect access to your ZakiChat account on this device.
-      </p>
+        <div>
+          <span class="security-eyebrow">
+            ZAKICHAT SECURITY
+          </span>
+
+          <h1>Security</h1>
+
+          <p>
+            Protect your ZakiChat account and control how this
+            device is secured.
+          </p>
+        </div>
+
+      </div>
+
     </header>
 
-    <section class="settings-section">
 
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">🔐</span>
+    <!-- Security overview -->
+    <section class="security-overview">
+
+      <div class="security-overview-icon" aria-hidden="true">
+        🛡️
+      </div>
+
+      <div class="security-overview-copy">
+
+        <strong>Device protection</strong>
+
+        <span>
+          App Lock adds an extra layer of protection before
+          someone can access ZakiChat on this device.
+        </span>
+
+      </div>
+
+      <div
+        id="securityOverviewBadge"
+        class="security-overview-badge"
+      >
+        Checking
+      </div>
+
+    </section>
+
+
+    <!-- App Lock -->
+    <section class="security-panel">
+
+      <div class="security-panel-heading">
+
+        <div class="security-panel-icon" aria-hidden="true">
+          🔒
+        </div>
 
         <div>
           <h2>App Lock</h2>
 
           <p>
-            Require a PIN or password before ZakiChat can be opened.
+            Require a PIN or password when ZakiChat needs
+            to be unlocked.
           </p>
         </div>
+
       </div>
 
-      <div class="settings-card security-card">
-        <div class="settings-card-copy">
+
+      <div class="security-lock-card">
+
+        <div class="security-lock-icon" aria-hidden="true">
+          🔐
+        </div>
+
+        <div class="security-lock-copy">
+
           <strong>App Lock</strong>
 
-          <span
-            id="appLockStatus"
-            class="settings-status"
-          >
+          <span id="appLockStatus">
             Checking…
           </span>
+
         </div>
 
         <button
           id="appLockToggle"
-          class="settings-toggle"
+          class="security-toggle"
           type="button"
         >
           Enable
         </button>
+
       </div>
+
 
       <p
         id="securityMessage"
-        class="settings-message"
+        class="security-message"
         aria-live="polite"
       ></p>
 
     </section>
 
+
+    <!-- Lock options -->
     <section
       id="appLockOptions"
-      class="settings-section security-options"
+      class="security-panel security-options"
       hidden
     >
 
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">🛡️</span>
+      <div class="security-panel-heading">
+
+        <div class="security-panel-icon" aria-hidden="true">
+          ⚙️
+        </div>
 
         <div>
           <h2>Lock options</h2>
 
           <p>
-            Choose how ZakiChat should protect this account.
+            Customize how App Lock protects this device.
           </p>
         </div>
+
       </div>
 
-      <div class="security-option-card">
 
-        <label for="lockMethod">
-          Lock method
-        </label>
+      <div class="security-form-grid">
 
-        <select
-          id="lockMethod"
-          class="security-select"
+        <!-- Method -->
+        <div class="security-field">
+
+          <label for="lockMethod">
+            <span>Lock method</span>
+            <small>Choose your unlock method</small>
+          </label>
+
+          <div class="security-control-wrap">
+            <select
+              id="lockMethod"
+              class="security-select"
+            >
+              <option value="pin">
+                PIN
+              </option>
+
+              <option value="password">
+                Password
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+
+        <!-- Secret -->
+        <div
+          id="secretField"
+          class="security-field"
         >
-          <option value="pin">PIN</option>
-          <option value="password">Password</option>
-        </select>
+
+          <label for="lockSecret">
+            <span id="lockSecretLabel">
+              Create PIN
+            </span>
+
+            <small>
+              Used to unlock ZakiChat on this device
+            </small>
+          </label>
+
+          <div class="security-input-wrap">
+
+            <input
+              id="lockSecret"
+              type="password"
+              autocomplete="new-password"
+              inputmode="numeric"
+              placeholder="Enter your PIN"
+            >
+
+            <button
+              id="toggleSecretVisibility"
+              class="security-input-action"
+              type="button"
+              aria-label="Show PIN"
+              title="Show PIN"
+            >
+              👁
+            </button>
+
+          </div>
+
+          <small class="security-field-note">
+            Your PIN/password is never stored directly.
+          </small>
+
+        </div>
+
+
+        <!-- Auto lock -->
+        <div class="security-field">
+
+          <label for="autoLock">
+            <span>Auto-lock</span>
+
+            <small>
+              Choose when the app should lock itself
+            </small>
+          </label>
+
+          <div class="security-control-wrap">
+
+            <select
+              id="autoLock"
+              class="security-select"
+            >
+
+              <option value="immediately">
+                Immediately
+              </option>
+
+              <option value="1">
+                After 1 minute
+              </option>
+
+              <option value="5">
+                After 5 minutes
+              </option>
+
+              <option value="15">
+                After 15 minutes
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
 
       </div>
 
-      <div
-        id="secretField"
-        class="security-option-card"
-      >
 
-        <label for="lockSecret">
-          Create PIN
-        </label>
+      <!-- Actions -->
+      <div class="security-actions">
 
-        <input
-          id="lockSecret"
-          type="password"
-          autocomplete="new-password"
-          inputmode="numeric"
+        <button
+          id="saveAppLock"
+          class="security-primary-button"
+          type="button"
         >
+          <span aria-hidden="true">✓</span>
+          <span>Save App Lock</span>
+        </button>
 
-        <small>
-          Your PIN/password is never stored directly.
-        </small>
-
-      </div>
-
-      <div class="security-option-card">
-
-        <label for="autoLock">
-          Auto-lock
-        </label>
-
-        <select
-          id="autoLock"
-          class="security-select"
+        <button
+          id="disableAppLock"
+          class="security-danger-button"
+          type="button"
         >
-          <option value="immediately">
-            Immediately
-          </option>
-
-          <option value="1">
-            After 1 minute
-          </option>
-
-          <option value="5">
-            After 5 minutes
-          </option>
-
-          <option value="15">
-            After 15 minutes
-          </option>
-        </select>
+          Disable App Lock
+        </button>
 
       </div>
-
-      <button
-        id="saveAppLock"
-        class="security-primary-button"
-        type="button"
-      >
-        Save App Lock
-      </button>
-
-      <button
-        id="disableAppLock"
-        class="security-danger-button"
-        type="button"
-      >
-        Disable App Lock
-      </button>
 
     </section>
 
-    <section class="settings-section">
 
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">👆</span>
+    <!-- Biometrics -->
+    <section class="security-panel">
+
+      <div class="security-panel-heading">
+
+        <div class="security-panel-icon" aria-hidden="true">
+          👆
+        </div>
 
         <div>
           <h2>Biometric unlock</h2>
 
           <p>
-            Fingerprint and face authentication can be added
-            using your device's supported platform authenticator.
+            Use supported device authentication for a
+            faster way to unlock ZakiChat.
           </p>
         </div>
+
       </div>
 
-      <div class="security-info-card">
 
-        <strong>
-          Coming with secure device authentication
-        </strong>
+      <div class="security-coming-card">
 
-        <p>
-          Biometric authentication will use your device and browser's
-          secure authentication system. ZakiChat will never access or
-          store your fingerprint or face data.
-        </p>
+        <div class="security-coming-icon" aria-hidden="true">
+          ✨
+        </div>
+
+        <div>
+
+          <strong>
+            Coming with secure device authentication
+          </strong>
+
+          <p>
+            Fingerprint and face authentication will use
+            your device's secure authentication system.
+            ZakiChat will not access or store your
+            biometric data.
+          </p>
+
+          <span class="security-coming-badge">
+            Coming soon
+          </span>
+
+        </div>
 
       </div>
 
     </section>
 
-    <section class="settings-section">
 
-      <div class="settings-section-heading">
-        <span class="settings-section-icon">ℹ️</span>
+    <!-- Important information -->
+    <section class="security-panel security-information">
+
+      <div class="security-panel-heading">
+
+        <div class="security-panel-icon" aria-hidden="true">
+          ℹ️
+        </div>
 
         <div>
           <h2>Important</h2>
 
           <p>
-            App Lock protects access to the ZakiChat interface on this
-            device. It does not replace your Supabase account password
-            and does not encrypt your entire device.
+            Understand what App Lock protects.
           </p>
+        </div>
+
+      </div>
+
+
+      <div class="security-info-list">
+
+        <div class="security-info-row">
+
+          <span class="security-info-check">
+            ✓
+          </span>
+
+          <div>
+            <strong>Protects this device</strong>
+
+            <p>
+              App Lock helps prevent access to the
+              ZakiChat interface when the app is locked.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="security-info-row">
+
+          <span class="security-info-check">
+            ✓
+          </span>
+
+          <div>
+            <strong>Works separately from your account password</strong>
+
+            <p>
+              Your Supabase account password remains
+              separate from your local App Lock credential.
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="security-info-row">
+
+          <span class="security-info-check">
+            ✓
+          </span>
+
+          <div>
+            <strong>Does not replace device security</strong>
+
+            <p>
+              App Lock is an additional app-level protection
+              and does not replace your phone's screen lock.
+            </p>
+          </div>
+
         </div>
 
       </div>
@@ -236,13 +438,74 @@
 
   </main>
 
+
+  <!-- Main navigation -->
+  <nav
+    class="security-bottom-nav"
+    aria-label="Main app navigation"
+  >
+
+    <a href="chats.html">
+
+      <span
+        class="security-nav-icon"
+        aria-hidden="true"
+      >
+        💬
+      </span>
+
+      <span>Chats</span>
+
+    </a>
+
+
+    <a
+      href="settings.html"
+      class="active"
+      aria-current="page"
+    >
+
+      <span
+        class="security-nav-icon"
+        aria-hidden="true"
+      >
+        ⚙️
+      </span>
+
+      <span>Settings</span>
+
+    </a>
+
+
+    <a href="status.html">
+
+      <span
+        class="security-nav-icon"
+        aria-hidden="true"
+      >
+        ◉
+      </span>
+
+      <span>Updates</span>
+
+    </a>
+
+  </nav>
+
+
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="../static/js/i18n.js"></script>
   <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
   <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>
+
+  <!-- Security engine -->
   <script src="../static/js/security.js"></script>
+
+  <!-- Security page UI -->
   <script src="../static/js/security-page.js"></script>
 
 </body>

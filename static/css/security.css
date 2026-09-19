@@ -1,40 +1,52 @@
 /* =========================================================
    ZakiChat Security
+   Responsive security settings UI
    ========================================================= */
 
 .security-page {
+  min-height: 100vh;
+  padding-bottom: 92px;
   background:
     radial-gradient(
-      circle at 15% 0%,
-      rgba(39, 211, 162, .10),
-      transparent 34%
+      circle at 10% 0%,
+      rgba(39, 211, 162, .14),
+      transparent 30%
     ),
     radial-gradient(
-      circle at 90% 10%,
-      rgba(24, 174, 240, .10),
+      circle at 100% 12%,
+      rgba(24, 174, 240, .13),
       transparent 32%
     ),
     #050b13;
 }
 
-.security-page .settings-shell {
-  padding-bottom: 110px;
+.security-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 22px 18px 115px;
 }
 
-/* Back link */
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.security-header {
+  margin-bottom: 20px;
+}
 
 .security-back {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 18px;
-  padding: 9px 13px;
+  min-height: 40px;
+  margin-bottom: 20px;
+  padding: 8px 13px;
   border: 1px solid rgba(255, 255, 255, .08);
-  border-radius: 12px;
-  color: var(--muted);
+  border-radius: 13px;
   background: rgba(255, 255, 255, .035);
+  color: var(--muted);
   text-decoration: none;
-  font-size: 13px;
+  font-size: .72rem;
   font-weight: 800;
   transition:
     color .18s ease,
@@ -45,369 +57,714 @@
 
 .security-back:hover {
   color: var(--text);
-  border-color: rgba(39, 211, 162, .28);
-  background: rgba(39, 211, 162, .07);
+  background: rgba(39, 211, 162, .08);
+  border-color: rgba(39, 211, 162, .25);
   transform: translateX(-2px);
 }
 
-/* Section spacing */
-
-.security-page .settings-section {
-  margin-top: 22px;
+.security-back-icon {
+  font-size: 1rem;
 }
 
-.security-page .settings-section:first-of-type {
+.security-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.security-heading-icon {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(39, 211, 162, .2);
+  border-radius: 17px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(39, 211, 162, .18),
+      rgba(24, 174, 240, .11)
+    );
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, .22);
+  font-size: 24px;
+}
+
+.security-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--primary);
+  font-size: .59rem;
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+
+.security-heading h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.45rem, 5vw, 2rem);
+  line-height: 1.1;
+}
+
+.security-heading p {
+  max-width: 570px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------
+   Overview
+   --------------------------------------------------------- */
+
+.security-overview {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 18px;
+  padding: 15px;
+  border: 1px solid rgba(39, 211, 162, .18);
+  border-radius: 19px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(39, 211, 162, .10),
+      rgba(24, 174, 240, .055)
+    );
+  box-shadow:
+    0 16px 45px rgba(0, 0, 0, .15);
+}
+
+.security-overview-icon {
+  width: 43px;
+  height: 43px;
+  flex: 0 0 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: rgba(39, 211, 162, .12);
+  font-size: 19px;
+}
+
+.security-overview-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.security-overview-copy strong {
+  display: block;
+  color: var(--text);
+  font-size: .76rem;
+  font-weight: 850;
+}
+
+.security-overview-copy span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: .62rem;
+  line-height: 1.45;
+}
+
+.security-overview-badge {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .045);
+  color: var(--muted);
+  font-size: .58rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.security-overview-badge.enabled {
+  border-color: rgba(39, 211, 162, .25);
+  background: rgba(39, 211, 162, .12);
+  color: var(--primary);
+}
+
+/* ---------------------------------------------------------
+   Panels
+   --------------------------------------------------------- */
+
+.security-panel {
+  margin-top: 18px;
+  padding: 17px;
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 21px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, .042),
+      rgba(255, 255, 255, .018)
+    );
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, .18);
+}
+
+.security-panel:first-of-type {
   margin-top: 0;
 }
 
-/* Section headings */
-
-.security-page .settings-section-heading {
+.security-panel-heading {
   display: flex;
   align-items: flex-start;
-  gap: 13px;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
-.security-page .settings-section-icon {
+.security-panel-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(39, 211, 162, .13);
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(39, 211, 162, .11),
+      rgba(24, 174, 240, .07)
+    );
+  font-size: 18px;
+}
+
+.security-panel-heading h2 {
+  margin: 1px 0 4px;
+  color: var(--text);
+  font-size: .9rem;
+  line-height: 1.25;
+}
+
+.security-panel-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .65rem;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------
+   App Lock card
+   --------------------------------------------------------- */
+
+.security-lock-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(39, 211, 162, .15);
+  border-radius: 17px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(39, 211, 162, .09),
+      rgba(24, 174, 240, .045)
+    );
+}
+
+.security-lock-icon {
   width: 42px;
   height: 42px;
   flex: 0 0 42px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(39, 211, 162, .14);
   border-radius: 13px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(39, 211, 162, .13),
-      rgba(24, 174, 240, .10)
-    );
-  font-size: 19px;
-  box-shadow:
-    0 10px 28px rgba(0, 0, 0, .16);
+  background: rgba(39, 211, 162, .12);
+  font-size: 18px;
 }
 
-.security-page .settings-section-heading h2 {
-  margin: 1px 0 4px;
-  color: var(--text);
-  font-size: .98rem;
-  line-height: 1.25;
-}
-
-.security-page .settings-section-heading p {
-  margin: 0;
-  color: var(--muted);
-  font-size: .72rem;
-  line-height: 1.5;
-}
-
-/* Main App Lock card */
-
-.security-card {
-  min-height: 78px;
-  padding: 14px 15px;
-  border: 1px solid rgba(39, 211, 162, .15);
-  border-radius: 18px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(39, 211, 162, .085),
-      rgba(24, 174, 240, .045)
-    );
-  box-shadow:
-    0 18px 48px rgba(0, 0, 0, .18);
-}
-
-.security-card .settings-card-copy {
+.security-lock-copy {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex: 1;
 }
 
-.security-card .settings-card-copy strong {
+.security-lock-copy strong {
+  display: block;
   color: var(--text);
-  font-size: .84rem;
+  font-size: .76rem;
   font-weight: 850;
 }
 
-.security-card .settings-status {
+.security-lock-copy span {
+  display: block;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: .68rem;
+  font-size: .62rem;
   line-height: 1.4;
 }
 
-/* Enable / Manage button */
-
-.security-page #appLockToggle {
-  min-width: 86px;
+.security-toggle {
+  min-width: 82px;
   min-height: 40px;
-  padding: 9px 14px;
-  border: 1px solid rgba(39, 211, 162, .18);
-  border-radius: 12px;
-  background: rgba(39, 211, 162, .11);
+  padding: 8px 13px;
+  border: 1px solid rgba(39, 211, 162, .22);
+  border-radius: 11px;
+  background: rgba(39, 211, 162, .10);
   color: var(--primary);
   font: inherit;
-  font-size: .68rem;
-  font-weight: 850;
+  font-size: .65rem;
+  font-weight: 900;
   cursor: pointer;
-  transition:
-    transform .18s ease,
-    background .18s ease,
-    border-color .18s ease;
+  transition: .18s ease;
 }
 
-.security-page #appLockToggle:hover {
+.security-toggle:hover {
   transform: translateY(-1px);
-  background: rgba(39, 211, 162, .18);
-  border-color: rgba(39, 211, 162, .30);
+  background: rgba(39, 211, 162, .17);
+  border-color: rgba(39, 211, 162, .35);
 }
 
-.security-page #appLockToggle.enabled {
+.security-toggle.enabled {
   background:
     linear-gradient(
       135deg,
       rgba(39, 211, 162, .18),
-      rgba(24, 174, 240, .12)
+      rgba(24, 174, 240, .11)
     );
-  border-color: rgba(39, 211, 162, .28);
+  border-color: rgba(39, 211, 162, .34);
 }
 
-/* Options */
+/* ---------------------------------------------------------
+   Message
+   --------------------------------------------------------- */
+
+.security-message {
+  min-height: 20px;
+  margin: 11px 3px 0;
+  color: var(--muted);
+  font-size: .64rem;
+  line-height: 1.45;
+}
+
+.security-message.error {
+  color: #ff8f9f;
+}
+
+.security-message.success {
+  color: var(--primary);
+}
+
+/* ---------------------------------------------------------
+   Form
+   --------------------------------------------------------- */
 
 .security-options {
   overflow: hidden;
-  padding-top: 2px;
 }
 
-.security-option-card,
-.security-info-card {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  margin-top: 12px;
-  padding: 17px;
-  border: 1px solid rgba(255, 255, 255, .07);
-  border-radius: 17px;
-  background: rgba(255, 255, 255, .035);
-  box-shadow:
-    0 14px 38px rgba(0, 0, 0, .13);
+.security-form-grid {
+  display: grid;
+  gap: 12px;
 }
 
-.security-option-card label {
+.security-field {
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.security-field > label {
+  display: block;
+  margin-bottom: 9px;
+  cursor: default;
+}
+
+.security-field > label > span {
+  display: block;
   color: var(--text);
-  font-size: .72rem;
+  font-size: .7rem;
   font-weight: 850;
 }
 
-.security-option-card input,
-.security-select {
+.security-field > label > small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: .59rem;
+  line-height: 1.4;
+}
+
+.security-control-wrap,
+.security-input-wrap {
+  position: relative;
+}
+
+.security-select,
+.security-field input {
   width: 100%;
-  min-height: 48px;
+  min-height: 43px;
   box-sizing: border-box;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, .09);
-  border-radius: 13px;
+  border: 1px solid rgba(255, 255, 255, .10);
+  border-radius: 12px;
   outline: none;
-  background: rgba(0, 0, 0, .22);
+  background: #0b1725;
   color: var(--text);
   font: inherit;
-  font-size: .78rem;
+  font-size: .68rem;
   transition:
     border-color .18s ease,
     box-shadow .18s ease,
     background .18s ease;
 }
 
-.security-option-card input:focus,
-.security-select:focus {
-  border-color: rgba(39, 211, 162, .48);
-  background: rgba(0, 0, 0, .28);
-  box-shadow:
-    0 0 0 3px rgba(39, 211, 162, .09);
-}
-
-.security-option-card input::placeholder {
-  color: rgba(220, 230, 242, .38);
-}
-
-.security-option-card small,
-.security-info-card p {
-  color: var(--muted);
-  font-size: .66rem;
-  line-height: 1.55;
-}
-
-/* Select appearance */
-
 .security-select {
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 40px;
-  background-image:
-    linear-gradient(45deg, transparent 50%, #7890a5 50%),
-    linear-gradient(135deg, #7890a5 50%, transparent 50%);
-  background-position:
-    calc(100% - 17px) 21px,
-    calc(100% - 12px) 21px;
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
+  padding: 9px 11px;
 }
 
-/* Buttons */
+.security-field input {
+  padding: 10px 45px 10px 12px;
+}
+
+.security-select:focus,
+.security-field input:focus {
+  border-color: rgba(39, 211, 162, .45);
+  background: #0d1b2b;
+  box-shadow:
+    0 0 0 3px rgba(39, 211, 162, .07);
+}
+
+.security-input-action {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  width: 34px;
+  height: 34px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.security-input-action:hover {
+  background: rgba(255, 255, 255, .06);
+  color: var(--text);
+}
+
+.security-field-note {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: .57rem;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------
+   Actions
+   --------------------------------------------------------- */
+
+.security-actions {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+}
 
 .security-primary-button,
 .security-danger-button {
   width: 100%;
-  min-height: 49px;
-  margin-top: 12px;
-  border-radius: 14px;
+  min-height: 45px;
+  border-radius: 12px;
   font: inherit;
-  font-size: .74rem;
-  font-weight: 850;
+  font-size: .68rem;
+  font-weight: 900;
   cursor: pointer;
-  transition:
-    transform .18s ease,
-    background .18s ease,
-    border-color .18s ease,
-    opacity .18s ease;
+  transition: .18s ease;
 }
 
 .security-primary-button {
-  border: 1px solid rgba(39, 211, 162, .24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
   background:
     linear-gradient(
       135deg,
-      rgba(39, 211, 162, .18),
-      rgba(24, 174, 240, .12)
+      #27d3a2,
+      #087db0
     );
-  color: #eafff9;
+  color: #03120e;
   box-shadow:
-    0 10px 28px rgba(39, 211, 162, .07);
+    0 10px 25px rgba(39, 211, 162, .12);
 }
 
 .security-primary-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(39, 211, 162, .38);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(39, 211, 162, .25),
-      rgba(24, 174, 240, .17)
-    );
+  box-shadow:
+    0 13px 30px rgba(39, 211, 162, .18);
 }
 
-.security-danger-button {
-  border: 1px solid rgba(255, 90, 90, .15);
-  background: rgba(255, 90, 90, .065);
-  color: #ffb4b4;
-}
-
-.security-danger-button:hover {
-  transform: translateY(-1px);
-  border-color: rgba(255, 90, 90, .28);
-  background: rgba(255, 90, 90, .12);
-}
-
-.security-primary-button:active,
-.security-danger-button:active,
-.security-page #appLockToggle:active {
-  transform: scale(.985);
-}
-
-.security-primary-button:disabled,
-.security-danger-button:disabled,
-.security-page #appLockToggle:disabled {
-  opacity: .5;
+.security-primary-button:disabled {
+  opacity: .55;
   cursor: not-allowed;
   transform: none;
 }
 
-/* Messages */
-
-.security-page .settings-message {
-  min-height: 18px;
-  margin: 7px 4px 0;
-  font-size: .67rem;
-  line-height: 1.45;
+.security-danger-button {
+  border: 1px solid rgba(255, 91, 111, .20);
+  background: rgba(255, 91, 111, .055);
+  color: #ff8f9f;
 }
 
-.security-success {
-  color: rgba(120, 230, 155, .95);
+.security-danger-button:hover {
+  background: rgba(255, 91, 111, .10);
+  border-color: rgba(255, 91, 111, .32);
 }
 
-.security-error {
-  color: rgba(255, 150, 150, .98);
+/* ---------------------------------------------------------
+   Biometrics
+   --------------------------------------------------------- */
+
+.security-coming-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .025);
 }
 
-/* Biometric / information card */
-
-.security-info-card {
-  padding: 18px;
+.security-coming-icon {
+  width: 39px;
+  height: 39px;
+  flex: 0 0 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(24, 174, 240, .10);
+  font-size: 17px;
 }
 
-.security-info-card strong {
+.security-coming-card strong {
+  display: block;
   color: var(--text);
-  font-size: .76rem;
+  font-size: .7rem;
   font-weight: 850;
 }
 
-.security-info-card p {
-  margin: 0;
+.security-coming-card p {
+  margin: 5px 0 9px;
+  color: var(--muted);
+  font-size: .61rem;
+  line-height: 1.55;
 }
 
-/* Better mobile layout */
-
-@media (max-width: 560px) {
-  .security-page .settings-shell {
-    width: calc(100% - 20px);
-  }
-
-  .security-page .settings-header {
-    margin-bottom: 16px;
-  }
-
-  .security-page .settings-section-heading {
-    gap: 10px;
-  }
-
-  .security-page .settings-section-icon {
-    width: 39px;
-    height: 39px;
-    flex-basis: 39px;
-    font-size: 17px;
-  }
-
-  .security-card {
-    padding: 13px;
-  }
-
-  .security-page #appLockToggle {
-    min-width: 78px;
-    padding-inline: 11px;
-  }
-
-  .security-option-card,
-  .security-info-card {
-    padding: 15px;
-  }
-
-  .security-primary-button,
-  .security-danger-button {
-    min-height: 48px;
-  }
+.security-coming-badge {
+  display: inline-flex;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: rgba(24, 174, 240, .09);
+  color: #7bd9ff;
+  font-size: .55rem;
+  font-weight: 850;
 }
 
-/* Accessibility */
+/* ---------------------------------------------------------
+   Information
+   --------------------------------------------------------- */
+
+.security-info-list {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .055);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.security-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, .055);
+}
+
+.security-info-row:last-child {
+  border-bottom: 0;
+}
+
+.security-info-check {
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(39, 211, 162, .11);
+  color: var(--primary);
+  font-size: .65rem;
+  font-weight: 900;
+}
+
+.security-info-row strong {
+  display: block;
+  color: var(--text);
+  font-size: .65rem;
+  font-weight: 850;
+}
+
+.security-info-row p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: .59rem;
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------
+   Bottom navigation
+   --------------------------------------------------------- */
+
+.security-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 760px;
+  margin: 0 auto;
+  padding:
+    7px
+    max(8px, env(safe-area-inset-right))
+    calc(7px + env(safe-area-inset-bottom))
+    max(8px, env(safe-area-inset-left));
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(5, 11, 19, .94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.security-bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 50px;
+  border-radius: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: .56rem;
+  font-weight: 800;
+  transition: .18s ease;
+}
+
+.security-bottom-nav a:hover {
+  background: rgba(255, 255, 255, .035);
+  color: var(--text);
+}
+
+.security-bottom-nav a.active {
+  background: rgba(39, 211, 162, .08);
+  color: var(--primary);
+}
+
+.security-nav-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+
+@media (min-width: 620px) {
+
+  .security-shell {
+    padding-top: 30px;
+  }
+
+  .security-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .security-field:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .security-actions {
+    grid-template-columns: 1fr 180px;
+    align-items: center;
+  }
+
+  .security-bottom-nav {
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-bottom: 0;
+    border-radius: 18px 18px 0 0;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .security-shell {
+    padding:
+      14px
+      12px
+      calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .security-heading {
+    gap: 11px;
+  }
+
+  .security-heading-icon {
+    width: 47px;
+    height: 47px;
+    flex-basis: 47px;
+    border-radius: 14px;
+    font-size: 21px;
+  }
+
+  .security-heading h1 {
+    font-size: 1.4rem;
+  }
+
+  .security-overview {
+    align-items: flex-start;
+  }
+
+  .security-overview-badge {
+    margin-left: auto;
+  }
+
+  .security-panel {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .security-lock-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .security-lock-copy {
+    padding-top: 2px;
+  }
+
+  .security-toggle {
+    width: 100%;
+  }
+
+}
 
 @media (prefers-reduced-motion: reduce) {
+
   .security-back,
-  .security-page #appLockToggle,
-  .security-option-card input,
-  .security-select,
+  .security-toggle,
   .security-primary-button,
-  .security-danger-button {
+  .security-bottom-nav a {
     transition: none;
   }
+
 }
