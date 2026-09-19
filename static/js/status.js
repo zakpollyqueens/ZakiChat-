@@ -2059,3 +2059,226 @@ showComposerError(message) {
   }
 
 })();
+
+/*
+ * ============================================================
+ * ZAKICHAT SHOWCASE
+ * ============================================================
+ *
+ * Published showcase content comes from:
+ * public.update_showcase_items
+ *
+ * The Admin Dashboard will eventually create/update/delete
+ * these records and upload the associated images.
+ *
+ * No admin credentials or service-role keys belong here.
+ * ============================================================
+ */
+(function () {
+  'use strict';
+
+  const fallbackShowcase = [
+    {
+      id: 'demo-personal',
+      title: 'Personal Plus',
+      description:
+        'Explore the customized Personal experience and larger file transfers.',
+      category: 'Personal',
+      image_url: '../static/images/showcase/personal-plus.svg',
+      target_url: '#'
+    },
+    {
+      id: 'demo-business',
+      title: 'Business Experience',
+      description:
+        'Discover business profiles, teams, communication and meetings.',
+      category: 'Business',
+      image_url: '../static/images/showcase/business.svg',
+      target_url: '#'
+    },
+    {
+      id: 'demo-security',
+      title: 'Security & Privacy',
+      description:
+        'Explore the tools designed to help protect your account and conversations.',
+      category: 'Security',
+      image_url: '../static/images/showcase/security.svg',
+      target_url: '#'
+    },
+    {
+      id: 'demo-features',
+      title: 'New Features',
+      description:
+        'Keep discovering new communication features as ZakiChat evolves.',
+      category: 'Features',
+      image_url: '../static/images/showcase/features.svg',
+      target_url: '#'
+    }
+  ];
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function escapeAttribute(value) {
+    return escapeHtml(value);
+  }
+
+  function renderShowcase(items) {
+    const track =
+      document.getElementById('updateShowcaseTrack');
+
+    const status =
+      document.getElementById('updateShowcaseStatus');
+
+    if (!track) {
+      return;
+    }
+
+    const source =
+      Array.isArray(items) && items.length
+        ? items
+        : fallbackShowcase;
+
+    const cards = source.map(function (item) {
+      const title =
+        escapeHtml(
+          item.title || 'ZakiChat Feature'
+        );
+
+      const description =
+        escapeHtml(
+          item.description || ''
+        );
+
+      const category =
+        escapeHtml(
+          item.category || 'Feature'
+        );
+
+      const image =
+        escapeAttribute(
+          item.image_url || ''
+        );
+
+      const target =
+        escapeAttribute(
+          item.target_url || '#'
+        );
+
+      return `
+        <a
+          class="update-showcase-card"
+          href="${target}"
+          aria-label="${title}"
+        >
+          <img
+            class="update-showcase-card-image"
+            src="${image}"
+            alt="${title}"
+            loading="lazy"
+          >
+
+          <span class="update-showcase-card-overlay">
+            <span class="update-showcase-category">
+              ${category}
+            </span>
+
+            <strong class="update-showcase-card-title">
+              ${title}
+            </strong>
+
+            <span class="update-showcase-card-description">
+              ${description}
+            </span>
+          </span>
+        </a>
+      `;
+    }).join('');
+
+    /*
+     * Duplicate the exact sequence so the CSS animation can move
+     * through one complete set and immediately continue into the
+     * identical second set.
+     */
+    track.innerHTML = cards + cards;
+
+    if (status) {
+      status.textContent =
+        `${source.length} showcase ${source.length === 1 ? 'item' : 'items'}`;
+    }
+  }
+
+  async function loadShowcase() {
+    const client =
+      window.ZakiChatAuth?.client;
+
+    if (!client) {
+      renderShowcase(fallbackShowcase);
+      return;
+    }
+
+    try {
+      const {
+        data,
+        error
+      } = await client
+        .from('update_showcase_items')
+        .select(`
+          id,
+          title,
+          description,
+          category,
+          image_url,
+          target_url,
+          sort_order,
+          created_at
+        `)
+        .eq('is_published', true)
+        .order(
+          'sort_order',
+          { ascending: true }
+        )
+        .order(
+          'created_at',
+          { ascending: false }
+        )
+        .limit(30);
+
+      if (error) {
+        throw error;
+      }
+
+      if (Array.isArray(data) && data.length) {
+        renderShowcase(data);
+      } else {
+        renderShowcase(fallbackShowcase);
+      }
+
+    } catch (error) {
+      console.warn(
+        'Showcase could not be loaded from Supabase. Using fallback content.',
+        error
+      );
+
+      renderShowcase(fallbackShowcase);
+    }
+  }
+
+  if (
+    document.readyState === 'loading'
+  ) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      loadShowcase
+    );
+  } else {
+    loadShowcase();
+  }
+
+})();

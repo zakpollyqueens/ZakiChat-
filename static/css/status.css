@@ -1071,3 +1071,207 @@ body:has(.bottom-nav) {
     font-size: 0.63rem;
   }
 }
+
+/* ============================================================
+   ZAKICHAT SHOWCASE
+   Seamless continuously moving feature carousel.
+   ============================================================ */
+
+.update-showcase-section {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(45, 74, 140, 0.18),
+      rgba(17, 25, 42, 0.96)
+    );
+  overflow: hidden;
+}
+
+.update-showcase-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 15px;
+}
+
+.update-showcase-heading h2 {
+  margin: 3px 0 5px;
+  font-size: 19px;
+}
+
+.update-showcase-heading p {
+  margin: 0;
+  color: #8e9bb2;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.update-showcase-badge {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(54, 124, 255, 0.13);
+  color: #8db3ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+}
+
+.update-showcase-viewport {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 18px;
+  outline: none;
+}
+
+.update-showcase-viewport::before,
+.update-showcase-viewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.update-showcase-viewport::before {
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(17, 25, 42, .98),
+    rgba(17, 25, 42, 0)
+  );
+}
+
+.update-showcase-viewport::after {
+  right: 0;
+  background: linear-gradient(
+    270deg,
+    rgba(17, 25, 42, .98),
+    rgba(17, 25, 42, 0)
+  );
+}
+
+.update-showcase-track {
+  width: max-content;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  animation: zc-showcase-scroll 48s linear infinite;
+  will-change: transform;
+}
+
+.update-showcase-viewport:hover .update-showcase-track,
+.update-showcase-viewport:focus-within .update-showcase-track {
+  animation-play-state: paused;
+}
+
+@keyframes zc-showcase-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.update-showcase-card {
+  position: relative;
+  flex: 0 0 min(78vw, 340px);
+  min-height: 230px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  background: #0b1425;
+  color: #fff;
+  text-decoration: none;
+}
+
+.update-showcase-card-image {
+  display: block;
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  background: #101a2d;
+}
+
+.update-showcase-card-overlay {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 48px 15px 14px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(3, 8, 18, .95)
+  );
+}
+
+.update-showcase-category {
+  display: inline-flex;
+  padding: 5px 8px;
+  margin-bottom: 7px;
+  border-radius: 999px;
+  background: rgba(54, 124, 255, .22);
+  color: #b9d0ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+.update-showcase-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.update-showcase-card-description {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, .72);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.update-showcase-status {
+  margin-top: 9px;
+  color: #73819a;
+  font-size: 10px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .update-showcase-section {
+    padding: 14px;
+  }
+
+  .update-showcase-card {
+    flex-basis: 82vw;
+  }
+
+  .update-showcase-card-image {
+    height: 220px;
+  }
+
+  .update-showcase-track {
+    gap: 11px;
+    animation-duration: 42s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .update-showcase-track {
+    animation: none;
+    overflow-x: auto;
+  }
+
+  .update-showcase-viewport {
+    overflow-x: auto;
+  }
+}

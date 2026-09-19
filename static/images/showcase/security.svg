@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#151d35"/>
+      <stop offset="1" stop-color="#473f91"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="560" rx="42" fill="url(#g)"/>
+  <rect x="90" y="90" width="720" height="380" rx="30" fill="#090d19" opacity=".9"/>
+  <text x="140" y="170" fill="#fff" font-family="Arial" font-size="29" font-weight="700">ZakiChat Security</text>
+  <text x="140" y="220" fill="#bfc8e9" font-family="Arial" font-size="21">Privacy and account protection</text>
+  <path d="M450 265 L555 305 L535 395 Q450 445 365 395 L345 305 Z" fill="#6d62ff"/>
+  <path d="M405 340 L435 370 L500 300" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

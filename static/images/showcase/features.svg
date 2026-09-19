@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff7a4d"/>
+      <stop offset="1" stop-color="#d33c91"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="560" rx="42" fill="url(#g)"/>
+  <rect x="85" y="90" width="730" height="380" rx="30" fill="#1c1020" opacity=".9"/>
+  <text x="135" y="170" fill="#fff" font-family="Arial" font-size="29" font-weight="700">New ZakiChat Features</text>
+  <text x="135" y="220" fill="#f4cadb" font-family="Arial" font-size="21">Chats • Channels • Updates • Calls</text>
+  <circle cx="220" cy="325" r="58" fill="#ff6e9e"/>
+  <circle cx="380" cy="325" r="58" fill="#8c70ff"/>
+  <circle cx="540" cy="325" r="58" fill="#49c9a1"/>
+  <circle cx="700" cy="325" r="58" fill="#ffb454"/>
+  <text x="220" y="334" text-anchor="middle" fill="#fff" font-family="Arial" font-size="30">C</text>
+  <text x="380" y="334" text-anchor="middle" fill="#fff" font-family="Arial" font-size="30">+</text>
+  <text x="540" y="334" text-anchor="middle" fill="#fff" font-family="Arial" font-size="30">U</text>
+  <text x="700" y="334" text-anchor="middle" fill="#fff" font-family="Arial" font-size="30">☎</text>
+</svg>
