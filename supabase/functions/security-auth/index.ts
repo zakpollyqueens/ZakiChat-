@@ -141,9 +141,34 @@ async function getAuthenticatedUser(
     return null;
   }
 
+  const serviceRoleKey =
+    Deno.env.get(
+      "SUPABASE_SERVICE_ROLE_KEY",
+    );
+
+  if (!serviceRoleKey) {
+    throw new Error(
+      "Supabase server secret key is not available",
+    );
+  }
+
+  /*
+   * Server-only database client. The caller's identity was
+   * verified above, and every security-table query below
+   * remains explicitly scoped to user.id.
+   */
+  const supabaseAdmin =
+    createClient(
+      Deno.env.get(
+        "SUPABASE_URL",
+      )!,
+      serviceRoleKey,
+    );
+
   return {
     user,
     supabase,
+    supabaseAdmin,
   };
 }
 
@@ -216,7 +241,7 @@ async function createRegistrationOptions(
 
   const {
     user,
-    supabase,
+    supabaseAdmin,
   } = auth;
 
   const {
@@ -363,7 +388,7 @@ async function verifyRegistration(
 
   const {
     user,
-    supabase,
+    supabaseAdmin,
   } = auth;
 
   const {
@@ -587,7 +612,7 @@ async function listPasskeys(
 
   const {
     user,
-    supabase,
+    supabaseAdmin,
   } = auth;
 
   const {
@@ -649,7 +674,7 @@ async function deletePasskey(
 
   const {
     user,
-    supabase,
+    supabaseAdmin,
   } = auth;
 
   const id =
