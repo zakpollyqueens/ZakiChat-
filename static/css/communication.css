@@ -1,0 +1,338 @@
+/* ============================================================
+   ZakiChat communication UI
+   ============================================================ */
+
+#zaki-communication-layer {
+  position: relative;
+  z-index: 1000;
+}
+
+.zaki-share-menu {
+  position: absolute;
+  left: 18px;
+  bottom: 82px;
+  width: min(300px, calc(100vw - 36px));
+  padding: 10px;
+  border: 1px solid var(--border, rgba(255,255,255,.1));
+  border-radius: 18px;
+  background: var(--surface, #101b2a);
+  box-shadow: 0 18px 45px rgba(0,0,0,.35);
+}
+
+.zaki-share-menu[hidden],
+.zaki-recording-bar[hidden],
+.zaki-call-overlay[hidden],
+.zaki-incoming-call[hidden] {
+  display: none !important;
+}
+
+.zaki-share-menu button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  padding: 11px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.zaki-share-menu button:hover {
+  background: rgba(255,255,255,.07);
+}
+
+.zaki-share-menu button > span {
+  grid-row: 1 / 3;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(39,211,162,.12);
+  font-size: 20px;
+}
+
+.zaki-share-menu strong {
+  font-size: .9rem;
+}
+
+.zaki-share-menu small {
+  margin-top: 2px;
+  opacity: .65;
+}
+
+.zaki-recording-bar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 70px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border, rgba(255,255,255,.1));
+  border-radius: 16px;
+  background: var(--surface, #101b2a);
+  box-shadow: 0 15px 40px rgba(0,0,0,.3);
+}
+
+.zaki-recording-dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: zakiRecordingPulse 1s infinite;
+}
+
+@keyframes zakiRecordingPulse {
+  50% {
+    opacity: .3;
+  }
+}
+
+.zaki-recording-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.zaki-recording-info span {
+  opacity: .7;
+  font-variant-numeric: tabular-nums;
+}
+
+.zaki-recording-bar button,
+.zaki-incoming-actions button {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+#zaki-send-recording,
+#zaki-answer-call {
+  background: var(--primary, #27d3a2);
+  color: #06130f;
+}
+
+#zaki-cancel-recording,
+#zaki-decline-call {
+  background: rgba(255,255,255,.08);
+  color: inherit;
+}
+
+.zaki-call-overlay,
+.zaki-incoming-call {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(8px);
+}
+
+.zaki-call-window {
+  width: min(760px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 24px;
+  background: #08111d;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+}
+
+.zaki-call-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+}
+
+.zaki-call-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.zaki-call-header span {
+  opacity: .65;
+  font-size: .85rem;
+}
+
+.zaki-call-header button {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.zaki-video-stage {
+  position: relative;
+  min-height: 430px;
+  background: #02070d;
+  overflow: hidden;
+}
+
+#zaki-remote-video {
+  width: 100%;
+  height: 100%;
+  min-height: 430px;
+  object-fit: cover;
+  background: #02070d;
+}
+
+#zaki-local-video {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 150px;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #101820;
+  border: 2px solid rgba(255,255,255,.2);
+}
+
+.zaki-call-avatar {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 70px;
+  font-weight: 700;
+}
+
+.zaki-call-controls {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px;
+}
+
+.zaki-call-controls button {
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  color: inherit;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.zaki-call-controls .zaki-end-call {
+  background: #e74c5c;
+  color: white;
+}
+
+.zaki-incoming-card {
+  width: min(360px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 30px;
+  border-radius: 24px;
+  background: var(--surface, #101b2a);
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(0,0,0,.45);
+}
+
+.zaki-incoming-avatar {
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#27d3a2,#5478ff);
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.zaki-incoming-card > span {
+  opacity: .65;
+}
+
+.zaki-incoming-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.zaki-incoming-actions button {
+  flex: 1;
+}
+
+.zaki-location-card {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 10px;
+  min-width: 220px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(39,211,162,.08);
+}
+
+.zaki-location-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(39,211,162,.14);
+  font-size: 20px;
+}
+
+.zaki-location-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.zaki-location-details span {
+  opacity: .65;
+  font-size: .78rem;
+}
+
+.zaki-location-card a {
+  grid-column: 1 / -1;
+  text-decoration: none;
+  text-align: center;
+  padding: 8px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.07);
+  color: inherit;
+}
+
+@media (max-width: 600px) {
+  .zaki-video-stage,
+  #zaki-remote-video {
+    min-height: 320px;
+  }
+
+  #zaki-local-video {
+    width: 105px;
+    height: 150px;
+  }
+
+  .zaki-recording-bar {
+    bottom: 64px;
+  }
+
+  .zaki-share-menu {
+    bottom: 70px;
+  }
+}

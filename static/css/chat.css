@@ -1464,3 +1464,319 @@
   }
 
 }
+
+/* ============================================================
+   ZakiChat Updates indicator
+   Telegram-inspired circular status indicator
+   ============================================================ */
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.updates-indicator {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid transparent;
+  background: rgba(127, 127, 127, 0.08);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.updates-indicator:hover {
+  transform: scale(1.05);
+  background: rgba(127, 127, 127, 0.14);
+}
+
+.updates-indicator:active {
+  transform: scale(0.96);
+}
+
+.updates-indicator:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.updates-indicator-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* Unviewed Updates state.
+   JavaScript will add .has-unread when permitted statuses
+   are waiting to be viewed. */
+.updates-indicator.has-unread {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+}
+
+.updates-indicator.has-unread .updates-indicator-icon {
+  color: #22c55e;
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .updates-indicator {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .updates-indicator-icon {
+    font-size: 25px;
+  }
+}
+
+/* Phones */
+@media (max-width: 768px) {
+  .top-actions {
+    gap: 6px;
+  }
+
+  .updates-indicator {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .updates-indicator-icon {
+    font-size: 23px;
+  }
+}
+
+/* ============================================================
+   ZakiChat Updates indicator
+   Telegram-inspired circular status indicator
+   ============================================================ */
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.updates-indicator {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid transparent;
+  background: rgba(127, 127, 127, 0.08);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.updates-indicator:hover {
+  transform: scale(1.05);
+  background: rgba(127, 127, 127, 0.14);
+}
+
+.updates-indicator:active {
+  transform: scale(0.96);
+}
+
+.updates-indicator:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.updates-indicator-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.updates-indicator.has-unread {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+}
+
+.updates-indicator.has-unread .updates-indicator-icon {
+  color: #22c55e;
+}
+
+@media (min-width: 769px) {
+  .updates-indicator {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .updates-indicator-icon {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-actions {
+    gap: 6px;
+  }
+
+  .updates-indicator {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .updates-indicator-icon {
+    font-size: 23px;
+  }
+}
+
+/* ============================================================
+   ZakiChat Updates indicator
+   Telegram-inspired circular status indicator
+   ============================================================ */
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.updates-indicator {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid transparent;
+  background: rgba(127, 127, 127, 0.08);
+  box-sizing: border-box;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.updates-indicator:hover {
+  transform: scale(1.05);
+  background: rgba(127, 127, 127, 0.14);
+}
+
+.updates-indicator:active {
+  transform: scale(0.96);
+}
+
+.updates-indicator:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.updates-indicator-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* Unviewed permitted updates */
+.updates-indicator.has-unread {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14);
+}
+
+.updates-indicator.has-unread .updates-indicator-icon {
+  color: #22c55e;
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .updates-indicator {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .updates-indicator-icon {
+    font-size: 25px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top-actions {
+    gap: 6px;
+  }
+
+  .updates-indicator {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+
+  .updates-indicator-icon {
+    font-size: 23px;
+  }
+}
+
+/* ============================================================
+   ZakiChat individual-chat communication controls
+   ============================================================ */
+
+.chat-call-button {
+  font-size: 1rem;
+}
+
+.chat-call-button:hover {
+  color: var(--primary);
+  border-color: rgba(39, 211, 162, .25);
+  background: rgba(39, 211, 162, .08);
+}
+
+@media (max-width: 600px) {
+  .chat-call-button {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+    font-size: .95rem;
+  }
+}
+
+/* ============================================================
+   ZakiChat individual-chat communication controls
+   ============================================================ */
+
+.chat-call-button {
+  font-size: 1rem;
+}
+
+.chat-call-button:hover {
+  color: var(--primary);
+  border-color: rgba(39, 211, 162, .25);
+  background: rgba(39, 211, 162, .08);
+}
+
+@media (max-width: 600px) {
+  .chat-call-button {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+    font-size: .95rem;
+  }
+}

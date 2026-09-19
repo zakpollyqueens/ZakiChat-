@@ -32,6 +32,17 @@
           aria-label="Search"
           title="Search"
         >⌕</button>
+        <a
+          href="status.html"
+          class="updates-indicator"
+          id="top-updates-indicator"
+          aria-label="Updates"
+          title="Updates"
+        >
+          <span class="updates-indicator-icon" aria-hidden="true">◌</span>
+        </a>
+
+
 
         <button
           type="button"
@@ -104,11 +115,11 @@
       </a>
 
       <a
-        href="calls.html"
+        href="status.html"
         class="bottom-nav-item"
       >
-        <span class="bottom-nav-icon" aria-hidden="true">📞</span>
-        <span>Calls</span>
+        <span class="bottom-nav-icon" aria-hidden="true">🔔</span>
+        <span>Updates</span>
       </a>
     </nav>
 
@@ -169,7 +180,26 @@
           aria-label="Refresh chat"
           title="Refresh chat"
         >↻</button>
-        <button class="icon-button" type="button" aria-label="Search">⌕</button>
+        <button
+          class="icon-button chat-call-button"
+          type="button"
+          id="voice-call-button"
+          aria-label="Voice call"
+          title="Voice call"
+        >📞</button>
+        <button
+          class="icon-button chat-call-button"
+          type="button"
+          id="video-call-button"
+          aria-label="Video call"
+          title="Video call"
+        >📹</button>
+        <button
+          class="icon-button"
+          type="button"
+          aria-label="Search"
+          title="Search messages"
+        >⌕</button>
         <button class="icon-button" aria-label="More options">⋮</button>
       </div>
     </header>
