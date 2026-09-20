@@ -184,3 +184,35 @@
     margin-left: auto;
   }
 }
+
+.block-user-button{
+  width:100%;
+  min-height:48px;
+  margin:4px 0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:1px solid rgba(88,186,255,.24);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(88,186,255,.16),rgba(124,108,255,.13));
+  color:inherit;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.block-user-button span:first-child{
+  font-size:21px;
+}
+
+.block-user-button:hover{
+  transform:translateY(-2px);
+  border-color:rgba(88,186,255,.48);
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
+}
+
+.block-user-button:active{
+  transform:translateY(0) scale(.98);
+}
