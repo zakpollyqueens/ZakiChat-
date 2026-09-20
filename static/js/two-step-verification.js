@@ -188,13 +188,28 @@
         return;
       }
 
-      if (confirm("Disable two-step verification for this account?")) {
-        await call("disable");
-        render(false);
-        alert("Two-step verification has been disabled.");
-      }
+      openDialog();
+
+      message.textContent =
+        "Generating new recovery codes...";
+
+      secretBox.hidden = true;
+      recoveryBox.hidden = true;
+      verify.hidden = true;
+
+      const result = await call("regenerate-recovery");
+
+      recoveryCodes.textContent =
+        (result.recoveryCodes || []).join("\\n");
+
+      recoveryBox.hidden = false;
+
+      message.textContent =
+        "Your old recovery codes are no longer valid. Save these new codes somewhere safe.";
+
     } catch (error) {
-      alert(error.message);
+      message.textContent = error.message;
+      openDialog();
     }
   });
 

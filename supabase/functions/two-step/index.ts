@@ -191,6 +191,47 @@ Deno.serve(async (req) => {
       return json({ enabled: true, recoveryCodes: recovery });
     }
 
+    if (action === "regenerate-recovery") {
+      if (!row?.enabled || !row?.encrypted_secret) {
+        return json(
+          { error: "Two-step verification is not enabled." },
+          400
+        );
+      }
+
+      const recovery = Array.from({ length: 8 }, () =>
+        crypto.randomUUID()
+          .replaceAll("-", "")
+          .slice(0, 10)
+          .toUpperCase()
+      );
+
+      const hashes = await Promise.all(
+        recovery.map(async code =>
+          Array.from(await digest(code))
+            .map(x => x.toString(16).padStart(2, "0"))
+            .join("")
+        )
+      );
+
+      const { error } = await admin
+        .from("two_step_verification")
+        .update({
+          recovery_code_hashes: hashes,
+          updated_at: new Date().toISOString()
+        })
+        .eq("user_id", user.id);
+
+      if (error) {
+        throw error;
+      }
+
+      return json({
+        enabled: true,
+        recoveryCodes: recovery
+      });
+    }
+
     if (action === "disable") {
       await admin.from("two_step_verification").update({
         enabled: false,
