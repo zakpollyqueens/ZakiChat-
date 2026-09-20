@@ -1,89 +1,55 @@
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "zakichat_two_step_verification";
+  const KEY = "zakichat_two_step_verification";
 
-  const setupButton = document.getElementById("setupButton");
-  const recoveryButton = document.getElementById("recoveryButton");
-  const setupDialog = document.getElementById("setupDialog");
-  const closeDialogButton = document.getElementById("closeDialogButton");
-  const verificationStatus = document.getElementById("verificationStatus");
-  const statusBadge = document.getElementById("statusBadge");
+  const setup = document.getElementById("setupButton");
+  const recovery = document.getElementById("recoveryButton");
+  const dialog = document.getElementById("setupDialog");
+  const close = document.getElementById("closeDialogButton");
+  const status = document.getElementById("verificationStatus");
+  const badge = document.getElementById("statusBadge");
 
-  function loadState() {
+  function getState() {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-
-      if (!saved) {
-        return {
-          configured: false
-        };
-      }
-
-      const parsed = JSON.parse(saved);
-
-      return {
-        configured: Boolean(parsed?.configured)
-      };
+      return JSON.parse(localStorage.getItem(KEY)) || { configured: false };
     } catch {
-      return {
-        configured: false
-      };
+      return { configured: false };
     }
   }
 
-  function saveState(state) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  function render() {
+    const on = Boolean(getState().configured);
+
+    status.textContent = on ? "Configured" : "Not configured";
+    badge.textContent = on ? "On" : "Off";
+    badge.classList.toggle("active", on);
+    setup.textContent = on
+      ? "Manage two-step verification"
+      : "Set up two-step verification";
   }
 
-  function render(state) {
-    if (state.configured) {
-      verificationStatus.textContent = "Configured";
-      statusBadge.textContent = "On";
-      statusBadge.classList.add("active");
-      setupButton.textContent = "Manage two-step verification";
-    } else {
-      verificationStatus.textContent = "Not configured";
-      statusBadge.textContent = "Off";
-      statusBadge.classList.remove("active");
-      setupButton.textContent = "Set up two-step verification";
-    }
-  }
-
-  function openDialog() {
-    setupDialog.hidden = false;
+  function open() {
+    if (dialog) dialog.hidden = false;
   }
 
   function closeDialog() {
-    setupDialog.hidden = true;
+    if (dialog) dialog.hidden = true;
   }
 
-  function showUnavailableMessage() {
-    openDialog();
-  }
+  setup?.addEventListener("click", open);
 
-  setupButton?.addEventListener("click", showUnavailableMessage);
-
-  recoveryButton?.addEventListener("click", function () {
-    window.alert(
-      "Recovery management will be available when the secure two-step verification backend is connected."
+  recovery?.addEventListener("click", function () {
+    alert(
+      "Recovery options will be available after two-step verification is connected to the secure account backend."
     );
   });
 
-  closeDialogButton?.addEventListener("click", closeDialog);
+  close?.addEventListener("click", closeDialog);
 
-  setupDialog?.addEventListener("click", function (event) {
-    if (event.target.hasAttribute("data-close-dialog")) {
-      closeDialog();
-    }
+  dialog?.addEventListener("click", function (e) {
+    if (e.target.hasAttribute("data-close-dialog")) closeDialog();
   });
 
-  const state = loadState();
-
-  /*
-   * The configured flag is intentionally not changed by this page.
-   * Real activation must happen through the authenticated backend flow.
-   */
-  saveState(state);
-  render(state);
+  render();
 })();
