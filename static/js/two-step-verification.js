@@ -12,11 +12,13 @@
   const code = document.getElementById("verificationCode");
   const secretBox = document.getElementById("setupSecretBox");
   const secret = document.getElementById("setupSecret");
+  const copySecret = document.getElementById("copySecretButton");
   const recoveryBox = document.getElementById("recoveryBox");
   const recoveryCodes = document.getElementById("recoveryCodes");
   const message = document.getElementById("setupMessage");
   const status = document.getElementById("verificationStatus");
   const badge = document.getElementById("statusBadge");
+  let enabled = false;
 
   async function session() {
     const client = window.ZakiChatAuth?.client;
@@ -44,10 +46,11 @@
   }
 
   function render(on) {
-    status.textContent = on ? "Configured" : "Not configured";
-    badge.textContent = on ? "On" : "Off";
-    badge.classList.toggle("active", on);
-    setup.textContent = on
+    enabled = Boolean(on);
+    status.textContent = enabled ? "Configured" : "Not configured";
+    badge.textContent = enabled ? "On" : "Off";
+    badge.classList.toggle("active", enabled);
+    setup.textContent = enabled
       ? "Manage two-step verification"
       : "Set up two-step verification";
   }
@@ -74,17 +77,49 @@
     message.textContent = "Preparing secure setup...";
     secretBox.hidden = true;
     recoveryBox.hidden = true;
+    verify.hidden = false;
+    verify.disabled = false;
     code.value = "";
+
+    if (enabled) {
+      message.textContent =
+        "Two-step verification is already enabled for this account.";
+      return;
+    }
+
+    message.textContent =
+      "Preparing secure setup. Your secret key will appear below.";
 
     try {
       const data = await call("setup");
-      secret.textContent = data.secret;
+
+      if (!data.secret) {
+        throw new Error("The server did not return a setup secret.");
+      }
+      secret.value = data.secret;
       secretBox.hidden = false;
       message.textContent =
-        "Add this secret to your authenticator app, then enter the 6-digit code.";
+        "Copy the secret key into your authenticator app, then enter the 6-digit code it generates.";
+      code.focus();
     } catch (e) {
       message.textContent = e.message;
     }
+  });
+
+  copySecret?.addEventListener("click", async function () {
+    if (!secret.value) return;
+
+    try {
+      await navigator.clipboard.writeText(secret.value);
+    } catch {
+      secret.select();
+      document.execCommand("copy");
+    }
+
+    copySecret.textContent = "Copied";
+    setTimeout(() => {
+      copySecret.textContent = "Copy secret";
+    }, 1500);
   });
 
   verify?.addEventListener("click", async function () {

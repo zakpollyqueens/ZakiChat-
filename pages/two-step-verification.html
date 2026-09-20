@@ -78,9 +78,23 @@
         </p>
 
         <div id="setupSecretBox" hidden>
-          <p><strong>Secret key</strong></p>
-          <code id="setupSecret"></code>
-          <p>Enter the 6-digit code from your authenticator app.</p>
+          <label for="setupSecret"><strong>Secret key</strong></label>
+          <div class="secret-row">
+            <input
+              id="setupSecret"
+              type="text"
+              readonly
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button type="button" id="copySecretButton" class="secondary-button">
+              Copy secret
+            </button>
+          </div>
+          <p>
+            Add this secret to your authenticator app. It will generate the
+            6-digit verification code you need below.
+          </p>
         </div>
 
         <label for="verificationCode">Verification code</label>
@@ -115,6 +129,6 @@
   <script src="../static/js/account-manager.js"></script>
   <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>
-  <script src="../static/js/two-step-verification.js"></script>
+  <script src="../static/js/two-step-verification.js?v=zc-vr15-2fa1"></script>
 </body>
 </html>
