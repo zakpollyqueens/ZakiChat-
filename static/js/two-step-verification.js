@@ -18,49 +18,78 @@
   const message = document.getElementById("setupMessage");
   const status = document.getElementById("verificationStatus");
   const badge = document.getElementById("statusBadge");
+
   let enabled = false;
 
   async function session() {
     const client = window.ZakiChatAuth?.client;
-    if (!client) throw new Error("ZakiChat authentication is not ready.");
+
+    if (!client) {
+      throw new Error("ZakiChat authentication is not ready.");
+    }
+
     const { data, error } = await client.auth.getSession();
+
     if (error) throw error;
     if (!data.session) throw new Error("Please sign in again.");
+
     return data.session;
   }
 
   async function call(action, extra = {}) {
     const s = await session();
+
     const res = await fetch(FN, {
       method: "POST",
       headers: {
         Authorization: "Bearer " + s.access_token,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ action, ...extra })
+      body: JSON.stringify({
+        action,
+        ...extra
+      })
     });
 
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Two-step verification request failed.");
+
+    if (!res.ok) {
+      throw new Error(
+        data.error || "Two-step verification request failed."
+      );
+    }
+
     return data;
   }
 
   function render(on) {
     enabled = Boolean(on);
-    status.textContent = enabled ? "Configured" : "Not configured";
-    badge.textContent = enabled ? "On" : "Off";
+
+    status.textContent = enabled
+      ? "Configured"
+      : "Not configured";
+
+    badge.textContent = enabled
+      ? "On"
+      : "Off";
+
     badge.classList.toggle("active", enabled);
+
     setup.textContent = enabled
       ? "Manage two-step verification"
       : "Set up two-step verification";
   }
 
-  function open() {
+  function openDialog() {
+    if (!dialog) return;
+
     dialog.hidden = false;
     document.body.style.overflow = "hidden";
   }
 
   function closeDialog() {
+    if (!dialog) return;
+
     dialog.hidden = true;
     document.body.style.overflow = "";
   }
@@ -69,18 +98,23 @@
     try {
       const data = await call("status");
       render(data.enabled);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error("Two-step status error:", error);
     }
   }
 
   setup?.addEventListener("click", async function () {
-    open();
-    message.textContent = "Preparing secure setup...";
+    openDialog();
+
+    message.textContent =
+      "Preparing secure setup. Your secret key will appear below.";
+
     secretBox.hidden = true;
     recoveryBox.hidden = true;
+
     verify.hidden = false;
     verify.disabled = false;
+
     code.value = "";
 
     if (enabled) {
@@ -89,26 +123,31 @@
       return;
     }
 
-    message.textContent =
-      "Preparing secure setup. Your secret key will appear below.";
-
     try {
       const data = await call("setup");
 
       if (!data.secret) {
-        throw new Error("The server did not return a setup secret.");
+        throw new Error(
+          "The server did not return a setup secret."
+        );
       }
+
       secret.value = data.secret;
       secretBox.hidden = false;
+
       message.textContent =
         "Copy the secret key into your authenticator app, then enter the 6-digit code it generates.";
+
       code.focus();
-    } catch (e) {
-      message.textContent = e.message;
+    } catch (error) {
+      message.textContent = error.message;
     }
   });
 
-  copySecret?.addEventListener("click", async function () {
+  copySecret?.addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (!secret.value) return;
 
     try {
@@ -119,69 +158,137 @@
     }
 
     copySecret.textContent = "Copied";
-    setTimeout(() => {
+
+    setTimeout(function () {
       copySecret.textContent = "Copy secret";
     }, 1500);
   });
 
-  verify?.addEventListener("click", async function () {
+  verify?.addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     const value = code.value.trim();
 
     if (!/^\d{6}$/.test(value)) {
-      message.textContent = "Enter the 6-digit verification code.";
+      message.textContent =
+        "Enter the 6-digit verification code.";
       return;
     }
 
     verify.disabled = true;
 
     try {
-      const data = await call("enable", { code: value });
+      const data = await call("enable", {
+        code: value
+      });
+
       render(true);
-      recoveryCodes.textContent = data.recoveryCodes.join("\n");
+
+      recoveryCodes.textContent =
+        (data.recoveryCodes || []).join("\n");
+
       recoveryBox.hidden = false;
+
       message.textContent =
         "Two-step verification is enabled. Save these recovery codes somewhere safe.";
+
       verify.hidden = true;
-    } catch (e) {
-      message.textContent = e.message;
+    } catch (error) {
+      message.textContent = error.message;
     } finally {
       verify.disabled = false;
     }
   });
 
-  recovery?.addEventListener("click", async function () {
-    const data = await call("status");
+  recovery?.addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
 
-    if (!data.enabled) {
-      alert("Two-step verification is not enabled.");
-      return;
-    }
+    try {
+      const data = await call("status");
 
-    if (confirm("Disable two-step verification for this account?")) {
-      try {
+      if (!data.enabled) {
+        alert("Two-step verification is not enabled.");
+        return;
+      }
+
+      if (
+        confirm(
+          "Disable two-step verification for this account?"
+        )
+      ) {
         await call("disable");
         render(false);
-        alert("Two-step verification has been disabled.");
-      } catch (e) {
-        alert(e.message);
+
+        alert(
+          "Two-step verification has been disabled."
+        );
       }
+    } catch (error) {
+      alert(error.message);
     }
   });
 
-  close?.addEventListener("click", closeDialog);
+  close?.addEventListener("click", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    closeDialog();
+  });
 
-  dialog?.addEventListener("click", function (e) {
-    if (e.target === dialog || e.target.hasAttribute("data-close-dialog")) {
+  close?.addEventListener(
+    "touchend",
+    function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeDialog();
+    },
+    { passive: false }
+  );
+
+  verify?.addEventListener(
+    "touchend",
+    function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      verify.click();
+    },
+    { passive: false }
+  );
+
+  copySecret?.addEventListener(
+    "touchend",
+    function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      copySecret.click();
+    },
+    { passive: false }
+  );
+
+  dialog?.addEventListener("click", function (event) {
+    if (
+      event.target === dialog ||
+      event.target.hasAttribute("data-close-dialog")
+    ) {
       closeDialog();
     }
   });
 
-  dialog?.addEventListener("touchend", function (e) {
-    if (e.target.hasAttribute("data-close-dialog")) {
-      e.preventDefault();
-      closeDialog();
-    }
-  }, { passive: false });
+  dialog?.addEventListener(
+    "touchend",
+    function (event) {
+      if (
+        event.target === dialog ||
+        event.target.hasAttribute("data-close-dialog")
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        closeDialog();
+      }
+    },
+    { passive: false }
+  );
 
   load();
 })();
