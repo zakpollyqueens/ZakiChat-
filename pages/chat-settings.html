@@ -75,6 +75,68 @@
     </section>
 
     <section class="chat-settings-group">
+      <h2>Sounds & vibration</h2>
+
+      <div class="chat-setting-item chat-select-row">
+        <span class="chat-setting-icon">🔔</span>
+        <span class="chat-setting-copy">
+          <strong>Message ringtone</strong>
+          <small>Choose the sound used for incoming messages.</small>
+        </span>
+        <select id="messageRingtone" class="chat-setting-select">
+          <option value="default">ZakiChat Default</option>
+          <option value="classic">Classic</option>
+          <option value="soft">Soft</option>
+          <option value="digital">Digital</option>
+        </select>
+      </div>
+
+      <div class="chat-setting-item chat-custom-sound">
+        <span class="chat-setting-icon">📁</span>
+        <span class="chat-setting-copy">
+          <strong>Custom message ringtone</strong>
+          <small id="customRingtoneName">No custom ringtone selected.</small>
+        </span>
+        <label class="chat-file-button">
+          Choose from device
+          <input type="file" id="customRingtoneFile" accept="audio/*">
+        </label>
+      </div>
+
+      <button type="button" id="removeCustomRingtone" class="chat-setting-item chat-setting-button" hidden>
+        <span class="chat-setting-icon">🗑️</span>
+        <span class="chat-setting-copy">
+          <strong>Remove custom ringtone</strong>
+          <small>Return to the selected ZakiChat ringtone.</small>
+        </span>
+        <span class="chat-setting-chevron">›</span>
+      </button>
+
+      <div class="chat-setting-item chat-select-row">
+        <span class="chat-setting-icon">👥</span>
+        <span class="chat-setting-copy">
+          <strong>Group message ringtone</strong>
+          <small>Choose the sound used for incoming group messages.</small>
+        </span>
+        <select id="groupMessageRingtone" class="chat-setting-select">
+          <option value="default">ZakiChat Default</option>
+          <option value="classic">Classic</option>
+          <option value="soft">Soft</option>
+          <option value="digital">Digital</option>
+        </select>
+      </div>
+
+      <label class="chat-setting-item">
+        <span class="chat-setting-icon">📳</span>
+        <span class="chat-setting-copy">
+          <strong>Message vibration</strong>
+          <small>Vibrate when a new message notification arrives.</small>
+        </span>
+        <input type="checkbox" id="messageVibration" class="chat-setting-toggle" checked>
+      </label>
+    </section>
+
+    <section class="chat-settings-group">
       <h2>Media</h2>
 
       <label class="chat-setting-item">
