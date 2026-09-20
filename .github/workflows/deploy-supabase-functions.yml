@@ -26,5 +26,5 @@ jobs:
         with:
           version: latest
 
-      - name: Deploy security-auth
-        run: supabase functions deploy security-auth --use-api --project-ref "$SUPABASE_PROJECT_ID"
+      - name: Deploy two-step
+        run: supabase functions deploy two-step --use-api --project-ref "$SUPABASE_PROJECT_ID"
