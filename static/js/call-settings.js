@@ -12,6 +12,8 @@
     microphoneStartsEnabled: true,
     speakerStartsEnabled: false,
     callRingtone: "default",
+    customCallRingtoneName: "",
+    customCallRingtoneData: "",
     videoQuality: "auto"
   };
 
@@ -21,14 +23,32 @@
     callSounds: document.getElementById("callSounds"),
     allowIncomingCalls: document.getElementById("allowIncomingCalls"),
     callVibration: document.getElementById("callVibration"),
-    microphoneStartsEnabled: document.getElementById("microphoneStartsEnabled"),
-    speakerStartsEnabled: document.getElementById("speakerStartsEnabled")
+    microphoneStartsEnabled:
+      document.getElementById("microphoneStartsEnabled"),
+    speakerStartsEnabled:
+      document.getElementById("speakerStartsEnabled")
   };
 
-  const callRingtone = document.getElementById("callRingtone");
-  const videoQuality = document.getElementById("videoQuality");
+  const callRingtone =
+    document.getElementById("callRingtone");
 
-  const message = document.getElementById("callSettingsMessage");
+  const videoQuality =
+    document.getElementById("videoQuality");
+
+  const customFile =
+    document.getElementById("customCallRingtoneFile");
+
+  const customName =
+    document.getElementById("customCallRingtoneName");
+
+  const removeButton =
+    document.getElementById("removeCustomCallRingtone");
+
+  const testButton =
+    document.getElementById("testCallRingtone");
+
+  const message =
+    document.getElementById("callSettingsMessage");
 
   function loadSettings() {
     try {
@@ -42,7 +62,9 @@
 
       return {
         ...defaults,
-        ...(parsed && typeof parsed === "object" ? parsed : {})
+        ...(parsed && typeof parsed === "object"
+          ? parsed
+          : {})
       };
     } catch {
       return { ...defaults };
@@ -50,53 +72,220 @@
   }
 
   function saveSettings(settings) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(settings)
+    );
   }
 
-  function showSavedMessage() {
-    message.textContent = "Call preference saved.";
+  function showSavedMessage(text) {
+    if (!message) return;
+
+    message.textContent =
+      text || "Call preference saved.";
+
     message.hidden = false;
 
-    window.clearTimeout(showSavedMessage.timeout);
+    window.clearTimeout(
+      showSavedMessage.timeout
+    );
 
-    showSavedMessage.timeout = window.setTimeout(function () {
-      message.hidden = true;
-    }, 1500);
+    showSavedMessage.timeout =
+      window.setTimeout(function () {
+        message.hidden = true;
+      }, 1800);
   }
 
   const settings = loadSettings();
 
+  function renderCustomRingtone() {
+    if (customName) {
+      customName.textContent =
+        settings.customCallRingtoneName ||
+        "No custom ringtone selected.";
+    }
+
+    if (removeButton) {
+      removeButton.hidden =
+        !settings.customCallRingtoneData;
+    }
+  }
+
   if (callRingtone) {
-    callRingtone.value = settings.callRingtone;
-    callRingtone.addEventListener("change", function () {
-      settings.callRingtone = callRingtone.value;
-      saveSettings(settings);
-      showSavedMessage();
-    });
+    callRingtone.value =
+      settings.callRingtone;
+
+    callRingtone.addEventListener(
+      "change",
+      function () {
+        settings.callRingtone =
+          callRingtone.value;
+
+        saveSettings(settings);
+
+        showSavedMessage(
+          "Call ringtone saved."
+        );
+      }
+    );
+  }
+
+  if (customFile) {
+    customFile.addEventListener(
+      "change",
+      function () {
+        const file =
+          this.files && this.files[0];
+
+        if (!file) return;
+
+        if (
+          !file.type ||
+          !file.type.startsWith("audio/")
+        ) {
+          showSavedMessage(
+            "Please choose an audio file."
+          );
+          this.value = "";
+          return;
+        }
+
+        const reader =
+          new FileReader();
+
+        reader.onload = function () {
+          settings.customCallRingtoneName =
+            file.name;
+
+          settings.customCallRingtoneData =
+            reader.result;
+
+          settings.callRingtone =
+            "custom";
+
+          saveSettings(settings);
+
+          if (callRingtone) {
+            callRingtone.value =
+              "custom";
+          }
+
+          renderCustomRingtone();
+
+          showSavedMessage(
+            "Phone ringtone saved."
+          );
+        };
+
+        reader.onerror = function () {
+          showSavedMessage(
+            "Unable to read that audio file."
+          );
+        };
+
+        reader.readAsDataURL(file);
+      }
+    );
+  }
+
+  if (removeButton) {
+    removeButton.addEventListener(
+      "click",
+      function () {
+        settings.customCallRingtoneName =
+          "";
+
+        settings.customCallRingtoneData =
+          "";
+
+        if (
+          settings.callRingtone ===
+          "custom"
+        ) {
+          settings.callRingtone =
+            "default";
+        }
+
+        saveSettings(settings);
+
+        if (callRingtone) {
+          callRingtone.value =
+            settings.callRingtone;
+        }
+
+        renderCustomRingtone();
+
+        if (window.ZakiRingtones) {
+          window.ZakiRingtones.stop();
+        }
+
+        showSavedMessage(
+          "Custom ringtone removed."
+        );
+      }
+    );
+  }
+
+  if (testButton) {
+    testButton.addEventListener(
+      "click",
+      async function () {
+        if (!window.ZakiRingtones) {
+          showSavedMessage(
+            "Ringtone engine is unavailable."
+          );
+          return;
+        }
+
+        await window.ZakiRingtones.test();
+
+        showSavedMessage(
+          "Playing ringtone."
+        );
+      }
+    );
   }
 
   if (videoQuality) {
-    videoQuality.value = settings.videoQuality;
-    videoQuality.addEventListener("change", function () {
-      settings.videoQuality = videoQuality.value;
-      saveSettings(settings);
-      showSavedMessage();
-    });
+    videoQuality.value =
+      settings.videoQuality;
+
+    videoQuality.addEventListener(
+      "change",
+      function () {
+        settings.videoQuality =
+          videoQuality.value;
+
+        saveSettings(settings);
+
+        showSavedMessage();
+      }
+    );
   }
 
-  Object.keys(controls).forEach(function (key) {
-    const control = controls[key];
+  Object.keys(controls).forEach(
+    function (key) {
+      const control =
+        controls[key];
 
-    if (!control) {
-      return;
+      if (!control) return;
+
+      control.checked =
+        Boolean(settings[key]);
+
+      control.addEventListener(
+        "change",
+        function () {
+          settings[key] =
+            control.checked;
+
+          saveSettings(settings);
+
+          showSavedMessage();
+        }
+      );
     }
+  );
 
-    control.checked = Boolean(settings[key]);
-
-    control.addEventListener("change", function () {
-      settings[key] = control.checked;
-      saveSettings(settings);
-      showSavedMessage();
-    });
-  });
+  renderCustomRingtone();
 })();

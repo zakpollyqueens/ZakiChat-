@@ -14,6 +14,9 @@
     signalChannel: null,
     callSubscription: null,
     signalSubscription: null,
+    incomingCallChannel: null,
+    ringtoneContext: null,
+    ringtoneTimer: null,
 
     localStream: null,
     remoteStream: null,
@@ -49,6 +52,7 @@
       this.createUI();
 
       this.bindEvents();
+      this.listenForIncomingCalls();
 
       this.initialized = true;
 
@@ -1770,7 +1774,125 @@ async startCall(
       await this.cleanupCall();
     },
 
+    getCallSettings() {
+      try {
+        const saved = localStorage.getItem("zakichat_call_settings");
+        const parsed = saved ? JSON.parse(saved) : {};
+        return {
+          callSounds: parsed.callSounds !== false,
+          allowIncomingCalls: parsed.allowIncomingCalls !== false,
+          callVibration: parsed.callVibration !== false,
+          callRingtone: parsed.callRingtone || "default"
+        };
+      } catch (_) {
+        return {
+          callSounds: true,
+          allowIncomingCalls: true,
+          callVibration: true,
+          callRingtone: "default"
+        };
+      }
+    },
+
+    startIncomingRingtone() {
+      this.stopIncomingRingtone();
+
+      const settings = this.getCallSettings();
+
+      if (!settings.callSounds) {
+        return;
+      }
+
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioCtx) {
+          return;
+        }
+
+        const ctx = new AudioCtx();
+        this.ringtoneContext = ctx;
+
+        const patterns = {
+          default: [[880, 0.16], [660, 0.16], [880, 0.16], [660, 0.28]],
+          classic: [[740, 0.22], [740, 0.22], [740, 0.42]],
+          soft: [[523, 0.28], [659, 0.28], [784, 0.45]],
+          digital: [[1047, 0.12], [1319, 0.12], [1568, 0.22]]
+        };
+
+        const pattern = patterns[settings.callRingtone] || patterns.default;
+
+        const ring = () => {
+          let offset = 0;
+
+          pattern.forEach(([frequency, duration]) => {
+            const oscillator = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            oscillator.type = settings.callRingtone === "digital"
+              ? "square"
+              : "sine";
+
+            oscillator.frequency.value = frequency;
+            gain.gain.setValueAtTime(0.0001, ctx.currentTime + offset);
+            gain.gain.exponentialRampToValueAtTime(
+              0.12,
+              ctx.currentTime + offset + 0.02
+            );
+            gain.gain.exponentialRampToValueAtTime(
+              0.0001,
+              ctx.currentTime + offset + duration
+            );
+
+            oscillator.connect(gain);
+            gain.connect(ctx.destination);
+
+            oscillator.start(ctx.currentTime + offset);
+            oscillator.stop(ctx.currentTime + offset + duration);
+
+            offset += duration + 0.03;
+          });
+        };
+
+        if (ctx.state === "suspended") {
+          ctx.resume().catch(() => {});
+        }
+
+        ring();
+
+        this.ringtoneTimer = setInterval(ring, 2200);
+
+        if (settings.callVibration && navigator.vibrate) {
+          navigator.vibrate([250, 250, 250, 700]);
+        }
+      } catch (error) {
+        console.warn("Incoming ringtone unavailable:", error);
+      }
+    },
+
+    stopIncomingRingtone() {
+      if (this.ringtoneTimer) {
+        clearInterval(this.ringtoneTimer);
+        this.ringtoneTimer = null;
+      }
+
+      if (navigator.vibrate) {
+        try {
+          navigator.vibrate(0);
+        } catch (_) {}
+      }
+
+      if (this.ringtoneContext) {
+        try {
+          this.ringtoneContext.close();
+        } catch (_) {}
+
+        this.ringtoneContext = null;
+      }
+    },
+
     async cleanupCall() {
+      this.stopIncomingRingtone();
       this.stopRecordingTimer();
 
       if (
@@ -1877,6 +1999,8 @@ async startCall(
           true;
       }
 
+      this.stopIncomingRingtone();
+
       /*
        * Incoming-call handling is intentionally completed
        * through the same call record/signaling channel.
@@ -1971,6 +2095,8 @@ async startCall(
           true;
       }
 
+      this.stopIncomingRingtone();
+
       this.pendingIncomingCallId =
         null;
 
@@ -2053,8 +2179,13 @@ async listenForIncomingCalls() {
       call
     ) {
       if (
-        this.callId
+        this.callId ||
+        this.pendingIncomingCallId === call.id
       ) {
+        return;
+      }
+
+      if (!this.getCallSettings().allowIncomingCalls) {
         return;
       }
 
@@ -2096,6 +2227,8 @@ async listenForIncomingCalls() {
         incoming.hidden =
           false;
       }
+
+      this.startIncomingRingtone();
 
       /*
        * The caller profile is fetched asynchronously.

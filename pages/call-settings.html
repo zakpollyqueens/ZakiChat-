@@ -97,7 +97,45 @@
           <option value="classic">Classic</option>
           <option value="soft">Soft</option>
           <option value="digital">Digital</option>
+          <option value="custom">My Phone Ringtone</option>
         </select>
+      </div>
+
+      <div class="select-row ringtone-file-row">
+        <div class="setting-copy">
+          <strong>Choose ringtone from phone</strong>
+          <small id="customCallRingtoneName">No custom ringtone selected.</small>
+        </div>
+
+        <div class="ringtone-actions">
+          <label class="call-file-button">
+            Choose audio
+            <input
+              type="file"
+              id="customCallRingtoneFile"
+              accept="audio/*"
+              hidden
+            >
+          </label>
+
+          <button
+            type="button"
+            id="testCallRingtone"
+            class="call-test-button"
+          >
+            Test
+          </button>
+
+          <button
+            type="button"
+            id="removeCustomCallRingtone"
+            class="call-remove-button"
+            hidden
+          >
+            Remove
+          </button>
+        </div>
+      </div>
       </div>
 
       <div class="select-row">
