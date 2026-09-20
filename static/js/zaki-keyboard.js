@@ -521,7 +521,12 @@
       .querySelectorAll(
         ".message-composer input[type='text'], " +
         ".message-composer textarea, " +
-        "#chat-search-input"
+        "#chat-search-input, " +
+        "input[data-zaki-keyboard], " +
+        "textarea[data-zaki-keyboard], " +
+        "input[type='search'], " +
+        "form input[type='text']:not([data-native-keyboard]), " +
+        "form textarea:not([data-native-keyboard])"
       )
       .forEach(attachInput);
   }
@@ -538,9 +543,14 @@
     document.addEventListener("focusin", event => {
       if (
         event.target.matches?.(
-          ".message-composer input[type='text'], " +
+".message-composer input[type='text'], " +
           ".message-composer textarea, " +
-          "#chat-search-input"
+          "#chat-search-input, " +
+          "input[data-zaki-keyboard], " +
+          "textarea[data-zaki-keyboard], " +
+          "input[type='search'], " +
+          "form input[type='text']:not([data-native-keyboard]), " +
+          "form textarea:not([data-native-keyboard])"
         )
       ) {
         attachInput(event.target);
@@ -555,9 +565,14 @@
       if (
         !keyboard.contains(event.target) &&
         !event.target.matches?.(
-          ".message-composer input[type='text'], " +
+".message-composer input[type='text'], " +
           ".message-composer textarea, " +
-          "#chat-search-input"
+          "#chat-search-input, " +
+          "input[data-zaki-keyboard], " +
+          "textarea[data-zaki-keyboard], " +
+          "input[type='search'], " +
+          "form input[type='text']:not([data-native-keyboard]), " +
+          "form textarea:not([data-native-keyboard])"
         )
       ) {
         if (!activeInput?.matches?.(":focus")) {
