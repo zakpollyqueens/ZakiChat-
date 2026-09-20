@@ -123,6 +123,7 @@
       "view-once": "◉",
       "one-hand": "☝️",
       themes: "🎨",
+      "keyboard-settings": "⚙️",
       voice: "🎙️",
       attachments: "📎",
       emoji: "😊"
@@ -183,6 +184,7 @@
       ["view-once", "◉", "View Once"],
       ["one-hand", "☝️", "One-hand"],
       ["themes", "🎨", "Themes"],
+      ["keyboard-settings", "⚙️", "Keyboard Settings"],
       ["voice", "🎙️", "Voice Note"],
       ["attachments", "📎", "Attachments"],
       ["emoji", "😊", "Emoji"]
@@ -430,6 +432,7 @@
         break;
 
       case "themes":
+      case "keyboard-settings":
         window.location.href = "keyboard.html";
         break;
 
