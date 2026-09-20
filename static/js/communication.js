@@ -1794,7 +1794,7 @@ async startCall(
       }
     },
 
-    startIncomingRingtone() {
+    async startIncomingRingtone() {
       this.stopIncomingRingtone();
 
       const settings = this.getCallSettings();
@@ -1803,91 +1803,39 @@ async startCall(
         return;
       }
 
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-
-        if (!AudioCtx) {
+      if (window.ZakiRingtones) {
+        try {
+          await window.ZakiRingtones.play();
           return;
+        } catch (error) {
+          console.warn(
+            "Shared ringtone engine failed:",
+            error
+          );
         }
-
-        const ctx = new AudioCtx();
-        this.ringtoneContext = ctx;
-
-        const patterns = {
-          default: [[880, 0.16], [660, 0.16], [880, 0.16], [660, 0.28]],
-          classic: [[740, 0.22], [740, 0.22], [740, 0.42]],
-          soft: [[523, 0.28], [659, 0.28], [784, 0.45]],
-          digital: [[1047, 0.12], [1319, 0.12], [1568, 0.22]]
-        };
-
-        const pattern = patterns[settings.callRingtone] || patterns.default;
-
-        const ring = () => {
-          let offset = 0;
-
-          pattern.forEach(([frequency, duration]) => {
-            const oscillator = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            oscillator.type = settings.callRingtone === "digital"
-              ? "square"
-              : "sine";
-
-            oscillator.frequency.value = frequency;
-            gain.gain.setValueAtTime(0.0001, ctx.currentTime + offset);
-            gain.gain.exponentialRampToValueAtTime(
-              0.12,
-              ctx.currentTime + offset + 0.02
-            );
-            gain.gain.exponentialRampToValueAtTime(
-              0.0001,
-              ctx.currentTime + offset + duration
-            );
-
-            oscillator.connect(gain);
-            gain.connect(ctx.destination);
-
-            oscillator.start(ctx.currentTime + offset);
-            oscillator.stop(ctx.currentTime + offset + duration);
-
-            offset += duration + 0.03;
-          });
-        };
-
-        if (ctx.state === "suspended") {
-          ctx.resume().catch(() => {});
-        }
-
-        ring();
-
-        this.ringtoneTimer = setInterval(ring, 2200);
-
-        if (settings.callVibration && navigator.vibrate) {
-          navigator.vibrate([250, 250, 250, 700]);
-        }
-      } catch (error) {
-        console.warn("Incoming ringtone unavailable:", error);
       }
+
+      console.warn(
+        "ZakiRingtones is unavailable."
+      );
     },
 
     stopIncomingRingtone() {
-      if (this.ringtoneTimer) {
-        clearInterval(this.ringtoneTimer);
-        this.ringtoneTimer = null;
+      if (window.ZakiRingtones) {
+        try {
+          window.ZakiRingtones.stop();
+        } catch (error) {
+          console.warn(
+            "Unable to stop shared ringtone:",
+            error
+          );
+        }
       }
 
       if (navigator.vibrate) {
         try {
           navigator.vibrate(0);
         } catch (_) {}
-      }
-
-      if (this.ringtoneContext) {
-        try {
-          this.ringtoneContext.close();
-        } catch (_) {}
-
-        this.ringtoneContext = null;
       }
     },
 
