@@ -1,5 +1,3 @@
 [functions.registration-payment]
 verify_jwt = false
 
-[functions.security-auth]
-verify_jwt = true
