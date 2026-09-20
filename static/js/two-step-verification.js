@@ -57,10 +57,12 @@
 
   function open() {
     dialog.hidden = false;
+    document.body.style.overflow = "hidden";
   }
 
   function closeDialog() {
     dialog.hidden = true;
+    document.body.style.overflow = "";
   }
 
   async function load() {
@@ -169,8 +171,17 @@
   close?.addEventListener("click", closeDialog);
 
   dialog?.addEventListener("click", function (e) {
-    if (e.target.hasAttribute("data-close-dialog")) closeDialog();
+    if (e.target === dialog || e.target.hasAttribute("data-close-dialog")) {
+      closeDialog();
+    }
   });
+
+  dialog?.addEventListener("touchend", function (e) {
+    if (e.target.hasAttribute("data-close-dialog")) {
+      e.preventDefault();
+      closeDialog();
+    }
+  }, { passive: false });
 
   load();
 })();

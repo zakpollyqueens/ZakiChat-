@@ -125,26 +125,40 @@
 .setup-dialog {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  display: grid;
-  place-items: center;
-  padding: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.setup-dialog[hidden] {
+  display: none !important;
 }
 
 .dialog-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.55);
+  z-index: 0;
+  background: rgba(0,0,0,.72);
+  pointer-events: auto;
 }
 
 .dialog-card {
   position: relative;
+  z-index: 2;
   width: min(100%, 430px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 24px;
   border-radius: 20px;
   background: var(--background-color, #111);
   border: 1px solid var(--border-color, rgba(255,255,255,.12));
-  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  pointer-events: auto;
 }
 
 .dialog-card h2 {
@@ -155,21 +169,32 @@
   margin-bottom: 18px;
 }
 
-@media (max-width: 600px) {
-  .two-step-page {
-    width: min(100% - 20px, 760px);
-    padding-top: 18px;
-  }
-
-  .two-step-header h1 {
-    font-size: 24px;
-  }
-
-  .security-card {
-    padding: 16px;
-  }
+.dialog-card label {
+  display: block;
+  margin: 14px 0 7px;
+  font-weight: 600;
 }
 
+.dialog-card input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color, rgba(255,255,255,.15));
+  background: rgba(127,127,127,.08);
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+  touch-action: manipulation;
+}
+
+.dialog-card button {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
 
 .secret-row {
   display: flex;
@@ -180,13 +205,6 @@
 .secret-row input {
   flex: 1;
   min-width: 0;
-  min-height: 48px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color, rgba(255,255,255,.15));
-  background: rgba(127,127,127,.08);
-  color: inherit;
-  font: inherit;
   font-size: 13px;
 }
 
@@ -194,4 +212,47 @@
   width: auto;
   min-width: 105px;
   margin-top: 0;
+}
+
+#verificationCode {
+  text-align: center;
+  letter-spacing: .18em;
+  font-weight: 700;
+}
+
+#recoveryCodes {
+  margin-top: 10px;
+  padding: 12px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: rgba(127,127,127,.08);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+  .setup-dialog {
+    align-items: flex-end;
+    padding: 8px;
+  }
+
+  .dialog-card {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .secret-row {
+    flex-direction: column;
+  }
+
+  .secret-row .secondary-button {
+    width: 100%;
+  }
+
+  .dialog-card .primary-button,
+  .dialog-card .secondary-button {
+    min-height: 52px;
+  }
 }
