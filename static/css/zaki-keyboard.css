@@ -1,0 +1,379 @@
+.zaki-keyboard {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: none;
+  padding: 8px 8px max(8px, env(safe-area-inset-bottom));
+  background: rgba(18, 20, 27, .98);
+  border-top: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 -12px 35px rgba(0,0,0,.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.zaki-keyboard.visible {
+  display: block;
+  animation: zakiKeyboardUp .2s ease-out;
+}
+
+@keyframes zakiKeyboardUp {
+  from {
+    transform: translateY(18px);
+    opacity: .7;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.zaki-keyboard[data-theme="light"] {
+  background: rgba(244,246,250,.98);
+  color: #15171c;
+  border-top-color: rgba(0,0,0,.08);
+}
+
+.zaki-keyboard[data-theme="glass"] {
+  background: rgba(25,28,38,.82);
+}
+
+.zaki-keyboard-tools {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 42px;
+  margin-bottom: 5px;
+}
+
+.zaki-front-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.zaki-front-tools::-webkit-scrollbar {
+  display: none;
+}
+
+.zaki-tool-button,
+.zaki-four-dots {
+  border: 0;
+  min-width: 42px;
+  height: 40px;
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  cursor: pointer;
+  color: inherit;
+  background: rgba(255,255,255,.08);
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    box-shadow .16s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.zaki-tool-button:active,
+.zaki-four-dots:active {
+  transform: scale(.91);
+}
+
+.zaki-tool-button:hover {
+  background: rgba(255,255,255,.14);
+}
+
+.zaki-four-dots {
+  position: relative;
+  width: 44px;
+  overflow: hidden;
+}
+
+.zaki-four-dots i,
+.preview-more i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  position: absolute;
+  transition:
+    transform .25s cubic-bezier(.2,.8,.2,1),
+    opacity .2s ease;
+}
+
+.zaki-four-dots i:nth-child(1) {
+  transform: translate(-6px,-6px);
+}
+
+.zaki-four-dots i:nth-child(2) {
+  transform: translate(6px,-6px);
+}
+
+.zaki-four-dots i:nth-child(3) {
+  transform: translate(-6px,6px);
+}
+
+.zaki-four-dots i:nth-child(4) {
+  transform: translate(6px,6px);
+}
+
+.zaki-four-dots::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 12px;
+  opacity: 0;
+  box-shadow: 0 0 18px rgba(120,160,255,.7);
+  transition: opacity .2s ease;
+}
+
+.zaki-four-dots.active {
+  background: rgba(90,130,255,.2);
+  transform: rotate(90deg);
+}
+
+.zaki-four-dots.active::after {
+  opacity: 1;
+}
+
+.zaki-four-dots.active i:nth-child(1) {
+  transform: translate(-7px,-7px) scale(.85);
+}
+
+.zaki-four-dots.active i:nth-child(2) {
+  transform: translate(7px,-7px) scale(.85);
+}
+
+.zaki-four-dots.active i:nth-child(3) {
+  transform: translate(-7px,7px) scale(.85);
+}
+
+.zaki-four-dots.active i:nth-child(4) {
+  transform: translate(7px,7px) scale(.85);
+}
+
+.zaki-keyboard-panel {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height .25s ease,
+    opacity .2s ease,
+    padding .25s ease;
+}
+
+.zaki-keyboard.tools-open .zaki-keyboard-panel {
+  max-height: 180px;
+  padding: 6px 0;
+  opacity: 1;
+}
+
+.zaki-panel-tool {
+  min-height: 58px;
+  border: 0;
+  border-radius: 13px;
+  background: rgba(255,255,255,.07);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.zaki-panel-tool span {
+  font-size: 19px;
+}
+
+.zaki-panel-tool small {
+  font-size: 9px;
+  opacity: .78;
+  text-align: center;
+}
+
+.zaki-panel-tool:active {
+  transform: scale(.95);
+}
+
+.zaki-suggestion-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-height: 36px;
+  align-items: center;
+}
+
+.zaki-suggestion-row::-webkit-scrollbar {
+  display: none;
+}
+
+.zaki-suggestion-row button {
+  border: 0;
+  min-width: 74px;
+  height: 31px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.07);
+  color: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.zaki-keyboard-keys {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.zaki-key-row {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.zaki-key {
+  border: 0;
+  flex: 1;
+  min-width: 0;
+  height: 43px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.105);
+  color: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow:
+    0 2px 0 rgba(0,0,0,.22),
+    inset 0 1px rgba(255,255,255,.035);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform .08s ease, background .12s ease;
+}
+
+.zaki-key:active {
+  transform: translateY(2px) scale(.97);
+  background: rgba(255,255,255,.18);
+}
+
+.zaki-key.wide {
+  flex: 1.25;
+}
+
+.zaki-key.space {
+  flex: 4;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  opacity: .88;
+}
+
+.zaki-bottom-row .zaki-key {
+  height: 41px;
+}
+
+.zaki-keyboard[data-size="small"] .zaki-key {
+  height: 37px;
+  font-size: 14px;
+}
+
+.zaki-keyboard[data-size="large"] .zaki-key {
+  height: 49px;
+  font-size: 17px;
+}
+
+.zaki-keyboard[data-theme="light"] .zaki-tool-button,
+.zaki-keyboard[data-theme="light"] .zaki-four-dots,
+.zaki-keyboard[data-theme="light"] .zaki-panel-tool,
+.zaki-keyboard[data-theme="light"] .zaki-suggestion-row button,
+.zaki-keyboard[data-theme="light"] .zaki-key {
+  background: rgba(0,0,0,.07);
+}
+
+.zaki-keyboard[data-theme="light"] .zaki-key:active {
+  background: rgba(0,0,0,.14);
+}
+
+.zaki-keyboard.one-hand {
+  width: min(82%, 430px);
+  left: auto;
+  right: 0;
+  border-radius: 20px 0 0 0;
+}
+
+.zaki-keyboard.one-hand .zaki-keyboard-keys {
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .zaki-keyboard {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .zaki-key {
+    height: 41px;
+    border-radius: 7px;
+  }
+
+  .zaki-key-row {
+    gap: 4px;
+  }
+
+  .zaki-keyboard-panel {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .zaki-panel-tool {
+    min-height: 54px;
+  }
+}
+
+@media (min-width: 700px) {
+  .zaki-keyboard {
+    left: 50%;
+    right: auto;
+    width: min(680px, 100%);
+    transform: translateX(-50%);
+    border-radius: 20px 20px 0 0;
+  }
+
+  .zaki-keyboard.visible {
+    animation: zakiKeyboardDesktop .2s ease-out;
+  }
+
+  @keyframes zakiKeyboardDesktop {
+    from {
+      transform: translate(-50%, 18px);
+      opacity: .7;
+    }
+    to {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zaki-keyboard,
+  .zaki-four-dots,
+  .zaki-four-dots i,
+  .zaki-keyboard-panel {
+    animation: none !important;
+    transition: none !important;
+  }
+}

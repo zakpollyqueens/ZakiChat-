@@ -1918,3 +1918,55 @@
     width: min(210px, calc(100vw - 16px));
   }
 }
+
+/* =========================================================
+   ZakiChat individual conversation header
+   ========================================================= */
+
+.chat-user {
+  min-width: 0;
+}
+
+.chat-user .conversation-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-weight: 800;
+}
+
+.voice-note-button {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 600px) {
+  .chat-header {
+    padding: 8px 10px;
+  }
+
+  .chat-user .conversation-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .chat-user strong {
+    max-width: 145px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .chat-user span {
+    max-width: 145px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

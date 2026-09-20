@@ -346,6 +346,23 @@ document.addEventListener(
       }
 
       conversationId = data;
+
+      if (window.ZakiCommunication) {
+        window.ZakiCommunication.init(
+          window.ZakiChatConfig,
+          {
+            currentUser,
+            targetUser: targetProfile,
+            conversationId
+          }
+        );
+
+        window.ZakiCommunication.setConversation({
+          currentUser,
+          targetUser: targetProfile,
+          conversationId
+        });
+      }
     }
 
     async function loadMessages() {
@@ -1005,6 +1022,27 @@ document.addEventListener(
         updateHeader();
       }
     }
+
+    document
+      .querySelector("#voice-note-button")
+      ?.addEventListener("click", async () => {
+        if (!window.ZakiCommunication) {
+          alert("Voice notes are not available right now.");
+          return;
+        }
+
+        if (!currentUser || !conversationId) {
+          return;
+        }
+
+        window.ZakiCommunication.setConversation({
+          currentUser,
+          targetUser: targetProfile,
+          conversationId
+        });
+
+        await window.ZakiCommunication.startRecording();
+      });
 
     attachButton?.addEventListener(
       "click",

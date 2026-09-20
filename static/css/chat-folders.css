@@ -237,3 +237,77 @@
     font-size: 24px;
   }
 }
+
+/* Mobile/touch improvements */
+.folder-item,
+.create-folder-button,
+.delete-folder-button,
+.secondary-button,
+.primary-button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.delete-folder-button {
+  min-width: 42px;
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+}
+
+.folder-dialog-card {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.folder-dialog-card input:focus {
+  border-color: var(--accent-color, #4f8cff);
+}
+
+@media (max-width: 480px) {
+  .chat-folders-header {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .chat-folders-header .back-button {
+    flex: 0 0 40px;
+  }
+
+  .folders-intro {
+    align-items: flex-start;
+  }
+
+  .folder-item {
+    padding: 12px 10px;
+  }
+
+  .folder-info {
+    gap: 9px;
+  }
+
+  .folder-name {
+    max-width: 190px;
+  }
+
+  .folder-dialog {
+    align-items: end;
+    padding: 10px;
+  }
+
+  .folder-dialog-card {
+    width: 100%;
+    border-radius: 20px 20px 14px 14px;
+    padding: 18px;
+  }
+
+  .folder-dialog-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .secondary-button,
+  .primary-button {
+    min-height: 46px;
+  }
+}

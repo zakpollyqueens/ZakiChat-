@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="../static/css/main.css">
 <link rel="stylesheet" href="../static/css/chat.css">
 <link rel="stylesheet" href="../static/css/responsive.css">
+<link rel="stylesheet" href="../static/css/zaki-keyboard.css">
 </head>
 
 <body class="chat-page">
@@ -246,6 +247,7 @@
 
     <form class="message-composer">
       <button type="button" class="composer-button" id="attach-file-button" aria-label="Attach file" title="Attach file">＋</button>
+      <button type="button" class="composer-button voice-note-button" id="voice-note-button" aria-label="Voice note" title="Voice note">🎙️</button>
       <input type="text" placeholder="Write a message..." aria-label="Message">
       <button
         type="button"
@@ -331,9 +333,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 <script src="../static/js/reaction-picker.js"></script>
 <script src="../static/js/typing.js"></script>
 <script src="../static/js/forward.js"></script>
+<script src="../static/js/communication.js"></script>
+<script src="../static/js/zaki-keyboard.js"></script>
 <script src="../static/js/chat.js"></script>
 <script src="../static/js/emoji-picker.js"></script>
 <script src="../static/js/chat-search.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (window.ZakiKeyboard) window.ZakiKeyboard.init();
+});
+</script>
 <script src="../static/js/chat-top-actions.js"></script>
 <script src="../static/js/quick-create.js"></script>
 </body>

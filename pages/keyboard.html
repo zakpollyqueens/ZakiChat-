@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyboard | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+  <link rel="stylesheet" href="../static/css/keyboard.css">
+</head>
+
+<body class="keyboard-page">
+
+  <main class="keyboard-shell">
+
+    <header class="keyboard-header">
+      <a class="keyboard-back" href="settings.html">
+        <span>←</span>
+        <span>Settings</span>
+      </a>
+
+      <div class="keyboard-title">
+        <span class="keyboard-eyebrow">ZAKICHAT • PERSONALIZATION</span>
+        <h1>Keyboard</h1>
+        <p>Customize the keyboard used while chatting and searching in ZakiChat.</p>
+      </div>
+    </header>
+
+    <section class="keyboard-card">
+      <div class="keyboard-heading">
+        <span>🎨</span>
+        <div>
+          <h2>Keyboard theme</h2>
+          <p>Choose the appearance of your ZakiChat keyboard.</p>
+        </div>
+      </div>
+
+      <div class="keyboard-themes">
+        <button type="button" class="keyboard-theme" data-theme="dark">
+          <span class="theme-preview dark-preview">Aa</span>
+          <strong>Dark</strong>
+        </button>
+
+        <button type="button" class="keyboard-theme" data-theme="light">
+          <span class="theme-preview light-preview">Aa</span>
+          <strong>Light</strong>
+        </button>
+
+        <button type="button" class="keyboard-theme" data-theme="glass">
+          <span class="theme-preview glass-preview">Aa</span>
+          <strong>Glass</strong>
+        </button>
+      </div>
+    </section>
+
+    <section class="keyboard-card">
+      <div class="keyboard-heading">
+        <span>⌨️</span>
+        <div>
+          <h2>Keyboard layout</h2>
+          <p>Control the main typing layout.</p>
+        </div>
+      </div>
+
+      <label class="keyboard-row">
+        <span>
+          <strong>Key size</strong>
+          <small>Choose compact, comfortable or large keys.</small>
+        </span>
+        <select id="keySize">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </label>
+
+      <label class="keyboard-row">
+        <span>
+          <strong>Number row</strong>
+          <small>Keep digits visible above the letter keys.</small>
+        </span>
+        <input type="checkbox" id="numberRow">
+      </label>
+
+      <label class="keyboard-row">
+        <span>
+          <strong>Emoji row</strong>
+          <small>Keep frequently used emoji available.</small>
+        </span>
+        <input type="checkbox" id="emojiRow" checked>
+      </label>
+
+      <label class="keyboard-row">
+        <span>
+          <strong>Suggestions</strong>
+          <small>Show suggestions above the keyboard.</small>
+        </span>
+        <input type="checkbox" id="suggestions" checked>
+      </label>
+    </section>
+
+    <section class="keyboard-card">
+      <div class="keyboard-heading">
+        <span>⚡</span>
+        <div>
+          <h2>Quick tools</h2>
+          <p>Choose which tools appear in the keyboard toolbar.</p>
+        </div>
+      </div>
+
+      <div class="keyboard-tool-grid">
+
+        <label class="tool-option">
+          <input type="checkbox" value="clipboard">
+          <span>📋</span>
+          <strong>Clipboard</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="gif">
+          <span>GIF</span>
+          <strong>GIFs</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="contact">
+          <span>👤</span>
+          <strong>Share Contact</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="editor">
+          <span>✍️</span>
+          <strong>Text Editor</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="screenshot">
+          <span>📸</span>
+          <strong>Screenshot Share</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="view-once">
+          <span>◉</span>
+          <strong>View Once</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="one-hand">
+          <span>☝️</span>
+          <strong>One-hand Mode</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="themes">
+          <span>🎨</span>
+          <strong>Themes</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="voice">
+          <span>🎙️</span>
+          <strong>Voice Note</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="attachments">
+          <span>📎</span>
+          <strong>Attachments</strong>
+        </label>
+
+        <label class="tool-option">
+          <input type="checkbox" value="emoji">
+          <span>😊</span>
+          <strong>Emoji</strong>
+        </label>
+
+      </div>
+
+      <div class="keyboard-tool-note">
+        <span class="quick-dots-preview">
+          <i></i><i></i><i></i><i></i>
+        </span>
+        <p>
+          The four-dot button opens your additional tools while keeping the
+          keyboard compact. Selected tools can appear in the front toolbar.
+        </p>
+      </div>
+    </section>
+
+    <section class="keyboard-card">
+      <div class="keyboard-heading">
+        <span>🔊</span>
+        <div>
+          <h2>Typing feedback</h2>
+          <p>Control feedback while using the ZakiChat keyboard.</p>
+        </div>
+      </div>
+
+      <label class="keyboard-row">
+        <span>
+          <strong>Key sounds</strong>
+          <small>Play a short sound when a key is pressed.</small>
+        </span>
+        <input type="checkbox" id="keySounds">
+      </label>
+
+      <label class="keyboard-row">
+        <span>
+          <strong>Key vibration</strong>
+          <small>Use vibration feedback when supported.</small>
+        </span>
+        <input type="checkbox" id="keyVibration" checked>
+      </label>
+    </section>
+
+    <section class="keyboard-preview-card">
+      <div class="preview-label">LIVE KEYBOARD PREVIEW</div>
+
+      <div id="keyboardPreview" class="keyboard-preview">
+        <div class="preview-toolbar">
+          <button type="button">📋</button>
+          <button type="button">GIF</button>
+          <button type="button">👤</button>
+          <button type="button" class="preview-more">
+            <i></i><i></i><i></i><i></i>
+          </button>
+        </div>
+
+        <div class="preview-suggestion">
+          <span>Hi</span>
+          <span>Hello</span>
+          <span>Hey</span>
+        </div>
+
+        <div class="preview-number-row">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+          <span>6</span><span>7</span><span>8</span><span>9</span><span>0</span>
+        </div>
+
+        <div class="preview-keys">
+          <span>Q</span><span>W</span><span>E</span><span>R</span><span>T</span>
+          <span>Y</span><span>U</span><span>I</span><span>O</span><span>P</span>
+        </div>
+
+        <div class="preview-keys">
+          <span>A</span><span>S</span><span>D</span><span>F</span><span>G</span>
+          <span>H</span><span>J</span><span>K</span><span>L</span>
+        </div>
+
+        <div class="preview-keys">
+          <span>⇧</span><span>Z</span><span>X</span><span>C</span><span>V</span>
+          <span>B</span><span>N</span><span>M</span><span>⌫</span>
+        </div>
+
+        <div class="preview-bottom">
+          <span>123</span>
+          <span>☺</span>
+          <span class="space-key">space</span>
+          <span>↵</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="keyboard-notice">
+      <strong>ℹ️ ZakiChat keyboard</strong>
+      <p>
+        These settings control the ZakiChat keyboard used inside chat
+        composition and chat search. They do not replace Android's system
+        keyboard such as Gboard.
+      </p>
+    </div>
+
+    <p id="keyboardStatus" class="keyboard-status" aria-live="polite"></p>
+
+  </main>
+
+  <script src="../static/js/keyboard.js"></script>
+</body>
+</html>
