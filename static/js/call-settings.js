@@ -8,7 +8,11 @@
     cameraStartsEnabled: true,
     callSounds: true,
     allowIncomingCalls: true,
-    callVibration: true
+    callVibration: true,
+    microphoneStartsEnabled: true,
+    speakerStartsEnabled: false,
+    callRingtone: "default",
+    videoQuality: "auto"
   };
 
   const controls = {
@@ -16,8 +20,13 @@
     cameraStartsEnabled: document.getElementById("cameraStartsEnabled"),
     callSounds: document.getElementById("callSounds"),
     allowIncomingCalls: document.getElementById("allowIncomingCalls"),
-    callVibration: document.getElementById("callVibration")
+    callVibration: document.getElementById("callVibration"),
+    microphoneStartsEnabled: document.getElementById("microphoneStartsEnabled"),
+    speakerStartsEnabled: document.getElementById("speakerStartsEnabled")
   };
+
+  const callRingtone = document.getElementById("callRingtone");
+  const videoQuality = document.getElementById("videoQuality");
 
   const message = document.getElementById("callSettingsMessage");
 
@@ -56,6 +65,24 @@
   }
 
   const settings = loadSettings();
+
+  if (callRingtone) {
+    callRingtone.value = settings.callRingtone;
+    callRingtone.addEventListener("change", function () {
+      settings.callRingtone = callRingtone.value;
+      saveSettings(settings);
+      showSavedMessage();
+    });
+  }
+
+  if (videoQuality) {
+    videoQuality.value = settings.videoQuality;
+    videoQuality.addEventListener("change", function () {
+      settings.videoQuality = videoQuality.value;
+      saveSettings(settings);
+      showSavedMessage();
+    });
+  }
 
   Object.keys(controls).forEach(function (key) {
     const control = controls[key];

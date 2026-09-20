@@ -85,6 +85,33 @@
         >
         <span class="toggle" aria-hidden="true"></span>
       </label>
+
+      <div class="select-row">
+        <div class="setting-copy">
+          <strong>Call ringtone</strong>
+          <small>Choose the sound used for incoming ZakiChat calls.</small>
+        </div>
+
+        <select id="callRingtone" class="call-select">
+          <option value="default">ZakiChat Default</option>
+          <option value="classic">Classic</option>
+          <option value="soft">Soft</option>
+          <option value="digital">Digital</option>
+        </select>
+      </div>
+
+      <div class="select-row">
+        <div class="setting-copy">
+          <strong>Video quality</strong>
+          <small>Choose your preferred video quality when supported.</small>
+        </div>
+
+        <select id="videoQuality" class="call-select">
+          <option value="auto">Auto</option>
+          <option value="data-saver">Data saver</option>
+          <option value="high">Higher quality</option>
+        </select>
+      </div>
     </section>
 
     <section class="call-card">
@@ -124,15 +151,44 @@
         >
         <span class="toggle" aria-hidden="true"></span>
       </label>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Microphone starts enabled</strong>
+          <small>Start calls with your microphone enabled.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="microphoneStartsEnabled"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
+
+      <label class="setting-row">
+        <span class="setting-copy">
+          <strong>Start calls on speaker</strong>
+          <small>Use speaker audio automatically when a call begins.</small>
+        </span>
+
+        <input
+          type="checkbox"
+          id="speakerStartsEnabled"
+          class="toggle-input"
+        >
+        <span class="toggle" aria-hidden="true"></span>
+      </label>
     </section>
 
     <section class="call-card info-card">
       <div class="info-icon">ℹ️</div>
 
       <p>
-        These preferences are stored on this device. Actual call routing,
-        permissions and call controls will be enforced by the calling
-        service when the ZakiChat calling backend is connected.
+        These preferences are stored on this device. Microphone and camera
+        permissions are controlled by your device or browser. Actual call
+        routing and service-level call controls are enforced by ZakiChat's
+        calling service when calling is connected.
       </p>
     </section>
 
