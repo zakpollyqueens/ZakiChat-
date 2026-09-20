@@ -73,12 +73,36 @@
       >
         <h2 id="dialogTitle">Two-step verification</h2>
 
-        <p>
-          The secure server-side verification flow is not connected yet.
-          This page is ready for the authentication integration.
+        <p id="setupMessage">
+          Set up an authenticator app to protect your ZakiChat account.
         </p>
 
-        <button type="button" id="closeDialogButton" class="primary-button">
+        <div id="setupSecretBox" hidden>
+          <p><strong>Secret key</strong></p>
+          <code id="setupSecret"></code>
+          <p>Enter the 6-digit code from your authenticator app.</p>
+        </div>
+
+        <label for="verificationCode">Verification code</label>
+        <input
+          id="verificationCode"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          placeholder="000000"
+        >
+
+        <button type="button" id="verifyButton" class="primary-button">
+          Verify and enable
+        </button>
+
+        <div id="recoveryBox" hidden>
+          <p><strong>Save your recovery codes</strong></p>
+          <pre id="recoveryCodes"></pre>
+        </div>
+
+        <button type="button" id="closeDialogButton" class="secondary-button">
           Close
         </button>
       </div>
@@ -86,6 +110,11 @@
 
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/two-step-verification.js"></script>
 </body>
 </html>
