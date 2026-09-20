@@ -132,6 +132,7 @@
   padding: 16px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
 }
 
 .setup-dialog[hidden] {
@@ -143,7 +144,7 @@
   inset: 0;
   z-index: 0;
   background: rgba(0,0,0,.72);
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .dialog-card {
@@ -159,6 +160,7 @@
   border: 1px solid var(--border-color, rgba(255,255,255,.12));
   box-shadow: 0 20px 60px rgba(0,0,0,.55);
   pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .dialog-card h2 {
