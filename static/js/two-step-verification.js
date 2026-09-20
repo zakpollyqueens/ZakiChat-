@@ -1,8 +1,7 @@
 (function () {
   "use strict";
 
-  const FN =
-    "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+  const FN = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
 
   const setup = document.getElementById("setupButton");
   const recovery = document.getElementById("recoveryButton");
@@ -23,13 +22,9 @@
 
   async function session() {
     const client = window.ZakiChatAuth?.client;
-
-    if (!client) {
-      throw new Error("ZakiChat authentication is not ready.");
-    }
+    if (!client) throw new Error("ZakiChat authentication is not ready.");
 
     const { data, error } = await client.auth.getSession();
-
     if (error) throw error;
     if (!data.session) throw new Error("Please sign in again.");
 
@@ -45,18 +40,13 @@
         Authorization: "Bearer " + s.access_token,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        action,
-        ...extra
-      })
+      body: JSON.stringify({ action, ...extra })
     });
 
     const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      throw new Error(
-        data.error || "Two-step verification request failed."
-      );
+      throw new Error(data.error || "Two-step verification request failed.");
     }
 
     return data;
@@ -65,14 +55,8 @@
   function render(on) {
     enabled = Boolean(on);
 
-    status.textContent = enabled
-      ? "Configured"
-      : "Not configured";
-
-    badge.textContent = enabled
-      ? "On"
-      : "Off";
-
+    status.textContent = enabled ? "Configured" : "Not configured";
+    badge.textContent = enabled ? "On" : "Off";
     badge.classList.toggle("active", enabled);
 
     setup.textContent = enabled
@@ -82,14 +66,12 @@
 
   function openDialog() {
     if (!dialog) return;
-
     dialog.hidden = false;
     document.body.style.overflow = "hidden";
   }
 
   function closeDialog() {
     if (!dialog) return;
-
     dialog.hidden = true;
     document.body.style.overflow = "";
   }
@@ -111,10 +93,8 @@
 
     secretBox.hidden = true;
     recoveryBox.hidden = true;
-
     verify.hidden = false;
     verify.disabled = false;
-
     code.value = "";
 
     if (enabled) {
@@ -127,9 +107,7 @@
       const data = await call("setup");
 
       if (!data.secret) {
-        throw new Error(
-          "The server did not return a setup secret."
-        );
+        throw new Error("The server did not return a setup secret.");
       }
 
       secret.value = data.secret;
@@ -171,17 +149,14 @@
     const value = code.value.trim();
 
     if (!/^\d{6}$/.test(value)) {
-      message.textContent =
-        "Enter the 6-digit verification code.";
+      message.textContent = "Enter the 6-digit verification code.";
       return;
     }
 
     verify.disabled = true;
 
     try {
-      const data = await call("enable", {
-        code: value
-      });
+      const data = await call("enable", { code: value });
 
       render(true);
 
@@ -213,17 +188,10 @@
         return;
       }
 
-      if (
-        confirm(
-          "Disable two-step verification for this account?"
-        )
-      ) {
+      if (confirm("Disable two-step verification for this account?")) {
         await call("disable");
         render(false);
-
-        alert(
-          "Two-step verification has been disabled."
-        );
+        alert("Two-step verification has been disabled.");
       }
     } catch (error) {
       alert(error.message);
@@ -236,36 +204,6 @@
     closeDialog();
   });
 
-  close?.addEventListener(
-    "touchend",
-    function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      closeDialog();
-    },
-    { passive: false }
-  );
-
-  verify?.addEventListener(
-    "touchend",
-    function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      verify.click();
-    },
-    { passive: false }
-  );
-
-  copySecret?.addEventListener(
-    "touchend",
-    function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      copySecret.click();
-    },
-    { passive: false }
-  );
-
   dialog?.addEventListener("click", function (event) {
     if (
       event.target === dialog ||
@@ -274,21 +212,6 @@
       closeDialog();
     }
   });
-
-  dialog?.addEventListener(
-    "touchend",
-    function (event) {
-      if (
-        event.target === dialog ||
-        event.target.hasAttribute("data-close-dialog")
-      ) {
-        event.preventDefault();
-        event.stopPropagation();
-        closeDialog();
-      }
-    },
-    { passive: false }
-  );
 
   load();
 })();
