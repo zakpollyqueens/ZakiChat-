@@ -102,6 +102,130 @@
          ===================================================== -->
 
 
+    <section class="calls-section" aria-labelledby="callsHeading">
+
+      <div class="calls-section-heading">
+
+        <div>
+          <span class="status-section-eyebrow">COMMUNICATION</span>
+
+          <div class="calls-title-row">
+            <h2 id="callsHeading">Calls</h2>
+
+            <span
+              id="missedCallBadge"
+              class="missed-call-badge"
+              hidden
+              aria-label="Missed calls"
+            >
+              0
+            </span>
+          </div>
+
+          <p>Voice and video call activity.</p>
+        </div>
+
+        <button
+          id="refreshCallsButton"
+          class="calls-refresh-button"
+          type="button"
+          aria-label="Refresh call history"
+          title="Refresh call history"
+        >
+          ↻
+        </button>
+
+      </div>
+
+      <div id="callsSummary" class="calls-summary">
+        <div class="calls-summary-card">
+          <span class="calls-summary-number" id="totalCallsCount">0</span>
+          <span class="calls-summary-label">Total calls</span>
+        </div>
+
+        <div class="calls-summary-card missed">
+          <span class="calls-summary-number" id="missedCallsCount">0</span>
+          <span class="calls-summary-label">Missed</span>
+        </div>
+
+        <div class="calls-summary-card">
+          <span class="calls-summary-number" id="outgoingCallsCount">0</span>
+          <span class="calls-summary-label">Outgoing</span>
+        </div>
+
+        <div class="calls-summary-card">
+          <span class="calls-summary-number" id="incomingCallsCount">0</span>
+          <span class="calls-summary-label">Incoming</span>
+        </div>
+      </div>
+
+      <div id="callsList" class="calls-list" aria-live="polite"></div>
+
+      <div id="callsLoading" class="calls-empty">
+        <div class="calls-empty-icon">📞</div>
+        <h3>Loading calls...</h3>
+        <p>Your call activity will appear here.</p>
+      </div>
+
+      <div id="callsEmpty" class="calls-empty" hidden>
+        <div class="calls-empty-icon">📞</div>
+        <h3>No calls yet</h3>
+        <p>Your voice and video calls will appear here.</p>
+      </div>
+
+      <div id="callsError" class="status-error" hidden></div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ZAKICHAT SHOWCASE
+         Admin-published feature/product/software imagery.
+         ===================================================== -->
+    <section
+      class="update-showcase-section"
+      aria-labelledby="updateShowcaseHeading"
+    >
+      <div class="update-showcase-heading">
+        <div>
+          <span class="status-section-eyebrow">DISCOVER</span>
+          <h2 id="updateShowcaseHeading">ZakiChat Showcase</h2>
+          <p>
+            Explore new features, experiences and useful additions
+            coming to ZakiChat.
+          </p>
+        </div>
+
+        <span class="update-showcase-badge">
+          LIVE
+        </span>
+      </div>
+
+      <div
+        class="update-showcase-viewport"
+        id="updateShowcaseViewport"
+        tabindex="0"
+        aria-label="ZakiChat feature showcase"
+      >
+        <div
+          class="update-showcase-track"
+          id="updateShowcaseTrack"
+        ></div>
+      </div>
+
+      <div
+        class="update-showcase-status"
+        id="updateShowcaseStatus"
+        aria-live="polite"
+      >
+        Loading showcase…
+      </div>
+    </section>
+
+
+
+
     <!--
          NEW RELEASES
          Free latest versions and paid upgrades are intentionally
@@ -198,124 +322,6 @@
       </div>
     </section>
 
-    <section class="calls-section" aria-labelledby="callsHeading">
-
-      <div class="calls-section-heading">
-
-        <div>
-          <span class="status-section-eyebrow">COMMUNICATION</span>
-
-          <div class="calls-title-row">
-            <h2 id="callsHeading">Calls</h2>
-
-            <span
-              id="missedCallBadge"
-              class="missed-call-badge"
-              hidden
-              aria-label="Missed calls"
-            >
-              0
-            </span>
-          </div>
-
-          <p>Voice and video call activity.</p>
-        </div>
-
-        <button
-          id="refreshCallsButton"
-          class="calls-refresh-button"
-          type="button"
-          aria-label="Refresh call history"
-          title="Refresh call history"
-        >
-          ↻
-        </button>
-
-      </div>
-
-      <div id="callsSummary" class="calls-summary">
-        <div class="calls-summary-card">
-          <span class="calls-summary-number" id="totalCallsCount">0</span>
-          <span class="calls-summary-label">Total calls</span>
-        </div>
-
-        <div class="calls-summary-card missed">
-          <span class="calls-summary-number" id="missedCallsCount">0</span>
-          <span class="calls-summary-label">Missed</span>
-        </div>
-
-        <div class="calls-summary-card">
-          <span class="calls-summary-number" id="outgoingCallsCount">0</span>
-          <span class="calls-summary-label">Outgoing</span>
-        </div>
-
-        <div class="calls-summary-card">
-          <span class="calls-summary-number" id="incomingCallsCount">0</span>
-          <span class="calls-summary-label">Incoming</span>
-        </div>
-      </div>
-
-      <div id="callsList" class="calls-list" aria-live="polite"></div>
-
-      <div id="callsLoading" class="calls-empty">
-        <div class="calls-empty-icon">📞</div>
-        <h3>Loading calls...</h3>
-        <p>Your call activity will appear here.</p>
-      </div>
-
-      <div id="callsEmpty" class="calls-empty" hidden>
-        <div class="calls-empty-icon">📞</div>
-        <h3>No calls yet</h3>
-        <p>Your voice and video calls will appear here.</p>
-      </div>
-
-      <div id="callsError" class="status-error" hidden></div>
-
-    </section>
-
-    <!-- =====================================================
-         ZAKICHAT SHOWCASE
-         Admin-published feature/product/software imagery.
-         ===================================================== -->
-    <section
-      class="update-showcase-section"
-      aria-labelledby="updateShowcaseHeading"
-    >
-      <div class="update-showcase-heading">
-        <div>
-          <span class="status-section-eyebrow">DISCOVER</span>
-          <h2 id="updateShowcaseHeading">ZakiChat Showcase</h2>
-          <p>
-            Explore new features, experiences and useful additions
-            coming to ZakiChat.
-          </p>
-        </div>
-
-        <span class="update-showcase-badge">
-          LIVE
-        </span>
-      </div>
-
-      <div
-        class="update-showcase-viewport"
-        id="updateShowcaseViewport"
-        tabindex="0"
-        aria-label="ZakiChat feature showcase"
-      >
-        <div
-          class="update-showcase-track"
-          id="updateShowcaseTrack"
-        ></div>
-      </div>
-
-      <div
-        class="update-showcase-status"
-        id="updateShowcaseStatus"
-        aria-live="polite"
-      >
-        Loading showcase…
-      </div>
-    </section>
 
 
     <!-- =====================================================
