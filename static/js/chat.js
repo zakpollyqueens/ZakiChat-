@@ -202,6 +202,62 @@ document.addEventListener(
           : "";
     }
 
+    async function updateStatusRing() {
+      if (!chatAvatar || !targetUserId || !currentUser) {
+        return;
+      }
+
+      try {
+        const { data: statuses, error } = await db
+          .from("status_updates")
+          .select("id")
+          .eq("user_id", targetUserId)
+          .gt("expires_at", new Date().toISOString());
+
+        if (error) {
+          throw error;
+        }
+
+        const ids = (statuses || []).map(
+          status => status.id
+        );
+
+        if (!ids.length) {
+          chatAvatar.classList.remove(
+            "has-unviewed-update"
+          );
+          return;
+        }
+
+        const { data: views, error: viewError } = await db
+          .from("status_views")
+          .select("status_id")
+          .eq("viewer_id", currentUser.id)
+          .in("status_id", ids);
+
+        if (viewError) {
+          throw viewError;
+        }
+
+        const viewed = new Set(
+          (views || []).map(
+            view => view.status_id
+          )
+        );
+
+        chatAvatar.classList.toggle(
+          "has-unviewed-update",
+          ids.some(id => !viewed.has(id))
+        );
+
+      } catch (error) {
+        console.warn(
+          "Unable to check unviewed status:",
+          error
+        );
+      }
+    }
+
     function updateHeader() {
       if (!targetProfile) {
         return;
@@ -243,15 +299,28 @@ document.addEventListener(
         }
       }
 
-      showStatus(
-        targetProfile.is_online
-          ? "online"
-          : targetProfile.last_seen
+      if (chatUserStatus) {
+        chatUserStatus.classList.remove(
+          "online-status",
+          "is-typing"
+        );
+      }
+
+      if (targetProfile.is_online) {
+        showStatus("online");
+
+        chatUserStatus?.classList.add(
+          "online-status"
+        );
+      } else {
+        showStatus(
+          targetProfile.last_seen
             ? `last seen ${formatTime(
                 targetProfile.last_seen
               )}`
             : "offline"
-      );
+        );
+      }
     }
 
     function clearMessages() {
@@ -321,6 +390,7 @@ document.addEventListener(
       targetProfile = data;
 
       updateHeader();
+      await updateStatusRing();
     }
 
     async function getConversation() {
@@ -362,6 +432,16 @@ document.addEventListener(
           targetUser: targetProfile,
           conversationId
         });
+
+        if (window.ZakiTyping) {
+          window.ZakiTyping.init(
+            db,
+            currentUser.id,
+            conversationId,
+            chatUserStatus,
+            updateHeader
+          );
+        }
       }
     }
 
@@ -386,6 +466,11 @@ document.addEventListener(
 
       renderMessages(
         data || []
+      );
+
+      await window.ZakiMessages.markDelivered(
+        conversationId,
+        currentUser.id
       );
 
       await window.ZakiMessages.markRead(
@@ -1261,6 +1346,11 @@ document.addEventListener(
             message.sender_id !==
             currentUser.id
           ) {
+            await window.ZakiMessages.markDelivered(
+              conversationId,
+              currentUser.id
+            );
+
             await window.ZakiMessages.markRead(
               conversationId,
               currentUser.id

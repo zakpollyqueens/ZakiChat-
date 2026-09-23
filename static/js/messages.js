@@ -71,9 +71,15 @@
         return "";
       }
 
-      return message.read_at
-        ? "✓✓"
-        : "✓";
+      if (message.read_at) {
+        return "✓✓";
+      }
+
+      if (message.delivered_at) {
+        return "✓✓";
+      }
+
+      return "✓";
     },
 
     async attachReplyPreviews(
@@ -647,6 +653,49 @@
       };
     },
 
+    async markDelivered(
+      conversationId,
+      currentUserId
+    ) {
+      if (
+        !this.db ||
+        !conversationId ||
+        !currentUserId
+      ) {
+        return {
+          error: new Error(
+            "Messages client is not initialized."
+          )
+        };
+      }
+
+      const { error } =
+        await this.db
+          .from("messages")
+          .update({
+            delivered_at:
+              new Date().toISOString()
+          })
+          .eq(
+            "conversation_id",
+            conversationId
+          )
+          .neq(
+            "sender_id",
+            currentUserId
+          )
+          .is(
+            "delivered_at",
+            null
+          )
+          .is(
+            "deleted_at",
+            null
+          );
+
+      return { error };
+    },
+
     async markRead(
       conversationId,
       currentUserId
@@ -1013,6 +1062,11 @@
           currentUserId
         );
 
+      const readClass =
+        message.read_at
+          ? " read-blue"
+          : "";
+
       html += `
         <div class="message-meta">
           <time>${this.escapeText(
@@ -1023,7 +1077,7 @@
           ${edited}
           ${
             mine && !deleted
-              ? `<span class="message-read-mark">${readMark}</span>`
+              ? `<span class="message-read-mark${readClass}">${readMark}</span>`
               : ""
           }
         </div>

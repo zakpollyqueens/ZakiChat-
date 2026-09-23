@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   let currentUser = null;
+  let activeFilter = "all";
   let refreshTimer = null;
   let refreshing = false;
   let refreshAgain = false;
@@ -93,6 +94,89 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     return avatar;
   }
+
+  function closeConversationMenus() {
+    document.querySelectorAll(".conversation-action-menu").forEach((menu) => {
+      menu.remove();
+    });
+  }
+
+  function createConversationMenu(link, conversation) {
+    const menu = document.createElement("div");
+    menu.className = "conversation-action-menu";
+
+    const items = [
+      [conversation.is_pinned ? "Unpin" : "Pin", "is_pinned"],
+      [conversation.is_favorite ? "Remove favorite" : "Favorite", "is_favorite"],
+      [conversation.marked_unread ? "Mark read" : "Mark unread", "marked_unread"],
+      [conversation.is_muted ? "Unmute" : "Mute", "is_muted"],
+      [conversation.is_archived ? "Unarchive" : "Archive", "is_archived"]
+    ];
+
+    items.forEach(([label, field]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = label;
+
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        closeConversationMenus();
+
+        const client = window.ZakiChatAuth?.client;
+        const userResult = await client?.auth.getUser();
+        const user = userResult?.data?.user;
+
+        if (!client || !user) return;
+
+        const { error } = await client
+          .from("conversation_members")
+          .update({ [field]: !conversation[field] })
+          .eq("conversation_id", conversation.id)
+          .eq("user_id", user.id);
+
+        if (error) {
+          console.error("Conversation preference update failed:", error);
+          return;
+        }
+
+        await refresh();
+      });
+
+      menu.appendChild(button);
+    });
+
+    link.appendChild(menu);
+  }
+
+  function attachConversationMenu(link, conversation) {
+    let timer = null;
+
+    link.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      closeConversationMenus();
+      createConversationMenu(link, conversation);
+    });
+
+    link.addEventListener("pointerdown", () => {
+      timer = setTimeout(() => {
+        closeConversationMenus();
+        createConversationMenu(link, conversation);
+      }, 600);
+    });
+
+    ["pointerup", "pointerleave", "pointercancel"].forEach((eventName) => {
+      link.addEventListener(eventName, () => {
+        clearTimeout(timer);
+      });
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".conversation-action-menu")) {
+      closeConversationMenus();
+    }
+  });
 
   function renderConversation(
     conversation
@@ -217,13 +301,52 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     );
 
+    attachConversationMenu(link, conversation);
     return link;
+  }
+
+  function applyFilter(conversations) {
+    return conversations.filter(
+      conversation => {
+        if (
+          conversation.is_archived
+        ) {
+          return false;
+        }
+
+        if (
+          activeFilter === "unread"
+        ) {
+          return (
+            conversation.unreadCount > 0 ||
+            conversation.marked_unread
+          );
+        }
+
+        if (
+          activeFilter === "favorites"
+        ) {
+          return conversation.is_favorite;
+        }
+
+        if (
+          activeFilter === "groups"
+        ) {
+          return conversation.type === "group";
+        }
+
+        return true;
+      }
+    );
   }
 
   function render(conversations) {
     list.innerHTML = "";
 
-    if (!conversations.length) {
+    const filtered =
+      applyFilter(conversations);
+
+    if (!filtered.length) {
       const empty =
         document.createElement("div");
 
@@ -238,12 +361,55 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    conversations.forEach(
+    filtered.forEach(
       conversation => {
         list.appendChild(
           renderConversation(
             conversation
           )
+        );
+      }
+    );
+  }
+
+  function initChatTabs() {
+    const tabs =
+      document.querySelector("#chat-tabs");
+
+    if (!tabs) {
+      return;
+    }
+
+    tabs.addEventListener(
+      "click",
+      event => {
+        const button =
+          event.target.closest(
+            "[data-filter]"
+          );
+
+        if (!button) {
+          return;
+        }
+
+        activeFilter =
+          button.dataset.filter ||
+          "all";
+
+        tabs
+          .querySelectorAll(
+            "[data-filter]"
+          )
+          .forEach(item => {
+            item.classList.toggle(
+              "active",
+              item === button
+            );
+          });
+
+        render(
+          window.ZakiConversations
+            .conversations || []
         );
       }
     );
@@ -460,6 +626,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     }
   }
+
+  initChatTabs();
 
   await load();
 

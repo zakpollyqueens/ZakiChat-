@@ -85,10 +85,11 @@
       <input type="search" placeholder="Search conversations" aria-label="Search conversations">
     </div>
 
-    <nav class="chat-tabs" aria-label="Conversation filters">
-      <button class="active">All</button>
-      <button>Unread</button>
-      <button>Groups</button>
+    <nav class="chat-tabs" id="chat-tabs" aria-label="Conversation filters">
+      <button type="button" class="active" data-filter="all">All</button>
+      <button type="button" data-filter="unread">Unread</button>
+      <button type="button" data-filter="favorites">Favorites</button>
+      <button type="button" data-filter="groups">Groups</button>
     </nav>
 
     <div class="conversation-list" id="conversation-list">
@@ -198,14 +199,78 @@
         <button
           class="icon-button"
           type="button"
-          aria-label="Search"
+          id="search-chat-button"
+          aria-label="Search messages"
           title="Search messages"
         >⌕</button>
-        <button class="icon-button" aria-label="More options">⋮</button>
+
+        <div class="chat-more-wrapper" id="chat-more-wrapper">
+          <button
+            class="icon-button"
+            type="button"
+            id="chat-more-button"
+            aria-label="More options"
+            aria-expanded="false"
+            aria-controls="chat-more-menu"
+            title="More options"
+          >⋮</button>
+
+          <div
+            class="chat-more-menu"
+            id="chat-more-menu"
+            hidden
+            role="menu"
+            aria-label="Chat options"
+          >
+            <button type="button" role="menuitem" data-chat-action="info">
+              👤 <span>Contact info</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="search">
+              ⌕ <span>Search</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="media">
+              🖼️ <span>Media, links & docs</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="notifications">
+              🔔 <span>Notifications</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="disappearing">
+              ⏱️ <span>Disappearing messages</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="theme">
+              🎨 <span>Wallpaper / Theme</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="starred">
+              ⭐ <span>Starred messages</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="clear">
+              🗑️ <span>Clear chat</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="export">
+              📤 <span>Export chat</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="block">
+              🚫 <span>Block</span>
+            </button>
+            <button type="button" role="menuitem" data-chat-action="report">
+              ⚠️ <span>Report</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
-    <section class="messages-panel"></section>
+    <div class="chat-search-bar" id="chat-search-bar" hidden>
+  <div class="chat-search-inner">
+    <button type="button" class="icon-button" id="chat-search-close" aria-label="Close search">←</button>
+    <input type="search" id="chat-search-input" placeholder="Search messages" autocomplete="off">
+    <span id="chat-search-count" aria-live="polite"></span>
+    <button type="button" class="icon-button" id="chat-search-prev" aria-label="Previous result">↑</button>
+    <button type="button" class="icon-button" id="chat-search-next" aria-label="Next result">↓</button>
+  </div>
+</div>
+
+<section class="messages-panel"></section>
 
     <div
       class="message-edit-bar"
@@ -345,6 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <script src="../static/js/chat-top-actions.js"></script>
+<script src="../static/js/chat-more-menu.js"></script>
 <script src="../static/js/quick-create.js"></script>
 </body>
 </html>

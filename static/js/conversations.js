@@ -44,6 +44,11 @@
         .from("conversation_members")
         .select(`
           conversation_id,
+          is_pinned,
+          is_archived,
+          is_favorite,
+          is_muted,
+          marked_unread,
           conversations (
             id,
             type,
@@ -158,11 +163,32 @@
           ...conversation,
           profile,
           latestMessage,
-          unreadCount
+          unreadCount,
+          is_pinned: Boolean(
+            row.is_pinned
+          ),
+          is_archived: Boolean(
+            row.is_archived
+          ),
+          is_favorite: Boolean(
+            row.is_favorite
+          ),
+          is_muted: Boolean(
+            row.is_muted
+          ),
+          marked_unread: Boolean(
+            row.marked_unread
+          )
         });
       }
 
       enriched.sort((a, b) => {
+        if (
+          a.is_pinned !== b.is_pinned
+        ) {
+          return a.is_pinned ? -1 : 1;
+        }
+
         const aTime =
           new Date(
             a.latestMessage?.created_at ||
