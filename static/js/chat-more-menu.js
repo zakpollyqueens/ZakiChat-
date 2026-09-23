@@ -43,7 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (action === "info") {
-      alert("Contact information will be available here.");
+      closeMenu();
+
+      const params = new URLSearchParams(window.location.search);
+      const userId = String(params.get("user") || "").trim();
+
+      if (userId) {
+        window.location.href =
+          `profile.html?user=${encodeURIComponent(userId)}`;
+      }
+
       return;
     }
 
