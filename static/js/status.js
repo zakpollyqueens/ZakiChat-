@@ -1011,19 +1011,48 @@
     },
 
     openComposer() {
-      document.getElementById(
-        'statusComposer'
-      ).hidden = false;
+      const dialog =
+        document.getElementById(
+          'statusComposer'
+        );
 
-      document.getElementById(
-        'statusText'
-      ).focus();
+      const textarea =
+        document.getElementById(
+          'statusText'
+        );
+
+      if (!dialog) {
+        return;
+      }
+
+      dialog.hidden = false;
+
+      requestAnimationFrame(() => {
+        dialog.classList.add(
+          'status-dialog-visible'
+        );
+
+        textarea?.focus({
+          preventScroll: true
+        });
+      });
     },
 
     closeComposer() {
-      document.getElementById(
-        'statusComposer'
-      ).hidden = true;
+      const dialog =
+        document.getElementById(
+          'statusComposer'
+        );
+
+      if (!dialog) {
+        return;
+      }
+
+      dialog.classList.remove(
+        'status-dialog-visible'
+      );
+
+      dialog.hidden = true;
 
       this.hideComposerError();
     },

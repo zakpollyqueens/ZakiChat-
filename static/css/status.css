@@ -1458,3 +1458,398 @@ body:has(.bottom-nav) {
  .status-item{min-height:66px;padding:9px 11px}
  .status-item+.status-item::before{left:72px}
 }
+
+/* ============================================================
+   ZAKICHAT UPDATES — ANIMATED VISUAL BACKGROUND
+   ============================================================ */
+
+.status-page {
+  position: relative;
+  overflow-x: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(45,124,255,.14), transparent 30rem),
+    radial-gradient(circle at 88% 24%, rgba(39,211,162,.11), transparent 27rem),
+    radial-gradient(circle at 50% 100%, rgba(132,92,255,.08), transparent 30rem);
+}
+
+.status-page::before,
+.status-page::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(12px);
+  opacity: .75;
+}
+
+.status-page::before {
+  width: 280px;
+  height: 280px;
+  top: 7%;
+  left: -90px;
+  background: radial-gradient(
+    circle,
+    rgba(45,124,255,.18),
+    transparent 70%
+  );
+  animation: zakiUpdatesOrbOne 12s ease-in-out infinite alternate;
+}
+
+.status-page::after {
+  width: 330px;
+  height: 330px;
+  right: -120px;
+  bottom: 8%;
+  background: radial-gradient(
+    circle,
+    rgba(39,211,162,.15),
+    transparent 70%
+  );
+  animation: zakiUpdatesOrbTwo 15s ease-in-out infinite alternate;
+}
+
+@keyframes zakiUpdatesOrbOne {
+  0% {
+    transform: translate3d(0,0,0) scale(1);
+  }
+  50% {
+    transform: translate3d(90px,100px,0) scale(1.18);
+  }
+  100% {
+    transform: translate3d(25px,190px,0) scale(.92);
+  }
+}
+
+@keyframes zakiUpdatesOrbTwo {
+  0% {
+    transform: translate3d(0,0,0) scale(.95);
+  }
+  50% {
+    transform: translate3d(-100px,-80px,0) scale(1.15);
+  }
+  100% {
+    transform: translate3d(-30px,-180px,0) scale(.9);
+  }
+}
+
+/* Soft moving light across the Updates content */
+.status-shell {
+  position: relative;
+}
+
+.status-shell::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  left: -30%;
+  top: 180px;
+  width: 160%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.12),
+    transparent
+  );
+  animation: zakiUpdatesSweep 9s ease-in-out infinite;
+}
+
+@keyframes zakiUpdatesSweep {
+  0%,100% {
+    transform: translateX(-15%);
+    opacity: 0;
+  }
+  45% {
+    opacity: .65;
+  }
+  60% {
+    transform: translateX(15%);
+    opacity: .15;
+  }
+}
+
+/* ============================================================
+   WHATSAPP-INSPIRED CREATE STATUS COMPOSER
+   ============================================================ */
+
+.status-dialog {
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(39,211,162,.10),
+      transparent 34%
+    ),
+    rgba(3,8,15,.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: zakiStatusBackdropIn .18s ease-out both;
+}
+
+.status-dialog-card {
+  position: relative;
+  width: min(500px, 100%);
+  max-height: min(720px, calc(100vh - 28px));
+  overflow-y: auto;
+  padding: 0;
+  border: 1px solid rgba(127,127,127,.16);
+  border-radius: 26px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.10),
+      rgba(255,255,255,.035)
+    ),
+    var(--card-bg, #fff);
+  box-shadow:
+    0 28px 80px rgba(0,0,0,.38),
+    0 8px 30px rgba(0,0,0,.18);
+  transform-origin: center bottom;
+  animation: zakiComposerSpring .34s cubic-bezier(.18,.9,.25,1.18) both;
+}
+
+.status-dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0;
+  padding: 18px 18px 15px;
+  border-bottom: 1px solid rgba(127,127,127,.12);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.025)
+    );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.status-dialog-header h2 {
+  margin: 3px 0 0;
+  font-size: 21px;
+  letter-spacing: -.025em;
+}
+
+.status-dialog-header > div::after {
+  content: "Share an update with people allowed to see your Updates";
+  display: block;
+  margin-top: 5px;
+  max-width: 340px;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: .55;
+}
+
+.status-close-button {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(127,127,127,.12);
+  border-radius: 50%;
+  background: rgba(127,127,127,.07);
+  font-size: 26px;
+  transition:
+    transform .16s ease,
+    background .16s ease;
+}
+
+.status-close-button:hover {
+  transform: rotate(90deg);
+  background: rgba(127,127,127,.13);
+}
+
+.status-dialog-card #statusText,
+.status-dialog-card .status-character-count,
+.status-dialog-card .status-media-picker,
+.status-dialog-card .status-media-preview,
+.status-dialog-card #publishStatusButton,
+.status-dialog-card #composerError {
+  margin-left: 18px;
+  margin-right: 18px;
+}
+
+.status-dialog-card #statusText {
+  margin-top: 18px;
+  width: calc(100% - 36px);
+  min-height: 145px;
+  padding: 16px;
+  border: 1px solid rgba(127,127,127,.16);
+  border-radius: 19px;
+  background: rgba(127,127,127,.055);
+  outline: none;
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.status-dialog-card #statusText:focus {
+  border-color: rgba(39,211,162,.52);
+  background: rgba(39,211,162,.045);
+  box-shadow: 0 0 0 4px rgba(39,211,162,.09);
+}
+
+.status-character-count {
+  margin-top: 7px;
+  margin-bottom: 13px;
+  padding-right: 3px;
+  font-size: 11px;
+}
+
+.status-media-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(127,127,127,.14);
+  border-radius: 17px;
+  background: rgba(127,127,127,.055);
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    border-color .15s ease;
+}
+
+.status-media-picker:hover {
+  transform: translateY(-1px);
+  background: rgba(39,211,162,.07);
+  border-color: rgba(39,211,162,.28);
+}
+
+.status-media-preview {
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.16);
+}
+
+.status-primary-button {
+  min-height: 52px;
+  margin-top: 5px;
+  margin-bottom: 18px;
+  border-radius: 17px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(39,211,162,.95),
+      rgba(45,124,255,.90)
+    );
+  color: #fff;
+  box-shadow: 0 9px 24px rgba(39,211,162,.18);
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    opacity .15s ease;
+}
+
+.status-primary-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 13px 30px rgba(39,211,162,.25);
+}
+
+.status-primary-button:active {
+  transform: scale(.985);
+}
+
+.status-primary-button:disabled {
+  cursor: wait;
+  opacity: .65;
+  transform: none;
+}
+
+@keyframes zakiStatusBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zakiComposerSpring {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(.94);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.012);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   MOBILE — BOTTOM-SHEET FEEL LIKE WHATSAPP
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .status-dialog {
+    place-items: end center;
+    padding: 8px;
+  }
+
+  .status-dialog-card {
+    width: 100%;
+    max-height: calc(100vh - 16px);
+    border-radius: 25px 25px 17px 17px;
+    animation: zakiComposerMobile .34s cubic-bezier(.18,.9,.25,1.18) both;
+  }
+
+  .status-dialog-header {
+    padding: 16px 15px 13px;
+  }
+
+  .status-dialog-card #statusText,
+  .status-dialog-card .status-character-count,
+  .status-dialog-card .status-media-picker,
+  .status-dialog-card .status-media-preview,
+  .status-dialog-card #publishStatusButton,
+  .status-dialog-card #composerError {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .status-dialog-card #statusText {
+    width: calc(100% - 28px);
+    min-height: 135px;
+  }
+
+  @keyframes zakiComposerMobile {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    70% {
+      opacity: 1;
+      transform: translateY(-5px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Respect Android/browser reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .status-page::before,
+  .status-page::after,
+  .status-shell::before,
+  .status-dialog,
+  .status-dialog-card {
+    animation: none !important;
+  }
+
+  .status-close-button,
+  .status-media-picker,
+  .status-primary-button {
+    transition: none !important;
+  }
+}
