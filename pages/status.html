@@ -44,8 +44,17 @@
          MY STATUS
          ===================================================== -->
 
-    <section class="my-status-card">
-      <div class="my-status-avatar" id="myStatusAvatar">+</div>
+    <section
+      class="my-status-card"
+      id="myStatusCard"
+      role="button"
+      tabindex="0"
+      aria-label="Add a status update"
+    >
+      <div class="my-status-avatar" id="myStatusAvatar">
+        <span class="my-status-avatar-placeholder">?</span>
+        <span class="my-status-plus" aria-hidden="true">+</span>
+      </div>
 
       <div class="my-status-info">
         <strong>My Status</strong>
@@ -92,50 +101,6 @@
          CALLS
          ===================================================== -->
 
-
-    <!-- =====================================================
-         ZAKICHAT SHOWCASE
-         Admin-published feature/product/software imagery.
-         ===================================================== -->
-    <section
-      class="update-showcase-section"
-      aria-labelledby="updateShowcaseHeading"
-    >
-      <div class="update-showcase-heading">
-        <div>
-          <span class="status-section-eyebrow">DISCOVER</span>
-          <h2 id="updateShowcaseHeading">ZakiChat Showcase</h2>
-          <p>
-            Explore new features, experiences and useful additions
-            coming to ZakiChat.
-          </p>
-        </div>
-
-        <span class="update-showcase-badge">
-          LIVE
-        </span>
-      </div>
-
-      <div
-        class="update-showcase-viewport"
-        id="updateShowcaseViewport"
-        tabindex="0"
-        aria-label="ZakiChat feature showcase"
-      >
-        <div
-          class="update-showcase-track"
-          id="updateShowcaseTrack"
-        ></div>
-      </div>
-
-      <div
-        class="update-showcase-status"
-        id="updateShowcaseStatus"
-        aria-live="polite"
-      >
-        Loading showcase…
-      </div>
-    </section>
 
     <!--
          NEW RELEASES
@@ -307,6 +272,51 @@
       <div id="callsError" class="status-error" hidden></div>
 
     </section>
+
+    <!-- =====================================================
+         ZAKICHAT SHOWCASE
+         Admin-published feature/product/software imagery.
+         ===================================================== -->
+    <section
+      class="update-showcase-section"
+      aria-labelledby="updateShowcaseHeading"
+    >
+      <div class="update-showcase-heading">
+        <div>
+          <span class="status-section-eyebrow">DISCOVER</span>
+          <h2 id="updateShowcaseHeading">ZakiChat Showcase</h2>
+          <p>
+            Explore new features, experiences and useful additions
+            coming to ZakiChat.
+          </p>
+        </div>
+
+        <span class="update-showcase-badge">
+          LIVE
+        </span>
+      </div>
+
+      <div
+        class="update-showcase-viewport"
+        id="updateShowcaseViewport"
+        tabindex="0"
+        aria-label="ZakiChat feature showcase"
+      >
+        <div
+          class="update-showcase-track"
+          id="updateShowcaseTrack"
+        ></div>
+      </div>
+
+      <div
+        class="update-showcase-status"
+        id="updateShowcaseStatus"
+        aria-live="polite"
+      >
+        Loading showcase…
+      </div>
+    </section>
+
 
     <!-- =====================================================
          CHANNELS

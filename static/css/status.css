@@ -1275,3 +1275,89 @@ body:has(.bottom-nav) {
     overflow-x: auto;
   }
 }
+
+/* ============================================================
+   WHATSAPP-STYLE MY STATUS
+   ============================================================ */
+
+.my-status-card {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .12s ease, background .15s ease;
+}
+
+.my-status-card:active {
+  transform: scale(.985);
+}
+
+.my-status-card:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.my-status-avatar {
+  position: relative;
+  border: 2px solid rgba(127,127,127,.22);
+  background: rgba(127,127,127,.10);
+}
+
+.my-status-avatar-placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.my-status-plus {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--card-bg, #07111f);
+  border-radius: 50%;
+  background: currentColor;
+  color: var(--card-bg, #07111f);
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.my-status-plus::first-letter {
+  color: inherit;
+}
+
+.status-add-button {
+  flex: 0 0 42px;
+  opacity: .78;
+}
+
+@media (max-width: 480px) {
+  .my-status-card {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .my-status-avatar {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
+
+  .my-status-plus {
+    width: 21px;
+    height: 21px;
+  }
+
+  .status-add-button {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+}

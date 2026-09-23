@@ -9,6 +9,7 @@
     calls: [],
 
     profiles: new Map(),
+    myProfile: null,
 
     realtimeChannel: null,
     callsRealtimeChannel: null,
@@ -50,7 +51,8 @@
 
         await Promise.all([
           this.loadStatuses(),
-          this.loadCalls()
+          this.loadCalls(),
+          this.loadMyProfile()
         ]);
 
         this.subscribeRealtime();
@@ -75,6 +77,22 @@
     },
 
     bindEvents() {
+      const myStatusCard =
+        document.getElementById('myStatusCard');
+
+      if (myStatusCard) {
+        myStatusCard.addEventListener('click', () => {
+          this.openComposer();
+        });
+
+        myStatusCard.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.openComposer();
+          }
+        });
+      }
+
       document
         .getElementById('addStatusButton')
         ?.addEventListener(
@@ -178,13 +196,116 @@
     async refreshAll() {
       await Promise.all([
         this.loadStatuses(),
-        this.loadCalls()
+        this.loadCalls(),
+        this.loadMyProfile()
       ]);
     },
 
     /* ======================================================
        STATUS SYSTEM
        ====================================================== */
+
+    async loadMyProfile() {
+      try {
+        const {
+          data,
+          error
+        } = await this.db
+          .from('profiles')
+          .select('id,username,full_name,avatar_url')
+          .eq('id', this.userId)
+          .maybeSingle();
+
+        if (error) {
+          console.warn('Unable to load own status profile:', error);
+          return;
+        }
+
+        this.myProfile = data || null;
+        this.renderMyStatusAvatar();
+      } catch (error) {
+        console.warn('Own status profile loading failed:', error);
+      }
+    },
+
+    renderMyStatusAvatar() {
+      const avatar =
+        document.getElementById('myStatusAvatar');
+
+      if (!avatar) return;
+
+      const profile = this.myProfile || {};
+      const name =
+        profile.full_name ||
+        profile.username ||
+        'ZakiChat User';
+
+      const initials =
+        this.getInitials(name);
+
+      avatar.innerHTML = '';
+
+      if (profile.avatar_url) {
+        const image =
+          document.createElement('img');
+
+        image.src =
+          profile.avatar_url;
+
+        image.alt =
+          'Your profile photo';
+
+        image.width = 54;
+        image.height = 54;
+
+        image.addEventListener('error', () => {
+          avatar.innerHTML = '';
+          const fallback =
+            document.createElement('span');
+
+          fallback.className =
+            'my-status-avatar-placeholder';
+
+          fallback.textContent =
+            initials;
+
+          avatar.appendChild(fallback);
+          this.appendStatusPlus(avatar);
+        });
+
+        avatar.appendChild(image);
+      } else {
+        const fallback =
+          document.createElement('span');
+
+        fallback.className =
+          'my-status-avatar-placeholder';
+
+        fallback.textContent =
+          initials;
+
+        avatar.appendChild(fallback);
+      }
+
+      this.appendStatusPlus(avatar);
+    },
+
+    appendStatusPlus(avatar) {
+      const plus =
+        document.createElement('span');
+
+      plus.className =
+        'my-status-plus';
+
+      plus.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+      plus.textContent = '+';
+
+      avatar.appendChild(plus);
+    },
 
     async loadStatuses() {
       this.hideError();
