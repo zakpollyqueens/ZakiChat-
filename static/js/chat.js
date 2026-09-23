@@ -85,6 +85,13 @@ document.addEventListener(
         ".chat-user .conversation-avatar"
       );
 
+    chatAvatar?.addEventListener("click", () => {
+      if (targetUserId) {
+        window.location.href =
+          `profile.html?user=${encodeURIComponent(targetUserId)}`;
+      }
+    });
+
     const editBar =
       document.querySelector(
         "#message-edit-bar"
@@ -822,6 +829,10 @@ document.addEventListener(
           );
         }
 
+        selectedMessageIds.delete(
+          String(messageId)
+        );
+
         if (
           editingMessageId ===
           messageId
@@ -1147,6 +1158,455 @@ document.addEventListener(
       }
     );
 
+    // ------------------------------------------------------------
+    // Individual message long-press menu
+    // ------------------------------------------------------------
+    let messagePressTimer = null;
+    let activeMessageMenu = null;
+    let selectedMessageIds = new Set();
+
+    function closeMessageMenu() {
+      if (activeMessageMenu) {
+        activeMessageMenu.remove();
+        activeMessageMenu = null;
+      }
+    }
+
+    function getStarredMessages() {
+      try {
+        return JSON.parse(
+          localStorage.getItem(
+            "zakichat-starred-messages"
+          ) || "[]"
+        );
+      } catch {
+        return [];
+      }
+    }
+
+    function setStarredMessages(ids) {
+      localStorage.setItem(
+        "zakichat-starred-messages",
+        JSON.stringify(ids)
+      );
+    }
+
+    function isMessageStarred(messageId) {
+      return getStarredMessages()
+        .includes(String(messageId));
+    }
+
+    function toggleStarredMessage(messageId) {
+      const id = String(messageId);
+      const ids = getStarredMessages();
+      const index = ids.indexOf(id);
+
+      if (index >= 0) {
+        ids.splice(index, 1);
+      } else {
+        ids.push(id);
+      }
+
+      setStarredMessages(ids);
+      return index < 0;
+    }
+
+    function copyMessageText(messageId) {
+      const text =
+        getMessageText(messageId);
+
+      if (!text) {
+        return;
+      }
+
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => showStatus("Message copied"))
+          .catch(() => {});
+      }
+    }
+
+    function selectMessage(messageId) {
+      const id = String(messageId);
+
+      if (selectedMessageIds.has(id)) {
+        selectedMessageIds.delete(id);
+      } else {
+        selectedMessageIds.add(id);
+      }
+
+      const bubble =
+        getMessageById(id);
+
+      bubble?.classList.toggle(
+        "message-selected",
+        selectedMessageIds.has(id)
+      );
+
+      if (selectedMessageIds.size) {
+        showStatus(
+          `${selectedMessageIds.size} message${
+            selectedMessageIds.size === 1 ? "" : "s"
+          } selected`
+        );
+      } else {
+        updateHeader();
+      }
+    }
+
+    function showMessageMenu(messageId, x, y) {
+      closeMessageMenu();
+
+      const bubble =
+        getMessageById(messageId);
+
+      if (!bubble) {
+        return;
+      }
+
+      const mine =
+        bubble.classList.contains(
+          "sent-bubble"
+        );
+
+      const deleted =
+        bubble.classList.contains(
+          "deleted-message"
+        );
+
+      if (deleted) {
+        return;
+      }
+
+      const text =
+        getMessageText(messageId);
+
+      const menu =
+        document.createElement("div");
+
+      menu.className =
+        "message-context-menu";
+
+      menu.setAttribute(
+        "role",
+        "menu"
+      );
+
+      const actions = [
+        ["reply", "↩", "Reply"],
+        ["react", "😊", "React"],
+        ["forward", "↗", "Forward"],
+        ...(text
+          ? [["copy", "⧉", "Copy"]]
+          : []),
+        ["star", "⭐",
+          isMessageStarred(messageId)
+            ? "Unstar"
+            : "Star"],
+        ["select", "☑", "Select"]
+      ];
+
+      if (
+        mine &&
+        text
+      ) {
+        actions.push(
+          ["edit", "✎", "Edit"]
+        );
+      }
+
+      if (mine) {
+        actions.push(
+          ["delete", "🗑", "Delete"]
+        );
+      }
+
+      menu.innerHTML =
+        actions
+          .map(
+            ([action, icon, label]) => `
+              <button
+                type="button"
+                role="menuitem"
+                data-context-action="${action}"
+              >
+                <span aria-hidden="true">${icon}</span>
+                <span>${label}</span>
+              </button>
+            `
+          )
+          .join("");
+
+      document.body.appendChild(menu);
+      activeMessageMenu = menu;
+
+      const width =
+        menu.offsetWidth || 190;
+      const height =
+        menu.offsetHeight || 260;
+
+      const left =
+        Math.max(
+          8,
+          Math.min(
+            x,
+            window.innerWidth - width - 8
+          )
+        );
+
+      const top =
+        Math.max(
+          8,
+          Math.min(
+            y,
+            window.innerHeight - height - 8
+          )
+        );
+
+      menu.style.left =
+        `${left}px`;
+      menu.style.top =
+        `${top}px`;
+
+      menu.addEventListener(
+        "click",
+        async event => {
+          const button =
+            event.target.closest(
+              "[data-context-action]"
+            );
+
+          if (!button) {
+            return;
+          }
+
+          const action =
+            button.dataset.contextAction;
+
+          closeMessageMenu();
+
+          if (action === "reply") {
+            enterReplyMode(messageId);
+            return;
+          }
+
+          if (action === "react") {
+            const emoji =
+              window.ZakiReactions?.EMOJIS?.[0];
+
+            if (
+              emoji &&
+              window.ZakiReactions
+            ) {
+              await window.ZakiReactions.toggle(
+                messageId,
+                emoji
+              );
+              await window.ZakiReactions.refresh();
+            }
+
+            return;
+          }
+
+          if (action === "forward") {
+            if (window.ZakiForward) {
+              await window.ZakiForward.open(
+                messageId
+              );
+            }
+            return;
+          }
+
+          if (action === "copy") {
+            copyMessageText(messageId);
+            return;
+          }
+
+          if (action === "star") {
+            const starred =
+              toggleStarredMessage(
+                messageId
+              );
+
+            showStatus(
+              starred
+                ? "Message starred"
+                : "Message unstarred"
+            );
+
+            return;
+          }
+
+          if (action === "select") {
+            selectMessage(messageId);
+            return;
+          }
+
+          if (action === "edit") {
+            enterEditMode(messageId);
+            return;
+          }
+
+          if (action === "delete") {
+            await deleteMessage(messageId);
+          }
+        }
+      );
+    }
+
+    function beginMessagePress(event) {
+      const bubble =
+        event.target.closest(
+          "[data-message-id]"
+        );
+
+      if (
+        !bubble ||
+        !messagesPanel?.contains(bubble)
+      ) {
+        return;
+      }
+
+      if (
+        event.target.closest(
+          "button, a, input, audio, video"
+        )
+      ) {
+        return;
+      }
+
+      const messageId =
+        bubble.dataset.messageId;
+
+      if (!messageId) {
+        return;
+      }
+
+      const point =
+        event.touches?.[0] ||
+        event;
+
+      clearTimeout(
+        messagePressTimer
+      );
+
+      messagePressTimer =
+        setTimeout(() => {
+          showMessageMenu(
+            messageId,
+            point.clientX,
+            point.clientY
+          );
+        }, 500);
+    }
+
+    function cancelMessagePress() {
+      clearTimeout(
+        messagePressTimer
+      );
+      messagePressTimer = null;
+    }
+
+    messagesPanel?.addEventListener(
+      "pointerdown",
+      beginMessagePress
+    );
+
+    messagesPanel?.addEventListener(
+      "pointerup",
+      cancelMessagePress
+    );
+
+    messagesPanel?.addEventListener(
+      "pointercancel",
+      cancelMessagePress
+    );
+
+    messagesPanel?.addEventListener(
+      "pointermove",
+      cancelMessagePress
+    );
+
+    document.addEventListener(
+      "click",
+      event => {
+        if (
+          activeMessageMenu &&
+          !activeMessageMenu.contains(
+            event.target
+          )
+        ) {
+          closeMessageMenu();
+        }
+      }
+    );
+
+    // ------------------------------------------------------------
+    // Reply preview: tap it to jump back to the original message
+    // ------------------------------------------------------------
+    messagesPanel?.addEventListener(
+      "click",
+      event => {
+        const preview =
+          event.target.closest(
+            ".message-reply-preview"
+          );
+
+        if (!preview) {
+          return;
+        }
+
+        const bubble =
+          preview.closest(
+            "[data-message-id]"
+          );
+
+        const targetId =
+          bubble?.dataset.messageId;
+
+        if (!targetId) {
+          return;
+        }
+
+        const originalId =
+          bubble.querySelector(
+            "[data-reply-message-id]"
+          )?.dataset.replyMessageId;
+
+        if (!originalId) {
+          return;
+        }
+
+        const original =
+          getMessageById(
+            originalId
+          );
+
+        if (!original) {
+          showStatus(
+            "Original message is unavailable"
+          );
+          return;
+        }
+
+        original.classList.add(
+          "message-reply-target"
+        );
+
+        original.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+        setTimeout(() => {
+          original.classList.remove(
+            "message-reply-target"
+          );
+        }, 1200);
+      }
+    );
+
     messagesPanel?.addEventListener(
       "click",
       async event => {
@@ -1171,6 +1631,91 @@ document.addEventListener(
           enterReplyMode(
             messageId
           );
+          return;
+        }
+
+        if (action === "react") {
+          const bubble =
+            getMessageById(messageId);
+
+          const reactionButton =
+            bubble?.querySelector(
+              ".message-reactions"
+            );
+
+          if (reactionButton) {
+            reactionButton.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest"
+            });
+          }
+
+          if (window.ZakiReactions?.EMOJIS?.length) {
+            const emoji =
+              window.ZakiReactions.EMOJIS[0];
+
+            await window.ZakiReactions.toggle(
+              messageId,
+              emoji
+            );
+
+            await window.ZakiReactions.refresh();
+          }
+
+          return;
+        }
+
+        if (action === "copy") {
+          const text =
+            getMessageText(messageId);
+
+          if (!text) {
+            return;
+          }
+
+          if (navigator.clipboard?.writeText) {
+            try {
+              await navigator.clipboard.writeText(text);
+              showStatus("Message copied");
+            } catch (error) {
+              console.warn("Copy failed:", error);
+            }
+          }
+          return;
+        }
+
+        if (action === "react") {
+          if (
+            window.ZakiReactions &&
+            window.ZakiReactions.open
+          ) {
+            window.ZakiReactions.open(
+              messageId,
+              button
+            );
+          }
+          return;
+        }
+
+        if (action === "copy") {
+          const text = getMessageText(messageId);
+
+          if (!text) {
+            return;
+          }
+
+          if (navigator.clipboard?.writeText) {
+            try {
+              await navigator.clipboard.writeText(text);
+              showStatus("Message copied");
+            } catch (error) {
+              console.warn(
+                "Copy failed:",
+                error
+              );
+            }
+          }
+
           return;
         }
 

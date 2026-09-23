@@ -8,6 +8,8 @@
   let panel = null;
   let channel = null;
   let refreshTimer = null;
+  let picker = null;
+  let pickerMessageId = null;
 
   function init(client, userId, messagesPanel) {
     db = client;
@@ -212,6 +214,97 @@
     }
   }
 
+  function closePicker() {
+    if (picker) {
+      picker.remove();
+      picker = null;
+    }
+
+    pickerMessageId = null;
+  }
+
+  function openPicker(messageId, anchor) {
+    if (!messageId || !anchor) {
+      return;
+    }
+
+    closePicker();
+
+    pickerMessageId = messageId;
+
+    picker = document.createElement("div");
+    picker.className = "reaction-picker";
+    picker.setAttribute("role", "menu");
+    picker.setAttribute("aria-label", "Choose a reaction");
+
+    EMOJIS.forEach(function (emoji) {
+      const button = document.createElement("button");
+
+      button.type = "button";
+      button.className = "reaction-picker-button";
+      button.textContent = emoji;
+      button.dataset.reactionEmoji = emoji;
+      button.setAttribute("role", "menuitem");
+      button.setAttribute("aria-label", "React with " + emoji);
+
+      button.addEventListener("click", async function (event) {
+        event.stopPropagation();
+
+        const result = await toggle(
+          pickerMessageId,
+          emoji
+        );
+
+        if (result.error) {
+          console.error(
+            "ZakiChat reaction failed:",
+            result.error
+          );
+          return;
+        }
+
+        closePicker();
+        await refresh();
+      });
+
+      picker.appendChild(button);
+    });
+
+    document.body.appendChild(picker);
+
+    const rect = anchor.getBoundingClientRect();
+    const pickerRect = picker.getBoundingClientRect();
+
+    let left =
+      rect.left +
+      (rect.width / 2) -
+      (pickerRect.width / 2);
+
+    let top =
+      rect.top -
+      pickerRect.height -
+      8;
+
+    const margin = 8;
+
+    left = Math.max(
+      margin,
+      Math.min(
+        left,
+        window.innerWidth -
+          pickerRect.width -
+          margin
+      )
+    );
+
+    if (top < margin) {
+      top = rect.bottom + 8;
+    }
+
+    picker.style.left = `${left}px`;
+    picker.style.top = `${top}px`;
+  }
+
   async function toggle(messageId, emoji) {
     if (!db || !currentUserId) {
       return {
@@ -336,6 +429,25 @@
       refresh,
       getForMessages,
       toggle,
-      group
+      group,
+      open: openPicker,
+      close: closePicker
     });
 })();
+
+
+document.addEventListener("click", function (event) {
+  if (
+    picker &&
+    !picker.contains(event.target) &&
+    !event.target.closest("[data-message-action='react']")
+  ) {
+    closePicker();
+  }
+});
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    closePicker();
+  }
+});

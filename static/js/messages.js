@@ -600,7 +600,8 @@
         await this.db
           .from("messages")
           .update({
-            content: text
+            content: text,
+            edited_at: new Date().toISOString()
           })
           .eq("id", messageId)
           .eq("sender_id", senderId)
@@ -1008,7 +1009,12 @@
 
       if (replyPreview) {
         html += `
-          <div class="message-reply-preview">
+          <div
+            class="message-reply-preview"
+            data-reply-message-id="${this.escapeText(
+              message.reply_to_message_id
+            )}"
+          >
             <strong>Reply</strong>
             <span>${this.escapeText(
               replyPreview
@@ -1088,23 +1094,45 @@
           <div class="message-actions">
             <button
               type="button"
+              class="message-action"
               data-message-action="reply"
-              data-message-id="${this.escapeText(
-                message.id
-              )}"
+              data-message-id="${this.escapeText(message.id)}"
               aria-label="Reply to message"
               title="Reply"
             >↩</button>
 
             <button
               type="button"
+              class="message-action"
+              data-message-action="react"
+              data-message-id="${this.escapeText(message.id)}"
+              aria-label="React to message"
+              title="React"
+            >😊</button>
+
+            <button
+              type="button"
+              class="message-action"
               data-message-action="forward"
-              data-message-id="${this.escapeText(
-                message.id
-              )}"
+              data-message-id="${this.escapeText(message.id)}"
               aria-label="Forward message"
               title="Forward"
             >↗</button>
+
+            ${
+              messageType === "text"
+                ? `
+                  <button
+                    type="button"
+                    class="message-action"
+                    data-message-action="copy"
+                    data-message-id="${this.escapeText(message.id)}"
+                    aria-label="Copy message"
+                    title="Copy"
+                  >⧉</button>
+                `
+                : ""
+            }
 
             ${
               mine &&
@@ -1112,10 +1140,9 @@
                 ? `
                   <button
                     type="button"
+                    class="message-action"
                     data-message-action="edit"
-                    data-message-id="${this.escapeText(
-                      message.id
-                    )}"
+                    data-message-id="${this.escapeText(message.id)}"
                     aria-label="Edit message"
                     title="Edit"
                   >✎</button>
@@ -1128,10 +1155,9 @@
                 ? `
                   <button
                     type="button"
+                    class="message-action message-delete"
                     data-message-action="delete"
-                    data-message-id="${this.escapeText(
-                      message.id
-                    )}"
+                    data-message-id="${this.escapeText(message.id)}"
                     aria-label="Delete message"
                     title="Delete"
                   >🗑</button>
