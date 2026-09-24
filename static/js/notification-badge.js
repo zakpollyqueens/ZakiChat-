@@ -6,7 +6,9 @@
     userId: null,
 
     init(config, userId) {
-      if (!config || !userId || !window.supabase) return;
+      if (!config || !userId || !window.supabase) {
+        return;
+      }
 
       this.userId = userId;
 
@@ -33,26 +35,44 @@
 
     render(count) {
       const link = this.getLink();
-      if (!link) return;
 
-      let badge = link.querySelector(
-        ".notification-unread-badge"
-      );
+      if (!link) {
+        return;
+      }
+
+      let badge =
+        link.querySelector(
+          ".notification-unread-badge"
+        );
 
       if (!count) {
-        if (badge) badge.remove();
-        link.removeAttribute("aria-label");
+        if (badge) {
+          badge.remove();
+        }
+
+        link.removeAttribute(
+          "aria-label"
+        );
+
         return;
       }
 
       if (!badge) {
-        badge = document.createElement("span");
-        badge.className = "notification-unread-badge";
+        badge =
+          document.createElement(
+            "span"
+          );
+
+        badge.className =
+          "notification-unread-badge";
+
         link.appendChild(badge);
       }
 
       badge.textContent =
-        count > 99 ? "99+" : String(count);
+        count > 99
+          ? "99+"
+          : String(count);
 
       badge.setAttribute(
         "aria-label",
@@ -61,12 +81,14 @@
 
       link.setAttribute(
         "aria-label",
-        `Updates, ${count} unread notifications`
+        `Notification Center, ${count} unread notifications`
       );
     },
 
     async load() {
-      if (!this.db || !this.userId) return;
+      if (!this.db || !this.userId) {
+        return;
+      }
 
       const { count, error } =
         await this.db
@@ -75,14 +97,21 @@
             count: "exact",
             head: true
           })
-          .eq("user_id", this.userId)
-          .is("read_at", null);
+          .eq(
+            "user_id",
+            this.userId
+          )
+          .is(
+            "read_at",
+            null
+          );
 
       if (error) {
         console.error(
           "ZakiChat notification badge:",
           error
         );
+
         return;
       }
 
@@ -90,7 +119,10 @@
     },
 
     subscribe() {
-      if (!window.ZakiRealtime || !this.userId) {
+      if (
+        !window.ZakiRealtime ||
+        !this.userId
+      ) {
         return;
       }
 
