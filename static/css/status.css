@@ -3508,3 +3508,339 @@ body:has(.bottom-nav) {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   ZAKICHAT AURORA STATUS COMPOSER
+   Aurora page background is intentionally untouched.
+   ============================================================ */
+
+.status-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  background: rgba(0,0,0,.68);
+  backdrop-filter: blur(18px);
+}
+
+.status-dialog[hidden] {
+  display: none;
+}
+
+.status-composer-card {
+  width: min(680px,100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 18px;
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(7,17,31,.94);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.58),
+    0 0 55px rgba(90,220,255,.08);
+}
+
+.status-composer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.status-composer-header h2 {
+  margin: 2px 0 0;
+}
+
+.status-composer-tabs {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 7px;
+  margin: 18px 0 12px;
+}
+
+.status-composer-tab,
+.status-tool-button,
+.status-choice-tray button {
+  border: 1px solid rgba(255,255,255,.11);
+  background: rgba(255,255,255,.045);
+  color: inherit;
+  border-radius: 13px;
+  padding: 10px 11px;
+  cursor: pointer;
+}
+
+.status-composer-tab.active,
+.status-tool-button:hover,
+.status-choice-tray button:hover {
+  background: rgba(90,220,255,.13);
+  border-color: rgba(90,220,255,.32);
+}
+
+.status-composer-canvas {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.1);
+
+  background:
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(76,219,255,.14),
+      transparent 42%
+    ),
+    rgba(0,0,0,.22);
+}
+
+.status-text-preview {
+  width: 88%;
+  text-align: center;
+  font-size: clamp(26px,6vw,48px);
+  font-weight: 800;
+  line-height: 1.12;
+  word-break: break-word;
+}
+
+.status-media-preview {
+  width: 100%;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+}
+
+.status-media-preview img,
+.status-media-preview video {
+  width: 100%;
+  max-height: 58vh;
+  object-fit: contain;
+}
+
+.status-tool-panel textarea,
+.status-caption-input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 15px;
+  background: rgba(255,255,255,.045);
+  color: inherit;
+  padding: 13px;
+  outline: none;
+}
+
+.status-tool-panel textarea {
+  resize: vertical;
+}
+
+.status-character-count {
+  margin: 5px 3px 9px;
+  text-align: right;
+  font-size: 11px;
+  opacity: .58;
+}
+
+.status-tool-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.status-choice-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 9px;
+  margin-top: 8px;
+  border-radius: 15px;
+  background: rgba(255,255,255,.035);
+}
+
+.status-media-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  margin-bottom: 9px;
+  border: 1px dashed rgba(255,255,255,.18);
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.status-media-picker input {
+  display: none;
+}
+
+.status-composer-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.status-option {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  opacity: .88;
+}
+
+.status-option select,
+.status-option input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  background: rgba(255,255,255,.045);
+  color: inherit;
+  padding: 10px;
+}
+
+.status-option select option {
+  background: #07111f;
+  color: #fff;
+}
+
+.status-voice-help {
+  text-align: center;
+  font-size: 13px;
+  opacity: .65;
+}
+
+.status-record-button {
+  display: block;
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 17px;
+  background: rgba(90,220,255,.13);
+  color: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.status-record-button.recording {
+  background: rgba(255,72,104,.18);
+  box-shadow: 0 0 30px rgba(255,72,104,.12);
+}
+
+.status-secondary-button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+}
+
+.status-voice-preview {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  font-weight: 800;
+}
+
+.status-voice-wave {
+  font-size: 38px;
+  letter-spacing: 3px;
+  opacity: .8;
+}
+
+.status-composer-footer {
+  margin-top: 14px;
+}
+
+.status-primary-button {
+  width: 100%;
+  min-height: 49px;
+  border: 0;
+  border-radius: 15px;
+  background: linear-gradient(135deg,#58d7ff,#8b7dff);
+  color: #06101d;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.status-primary-button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.status-form-error {
+  padding: 9px 11px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,70,100,.16);
+  background: rgba(255,70,100,.08);
+  color: #ff9aa9;
+}
+
+.status-text-preview.font-serif {
+  font-family: Georgia,serif;
+}
+
+.status-text-preview.font-mono {
+  font-family: monospace;
+}
+
+.status-text-preview.font-round {
+  font-family: "Trebuchet MS",sans-serif;
+}
+
+.status-composer-canvas.bg-violet {
+  background:
+    radial-gradient(
+      circle at 70% 20%,
+      rgba(170,100,255,.34),
+      transparent 42%
+    ),
+    #170f2e;
+}
+
+.status-composer-canvas.bg-ocean {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(0,220,255,.3),
+      transparent 45%
+    ),
+    #071d2b;
+}
+
+.status-composer-canvas.bg-ember {
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(255,120,55,.3),
+      transparent 45%
+    ),
+    #29120b;
+}
+
+.status-composer-canvas.bg-midnight {
+  background: #030813;
+}
+
+@media (max-width:600px) {
+
+  .status-composer-card {
+    padding: 13px;
+    border-radius: 22px;
+  }
+
+  .status-composer-options {
+    grid-template-columns: 1fr;
+  }
+
+  .status-composer-canvas {
+    min-height: 230px;
+  }
+
+  .status-composer-tab {
+    padding: 9px 5px;
+    font-size: 12px;
+  }
+}

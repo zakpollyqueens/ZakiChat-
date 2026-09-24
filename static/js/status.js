@@ -2432,3 +2432,729 @@ showComposerError(message) {
   }
 
 })();
+
+/* ============================================================
+   ZAKICHAT AURORA STATUS COMPOSER
+   ============================================================ */
+
+(function () {
+  "use strict";
+
+  function initComposer() {
+    const composer = document.getElementById("statusComposer");
+    if (!composer) return;
+
+    const text = document.getElementById("statusText");
+    const media = document.getElementById("statusMedia");
+    const caption = document.getElementById("statusCaption");
+    const preview = document.getElementById("statusMediaPreview");
+    const textPreview = document.getElementById("statusTextPreview");
+    const canvas = document.getElementById("statusComposerCanvas");
+    const count = document.getElementById("statusCharacterCount");
+    const error = document.getElementById("composerError");
+
+    const state = {
+      mode: "text",
+      font: "system",
+      background: "aurora",
+      music: "None",
+      voiceBlob: null,
+      voiceRecorder: null,
+      voiceChunks: [],
+      voiceTimer: null,
+      voiceStarted: 0
+    };
+
+    function showError(message) {
+      if (!error) return;
+      error.textContent = message;
+      error.hidden = false;
+    }
+
+    function clearError() {
+      if (!error) return;
+      error.textContent = "";
+      error.hidden = true;
+    }
+
+    function updatePreview() {
+      if (textPreview) {
+        textPreview.textContent =
+          text?.value.trim() || "What's on your mind?";
+
+        textPreview.className =
+          "status-text-preview" +
+          (state.font !== "system"
+            ? " font-" + state.font
+            : "");
+      }
+
+      if (canvas) {
+        canvas.className =
+          "status-composer-canvas" +
+          (state.background !== "aurora"
+            ? " bg-" + state.background
+            : "");
+      }
+
+      if (count && text) {
+        count.textContent = text.value.length;
+      }
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+
+      document.querySelectorAll("[data-composer-mode]")
+        .forEach(button => {
+          button.classList.toggle(
+            "active",
+            button.dataset.composerMode === mode
+          );
+        });
+
+      const textTools =
+        document.getElementById("statusTextTools");
+
+      const mediaTools =
+        document.getElementById("statusMediaTools");
+
+      const voiceTools =
+        document.getElementById("statusVoiceTools");
+
+      const textPreviewElement =
+        document.getElementById("statusTextPreview");
+
+      const mediaPreviewElement =
+        document.getElementById("statusMediaPreview");
+
+      const voicePreviewElement =
+        document.getElementById("statusVoicePreview");
+
+      if (textTools) textTools.hidden = mode !== "text";
+      if (mediaTools) mediaTools.hidden = mode !== "media";
+      if (voiceTools) voiceTools.hidden = mode !== "voice";
+
+      if (textPreviewElement) {
+        textPreviewElement.hidden = mode !== "text";
+      }
+
+      if (mediaPreviewElement) {
+        mediaPreviewElement.hidden = mode !== "media";
+      }
+
+      if (voicePreviewElement) {
+        voicePreviewElement.hidden = mode !== "voice";
+      }
+
+      clearError();
+    }
+
+    function openComposer() {
+      clearError();
+      composer.hidden = false;
+      setMode("text");
+      updatePreview();
+
+      setTimeout(() => {
+        text?.focus();
+      }, 80);
+    }
+
+    function closeComposer() {
+      stopVoiceRecording();
+      composer.hidden = true;
+    }
+
+    function toggleTray(name) {
+      const map = {
+        emoji: "statusEmojiTray",
+        sticker: "statusStickerTray",
+        font: "statusFontTray",
+        background: "statusBackgroundTray",
+        music: "statusMusicTray"
+      };
+
+      const target = map[name];
+      if (!target) return;
+
+      document.querySelectorAll(".status-choice-tray")
+        .forEach(tray => {
+          if (tray.id !== target) tray.hidden = true;
+        });
+
+      const tray = document.getElementById(target);
+
+      if (tray) {
+        tray.hidden = !tray.hidden;
+      }
+    }
+
+    function previewMedia(file) {
+      if (!preview) return;
+
+      preview.innerHTML = "";
+
+      if (!file) {
+        preview.hidden = true;
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+
+      if (file.type.startsWith("video/")) {
+        const video = document.createElement("video");
+
+        video.src = url;
+        video.controls = true;
+        video.muted = true;
+        video.playsInline = true;
+
+        preview.appendChild(video);
+      } else if (file.type.startsWith("image/")) {
+        const image = document.createElement("img");
+
+        image.src = url;
+        image.alt = "Status preview";
+
+        preview.appendChild(image);
+      }
+
+      preview.hidden = false;
+    }
+
+    function startVoiceTimer() {
+      state.voiceStarted = Date.now();
+
+      const time =
+        document.getElementById("statusVoiceTime");
+
+      state.voiceTimer = setInterval(() => {
+        const seconds = Math.floor(
+          (Date.now() - state.voiceStarted) / 1000
+        );
+
+        const minutes =
+          String(Math.floor(seconds / 60)).padStart(2, "0");
+
+        const remaining =
+          String(seconds % 60).padStart(2, "0");
+
+        if (time) {
+          time.textContent =
+            minutes + ":" + remaining;
+        }
+      }, 250);
+    }
+
+    function stopVoiceTimer() {
+      if (state.voiceTimer) {
+        clearInterval(state.voiceTimer);
+        state.voiceTimer = null;
+      }
+    }
+
+    async function startVoiceRecording() {
+      if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia ||
+        !window.MediaRecorder
+      ) {
+        showError(
+          "Voice recording is not supported on this device."
+        );
+        return;
+      }
+
+      if (state.voiceRecorder) return;
+
+      try {
+        const stream =
+          await navigator.mediaDevices.getUserMedia({
+            audio: true
+          });
+
+        state.voiceChunks = [];
+
+        const recorder =
+          new MediaRecorder(stream);
+
+        state.voiceRecorder = recorder;
+
+        recorder.ondataavailable = event => {
+          if (event.data && event.data.size) {
+            state.voiceChunks.push(event.data);
+          }
+        };
+
+        recorder.onstop = () => {
+          const mime =
+            recorder.mimeType || "audio/webm";
+
+          state.voiceBlob =
+            new Blob(state.voiceChunks, {
+              type: mime
+            });
+
+          stream.getTracks().forEach(
+            track => track.stop()
+          );
+
+          state.voiceRecorder = null;
+
+          const clearButton =
+            document.getElementById(
+              "statusVoiceClearButton"
+            );
+
+          if (clearButton) {
+            clearButton.hidden = false;
+          }
+
+          const recordButton =
+            document.getElementById(
+              "statusRecordButton"
+            );
+
+          if (recordButton) {
+            recordButton.classList.remove(
+              "recording"
+            );
+
+            recordButton.textContent =
+              "🎙 Hold to record again";
+          }
+
+          stopVoiceTimer();
+        };
+
+        recorder.start();
+        startVoiceTimer();
+
+        const recordButton =
+          document.getElementById(
+            "statusRecordButton"
+          );
+
+        if (recordButton) {
+          recordButton.classList.add("recording");
+          recordButton.textContent =
+            "● Recording… release to stop";
+        }
+
+        clearError();
+
+      } catch (err) {
+        showError(
+          "Microphone permission is required."
+        );
+      }
+    }
+
+    function stopVoiceRecording() {
+      const recorder = state.voiceRecorder;
+
+      if (
+        recorder &&
+        recorder.state === "recording"
+      ) {
+        recorder.stop();
+      }
+
+      stopVoiceTimer();
+    }
+
+    function clearVoiceRecording() {
+      state.voiceBlob = null;
+      state.voiceChunks = [];
+
+      const clearButton =
+        document.getElementById(
+          "statusVoiceClearButton"
+        );
+
+      if (clearButton) {
+        clearButton.hidden = true;
+      }
+
+      const recordButton =
+        document.getElementById(
+          "statusRecordButton"
+        );
+
+      if (recordButton) {
+        recordButton.classList.remove("recording");
+        recordButton.textContent =
+          "🎙 Hold to record";
+      }
+
+      const time =
+        document.getElementById(
+          "statusVoiceTime"
+        );
+
+      if (time) {
+        time.textContent = "00:00";
+      }
+    }
+
+    function resetComposer() {
+      if (text) text.value = "";
+      if (media) media.value = "";
+      if (caption) caption.value = "";
+
+      state.mode = "text";
+      state.font = "system";
+      state.background = "aurora";
+      state.music = "None";
+
+      clearVoiceRecording();
+
+      if (preview) {
+        preview.innerHTML = "";
+        preview.hidden = true;
+      }
+
+      document.querySelectorAll(
+        ".status-choice-tray"
+      ).forEach(tray => {
+        tray.hidden = true;
+      });
+
+      updatePreview();
+      setMode("text");
+    }
+
+    async function publish() {
+      clearError();
+
+      const button =
+        document.getElementById(
+          "publishStatusButton"
+        );
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Posting…";
+      }
+
+      try {
+        const textValue =
+          text?.value.trim() || "";
+
+        const captionValue =
+          caption?.value.trim() || "";
+
+        const selectedFile =
+          media?.files?.[0] || null;
+
+        if (
+          state.mode === "text" &&
+          !textValue
+        ) {
+          throw new Error(
+            "Write something before posting."
+          );
+        }
+
+        if (
+          state.mode === "media" &&
+          !selectedFile
+        ) {
+          throw new Error(
+            "Choose a photo or video first."
+          );
+        }
+
+        if (
+          state.mode === "voice" &&
+          !state.voiceBlob
+        ) {
+          throw new Error(
+            "Record a voice status first."
+          );
+        }
+
+        /*
+         * If the existing StatusPage implementation exposes
+         * publishStatus(), use it so existing Supabase logic,
+         * RLS and status refresh behavior remain intact.
+         */
+        if (
+          window.StatusPage &&
+          typeof window.StatusPage.publishStatus ===
+            "function"
+        ) {
+          window.StatusPage.__composerPayload = {
+            mode: state.mode,
+            text: textValue,
+            caption: captionValue,
+            file: selectedFile,
+            voiceBlob: state.voiceBlob,
+            font: state.font,
+            background: state.background,
+            music: state.music,
+            audience:
+              document.getElementById(
+                "statusAudience"
+              )?.value || "contacts",
+            mentions:
+              document.getElementById(
+                "statusMentions"
+              )?.value.trim() || ""
+          };
+
+          await window.StatusPage.publishStatus(
+            window.StatusPage.__composerPayload
+          );
+
+          resetComposer();
+          closeComposer();
+          return;
+        }
+
+        throw new Error(
+          "Status publishing module is not available."
+        );
+
+      } catch (err) {
+        showError(
+          err?.message ||
+          "Unable to publish this status."
+        );
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Post status";
+        }
+      }
+    }
+
+    document.getElementById("myStatusCard")
+      ?.addEventListener(
+        "click",
+        openComposer
+      );
+
+    document.getElementById("addStatusButton")
+      ?.addEventListener(
+        "click",
+        event => {
+          event.stopPropagation();
+          openComposer();
+        }
+      );
+
+    document.getElementById("closeComposerButton")
+      ?.addEventListener(
+        "click",
+        closeComposer
+      );
+
+    document.querySelectorAll(
+      "[data-composer-mode]"
+    ).forEach(button => {
+      button.addEventListener(
+        "click",
+        () => setMode(
+          button.dataset.composerMode
+        )
+      );
+    });
+
+    document.querySelectorAll(
+      "[data-action]"
+    ).forEach(button => {
+      button.addEventListener(
+        "click",
+        () => toggleTray(
+          button.dataset.action
+        )
+      );
+    });
+
+    document.querySelectorAll(
+      "[data-font]"
+    ).forEach(button => {
+      button.addEventListener(
+        "click",
+        () => {
+          state.font =
+            button.dataset.font;
+
+          updatePreview();
+
+          const tray =
+            document.getElementById(
+              "statusFontTray"
+            );
+
+          if (tray) tray.hidden = true;
+        }
+      );
+    });
+
+    document.querySelectorAll(
+      "[data-bg]"
+    ).forEach(button => {
+      button.addEventListener(
+        "click",
+        () => {
+          state.background =
+            button.dataset.bg;
+
+          updatePreview();
+
+          const tray =
+            document.getElementById(
+              "statusBackgroundTray"
+            );
+
+          if (tray) tray.hidden = true;
+        }
+      );
+    });
+
+    document.querySelectorAll(
+      "[data-music]"
+    ).forEach(button => {
+      button.addEventListener(
+        "click",
+        () => {
+          state.music =
+            button.dataset.music;
+
+          const tray =
+            document.getElementById(
+              "statusMusicTray"
+            );
+
+          if (tray) tray.hidden = true;
+        }
+      );
+    });
+
+    text?.addEventListener(
+      "input",
+      updatePreview
+    );
+
+    media?.addEventListener(
+      "change",
+      event => {
+        previewMedia(
+          event.target.files?.[0]
+        );
+      }
+    );
+
+    document.getElementById(
+      "statusEmojiTray"
+    )?.addEventListener(
+      "click",
+      event => {
+        const emoji =
+          event.target.textContent.trim();
+
+        if (!emoji || !text) return;
+
+        text.value +=
+          (text.value ? " " : "") + emoji;
+
+        text.dispatchEvent(
+          new Event(
+            "input",
+            { bubbles: true }
+          )
+        );
+      }
+    );
+
+    document.getElementById(
+      "statusStickerTray"
+    )?.addEventListener(
+      "click",
+      event => {
+        const sticker =
+          event.target.textContent.trim();
+
+        if (!sticker || !text) return;
+
+        text.value +=
+          (text.value ? " " : "") + sticker;
+
+        text.dispatchEvent(
+          new Event(
+            "input",
+            { bubbles: true }
+          )
+        );
+      }
+    );
+
+    const recordButton =
+      document.getElementById(
+        "statusRecordButton"
+      );
+
+    if (recordButton) {
+
+      recordButton.addEventListener(
+        "pointerdown",
+        event => {
+          event.preventDefault();
+          startVoiceRecording();
+        }
+      );
+
+      [
+        "pointerup",
+        "pointercancel",
+        "pointerleave"
+      ].forEach(type => {
+        recordButton.addEventListener(
+          type,
+          event => {
+            event.preventDefault();
+            stopVoiceRecording();
+          }
+        );
+      });
+    }
+
+    document.getElementById(
+      "statusVoiceClearButton"
+    )?.addEventListener(
+      "click",
+      clearVoiceRecording
+    );
+
+    document.getElementById(
+      "publishStatusButton"
+    )?.addEventListener(
+      "click",
+      publish
+    );
+
+    composer.addEventListener(
+      "click",
+      event => {
+        if (event.target === composer) {
+          closeComposer();
+        }
+      }
+    );
+
+    updatePreview();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initComposer
+    );
+  } else {
+    initComposer();
+  }
+
+})();

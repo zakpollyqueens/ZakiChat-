@@ -391,72 +391,230 @@
   <!-- =======================================================
        CREATE STATUS DIALOG
        ======================================================= -->
-
   <div id="statusComposer" class="status-dialog" hidden>
-    <div class="status-dialog-card">
+    <div class="status-composer-card">
 
-      <div class="status-dialog-header">
+      <header class="status-composer-header">
         <div>
           <span class="status-eyebrow">NEW UPDATE</span>
           <h2>Create status</h2>
         </div>
+        <button id="closeComposerButton"
+                class="status-close-button"
+                type="button">×</button>
+      </header>
 
-        <button
-          id="closeComposerButton"
-          class="status-close-button"
-          type="button"
-          aria-label="Close"
-          title="Close"
-        >
-          ×
+      <div class="status-composer-tabs">
+        <button type="button"
+                class="status-composer-tab active"
+                data-composer-mode="text">Aa Text</button>
+
+        <button type="button"
+                class="status-composer-tab"
+                data-composer-mode="media">▣ Photo / Video</button>
+
+        <button type="button"
+                class="status-composer-tab"
+                data-composer-mode="voice">● Voice</button>
+      </div>
+
+      <div id="statusComposerCanvas"
+           class="status-composer-canvas">
+
+        <div id="statusTextPreview"
+             class="status-text-preview">
+          What's on your mind?
+        </div>
+
+        <div id="statusMediaPreview"
+             class="status-media-preview"
+             hidden></div>
+
+        <div id="statusVoicePreview"
+             class="status-voice-preview"
+             hidden>
+          <div class="status-voice-wave">
+            ▁▃▆▇▅▂▆▃▁
+          </div>
+          <span id="statusVoiceTime">00:00</span>
+        </div>
+
+      </div>
+
+      <section id="statusTextTools"
+               class="status-tool-panel">
+
+        <textarea id="statusText"
+                  maxlength="700"
+                  rows="4"
+                  placeholder="Write a status…"></textarea>
+
+        <div class="status-character-count">
+          <span id="statusCharacterCount">0</span>/700
+        </div>
+
+        <div class="status-tool-row">
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="emoji">😊 Emoji</button>
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="sticker">✨ Sticker</button>
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="font">Aa Font</button>
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="background">◉ Background</button>
+        </div>
+
+        <div id="statusEmojiTray"
+             class="status-choice-tray"
+             hidden>
+          😀 😎 ❤️ 😂 🔥 🎉 🙏 ✨ 👍 🥰
+        </div>
+
+        <div id="statusStickerTray"
+             class="status-choice-tray"
+             hidden>
+          ⭐ 🌈 💫 🎵 🚀 💎 🌸 🦋
+        </div>
+
+        <div id="statusFontTray"
+             class="status-choice-tray"
+             hidden>
+          <button data-font="system">System</button>
+          <button data-font="serif">Serif</button>
+          <button data-font="mono">Mono</button>
+          <button data-font="round">Round</button>
+        </div>
+
+        <div id="statusBackgroundTray"
+             class="status-choice-tray"
+             hidden>
+          <button data-bg="aurora">Aurora</button>
+          <button data-bg="violet">Violet</button>
+          <button data-bg="ocean">Ocean</button>
+          <button data-bg="ember">Ember</button>
+          <button data-bg="midnight">Midnight</button>
+        </div>
+
+      </section>
+
+      <section id="statusMediaTools"
+               class="status-tool-panel"
+               hidden>
+
+        <label class="status-media-picker">
+          <span>＋ Choose photo or video</span>
+          <input id="statusMedia"
+                 type="file"
+                 accept="image/*,video/*">
+        </label>
+
+        <div class="status-tool-row">
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="emoji">😊 Emoji</button>
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="draw">✎ Draw</button>
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="music">♫ Music</button>
+
+          <button type="button"
+                  class="status-tool-button"
+                  data-action="crop">⌗ Crop</button>
+
+        </div>
+
+        <input id="statusCaption"
+               class="status-caption-input"
+               maxlength="300"
+               placeholder="Add a caption…">
+
+        <div id="statusMusicTray"
+             class="status-choice-tray"
+             hidden>
+          <button data-music="None">No music</button>
+          <button data-music="Chill">Chill</button>
+          <button data-music="Afrobeat">Afrobeat</button>
+          <button data-music="Energy">Energy</button>
+          <button data-music="Peaceful">Peaceful</button>
+        </div>
+
+      </section>
+
+      <section id="statusVoiceTools"
+               class="status-tool-panel"
+               hidden>
+
+        <p class="status-voice-help">
+          Hold the button to record your voice status.
+        </p>
+
+        <button id="statusRecordButton"
+                class="status-record-button"
+                type="button">
+          🎙 Hold to record
         </button>
+
+        <button id="statusVoiceClearButton"
+                class="status-secondary-button"
+                type="button"
+                hidden>
+          Remove recording
+        </button>
+
+      </section>
+
+      <div class="status-composer-options">
+
+        <label class="status-option">
+          <span>Who can see this?</span>
+
+          <select id="statusAudience">
+            <option value="contacts">My contacts</option>
+            <option value="all_contacts">All permitted contacts</option>
+            <option value="only_me">Only me</option>
+          </select>
+        </label>
+
+        <label class="status-option">
+          <span>Mentions</span>
+
+          <input id="statusMentions"
+                 maxlength="300"
+                 placeholder="@username (optional)">
+        </label>
+
       </div>
 
-      <textarea
-        id="statusText"
-        maxlength="700"
-        rows="6"
-        placeholder="What's on your mind?"
-      ></textarea>
+      <p id="composerError"
+         class="status-form-error"
+         hidden></p>
 
-      <div class="status-character-count">
-        <span id="statusCharacterCount">0</span>/700
-      </div>
+      <footer class="status-composer-footer">
 
-      <label class="status-media-picker">
-        <span>📷 Add photo or video</span>
+        <button id="publishStatusButton"
+                class="status-primary-button"
+                type="button">
+          Post status
+        </button>
 
-        <input
-          id="statusMedia"
-          type="file"
-          accept="image/*,video/*"
-        >
-      </label>
-
-      <div
-        id="statusMediaPreview"
-        class="status-media-preview"
-        hidden
-      ></div>
-
-      <button
-        id="publishStatusButton"
-        class="status-primary-button"
-        type="button"
-      >
-        Post status
-      </button>
-
-      <p
-        id="composerError"
-        class="status-form-error"
-        hidden
-      ></p>
+      </footer>
 
     </div>
   </div>
 
-  <!-- =======================================================
+<!-- =======================================================
        STATUS VIEWER
        ======================================================= -->
 
