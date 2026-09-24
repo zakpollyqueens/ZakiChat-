@@ -1,24 +1,52 @@
 (function () {
   "use strict";
 
-  const trigger = document.getElementById("admin-secret-trigger");
-  if (!trigger) return;
+  function initAdminEntry() {
+    const trigger = document.getElementById("admin-secret-trigger");
+    if (!trigger || trigger.dataset.adminEntryReady === "true") return;
 
-  let taps = 0;
-  let timer = null;
+    trigger.dataset.adminEntryReady = "true";
 
-  trigger.addEventListener("click", function () {
-    taps += 1;
+    let taps = 0;
+    let timer = null;
 
-    clearTimeout(timer);
-
-    timer = setTimeout(function () {
+    function resetTaps() {
       taps = 0;
-    }, 2500);
-
-    if (taps >= 7) {
-      taps = 0;
-      window.location.href = "admin.html";
+      timer = null;
     }
-  });
+
+    function registerTap(event) {
+      if (
+        event.type === "keydown" &&
+        event.key !== "Enter" &&
+        event.key !== " "
+      ) {
+        return;
+      }
+
+      if (event.type === "keydown") {
+        event.preventDefault();
+      }
+
+      taps += 1;
+
+      clearTimeout(timer);
+      timer = setTimeout(resetTaps, 5000);
+
+      if (taps === 7) {
+        clearTimeout(timer);
+        resetTaps();
+        window.location.href = "admin.html";
+      }
+    }
+
+    trigger.addEventListener("click", registerTap);
+    trigger.addEventListener("keydown", registerTap);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAdminEntry);
+  } else {
+    initAdminEntry();
+  }
 })();
