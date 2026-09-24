@@ -47,15 +47,6 @@
       }
 
       this.userId = userId;
-
-      if (window.ZakiBrowserNotifications) {
-        window.ZakiBrowserNotifications.init(
-          window.ZakiChatConfig,
-          userId
-        );
-      }
-
-      this.setupNotificationControl();
     },
 
     setupNotificationControl() {
