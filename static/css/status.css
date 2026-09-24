@@ -1853,3 +1853,147 @@ body:has(.bottom-nav) {
     transition: none !important;
   }
 }
+
+/* ============================================================
+   ZAKICHAT UPDATES — PERFORMANCE OPTIMIZED BACKGROUND
+   ============================================================ */
+
+.status-page {
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(45,124,255,.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 30%,
+      rgba(39,211,162,.06),
+      transparent 30%
+    );
+}
+
+/* Lightweight animated glow */
+.status-page::before,
+.status-page::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  filter: blur(35px);
+  opacity: .28;
+  will-change: transform;
+}
+
+.status-page::before {
+  left: -70px;
+  top: 15%;
+  background: rgba(45,124,255,.20);
+  animation: zakiLightMoveOne 18s ease-in-out infinite alternate;
+}
+
+.status-page::after {
+  right: -70px;
+  bottom: 15%;
+  background: rgba(39,211,162,.16);
+  animation: zakiLightMoveTwo 22s ease-in-out infinite alternate;
+}
+
+@keyframes zakiLightMoveOne {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  50% {
+    transform: translate3d(80px,70px,0);
+  }
+
+  100% {
+    transform: translate3d(20px,150px,0);
+  }
+}
+
+@keyframes zakiLightMoveTwo {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  50% {
+    transform: translate3d(-70px,-60px,0);
+  }
+
+  100% {
+    transform: translate3d(-20px,-130px,0);
+  }
+}
+
+/* Remove the expensive moving sweep */
+.status-shell::before {
+  display: none;
+}
+
+/* Keep cards visually rich without expensive blur */
+.status-item,
+.my-status-card,
+.status-list {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Lightweight interaction */
+.status-item {
+  transition:
+    background-color .12s ease,
+    transform .12s ease;
+}
+
+.status-item:active {
+  transform: scale(.995);
+}
+
+/* Keep composer backdrop smooth */
+.status-dialog {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(0,0,0,.68);
+}
+
+/* Avoid expensive glass blur on mobile */
+.status-dialog-header {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: var(--card-bg, #fff);
+}
+
+@media (max-width: 600px) {
+  .status-page::before,
+  .status-page::after {
+    width: 130px;
+    height: 130px;
+    filter: blur(28px);
+    opacity: .22;
+  }
+
+  .status-page {
+    background:
+      radial-gradient(
+        circle at 20% 5%,
+        rgba(45,124,255,.06),
+        transparent 35%
+      ),
+      radial-gradient(
+        circle at 80% 35%,
+        rgba(39,211,162,.045),
+        transparent 32%
+      );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-page::before,
+  .status-page::after {
+    animation: none;
+  }
+}
