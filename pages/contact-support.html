@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & Support | ZakiChat</title>
+  <link rel="stylesheet" href="../static/css/contact-support.css">
+</head>
+
+<body class="support-page">
+
+  <main class="support-shell">
+
+    <header class="support-header">
+      <a href="settings.html" class="support-back" aria-label="Back to Settings">‹</a>
+
+      <div>
+        <div class="support-eyebrow">ZAKICHAT SUPPORT</div>
+        <h1>Contact & Support</h1>
+        <p>Send a message directly to the ZakiChat support team.</p>
+      </div>
+    </header>
+
+    <section class="support-compose-card">
+
+      <div class="support-card-heading">
+        <div class="support-heading-icon">✦</div>
+        <div>
+          <h2>How can we help?</h2>
+          <p>Your message will be delivered to the Admin Control Center.</p>
+        </div>
+      </div>
+
+      <form id="supportComposeForm" novalidate>
+
+        <label for="supportCategory">Category</label>
+        <select id="supportCategory" name="category">
+          <option value="general">General Support</option>
+          <option value="account">Account</option>
+          <option value="payments">Payments</option>
+          <option value="security">Security</option>
+          <option value="bug">Report a Bug</option>
+          <option value="report">Report a User or Content</option>
+          <option value="other">Other</option>
+        </select>
+
+        <label for="supportSubject">Subject</label>
+        <input
+          id="supportSubject"
+          name="subject"
+          type="text"
+          maxlength="120"
+          autocomplete="off"
+          placeholder="What do you need help with?"
+          required
+        >
+
+        <label for="supportMessage">Message</label>
+        <textarea
+          id="supportMessage"
+          name="message"
+          maxlength="5000"
+          rows="8"
+          placeholder="Describe your issue or question..."
+          required
+        ></textarea>
+
+        <div class="support-message-meta">
+          <span id="supportStatusText">Be as clear as possible.</span>
+          <span id="supportCharacterCount">0 / 5000</span>
+        </div>
+
+        <button type="submit" id="supportSubmitButton">
+          <span class="support-submit-icon">➤</span>
+          <span>Send to Support</span>
+        </button>
+
+        <div
+          id="supportFeedback"
+          class="support-feedback"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+      </form>
+
+    </section>
+
+    <section class="support-info-card">
+      <div class="support-info-icon">🔒</div>
+      <div>
+        <strong>Your message is private</strong>
+        <p>
+          Your support request is associated with your ZakiChat account
+          and is visible to authorized support administrators.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/contact-support.js"></script>
+
+</body>
+</html>

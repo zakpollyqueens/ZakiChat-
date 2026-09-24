@@ -460,3 +460,118 @@
     font-size: .62rem !important;
   }
 }
+
+
+/* ============================================================
+   AURORA FLOATING CONTACT & SUPPORT
+   ============================================================ */
+
+.settings-support-float {
+  position: fixed;
+  right: 18px;
+  bottom: calc(82px + env(safe-area-inset-bottom));
+  z-index: 999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  min-height: 48px;
+  padding: 0 17px 0 13px;
+
+  border: 1px solid rgba(120, 255, 230, 0.32);
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(12, 25, 34, 0.96),
+      rgba(17, 43, 49, 0.92)
+    );
+
+  color: #dffff8;
+  text-decoration: none;
+
+  box-shadow:
+    0 0 12px rgba(83, 255, 224, 0.18),
+    0 0 30px rgba(83, 255, 224, 0.10),
+    inset 0 0 14px rgba(83, 255, 224, 0.06);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.settings-support-float:hover,
+.settings-support-float:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(120, 255, 230, 0.65);
+
+  box-shadow:
+    0 0 16px rgba(83, 255, 224, 0.28),
+    0 0 38px rgba(83, 255, 224, 0.16),
+    inset 0 0 18px rgba(83, 255, 224, 0.09);
+}
+
+.settings-support-float:active {
+  transform: scale(0.96);
+}
+
+.settings-support-float-icon {
+  width: 27px;
+  height: 27px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(150, 255, 240, 0.95),
+      rgba(54, 180, 170, 0.28) 55%,
+      rgba(20, 70, 72, 0.18)
+    );
+
+  color: #dffff8;
+  font-size: 14px;
+
+  box-shadow:
+    0 0 10px rgba(83, 255, 224, 0.32);
+}
+
+.settings-support-float-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .settings-support-float {
+    right: 14px;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    min-height: 46px;
+    padding-right: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .settings-support-float {
+    width: 48px;
+    height: 48px;
+    min-height: 48px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .settings-support-float-label {
+    display: none;
+  }
+}
