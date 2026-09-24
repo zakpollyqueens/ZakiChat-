@@ -2951,3 +2951,560 @@ body:has(.bottom-nav) {
     transition: none !important;
   }
 }
+
+/* ============================================================
+   ZAKICHAT AURORA — FINAL DARK-ONLY UPDATES THEME
+   NO WHITE / NO CREAM / NO LIGHT CARDS
+   ============================================================ */
+
+.status-page,
+.status-page * {
+  --aurora-black: #02050b;
+  --aurora-deep: #03101c;
+  --aurora-navy: #06182b;
+  --aurora-blue: #0b2b4a;
+  --aurora-cyan: #00e6c3;
+  --aurora-purple: #704cff;
+}
+
+/* ---------- ENTIRE PAGE ---------- */
+
+.status-page {
+  background:
+    radial-gradient(
+      circle at 12% 12%,
+      rgba(0, 230, 195, .16),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 88% 18%,
+      rgba(35, 110, 255, .18),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 52% 72%,
+      rgba(112, 76, 255, .13),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #01040a 0%,
+      #03101c 42%,
+      #020711 100%
+    ) !important;
+
+  color: #e9ffff !important;
+}
+
+/* ---------- AURORA ---------- */
+
+.status-page::before {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  z-index: -2;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 20% 25%,
+      rgba(0, 255, 210, .20),
+      transparent 22%
+    ),
+    radial-gradient(
+      ellipse at 78% 20%,
+      rgba(0, 110, 255, .20),
+      transparent 24%
+    ),
+    radial-gradient(
+      ellipse at 58% 72%,
+      rgba(116, 60, 255, .16),
+      transparent 27%
+    ),
+    radial-gradient(
+      ellipse at 12% 85%,
+      rgba(0, 180, 255, .12),
+      transparent 22%
+    );
+
+  animation: zakiAuroraFinal 30s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.status-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 65% 35%,
+      rgba(0, 255, 210, .07),
+      transparent 28%
+    ),
+    radial-gradient(
+      ellipse at 30% 65%,
+      rgba(50, 100, 255, .07),
+      transparent 30%
+    );
+
+  animation: zakiAuroraPulseFinal 18s ease-in-out infinite alternate;
+}
+
+@keyframes zakiAuroraFinal {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2%, 1%, 0) scale(1.025);
+  }
+
+  100% {
+    transform: translate3d(-1%, 2%, 0) scale(1.015);
+  }
+}
+
+@keyframes zakiAuroraPulseFinal {
+  0% {
+    opacity: .55;
+    transform: translate3d(-1%, 0, 0);
+  }
+
+  100% {
+    opacity: .95;
+    transform: translate3d(1%, -1%, 0);
+  }
+}
+
+/* ---------- KILL OLD LIGHT EFFECTS ---------- */
+
+.status-shell::before {
+  display: none !important;
+}
+
+.status-page * {
+  scrollbar-color: #123553 #020711;
+}
+
+.status-page ::-webkit-scrollbar {
+  width: 5px;
+}
+
+.status-page ::-webkit-scrollbar-track {
+  background: #020711;
+}
+
+.status-page ::-webkit-scrollbar-thumb {
+  background: #164563;
+  border-radius: 99px;
+}
+
+
+/* ============================================================
+   ALL MAIN SURFACES — DARK ONLY
+   ============================================================ */
+
+.status-shell,
+.status-content,
+.status-main,
+.status-section,
+.status-list,
+.status-empty,
+.my-status-card,
+.calls-section,
+.update-showcase-section,
+.releases-updates-section,
+.channels-updates-section {
+  color: #eaffff !important;
+}
+
+/* Kill common white backgrounds */
+.status-page .card,
+.status-page .panel,
+.status-page .section,
+.status-page .modal,
+.status-page .dialog,
+.status-page .status-card,
+.status-page .status-item,
+.status-page .my-status-card {
+  background-color: transparent;
+}
+
+/* ---------- MY STATUS ---------- */
+
+.my-status-card {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 214, 184, .10),
+      rgba(5, 30, 58, .88)
+    ) !important;
+
+  border: 1px solid rgba(0, 229, 195, .16) !important;
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.my-status-info strong,
+.my-status-card strong {
+  color: #ffffff !important;
+}
+
+.my-status-info span,
+.my-status-card span {
+  color: rgba(220,245,250,.60) !important;
+}
+
+
+/* ============================================================
+   STATUS LIST
+   ============================================================ */
+
+.status-list {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(5, 25, 47, .88),
+      rgba(2, 11, 23, .94)
+    ) !important;
+
+  border: 1px solid rgba(48, 137, 190, .16) !important;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+.status-item {
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+.status-item:hover {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,220,190,.08),
+      rgba(30,100,255,.06)
+    ) !important;
+}
+
+.status-item-info strong {
+  color: #ffffff !important;
+}
+
+.status-item-info span {
+  color: rgba(215,235,245,.56) !important;
+}
+
+
+/* ============================================================
+   SHOWCASE / RELEASES / CHANNELS / CALLS
+   ============================================================ */
+
+.calls-section,
+.update-showcase-section,
+.releases-updates-section,
+.channels-updates-section {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(6, 28, 54, .88),
+      rgba(2, 12, 25, .94)
+    ) !important;
+
+  border: 1px solid rgba(54, 135, 195, .15) !important;
+
+  box-shadow:
+    0 20px 48px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+.calls-section *,
+.update-showcase-section *,
+.releases-updates-section *,
+.channels-updates-section * {
+  color: inherit;
+}
+
+.calls-section h2,
+.update-showcase-section h2,
+.releases-updates-section h2,
+.channels-updates-section h2 {
+  color: #ffffff !important;
+}
+
+.calls-section p,
+.update-showcase-section p,
+.releases-updates-section p,
+.channels-updates-section p {
+  color: rgba(215,235,245,.58) !important;
+}
+
+
+/* ============================================================
+   CREATE STATUS — COMPLETELY DARK
+   ============================================================ */
+
+.status-dialog {
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(0, 230, 195, .08),
+      transparent 32%
+    ),
+    rgba(0, 3, 9, .94) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.status-dialog-card {
+  background:
+    linear-gradient(
+      145deg,
+      #071c32 0%,
+      #041221 48%,
+      #020a15 100%
+    ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid rgba(43, 164, 207, .20) !important;
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.72),
+    0 0 55px rgba(0,190,210,.07),
+    inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.status-dialog-header {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(12, 48, 78, .70),
+      rgba(4, 17, 32, .45)
+    ) !important;
+
+  border-bottom: 1px solid rgba(70,150,200,.13) !important;
+}
+
+.status-dialog-header h2 {
+  color: #ffffff !important;
+}
+
+.status-dialog-card #statusText {
+  background:
+    linear-gradient(
+      145deg,
+      #09243b,
+      #041423
+    ) !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid rgba(40,160,200,.18) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+.status-dialog-card #statusText::placeholder {
+  color: rgba(205,230,240,.38) !important;
+}
+
+.status-dialog-card #statusText:focus {
+  border-color: rgba(0,230,195,.50) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(0,230,195,.08),
+    0 0 30px rgba(0,230,195,.06) !important;
+}
+
+.status-media-picker {
+  background:
+    linear-gradient(
+      145deg,
+      #0a2b42,
+      #051827
+    ) !important;
+
+  color: #e9ffff !important;
+
+  border: 1px solid rgba(0,190,220,.17) !important;
+}
+
+.status-media-picker:hover {
+  background:
+    linear-gradient(
+      145deg,
+      #0b3a4b,
+      #062034
+    ) !important;
+
+  border-color: rgba(0,230,195,.38) !important;
+}
+
+.status-primary-button {
+  background:
+    linear-gradient(
+      135deg,
+      #00e6b8,
+      #00cbd0 48%,
+      #2678ff
+    ) !important;
+
+  color: #00100d !important;
+
+  border: 0 !important;
+
+  box-shadow:
+    0 12px 32px rgba(0,220,190,.20),
+    inset 0 1px 0 rgba(255,255,255,.20) !important;
+}
+
+
+/* ============================================================
+   CLOSE BUTTON
+   ============================================================ */
+
+.status-close-button {
+  background: #0a2239 !important;
+  color: #dffcff !important;
+
+  border: 1px solid rgba(80,160,210,.16) !important;
+}
+
+.status-close-button:hover {
+  background: #0e3552 !important;
+}
+
+
+/* ============================================================
+   BOTTOM NAV — DARK AURORA
+   ============================================================ */
+
+.status-page .bottom-nav {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(3, 14, 29, .98),
+      rgba(1, 7, 16, .99)
+    ) !important;
+
+  border: 1px solid rgba(55,135,195,.16) !important;
+
+  box-shadow:
+    0 -10px 40px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+.status-page .bottom-nav a {
+  background: transparent !important;
+  color: rgba(210,230,240,.55) !important;
+}
+
+.status-page .bottom-nav a.selected {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,230,195,.13),
+      rgba(35,105,255,.14)
+    ) !important;
+
+  color: #35f3c3 !important;
+}
+
+
+/* ============================================================
+   REMOVE ANY REMAINING LIGHT BACKGROUNDS
+   ============================================================ */
+
+.status-page input,
+.status-page textarea,
+.status-page select,
+.status-page button {
+  color-scheme: dark;
+}
+
+.status-page input:not([type="file"]),
+.status-page textarea,
+.status-page select {
+  background-color: #061525 !important;
+  color: #ffffff !important;
+}
+
+.status-page button {
+  color-scheme: dark;
+}
+
+.status-page [style*="background: white"],
+.status-page [style*="background:white"],
+.status-page [style*="background: #fff"],
+.status-page [style*="background:#fff"],
+.status-page [style*="background-color: white"],
+.status-page [style*="background-color: #fff"] {
+  background: #061525 !important;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .status-page {
+    background:
+      radial-gradient(
+        circle at 15% 8%,
+        rgba(0,230,195,.12),
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at 90% 20%,
+        rgba(30,100,255,.14),
+        transparent 32%
+      ),
+      linear-gradient(
+        180deg,
+        #01040a,
+        #03101c 50%,
+        #020711
+      ) !important;
+  }
+
+  .status-page::before {
+    inset: -10%;
+    animation-duration: 36s;
+  }
+
+  .status-page::after {
+    animation-duration: 25s;
+  }
+
+  .status-dialog {
+    padding: 7px !important;
+  }
+
+  .status-dialog-card {
+    border-radius: 27px 27px 18px 18px !important;
+  }
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .status-page::before,
+  .status-page::after {
+    animation: none !important;
+  }
+}
