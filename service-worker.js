@@ -42,6 +42,16 @@ self.addEventListener("push", event => {
         ? `zakichat-${data.notificationId}`
         : "zakichat-notification",
     renotify: true,
+    actions: [
+      {
+        action: "reply",
+        title: "Reply"
+      },
+      {
+        action: "open",
+        title: "Open"
+      }
+    ],
     data: {
       actorId:
         data.actorId || "",
@@ -73,11 +83,16 @@ self.addEventListener(
     const actorId =
       data.actorId || "";
 
+    const replyMode =
+      event.action === "reply";
+
     const targetUrl =
       actorId
         ? `/pages/chats.html?user=${encodeURIComponent(
             actorId
-          )}`
+          )}${replyMode ? `&replyMessageId=${encodeURIComponent(
+            data.messageId || ""
+          )}` : ""}`
         : "/pages/notifications.html";
 
     event.waitUntil(

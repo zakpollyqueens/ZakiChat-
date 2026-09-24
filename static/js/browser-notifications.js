@@ -317,6 +317,16 @@
             tag: notification.id
               ? `zakichat-${notification.id}`
               : "zakichat-notification",
+            actions: [
+              {
+                action: "reply",
+                title: "Reply"
+              },
+              {
+                action: "open",
+                title: "Open"
+              }
+            ],
             data: {
               actorId:
                 notification.actor_id || "",
