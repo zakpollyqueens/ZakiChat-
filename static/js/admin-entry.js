@@ -1,16 +1,13 @@
 (function () {
   "use strict";
 
-  const version =
-    document.getElementById("current-version");
-
-  if (!version) return;
+  const trigger = document.getElementById("admin-secret-trigger");
+  if (!trigger) return;
 
   let taps = 0;
   let timer = null;
 
-  version.addEventListener("click", function () {
-
+  trigger.addEventListener("click", function () {
     taps += 1;
 
     clearTimeout(timer);
@@ -21,9 +18,7 @@
 
     if (taps >= 7) {
       taps = 0;
-
       window.location.href = "admin.html";
     }
   });
-
 })();
