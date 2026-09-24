@@ -1997,3 +1997,957 @@ body:has(.bottom-nav) {
     animation: none;
   }
 }
+
+======================================
+   ZAKICHAT UPDATES — COMPLETE DARK AURORA UI
+   Reference design inspired / mobile-first
+   ============================================================ */
+
+.status-page {
+  position: relative !important;
+  isolation: isolate;
+  overflow-x: hidden;
+
+  min-height: 100vh;
+
+  color: #f7f9ff !important;
+
+  background:
+    radial-gradient(
+      circle at 15% 8%,
+      rgba(0, 224, 190, .13),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 88% 20%,
+      rgba(40, 100, 255, .15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 52% 75%,
+      rgba(125, 65, 255, .12),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #020817 0%,
+      #061126 48%,
+      #020713 100%
+    ) !important;
+}
+
+/* ============================================================
+   ANIMATED AURORA
+   ============================================================ */
+
+.status-page::before {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  z-index: -2;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 18% 28%,
+      rgba(0, 255, 204, .18),
+      transparent 23%
+    ),
+    radial-gradient(
+      ellipse at 78% 22%,
+      rgba(0, 120, 255, .18),
+      transparent 25%
+    ),
+    radial-gradient(
+      ellipse at 52% 72%,
+      rgba(125, 58, 237, .16),
+      transparent 27%
+    ),
+    radial-gradient(
+      ellipse at 12% 88%,
+      rgba(0, 90, 255, .13),
+      transparent 22%
+    );
+
+  animation: zakiUpdatesAurora 32s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.status-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 68% 38%,
+      rgba(0, 255, 200, .07),
+      transparent 30%
+    ),
+    radial-gradient(
+      ellipse at 30% 66%,
+      rgba(75, 90, 255, .07),
+      transparent 31%
+    );
+
+  animation: zakiUpdatesGlow 22s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+@keyframes zakiUpdatesAurora {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2%, 1%, 0) scale(1.025);
+  }
+
+  100% {
+    transform: translate3d(-1%, 2%, 0) scale(1.015);
+  }
+}
+
+@keyframes zakiUpdatesGlow {
+  0% {
+    opacity: .55;
+    transform: translate3d(-1%, 0, 0);
+  }
+
+  50% {
+    opacity: .95;
+    transform: translate3d(1%, -1%, 0);
+  }
+
+  100% {
+    opacity: .65;
+    transform: translate3d(0, 1%, 0);
+  }
+}
+
+/* Remove old expensive animation */
+.status-shell::before {
+  display: none !important;
+}
+
+.status-page::before,
+.status-page::after {
+  filter: none !important;
+}
+
+
+/* ============================================================
+   PAGE CONTAINER
+   ============================================================ */
+
+.status-shell {
+  position: relative;
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 24px 18px 125px !important;
+}
+
+.status-header {
+  align-items: center;
+  margin-bottom: 24px !important;
+}
+
+.status-header h1 {
+  color: #ffffff !important;
+  font-size: clamp(29px, 7vw, 38px) !important;
+  font-weight: 850;
+  letter-spacing: -.035em;
+}
+
+.status-header p {
+  color: rgba(225, 235, 255, .65) !important;
+  font-size: 13px;
+}
+
+.status-eyebrow,
+.status-section-eyebrow {
+  color: #42f5c9 !important;
+  opacity: .82 !important;
+  font-size: 10px !important;
+  letter-spacing: .17em !important;
+}
+
+.status-refresh-button,
+.calls-refresh-button {
+  border: 1px solid rgba(79, 224, 255, .18) !important;
+  background: rgba(7, 24, 48, .68) !important;
+  color: #45f4cb !important;
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+
+/* ============================================================
+   MY STATUS — WHATSAPP-STYLE
+   ============================================================ */
+
+.my-status-card {
+  position: relative;
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 13px 15px !important;
+  margin-bottom: 30px !important;
+
+  border: 1px solid rgba(89, 204, 255, .14) !important;
+  border-radius: 22px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 219, 184, .10),
+      rgba(23, 53, 112, .27)
+    ) !important;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.27),
+    inset 0 1px 0 rgba(255,255,255,.045);
+
+  overflow: hidden;
+}
+
+.my-status-card::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right: -90px;
+  top: -100px;
+  border-radius: 50%;
+  background: rgba(0, 235, 193, .10);
+  pointer-events: none;
+}
+
+.my-status-card::after {
+  display: none !important;
+}
+
+.my-status-avatar {
+  position: relative;
+  width: 60px !important;
+  height: 60px !important;
+  flex-basis: 60px !important;
+
+  border: 3px solid #25e8a9 !important;
+
+  background: #09172b !important;
+
+  box-shadow:
+    0 0 0 3px rgba(37,232,169,.10),
+    0 8px 22px rgba(0,0,0,.30);
+}
+
+.my-status-avatar-placeholder {
+  color: #63f6d0 !important;
+}
+
+.my-status-plus {
+  width: 23px !important;
+  height: 23px !important;
+
+  border: 2px solid #061126 !important;
+  background: #25e8a9 !important;
+  color: #03111c !important;
+
+  box-shadow: 0 4px 12px rgba(37,232,169,.30);
+}
+
+.my-status-info strong {
+  color: #ffffff !important;
+  font-size: 16px !important;
+}
+
+.my-status-info span {
+  color: rgba(225,235,255,.62) !important;
+}
+
+.status-add-button {
+  border: 1px solid rgba(37,232,169,.28) !important;
+  background:
+    radial-gradient(
+      circle,
+      rgba(37,232,169,.18),
+      rgba(37,232,169,.05)
+    ) !important;
+  color: #39efc1 !important;
+  box-shadow: 0 7px 20px rgba(0,0,0,.18);
+}
+
+
+/* ============================================================
+   STATUS LIST
+   ============================================================ */
+
+.status-section {
+  margin-bottom: 30px !important;
+}
+
+.status-section-heading {
+  padding: 0 4px !important;
+  margin-bottom: 11px !important;
+}
+
+.status-section-heading h2 {
+  color: #ffffff !important;
+  font-size: 18px !important;
+}
+
+.status-section-heading > span {
+  color: #48efc6 !important;
+  background: rgba(37,232,169,.09) !important;
+  border: 1px solid rgba(37,232,169,.15) !important;
+}
+
+.status-list {
+  gap: 0 !important;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(85, 155, 255, .12);
+
+  border-radius: 21px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(10, 30, 59, .78),
+      rgba(4, 15, 31, .72)
+    ) !important;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.status-item {
+  min-height: 72px;
+
+  padding: 11px 14px !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+
+  background: transparent !important;
+
+  color: #ffffff !important;
+}
+
+.status-item + .status-item::before {
+  background: rgba(125,170,230,.11) !important;
+}
+
+.status-item:hover {
+  background: rgba(34,78,125,.22) !important;
+}
+
+.status-item:active {
+  transform: scale(.994);
+}
+
+.status-avatar {
+  width: 54px !important;
+  height: 54px !important;
+  flex-basis: 54px !important;
+
+  border: 3px solid rgba(119,145,180,.40) !important;
+
+  background: #08172b !important;
+
+  box-shadow: 0 7px 17px rgba(0,0,0,.25);
+}
+
+.status-item.status-unseen .status-avatar {
+  border-color: #25e99d !important;
+
+  box-shadow:
+    0 0 0 3px rgba(37,233,157,.10),
+    0 7px 18px rgba(0,0,0,.28);
+}
+
+.status-item-info strong {
+  color: #ffffff !important;
+  font-size: 15px !important;
+}
+
+.status-item-info span {
+  color: rgba(220,230,250,.58) !important;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.status-empty,
+.calls-empty {
+  color: rgba(220,230,250,.70) !important;
+
+  border: 1px solid rgba(80,140,220,.09);
+  border-radius: 20px;
+
+  background: rgba(5,18,37,.45);
+}
+
+.status-empty h3,
+.calls-empty h3 {
+  color: #ffffff !important;
+}
+
+
+/* ============================================================
+   CALLS
+   ============================================================ */
+
+.calls-section {
+  padding: 19px !important;
+
+  border: 1px solid rgba(90,150,255,.13) !important;
+  border-radius: 23px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8,27,54,.82),
+      rgba(3,14,30,.78)
+    ) !important;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.23),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.calls-section-heading h2 {
+  color: #ffffff !important;
+}
+
+.calls-section-heading p {
+  color: rgba(220,230,250,.58) !important;
+}
+
+.calls-summary-card {
+  border: 1px solid rgba(95,155,255,.08);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24,53,93,.65),
+      rgba(7,22,43,.75)
+    ) !important;
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.calls-summary-card.missed {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(150,25,75,.20),
+      rgba(45,14,42,.50)
+    ) !important;
+}
+
+.calls-summary-number {
+  color: #ffffff !important;
+}
+
+.calls-summary-label {
+  color: rgba(220,230,250,.55) !important;
+}
+
+
+/* ============================================================
+   SHOWCASE / RELEASES / CHANNELS
+   ============================================================ */
+
+.update-showcase-section,
+.releases-updates-section,
+.channels-updates-section {
+  border: 1px solid rgba(87,150,255,.13) !important;
+  border-radius: 23px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8,27,55,.82),
+      rgba(3,14,30,.76)
+    ) !important;
+
+  box-shadow:
+    0 18px 42px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+.update-showcase-heading h2,
+.releases-updates-heading h2,
+.channels-updates-heading h2 {
+  color: #ffffff !important;
+}
+
+.update-showcase-heading p,
+.releases-updates-heading p,
+.channels-updates-heading p {
+  color: rgba(220,230,250,.60) !important;
+}
+
+.channels-updates-card,
+.release-update-card {
+  border-color: rgba(90,155,255,.12) !important;
+  background: rgba(7,23,47,.60) !important;
+}
+
+
+/* ============================================================
+   BOTTOM NAVIGATION
+   ============================================================ */
+
+.status-page .bottom-nav {
+  border: 1px solid rgba(95,150,255,.13) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(3,12,27,.96),
+      rgba(2,8,20,.97)
+    ) !important;
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.status-page .bottom-nav a {
+  color: rgba(210,220,240,.66) !important;
+  background: transparent !important;
+}
+
+.status-page .bottom-nav a.selected {
+  color: #32f3c1 !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(0,225,190,.13),
+      rgba(40,100,255,.13)
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 5px 18px rgba(0,0,0,.20);
+}
+
+.status-page .bottom-nav a.selected .bottom-nav-icon {
+  filter: drop-shadow(0 0 8px rgba(50,243,193,.32));
+}
+
+
+/* ============================================================
+   CREATE STATUS COMPOSER
+   Same dark aurora visual language
+   ============================================================ */
+
+.status-dialog {
+  position: fixed !important;
+  inset: 0 !important;
+
+  z-index: 9999 !important;
+
+  display: grid;
+  place-items: center;
+
+  padding: 18px;
+
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(0,230,190,.10),
+      transparent 30%
+    ),
+    rgba(1,7,17,.88) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Animated glow behind composer */
+.status-dialog::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(0,235,193,.10),
+      transparent 65%
+    );
+
+  pointer-events: none;
+  animation: zakiComposerGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes zakiComposerGlow {
+  from {
+    opacity: .55;
+    transform: translate(-50%, -50%) scale(.94);
+  }
+
+  to {
+    opacity: .9;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+}
+
+.status-dialog-card {
+  position: relative !important;
+
+  width: min(500px, 100%) !important;
+  max-height: min(720px, calc(100vh - 30px)) !important;
+
+  overflow-y: auto;
+
+  padding: 0 !important;
+
+  border: 1px solid rgba(79,185,255,.17) !important;
+  border-radius: 27px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(9,31,61,.98),
+      rgba(3,15,32,.98)
+    ) !important;
+
+  color: #ffffff !important;
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.62),
+    0 0 60px rgba(0,180,220,.07),
+    inset 0 1px 0 rgba(255,255,255,.05);
+
+  animation: zakiComposerEnter .32s cubic-bezier(.18,.9,.25,1.12) both !important;
+}
+
+.status-dialog-card::before {
+  content: "";
+  display: block;
+
+  width: 42px;
+  height: 4px;
+
+  margin: 9px auto 0;
+
+  border-radius: 999px;
+
+  background: rgba(160,190,220,.28);
+}
+
+
+/* Composer header */
+
+.status-dialog-header {
+  position: relative !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 17px 18px 15px !important;
+
+  border-bottom: 1px solid rgba(100,150,210,.12) !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17,48,86,.48),
+      rgba(5,20,40,.12)
+    ) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.status-dialog-header h2 {
+  color: #ffffff !important;
+  font-size: 21px !important;
+}
+
+.status-dialog-header > div::after {
+  color: rgba(215,230,250,.55) !important;
+}
+
+
+/* Composer close button */
+
+.status-close-button {
+  border: 1px solid rgba(105,155,220,.15) !important;
+
+  background:
+    rgba(30,60,95,.42) !important;
+
+  color: #dceaff !important;
+
+  box-shadow: 0 6px 17px rgba(0,0,0,.22);
+}
+
+.status-close-button:hover {
+  background: rgba(40,90,130,.52) !important;
+  color: #ffffff !important;
+}
+
+
+/* Text area */
+
+.status-dialog-card #statusText {
+  color: #ffffff !important;
+
+  border: 1px solid rgba(82,155,220,.15) !important;
+  border-radius: 20px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(13,39,70,.82),
+      rgba(5,20,40,.82)
+    ) !important;
+
+  caret-color: #35f2c3;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.status-dialog-card #statusText::placeholder {
+  color: rgba(210,225,245,.42) !important;
+}
+
+.status-dialog-card #statusText:focus {
+  border-color: rgba(39,232,177,.48) !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(12,48,71,.92),
+      rgba(5,23,42,.92)
+    ) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(39,232,177,.08),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+.status-character-count {
+  color: rgba(210,225,245,.50) !important;
+}
+
+
+/* Media picker */
+
+.status-media-picker {
+  color: #dffcff !important;
+
+  border: 1px solid rgba(74,180,220,.15) !important;
+  border-radius: 18px !important;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(17,53,77,.62),
+      rgba(7,26,48,.72)
+    ) !important;
+}
+
+.status-media-picker:hover {
+  border-color: rgba(40,235,187,.35) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15,73,78,.72),
+      rgba(8,31,52,.82)
+    ) !important;
+}
+
+
+/* Publish button */
+
+.status-primary-button {
+  min-height: 54px !important;
+
+  border: 0 !important;
+  border-radius: 18px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #18e6aa 0%,
+      #16cfc4 42%,
+      #287bff 100%
+    ) !important;
+
+  color: #001713 !important;
+
+  font-weight: 850 !important;
+
+  box-shadow:
+    0 12px 30px rgba(18,225,182,.18),
+    inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.status-primary-button:hover {
+  box-shadow:
+    0 15px 35px rgba(18,225,182,.27),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+
+/* Composer animation */
+
+@keyframes zakiComposerEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(.94);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.008);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* ============================================================
+   MOBILE COMPOSER — WHATSAPP-LIKE BOTTOM SHEET
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .status-shell {
+    padding:
+      17px
+      10px
+      115px !important;
+  }
+
+  .status-dialog {
+    place-items: end center !important;
+    padding: 7px !important;
+  }
+
+  .status-dialog-card {
+    width: 100% !important;
+    max-height: calc(100vh - 10px) !important;
+
+    border-radius: 27px 27px 18px 18px !important;
+
+    animation:
+      zakiComposerMobile
+      .34s
+      cubic-bezier(.18,.9,.25,1.12)
+      both !important;
+  }
+
+  .status-dialog-card::before {
+    margin-top: 8px;
+  }
+
+  .status-dialog-header {
+    padding: 15px 15px 13px !important;
+  }
+
+  .status-dialog-header h2 {
+    font-size: 20px !important;
+  }
+
+  .status-dialog-card #statusText,
+  .status-dialog-card .status-character-count,
+  .status-dialog-card .status-media-picker,
+  .status-dialog-card .status-media-preview,
+  .status-dialog-card #publishStatusButton,
+  .status-dialog-card #composerError {
+    margin-left: 14px !important;
+    margin-right: 14px !important;
+  }
+
+  .status-dialog-card #statusText {
+    width: calc(100% - 28px) !important;
+    min-height: 145px !important;
+  }
+
+  .status-primary-button {
+    margin-bottom: 17px !important;
+  }
+}
+
+@keyframes zakiComposerMobile {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ============================================================
+   PERFORMANCE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+  .status-page::before {
+    animation-duration: 36s;
+  }
+
+  .status-page::after {
+    animation-duration: 26s;
+  }
+
+  .status-dialog::before {
+    animation-duration: 12s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .status-page::before,
+  .status-page::after,
+  .status-dialog::before,
+  .status-dialog-card {
+    animation: none !important;
+  }
+
+  .status-close-button,
+  .status-media-picker,
+  .status-primary-button,
+  .status-item {
+    transition: none !important;
+  }
+}
