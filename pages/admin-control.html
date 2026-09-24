@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050914">
+<title>Admin Control | ZakiChat</title>
+<link rel="stylesheet" href="../static/css/admin.css">
+</head>
+
+<body class="admin-page">
+<main class="admin-shell">
+<section class="admin-card">
+
+<div class="admin-brand">
+<div class="admin-brand-mark">Z</div>
+<h1>Admin Control Center</h1>
+<p id="adminState">Verifying secure session...</p>
+</div>
+
+<div id="adminPanel" class="admin-hidden">
+<p>Administrator access verified.</p>
+<p id="adminRole"></p>
+<p id="adminExpiry"></p>
+
+<button id="adminLogout" class="admin-button">
+Secure Sign Out
+</button>
+</div>
+
+<div id="adminDenied" class="admin-denied admin-hidden">
+<strong>Access denied</strong>
+<span>Administrator session is invalid or expired.</span>
+</div>
+
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/account-manager.js"></script>
+<script src="../static/js/supabase-client.js"></script>
+
+<script>
+(async()=>{
+"use strict";
+
+const FN="https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+const token=sessionStorage.getItem("zakichat-admin-session");
+const panel=document.getElementById("adminPanel");
+const denied=document.getElementById("adminDenied");
+const state=document.getElementById("adminState");
+
+function fail(){
+sessionStorage.removeItem("zakichat-admin-session");
+sessionStorage.removeItem("zakichat-admin-role");
+sessionStorage.removeItem("zakichat-admin-expiry");
+location.href="admin.html";
+}
+
+try{
+const {data}=await window.ZakiChatAuth.client.auth.getSession();
+
+if(!data.session||!token)throw new Error("No session");
+
+const r=await fetch(FN,{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:`Bearer ${data.session.access_token}`
+},
+body:JSON.stringify({
+action:"admin-session-verify",
+adminSessionToken:token
+})
+});
+
+const result=await r.json();
+
+if(!r.ok||!result.valid)throw new Error("Invalid admin session");
+
+state.textContent="Secure administrator session verified.";
+panel.classList.remove("admin-hidden");
+
+document.getElementById("adminRole").textContent=
+"Role: "+(result.role||"Administrator");
+
+document.getElementById("adminExpiry").textContent=
+"Session expires: "+(result.expiresAt||"");
+
+document.getElementById("adminLogout").onclick=async()=>{
+await fetch(FN,{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+Authorization:`Bearer ${data.session.access_token}`
+},
+body:JSON.stringify({
+action:"admin-session-revoke",
+adminSessionToken:token
+})
+});
+
+sessionStorage.clear();
+await window.ZakiChatAuth.client.auth.signOut();
+location.href="admin.html";
+};
+
+}catch(e){
+denied.classList.remove("admin-hidden");
+state.textContent="Security verification failed.";
+setTimeout(fail,1200);
+}
+})();
+</script>
+</body>
+</html>

@@ -114,12 +114,43 @@ async function validTotp(secret: string, code: string) {
 function randomSecret() {
   return base32Encode(crypto.getRandomValues(new Uint8Array(20)));
 }
+function randomSessionToken() {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replaceAll("+", "-")
+    .replaceAll("/", "_")
+    .replaceAll("=", "");
+}
 
+function hex(bytes: Uint8Array) {
+  return Array.from(bytes)
+    .map(x => x.toString(16).padStart(2, "0"))
+    .join("");
+}
 async function userFromRequest(req: Request) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) return null;
   const { data } = await admin.auth.getUser(token);
   return data.user;
+}
+
+
+function b64url(bytes: Uint8Array) {
+  let s = "";
+  for (const b of bytes) s += String.fromCharCode(b);
+  return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+
+async function sessionToken() {
+  return b64url(crypto.getRandomValues(new Uint8Array(32)));
+}
+
+async function hashToken(token: string) {
+  return Array.from(await digest(token))
+    .map(x => x.toString(16).padStart(2,"0"))
+    .join("");
 }
 
 Deno.serve(async (req) => {
@@ -137,7 +168,21 @@ Deno.serve(async (req) => {
       .select("enabled,encrypted_secret,verified_at")
       .eq("user_id", user.id)
       .maybeSingle();
+function randomSessionToken() {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replaceAll("+", "-")
+    .replaceAll("/", "_")
+    .replaceAll("=", "");
+}
 
+function hex(bytes: Uint8Array) {
+  return Array.from(bytes)
+    .map(x => x.toString(16).padStart(2, "0"))
+    .join("");
+}
     if (action === "status") {
       return json({
         enabled: Boolean(row?.enabled),
@@ -230,6 +275,99 @@ Deno.serve(async (req) => {
         enabled: true,
         recoveryCodes: recovery
       });
+    }
+
+
+    if (action === "admin-verify") {
+      const { data: adminRow } = await admin
+        .from("admin_users")
+        .select("user_id,role,active,require_2fa")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (!adminRow?.active)
+        return json({ error: "Administrator access denied." }, 403);
+
+      if (adminRow.require_2fa !== false) {
+        if (!row?.enabled || !row?.encrypted_secret)
+          return json({ error: "Administrator 2FA is not configured." }, 403);
+
+        const secret = await decrypt(row.encrypted_secret);
+
+        if (!await validTotp(secret, String(body.code || "")))
+          return json({ error: "Invalid administrator 2FA code." }, 401);
+      }
+
+      const token = await sessionToken();
+      const tokenHash = await hashToken(token);
+      const expires = new Date(Date.now()+30*60*1000).toISOString();
+
+      const { error } = await admin.from("admin_sessions").insert({
+        admin_user_id: user.id,
+        token_hash: tokenHash,
+        expires_at: expires,
+        ip_address: req.headers.get("x-forwarded-for"),
+        user_agent: req.headers.get("user-agent")
+      });
+
+      if (error) throw error;
+
+      return json({
+        adminSessionToken: token,
+        role: adminRow.role,
+        expiresAt: expires
+      });
+    }
+
+    if (action === "admin-session-verify") {
+      const token = String(body.adminSessionToken || "");
+      if (!token) return json({ valid:false },401);
+
+      const hash = await hashToken(token);
+
+      const { data: row2 } = await admin
+        .from("admin_sessions")
+        .select("id,admin_user_id,expires_at,revoked_at")
+        .eq("token_hash",hash)
+        .maybeSingle();
+
+      if (!row2 || row2.revoked_at || new Date(row2.expires_at)<=new Date())
+        return json({ valid:false },401);
+
+      if (row2.admin_user_id !== user.id)
+        return json({ valid:false },401);
+
+      const { data: a } = await admin
+        .from("admin_users")
+        .select("role,active")
+        .eq("user_id",user.id)
+        .maybeSingle();
+
+      if (!a?.active) return json({ valid:false },403);
+
+      await admin.from("admin_sessions")
+        .update({last_seen_at:new Date().toISOString()})
+        .eq("id",row2.id);
+
+      return json({
+        valid:true,
+        role:a.role,
+        expiresAt:row2.expires_at
+      });
+    }
+
+    if (action === "admin-session-revoke") {
+      const token = String(body.adminSessionToken || "");
+      if (!token) return json({ ok:true });
+
+      const hash = await hashToken(token);
+
+      await admin.from("admin_sessions")
+        .update({revoked_at:new Date().toISOString()})
+        .eq("token_hash",hash)
+        .eq("admin_user_id",user.id);
+
+      return json({ok:true});
     }
 
     if (action === "disable") {

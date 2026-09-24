@@ -1,0 +1,116 @@
+.admin-page{
+  min-height:100vh;
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(0,255,200,.12),transparent 32%),
+    radial-gradient(circle at 85% 80%,rgba(90,80,255,.16),transparent 35%),
+    #050914;
+  color:#eef7ff;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.admin-shell{
+  width:min(94%,520px);
+  margin:0 auto;
+  padding:42px 0 80px;
+}
+
+.admin-card{
+  background:rgba(10,18,32,.78);
+  border:1px solid rgba(0,255,210,.18);
+  border-radius:24px;
+  padding:26px;
+  box-shadow:0 20px 70px rgba(0,0,0,.45),0 0 35px rgba(0,255,210,.08);
+  backdrop-filter:blur(18px);
+}
+
+.admin-brand{
+  text-align:center;
+  margin-bottom:26px;
+}
+
+.admin-brand-mark{
+  width:70px;
+  height:70px;
+  margin:0 auto 14px;
+  display:grid;
+  place-items:center;
+  border-radius:22px;
+  font-size:30px;
+  font-weight:800;
+  background:linear-gradient(135deg,#00e6c3,#536dff);
+  color:#020611;
+  box-shadow:0 0 35px rgba(0,230,195,.25);
+}
+
+.admin-brand h1{
+  margin:0;
+  font-size:27px;
+}
+
+.admin-brand p{
+  margin:8px 0 0;
+  color:#91a4bb;
+}
+
+.admin-field{
+  margin-top:16px;
+}
+
+.admin-field label{
+  display:block;
+  margin-bottom:7px;
+  color:#a9bad0;
+  font-size:13px;
+}
+
+.admin-field input{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(120,160,190,.22);
+  border-radius:14px;
+  padding:14px;
+  background:#08101d;
+  color:#fff;
+  outline:none;
+}
+
+.admin-field input:focus{
+  border-color:#00d9b7;
+  box-shadow:0 0 0 3px rgba(0,217,183,.10);
+}
+
+.admin-button{
+  width:100%;
+  margin-top:20px;
+  border:0;
+  border-radius:14px;
+  padding:14px;
+  font-weight:800;
+  cursor:pointer;
+  color:#020611;
+  background:linear-gradient(135deg,#00e6c3,#6078ff);
+}
+
+.admin-message{
+  min-height:22px;
+  margin-top:14px;
+  text-align:center;
+  color:#91a4bb;
+  font-size:14px;
+}
+
+.admin-denied{
+  text-align:center;
+  padding:35px 10px;
+}
+
+.admin-denied strong{
+  display:block;
+  font-size:22px;
+  margin-bottom:8px;
+}
+
+.admin-hidden{
+  display:none!important;
+}
