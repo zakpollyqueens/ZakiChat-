@@ -288,15 +288,11 @@ function hex(bytes: Uint8Array) {
       if (!adminRow?.active)
         return json({ error: "Administrator access denied." }, 403);
 
-      if (adminRow.require_2fa !== false) {
-        if (!row?.enabled || !row?.encrypted_secret)
-          return json({ error: "Administrator 2FA is not configured." }, 403);
-
-        const secret = await decrypt(row.encrypted_secret);
-
-        if (!await validTotp(secret, String(body.code || "")))
-          return json({ error: "Invalid administrator 2FA code." }, 401);
-      }
+      // TEMPORARILY DISABLED:
+      // Administrator TOTP verification is bypassed for now.
+      // The existing two-step verification implementation remains intact
+      // and can be restored when the replacement admin verification method
+      // is ready.
 
       const token = await sessionToken();
       const tokenHash = await hashToken(token);
