@@ -25,6 +25,26 @@ email:email.value.trim(),password:pass.value
 
 if(error)throw error;
 
+if(!codeBox){
+codeBox=document.createElement("input");
+codeBox.type="text";
+codeBox.inputMode="numeric";
+codeBox.maxLength=6;
+codeBox.placeholder="6-digit authenticator code";
+codeBox.required=true;
+codeBox.style.cssText=
+"width:100%;box-sizing:border-box;margin-top:14px;padding:14px;"+
+"border-radius:14px;background:#08101d;color:#fff;"+
+"border:1px solid rgba(0,255,210,.25)";
+form.insertBefore(codeBox,form.querySelector("button"));
+}
+
+if(!codeBox.value){
+say("Enter your administrator 2FA code.");
+codeBox.focus();
+return;
+}
+
 const r=await fetch(FN,{
 method:"POST",
 headers:{
@@ -32,7 +52,8 @@ headers:{
 Authorization:`Bearer ${data.session.access_token}`
 },
 body:JSON.stringify({
-action:"admin-verify"
+action:"admin-verify",
+code:codeBox.value.trim()
 })
 });
 
