@@ -1995,8 +1995,38 @@ document.addEventListener(
       );
 
       await loadTargetProfile();
-      await getConversation();
-      await loadMessages();
+await getConversation();
+await loadMessages();
+
+subscribeToMessages();
+
+const callType =
+  new URLSearchParams(window.location.search).get("call");
+
+const voiceBtn =
+  document.getElementById("voice-call-button");
+
+const videoBtn =
+  document.getElementById("video-call-button");
+
+if (voiceBtn) {
+  voiceBtn.onclick = () =>
+    window.ZakiCommunication?.startCall("voice");
+}
+
+if (videoBtn) {
+  videoBtn.onclick = () =>
+    window.ZakiCommunication?.startCall("video");
+}
+
+if (
+  callType === "voice" ||
+  callType === "video"
+) {
+  setTimeout(() => {
+    window.ZakiCommunication?.startCall(callType);
+  }, 500);
+}
 
       subscribeToMessages();
     } catch (error) {
