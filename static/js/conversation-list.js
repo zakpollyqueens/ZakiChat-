@@ -133,8 +133,7 @@ const result=await window.ZakiConversations.load();
 if(result.error){
 console.error("ZakiChat conversation list:",result.error);
 
-list.innerHTML=
-'<div class="conversation-empty">Unable to load conversations. Check your connection and sign-in session.</div>';
+list.innerHTML='<div class="conversation-empty">Load error: '+String(result.error?.message||result.error||"Unknown error")+'</div>';
 
 return;
 }
