@@ -168,21 +168,6 @@ Deno.serve(async (req) => {
       .select("enabled,encrypted_secret,verified_at")
       .eq("user_id", user.id)
       .maybeSingle();
-function randomSessionToken() {
-  const bytes = crypto.getRandomValues(new Uint8Array(32));
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary)
-    .replaceAll("+", "-")
-    .replaceAll("/", "_")
-    .replaceAll("=", "");
-}
-
-function hex(bytes: Uint8Array) {
-  return Array.from(bytes)
-    .map(x => x.toString(16).padStart(2, "0"))
-    .join("");
-}
     if (action === "status") {
       return json({
         enabled: Boolean(row?.enabled),
@@ -216,7 +201,7 @@ function hex(bytes: Uint8Array) {
         return json({ error: "Setup has not been started." }, 400);
 
       const secret = await decrypt(row.encrypted_secret);
-      if (!await validTotp(secret, String(body.code || "")))
+      if (!await validTotp(secret, String(body.code || "").replace(/\s+/g, "")))
         return json({ error: "Invalid verification code." }, 400);
 
       const recovery = Array.from({ length: 8 }, () =>
@@ -294,7 +279,7 @@ function hex(bytes: Uint8Array) {
 
         const secret = await decrypt(row.encrypted_secret);
 
-        if (!await validTotp(secret, String(body.code || "")))
+        if (!await validTotp(secret, String(body.code || "").replace(/\s+/g, "")))
           return json({ error: "Invalid administrator 2FA code." }, 401);
       }
 

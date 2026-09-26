@@ -144,12 +144,12 @@
         hidden
         aria-label="Create new"
       >
-        <a href="#" class="quick-create-item" id="open-new-chat-picker">
+        <a href="contacts.html?mode=chat" class="quick-create-item">
           <span aria-hidden="true">💬</span>
           <span>New Chat</span>
         </a>
 
-        <a href="people.html" class="quick-create-item">
+        <a href="contacts.html" class="quick-create-item">
           <span aria-hidden="true">👤</span>
           <span>New Contact</span>
         </a>
@@ -356,7 +356,7 @@
     </form>
 
   
-    <!-- New Chat contact picker -->
+    <!-- New Chat contact picker removed: Contacts is the source of truth. -->
     <div class="new-chat-picker" id="new-chat-picker" hidden aria-hidden="true">
       <div class="new-chat-backdrop" data-new-chat-close></div>
 
@@ -456,6 +456,5 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="../static/js/chat-top-actions.js"></script>
 <script src="../static/js/chat-more-menu.js"></script>
 <script src="../static/js/quick-create.js"></script>
-<script src="../static/js/new-chat-picker.js"></script>
 </body>
 </html>

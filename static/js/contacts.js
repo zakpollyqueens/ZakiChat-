@@ -62,6 +62,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   let contacts = [];
   let peopleSearchTimer = null;
 
+  const chatMode =
+    new URLSearchParams(window.location.search).get("mode") === "chat";
+
   function showFormMessage(text, error = false) {
     if (!formMessage) return;
 
@@ -343,6 +346,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           `chats.html?user=${encodeURIComponent(profile.id)}`;
       });
 
+      if (chatMode) {
+        chat.innerHTML = "💬 <span class="action-label">Start chat</span>";
+      }
+
       actions.appendChild(chat);
 
       if (profile.phone) {
@@ -378,6 +385,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       contactList.appendChild(card);
     });
+  }
+
+  function applyChatMode() {
+    if (!chatMode) return;
+
+    document.title = "New Chat | ZakiChat";
+
+    const subtitle = document.getElementById("contactsSubtitle");
+    if (subtitle) {
+      subtitle.textContent =
+        "Select one of your ZakiChat contacts to start a chat.";
+    }
+
+    const heading = document.querySelector(".section-heading h2");
+    if (heading) {
+      heading.textContent = "Choose a contact";
+    }
+
+    if (openAddContact) {
+      openAddContact.innerHTML =
+        "<span>＋</span><span class="label">Add Contact</span>";
+    }
   }
 
   async function loadContacts() {
