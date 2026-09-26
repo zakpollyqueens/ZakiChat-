@@ -12,22 +12,23 @@ return this.db&&this.currentUser?this:null;
 
 async load(){
 if(!this.db||!this.currentUser)
-return{data:[],error:new Error("Not initialized.")};
+return{data:[],error:new Error("Not initialized")};
 
 try{
 const me=this.currentUser.id;
 
 const m=await this.db
 .from("conversation_members")
-.select("conversation_id,is_pinned,is_archived,is_favorite,is_muted,marked_unread")
+.select("conversation_id")
 .eq("user_id",me);
 
 if(m.error)throw m.error;
 
-const mine=m.data||[];
-const cids=[...new Set(mine.map(x=>x.conversation_id).filter(Boolean))];
+const ids=[...new Set(
+(m.data||[]).map(x=>x.conversation_id).filter(Boolean)
+)];
 
-if(!cids.length){
+if(!ids.length){
 this.conversations=[];
 return{data:[],error:null};
 }
@@ -35,20 +36,18 @@ return{data:[],error:null};
 const c=await this.db
 .from("conversations")
 .select("id,type,title,avatar_url,created_at,updated_at")
-.in("id",cids);
+.in("id",ids);
 
 if(c.error)throw c.error;
-
-const convs=c.data||[];
 
 const cm=await this.db
 .from("conversation_members")
 .select("conversation_id,user_id")
-.in("conversation_id",cids);
+.in("conversation_id",ids);
 
 if(cm.error)throw cm.error;
 
-const otherIds=[...new Set(
+const others=[...new Set(
 (cm.data||[])
 .map(x=>x.user_id)
 .filter(x=>x&&x!==me)
@@ -56,35 +55,33 @@ const otherIds=[...new Set(
 
 let profiles={};
 
-if(otherIds.length){
+if(others.length){
 const p=await this.db
 .from("profiles")
 .select("id,username,full_name,avatar_url,is_online,last_seen")
-.in("id",otherIds);
+.in("id",others);
 
 if(p.error)throw p.error;
+
 (p.data||[]).forEach(x=>profiles[x.id]=x);
 }
 
-const pref={};
-mine.forEach(x=>pref[x.conversation_id]=x);
-
 const members={};
+
 (cm.data||[]).forEach(x=>{
 (members[x.conversation_id]||=[]).push(x.user_id);
 });
 
 const out=[];
 
-for(const c of convs){
-const ids=members[c.id]||[];
-const otherId=ids.find(x=>x!==me);
-const p=otherId?profiles[otherId]||null:null;
+for(const conv of c.data||[]){
+const userId=(members[conv.id]||[]).find(x=>x!==me);
+const profile=userId?profiles[userId]||null:null;
 
 const q=await this.db
 .from("messages")
 .select("id,sender_id,content,message_type,created_at,read_at,edited_at,reply_to_message_id,deleted_at")
-.eq("conversation_id",c.id)
+.eq("conversation_id",conv.id)
 .is("deleted_at",null)
 .order("created_at",{ascending:false})
 .limit(1);
@@ -94,7 +91,7 @@ if(q.error)throw q.error;
 const u=await this.db
 .from("messages")
 .select("id",{count:"exact",head:true})
-.eq("conversation_id",c.id)
+.eq("conversation_id",conv.id)
 .neq("sender_id",me)
 .is("read_at",null)
 .is("deleted_at",null);
@@ -102,27 +99,22 @@ const u=await this.db
 if(u.error)throw u.error;
 
 out.push({
-...c,
-...(pref[c.id]||{}),
-profile:p,
+...conv,
+is_pinned:false,
+is_archived:false,
+is_favorite:false,
+is_muted:false,
+marked_unread:false,
+profile,
 latestMessage:q.data?.[0]||null,
 unreadCount:u.count||0
 });
 }
 
 out.sort((a,b)=>{
-if(a.is_pinned!==b.is_pinned)
-return a.is_pinned?-1:1;
-
-return new Date(
-b.latestMessage?.created_at||
-b.updated_at||
-b.created_at
-)-new Date(
-a.latestMessage?.created_at||
-a.updated_at||
-a.created_at
-);
+const ap=a.latestMessage?.created_at||a.updated_at||a.created_at;
+const bp=b.latestMessage?.created_at||b.updated_at||b.created_at;
+return new Date(bp)-new Date(ap);
 });
 
 this.conversations=out;
@@ -157,7 +149,8 @@ return m.content||"Message";
 },
 
 getTime(c){
-const v=c?.latestMessage?.created_at||c?.updated_at||c?.created_at;
+const v=c?.latestMessage?.created_at||
+c?.updated_at||c?.created_at;
 if(!v)return"";
 const d=new Date(v);
 return Number.isNaN(d.getTime())?"":d.toLocaleTimeString([],{
