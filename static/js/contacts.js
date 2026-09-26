@@ -352,16 +352,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       actions.appendChild(chat);
 
+      const video = document.createElement("button");
+      video.type = "button";
+      video.className = "contact-action video";
+      video.title = `Video call ${profile.full_name || profile.username || ""}`;
+      video.innerHTML = '📹 <span class="action-label">Video</span>';
+
+      video.addEventListener("click", () => {
+        window.location.href =
+          `chats.html?user=${encodeURIComponent(profile.id)}&call=video`;
+      });
+
+      actions.appendChild(video);
+
       if (profile.phone) {
         const call = document.createElement("button");
         call.type = "button";
         call.className = "contact-action call";
-        call.title = `Call ${profile.phone}`;
-        call.innerHTML = "☎️";
+        call.title = `Voice call ${profile.full_name || profile.username || ""}`;
+        call.innerHTML = '📞 <span class="action-label">Call</span>';
 
         call.addEventListener("click", () => {
           window.location.href =
-            `tel:${encodeURIComponent(profile.phone)}`;
+            `chats.html?user=${encodeURIComponent(profile.id)}&call=voice`;
         });
 
         actions.appendChild(call);
