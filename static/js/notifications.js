@@ -185,7 +185,7 @@
               "click",
               () => {
                 window.location.href =
-                  `chats.html?user=${encodeURIComponent(
+                  `chat.html?user=${encodeURIComponent(
                     notification.actor_id
                   )}`;
               }

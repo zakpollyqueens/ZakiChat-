@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ? `group.html?id=${encodeURIComponent(
             conversation.id
           )}`
-        : `chats.html?user=${encodeURIComponent(
+        : `chat.html?user=${encodeURIComponent(
             conversation.profile?.id || ""
           )}`;
 

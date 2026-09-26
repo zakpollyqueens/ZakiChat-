@@ -88,7 +88,7 @@ self.addEventListener(
 
     const targetUrl =
       actorId
-        ? `/pages/chats.html?user=${encodeURIComponent(
+        ? `/pages/chat.html?user=${encodeURIComponent(
             actorId
           )}${replyMode ? `&replyMessageId=${encodeURIComponent(
             data.messageId || ""

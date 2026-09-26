@@ -1754,7 +1754,7 @@ getDirectionLabel(
 
       window.location.href =
         query
-          ? `chats.html?${query}`
+          ? `chat.html?${query}`
           : 'chats.html';
     },
 

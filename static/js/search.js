@@ -601,7 +601,7 @@
     if (!userId) return;
 
     window.location.href =
-      "chats.html?user=" +
+      "chat.html?user=" +
       encodeURIComponent(
         userId
       );

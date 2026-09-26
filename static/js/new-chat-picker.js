@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       row.addEventListener("click", () => {
         window.location.href =
-          "chats.html?user=" + encodeURIComponent(p.id);
+          "chat.html?user=" + encodeURIComponent(p.id);
       });
 
       list.appendChild(row);

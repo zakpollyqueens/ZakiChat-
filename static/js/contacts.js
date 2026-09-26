@@ -343,7 +343,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       chat.addEventListener("click", () => {
         window.location.href =
-          `chats.html?user=${encodeURIComponent(profile.id)}`;
+          `chat.html?user=${encodeURIComponent(profile.id)}`;
       });
 
       if (chatMode) {
@@ -360,7 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       video.addEventListener("click", () => {
         window.location.href =
-          `chats.html?user=${encodeURIComponent(profile.id)}&call=video`;
+          `chat.html?user=${encodeURIComponent(profile.id)}&call=video`;
       });
 
       actions.appendChild(video);
@@ -374,7 +374,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         call.addEventListener("click", () => {
           window.location.href =
-            `chats.html?user=${encodeURIComponent(profile.id)}&call=voice`;
+            `chat.html?user=${encodeURIComponent(profile.id)}&call=voice`;
         });
 
         actions.appendChild(call);
