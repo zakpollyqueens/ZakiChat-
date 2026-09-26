@@ -1,349 +1,175 @@
-(function () {
-  "use strict";
+(function(){
+"use strict";
 
-  const ZakiConversations = {
-    db: null,
-    currentUser: null,
-    conversations: [],
-    selectedConversationId: null,
+const Z={
+db:null,currentUser:null,conversations:[],selectedConversationId:null,
 
-    init(config, user) {
-      if (!window.supabase || !config || !user) {
-        console.error(
-          "ZakiChat Conversations: initialization data unavailable."
-        );
-        return null;
-      }
+init(config,user){
+this.db=window.ZakiChatAuth?.client;
+if(!this.db||!user)return null;
+this.currentUser=user;
+return this;
+},
 
-      this.db =
-        window.ZakiChatAuth?.client;
+async load(){
+if(!this.db||!this.currentUser)
+return{data:[],error:new Error("Not initialized.")};
 
-      if (!this.db) {
-        console.error(
-          "ZakiChat Conversations: centralized Supabase client unavailable."
-        );
-        return null;
-      }
+const {data:rows,error}=await this.db
+.from("conversation_members")
+.select(`
+conversation_id,is_pinned,is_archived,is_favorite,is_muted,marked_unread,
+conversations(id,type,title,avatar_url,created_at,updated_at,
+conversation_members(user_id))
+`)
+.eq("user_id",this.currentUser.id);
 
-      this.currentUser = user;
+if(error)return{data:[],error};
 
-      return this;
-    },
+const base=(rows||[])
+.map(r=>({...r.conversations,
+is_pinned:!!r.is_pinned,
+is_archived:!!r.is_archived,
+is_favorite:!!r.is_favorite,
+is_muted:!!r.is_muted,
+marked_unread:!!r.marked_unread}))
+.filter(c=>c&&c.id);
 
-    async load() {
-      if (!this.db || !this.currentUser) {
-        return {
-          data: [],
-          error: new Error(
-            "Conversations client is not initialized."
-          )
-        };
-      }
+const ids=[...new Set(base.flatMap(c=>
+(c.conversation_members||[])
+.map(m=>m.user_id)
+.filter(id=>id&&id!==this.currentUser.id)
+))];
 
-      const { data, error } = await this.db
-        .from("conversation_members")
-        .select(`
-          conversation_id,
-          is_pinned,
-          is_archived,
-          is_favorite,
-          is_muted,
-          marked_unread,
-          conversations (
-            id,
-            type,
-            title,
-            avatar_url,
-            created_at,
-            updated_at,
-            conversation_members (
-              user_id,
-              profiles (
-                id,
-                username,
-                full_name,
-                avatar_url,
-                is_online,
-                last_seen
-              )
-            )
-          )
-        `)
-        .eq("user_id", this.currentUser.id);
+let profiles={};
 
-      if (error) {
-        return {
-          data: [],
-          error
-        };
-      }
+if(ids.length){
+const p=await this.db
+.from("profiles")
+.select("id,username,full_name,avatar_url,is_online,last_seen")
+.in("id",ids);
 
-      const conversations =
-        (data || [])
-          .map(row => row.conversations)
-          .filter(Boolean);
+if(!p.error)
+(p.data||[]).forEach(x=>profiles[x.id]=x);
+}
 
-      const enriched = [];
+const enriched=[];
 
-      for (const conversation of conversations) {
-        const members =
-          conversation.conversation_members || [];
+for(const c of base){
+const other=(c.conversation_members||[])
+.find(m=>m.user_id!==this.currentUser.id);
 
-        const otherMember =
-          members.find(
-            member =>
-              member.user_id !==
-              this.currentUser.id
-          );
+const profile=other?profiles[other.user_id]||null:null;
 
-        const profile =
-          otherMember?.profiles || null;
+let latestMessage=null,unreadCount=0;
 
-        let latestMessage = null;
-        let unreadCount = 0;
+const latest=await this.db
+.from("messages")
+.select("id,sender_id,content,message_type,created_at,read_at,edited_at,reply_to_message_id,deleted_at")
+.eq("conversation_id",c.id)
+.is("deleted_at",null)
+.order("created_at",{ascending:false})
+.limit(1);
 
-        /*
-         * Only non-deleted messages are used for:
-         * - latest message preview
-         * - unread count
-         */
-        const latestResult =
-          await this.db
-            .from("messages")
-            .select(`
-              id,
-              sender_id,
-              content,
-              message_type,
-              created_at,
-              read_at,
-              edited_at,
-              reply_to_message_id,
-              deleted_at
-            `)
-            .eq(
-              "conversation_id",
-              conversation.id
-            )
-            .is("deleted_at", null)
-            .order("created_at", {
-              ascending: false
-            })
-            .limit(1);
+if(!latest.error)latestMessage=latest.data?.[0]||null;
 
-        if (!latestResult.error) {
-          latestMessage =
-            latestResult.data?.[0] || null;
-        }
+const unread=await this.db
+.from("messages")
+.select("id",{count:"exact",head:true})
+.eq("conversation_id",c.id)
+.neq("sender_id",this.currentUser.id)
+.is("read_at",null)
+.is("deleted_at",null);
 
-        const unreadResult =
-          await this.db
-            .from("messages")
-            .select("id", {
-              count: "exact",
-              head: true
-            })
-            .eq(
-              "conversation_id",
-              conversation.id
-            )
-            .neq(
-              "sender_id",
-              this.currentUser.id
-            )
-            .is("read_at", null)
-            .is("deleted_at", null);
+if(!unread.error)unreadCount=unread.count||0;
 
-        if (!unreadResult.error) {
-          unreadCount =
-            unreadResult.count || 0;
-        }
+enriched.push({
+...c,profile,latestMessage,unreadCount
+});
+}
 
-        enriched.push({
-          ...conversation,
-          profile,
-          latestMessage,
-          unreadCount,
-          is_pinned: Boolean(
-            row.is_pinned
-          ),
-          is_archived: Boolean(
-            row.is_archived
-          ),
-          is_favorite: Boolean(
-            row.is_favorite
-          ),
-          is_muted: Boolean(
-            row.is_muted
-          ),
-          marked_unread: Boolean(
-            row.marked_unread
-          )
-        });
-      }
+enriched.sort((a,b)=>{
+if(a.is_pinned!==b.is_pinned)
+return a.is_pinned?-1:1;
 
-      enriched.sort((a, b) => {
-        if (
-          a.is_pinned !== b.is_pinned
-        ) {
-          return a.is_pinned ? -1 : 1;
-        }
+const at=new Date(
+a.latestMessage?.created_at||
+a.updated_at||
+a.created_at
+).getTime();
 
-        const aTime =
-          new Date(
-            a.latestMessage?.created_at ||
-            a.updated_at ||
-            a.created_at
-          ).getTime();
+const bt=new Date(
+b.latestMessage?.created_at||
+b.updated_at||
+b.created_at
+).getTime();
 
-        const bTime =
-          new Date(
-            b.latestMessage?.created_at ||
-            b.updated_at ||
-            b.created_at
-          ).getTime();
+return bt-at;
+});
 
-        return bTime - aTime;
-      });
+this.conversations=enriched;
 
-      this.conversations = enriched;
+return{data:enriched,error:null};
+},
 
-      return {
-        data: enriched,
-        error: null
-      };
-    },
+getDisplayName(c){
+if(!c)return"Conversation";
+if(c.type==="group")return c.title||"Group";
+return c.profile?.full_name||
+c.profile?.username||
+"ZakiChat User";
+},
 
-    getDisplayName(conversation) {
-      if (!conversation) {
-        return "Conversation";
-      }
+getAvatar(c){
+if(!c)return"";
+return c.type==="group"
+?(c.avatar_url||"")
+:(c.profile?.avatar_url||"");
+},
 
-      if (conversation.type === "group") {
-        return (
-          conversation.title ||
-          "Group"
-        );
-      }
+getPreview(c){
+const m=c?.latestMessage;
+if(!m)return"No messages yet";
 
-      return (
-        conversation.profile?.full_name ||
-        conversation.profile?.username ||
-        "ZakiChat User"
-      );
-    },
+if(m.message_type&&m.message_type!=="text")
+return m.message_type.charAt(0).toUpperCase()+
+m.message_type.slice(1);
 
-    getAvatar(conversation) {
-      if (!conversation) {
-        return "";
-      }
+return m.content||"Message";
+},
 
-      if (conversation.type === "group") {
-        return (
-          conversation.avatar_url || ""
-        );
-      }
+getTime(c){
+const v=c?.latestMessage?.created_at||
+c?.updated_at||c?.created_at;
 
-      return (
-        conversation.profile?.avatar_url ||
-        ""
-      );
-    },
+if(!v)return"";
 
-    getPreview(conversation) {
-      const message =
-        conversation?.latestMessage;
+const d=new Date(v);
+if(Number.isNaN(d.getTime()))return"";
 
-      if (!message) {
-        return "No messages yet";
-      }
+return d.toLocaleTimeString([],{
+hour:"2-digit",minute:"2-digit"
+});
+},
 
-      if (
-        message.message_type &&
-        message.message_type !== "text"
-      ) {
-        return (
-          message.message_type
-            .charAt(0)
-            .toUpperCase() +
-          message.message_type.slice(1)
-        );
-      }
+select(id){
+const c=this.conversations.find(x=>x.id===id);
+if(!c)return null;
+this.selectedConversationId=id;
+return c;
+},
 
-      return (
-        message.content ||
-        "Message"
-      );
-    },
+find(id){
+return this.conversations.find(x=>x.id===id)||null;
+},
 
-    getTime(conversation) {
-      const value =
-        conversation?.latestMessage
-          ?.created_at ||
-        conversation?.updated_at ||
-        conversation?.created_at;
+findByUserId(id){
+if(!id)return null;
+return this.conversations.find(
+c=>c.profile?.id===id
+)||null;
+}
+};
 
-      if (!value) {
-        return "";
-      }
-
-      const date =
-        new Date(value);
-
-      if (Number.isNaN(date.getTime())) {
-        return "";
-      }
-
-      return date.toLocaleTimeString(
-        [],
-        {
-          hour: "2-digit",
-          minute: "2-digit"
-        }
-      );
-    },
-
-    select(conversationId) {
-      const conversation =
-        this.conversations.find(
-          item =>
-            item.id === conversationId
-        );
-
-      if (!conversation) {
-        return null;
-      }
-
-      this.selectedConversationId =
-        conversationId;
-
-      return conversation;
-    },
-
-    find(conversationId) {
-      return (
-        this.conversations.find(
-          item =>
-            item.id === conversationId
-        ) || null
-      );
-    },
-
-    findByUserId(userId) {
-      if (!userId) {
-        return null;
-      }
-
-      return (
-        this.conversations.find(
-          conversation =>
-            conversation.profile?.id ===
-            userId
-        ) || null
-      );
-    }
-  };
-
-  window.ZakiConversations =
-    ZakiConversations;
+window.ZakiConversations=Z;
 })();
