@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (chatMode) {
-        chat.innerHTML = "💬 <span class="action-label">Start chat</span>";
+        chat.innerHTML = '💬 <span class="action-label">Start chat</span>';
       }
 
       actions.appendChild(chat);
@@ -404,8 +404,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (openAddContact) {
-      openAddContact.innerHTML =
-        "<span>＋</span><span class="label">Add Contact</span>";
+      openAddContact.innerHTML = '<span>＋</span><span class="label">Add Contact</span>';
     }
   }
 

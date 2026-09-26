@@ -34,51 +34,7 @@
              placeholder="Search groups">
     </div>
 
-    <section class="groups-grid" id="groupsList">
-
-      <article class="group-card">
-        <div class="group-avatar gradient-avatar">ZS</div>
-
-        <div class="group-info">
-          <strong>Zakmolanitech Community</strong>
-          <span>Technology, coding and digital solutions</span>
-          <small>128 members</small>
-        </div>
-
-        <button class="group-action primary" type="button">
-          Open
-        </button>
-      </article>
-
-      <article class="group-card">
-        <div class="group-avatar">DS</div>
-
-        <div class="group-info">
-          <strong>Developers Hub</strong>
-          <span>Web development and programming</span>
-          <small>64 members</small>
-        </div>
-
-        <button class="group-action primary" type="button">
-          Open
-        </button>
-      </article>
-
-      <article class="group-card">
-        <div class="group-avatar">TC</div>
-
-        <div class="group-info">
-          <strong>Tech Community</strong>
-          <span>Technology discussions and ideas</span>
-          <small>42 members</small>
-        </div>
-
-        <button class="group-action primary" type="button">
-          Open
-        </button>
-      </article>
-
-    </section>
+    <section class="groups-grid" id="groupsList"></section>
 
     <div class="empty-groups" id="emptyGroups" hidden>
       <strong>No groups found</strong>
@@ -126,6 +82,17 @@
           maxlength="180"
           placeholder="What is this group about?"></textarea>
       </label>
+
+      <div class="group-contact-picker">
+        <div class="group-picker-head">
+          <strong>Select contacts</strong>
+          <span id="groupSelectedCount">0 selected</span>
+        </div>
+        <input id="groupContactSearch" class="group-input" type="search" placeholder="Search contacts">
+        <div id="groupContactList" class="group-contact-list">
+          <div class="group-picker-empty">Loading your contacts...</div>
+        </div>
+      </div>
 
       <div class="form-message" id="groupMessage"></div>
 

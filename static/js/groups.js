@@ -21,7 +21,9 @@
 
   const state = {
     user: null,
-    groups: []
+    groups: [],
+    contacts: [],
+    selectedContacts: new Set()
   };
 
   const elements = {
@@ -33,7 +35,10 @@
     form: document.getElementById("createGroupForm"),
     nameInput: document.getElementById("groupName"),
     descriptionInput: document.getElementById("groupDescription"),
-    error: document.getElementById("groupMessage")
+    error: document.getElementById("groupMessage"),
+    contactSearch: document.getElementById("groupContactSearch"),
+    contactList: document.getElementById("groupContactList"),
+    selectedCount: document.getElementById("groupSelectedCount")
   };
 
   function escapeHtml(value) {
@@ -48,7 +53,7 @@
   function openModal() {
     if (!elements.modal) return;
 
-    elements.modal.classList.add("active");
+    elements.modal.classList.add("open");
     elements.modal.setAttribute("aria-hidden", "false");
 
     if (elements.nameInput) {
@@ -59,7 +64,7 @@
   function closeModal() {
     if (!elements.modal) return;
 
-    elements.modal.classList.remove("active");
+    elements.modal.classList.remove("open");
     elements.modal.setAttribute("aria-hidden", "true");
 
     if (elements.form) {
@@ -203,6 +208,98 @@
     renderGroups(elements.searchInput?.value || "");
   }
 
+  function initials(profile) {
+    const text = profile?.full_name || profile?.username || "U";
+    return text.trim().split(/\\s+/).slice(0,2).map(x => x[0]).join("").toUpperCase();
+  }
+
+  function renderContacts(term = "") {
+    if (!elements.contactList) return;
+
+    const q = term.trim().toLowerCase();
+    const list = state.contacts.filter(item => {
+      const p = item.profile;
+      const text = [p?.full_name,p?.username,p?.phone].filter(Boolean).join(" ").toLowerCase();
+      return !q || text.includes(q);
+    });
+
+    elements.contactList.innerHTML = "";
+
+    if (!list.length) {
+      elements.contactList.innerHTML = '<div class="group-picker-empty">No ZakiChat contacts found.</div>';
+      return;
+    }
+
+    list.forEach(item => {
+      const p = item.profile;
+      if (!p?.id) return;
+
+      const row = document.createElement("label");
+      row.className = "group-contact-row";
+
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = state.selectedContacts.has(p.id);
+
+      check.addEventListener("change", () => {
+        if (check.checked) state.selectedContacts.add(p.id);
+        else state.selectedContacts.delete(p.id);
+        updateSelectedCount();
+      });
+
+      const avatar = document.createElement("div");
+      avatar.className = "group-contact-avatar";
+
+      if (p.avatar_url) {
+        const img = document.createElement("img");
+        img.src = p.avatar_url;
+        img.alt = "";
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = initials(p);
+      }
+
+      const info = document.createElement("div");
+      info.className = "group-contact-info";
+      info.innerHTML =
+        `<strong>${escapeHtml(p.full_name || p.username || "ZakiChat User")}</strong>` +
+        `<span>${escapeHtml(p.username ? "@" + p.username : "ZakiChat contact")}</span>`;
+
+      row.append(check, avatar, info);
+      elements.contactList.appendChild(row);
+    });
+  }
+
+  function updateSelectedCount() {
+    if (elements.selectedCount) {
+      elements.selectedCount.textContent =
+        `${state.selectedContacts.size} selected`;
+    }
+  }
+
+  async function loadContacts() {
+    const { data, error } = await db
+      .from("contacts")
+      .select(`
+        contact_user_id,
+        profile:profiles!contacts_contact_user_id_fkey(
+          id,username,full_name,phone,avatar_url
+        )
+      `)
+      .eq("user_id", state.user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Group contacts error:", error);
+      state.contacts = [];
+      renderContacts();
+      return;
+    }
+
+    state.contacts = data || [];
+    renderContacts(elements.contactSearch?.value || "");
+  }
+
   async function createGroup(event) {
     event.preventDefault();
 
@@ -212,8 +309,8 @@
     }
 
     const name = elements.nameInput?.value.trim() || "";
-    const description =
-      elements.descriptionInput?.value.trim() || null;
+    const description = elements.descriptionInput?.value.trim() || null;
+    const memberIds = [...state.selectedContacts];
 
     if (name.length < 2 || name.length > 80) {
       showError("Group name must be between 2 and 80 characters.");
@@ -225,8 +322,12 @@
       return;
     }
 
-    const submitButton =
-      elements.form?.querySelector('button[type="submit"]');
+    if (!memberIds.length) {
+      showError("Select at least one contact for the group.");
+      return;
+    }
+
+    const submitButton = elements.form?.querySelector('button[type="submit"]');
 
     if (submitButton) {
       submitButton.disabled = true;
@@ -235,10 +336,11 @@
 
     showError("");
 
-    const { data, error } = await db.rpc("create_group", {
+    const { data, error } = await db.rpc("create_group_with_members", {
       p_name: name,
       p_description: description,
-      p_avatar_url: null
+      p_avatar_url: null,
+      p_member_ids: memberIds
     });
 
     if (error) {
@@ -247,40 +349,25 @@
 
       if (submitButton) {
         submitButton.disabled = false;
-        submitButton.textContent = "Create Group";
+        submitButton.textContent = "＋ Create Group";
       }
-
       return;
     }
 
+    const createdGroup = Array.isArray(data) ? data[0] : data;
+
     closeModal();
 
-    if (data) {
-      const createdGroup = Array.isArray(data)
-        ? data[0]
-        : data;
-
-      if (createdGroup) {
-        state.groups.unshift(createdGroup);
-      }
-    }
-
-    renderGroups(elements.searchInput?.value || "");
-
-    if (data) {
-      const createdGroup = Array.isArray(data)
-        ? data[0]
-        : data;
-
-      if (createdGroup?.id) {
-        window.location.href =
-          `group.html?id=${encodeURIComponent(createdGroup.id)}`;
-      }
+    if (createdGroup?.id) {
+      window.location.href =
+        `group.html?id=${encodeURIComponent(createdGroup.id)}`;
+    } else {
+      await loadGroups();
     }
 
     if (submitButton) {
       submitButton.disabled = false;
-      submitButton.textContent = "Create Group";
+      submitButton.textContent = "＋ Create Group";
     }
   }
 
@@ -305,11 +392,20 @@
       });
     }
 
+    if (elements.contactSearch) {
+      elements.contactSearch.addEventListener("input", () => {
+        renderContacts(elements.contactSearch.value);
+      });
+    }
+
     if (elements.createButton) {
-      elements.createButton.addEventListener(
-        "click",
-        openModal
-      );
+      elements.createButton.addEventListener("click", async () => {
+        state.selectedContacts.clear();
+        updateSelectedCount();
+        renderContacts();
+        openModal();
+        await loadContacts();
+      });
     }
 
     if (elements.closeModal) {
@@ -328,10 +424,7 @@
     }
 
     if (elements.form) {
-      elements.form.addEventListener(
-        "submit",
-        createGroup
-      );
+      elements.form.addEventListener("submit", createGroup);
     }
 
     const channel = db
