@@ -144,7 +144,7 @@
         hidden
         aria-label="Create new"
       >
-        <a href="contacts.html" class="quick-create-item">
+        <a href="#" class="quick-create-item" id="open-new-chat-picker">
           <span aria-hidden="true">💬</span>
           <span>New Chat</span>
         </a>
@@ -355,7 +355,50 @@
       >➤</button>
     </form>
 
-  </main>
+  
+    <!-- New Chat contact picker -->
+    <div class="new-chat-picker" id="new-chat-picker" hidden aria-hidden="true">
+      <div class="new-chat-backdrop" data-new-chat-close></div>
+
+      <section class="new-chat-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-chat-title">
+
+        <header class="new-chat-header">
+          <div>
+            <span class="new-chat-eyebrow">ZAKICHAT</span>
+            <h2 id="new-chat-title">New Chat</h2>
+            <p>Choose a contact to start chatting.</p>
+          </div>
+
+          <button
+            type="button"
+            class="new-chat-close"
+            data-new-chat-close
+            aria-label="Close"
+          >×</button>
+        </header>
+
+        <label class="new-chat-search">
+          <span aria-hidden="true">⌕</span>
+          <input
+            id="new-chat-search"
+            type="search"
+            placeholder="Search contacts"
+            autocomplete="off"
+          >
+        </label>
+
+        <div class="new-chat-list" id="new-chat-list">
+          <div class="new-chat-loading">
+            Loading contacts...
+          </div>
+        </div>
+      </section>
+    </div>
+
+</main>
 
 </div>
 
@@ -413,5 +456,6 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="../static/js/chat-top-actions.js"></script>
 <script src="../static/js/chat-more-menu.js"></script>
 <script src="../static/js/quick-create.js"></script>
+<script src="../static/js/new-chat-picker.js"></script>
 </body>
 </html>
