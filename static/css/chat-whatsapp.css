@@ -1,0 +1,328 @@
+/* =========================================================
+   ZakiChat - WhatsApp-style chat layout
+   Aurora background, dark interface, responsive design
+   ========================================================= */
+
+.chat-page {
+  margin: 0;
+  min-height: 100vh;
+  background: #07111f;
+  color: #ffffff;
+}
+
+.chat-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0, 255, 220, .10), transparent 30%),
+    radial-gradient(circle at 85% 20%, rgba(90, 80, 255, .12), transparent 32%),
+    linear-gradient(135deg, #06101d, #0a1727 50%, #07111f);
+}
+
+/* HEADER */
+
+.chat-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  background: rgba(5, 12, 23, .92);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+  z-index: 20;
+}
+
+.chat-back,
+.chat-header-actions button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.chat-back:hover,
+.chat-header-actions button:hover {
+  background: rgba(255,255,255,.08);
+}
+
+.chat-user {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.conversation-avatar {
+  width: 43px;
+  height: 43px;
+  min-width: 43px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #16d9c5, #536dfe);
+  color: #fff;
+  font-weight: 700;
+}
+
+.conversation-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat-user-details {
+  min-width: 0;
+}
+
+.chat-user-details strong,
+.chat-user strong {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 16px;
+}
+
+.chat-user-details span,
+.chat-user span {
+  display: block;
+  margin-top: 2px;
+  color: rgba(255,255,255,.58);
+  font-size: 12px;
+}
+
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* MORE MENU */
+
+#chat-more-wrapper {
+  position: relative;
+}
+
+.chat-more-menu {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 245px;
+  padding: 8px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 16px;
+  background: rgba(10, 20, 34, .97);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.chat-more-menu[hidden] {
+  display: none;
+}
+
+.chat-more-menu button {
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chat-more-menu button:hover {
+  background: rgba(255,255,255,.08);
+}
+
+/* SEARCH */
+
+.chat-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(5,12,23,.94);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.chat-search-bar[hidden] {
+  display: none;
+}
+
+.chat-search-bar input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 22px;
+  outline: none;
+  background: rgba(255,255,255,.07);
+  color: #fff;
+}
+
+.chat-search-bar button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 22px;
+}
+
+/* MESSAGES */
+
+.messages-panel {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.chat-background-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .95;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(0,255,220,.06), transparent 25%),
+    radial-gradient(circle at 90% 70%, rgba(90,80,255,.08), transparent 28%);
+}
+
+.messages-list {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow-y: auto;
+  padding: 18px 12px 20px;
+}
+
+/* MESSAGE ACTION BARS */
+
+.message-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 14px;
+  background: rgba(8,17,30,.96);
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.message-action-bar[hidden] {
+  display: none;
+}
+
+.message-action-bar small {
+  display: block;
+  color: #18d9c5;
+}
+
+.message-action-bar button {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 22px;
+}
+
+/* COMPOSER */
+
+.message-composer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 10px;
+  background: rgba(5,12,23,.96);
+  border-top: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+}
+
+.message-composer button {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.message-composer button:hover {
+  background: rgba(255,255,255,.08);
+}
+
+.message-composer input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 24px;
+  outline: none;
+  background: rgba(255,255,255,.07);
+  color: #fff;
+  font-size: 15px;
+}
+
+.message-composer input[type="text"]::placeholder {
+  color: rgba(255,255,255,.45);
+}
+
+#send-message-button {
+  background: linear-gradient(135deg, #16d9c5, #536dfe);
+  box-shadow: 0 8px 25px rgba(22,217,197,.18);
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .chat-header {
+    height: 60px;
+    padding: 0 6px;
+  }
+
+  .chat-header-actions button {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+
+  .chat-user-details strong,
+  .chat-user strong {
+    font-size: 15px;
+  }
+
+  .messages-list {
+    padding: 12px 8px 16px;
+  }
+
+  .message-composer {
+    padding: 7px 6px;
+  }
+
+  .message-composer button {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .message-composer input[type="text"] {
+    height: 42px;
+  }
+}

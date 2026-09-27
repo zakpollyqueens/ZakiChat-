@@ -589,3 +589,48 @@ img{
     text-align:center;
   }
 }
+
+/* =========================================================
+   ZakiChat Global Appearance
+   ========================================================= */
+
+:root {
+  --zakichat-font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+
+  --zakichat-font-size: 16px;
+}
+
+html,
+body {
+  font-family: var(--zakichat-font-family);
+  font-size: var(--zakichat-font-size);
+}
+
+body {
+  background-color: #07111f;
+}
+
+html[data-zakichat-theme="light"] body {
+  background-color: #101827;
+}
+
+html[data-zakichat-theme="dark"] body {
+  background-color: #07111f;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--zakichat-wallpaper);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: .42;
+}
