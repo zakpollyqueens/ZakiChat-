@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!wrapper || !button || !menu) return;
 
+  const BLOCKED_USERS_KEY = "zakichat_blocked_users";
+
   function closeMenu() {
     menu.hidden = true;
     button.setAttribute("aria-expanded", "false");
@@ -16,6 +18,59 @@ document.addEventListener("DOMContentLoaded", () => {
   function openMenu() {
     menu.hidden = false;
     button.setAttribute("aria-expanded", "true");
+  }
+
+  function getChatUserId() {
+    return String(
+      new URLSearchParams(window.location.search).get("user") || ""
+    ).trim();
+  }
+
+  function loadBlockedUsers() {
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem(BLOCKED_USERS_KEY) || "[]"
+      );
+      return Array.isArray(saved) ? saved : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveBlockedUsers(users) {
+    localStorage.setItem(
+      BLOCKED_USERS_KEY,
+      JSON.stringify(users)
+    );
+  }
+
+  function blockCurrentUser() {
+    const userId = getChatUserId();
+
+    if (!userId) {
+      alert("Unable to identify this contact.");
+      return;
+    }
+
+    const name =
+      document.querySelector(".chat-user strong")?.textContent?.trim() ||
+      "this contact";
+
+    if (!window.confirm(`Block ${name}?`)) return;
+
+    const blockedUsers = loadBlockedUsers();
+
+    if (!blockedUsers.some(user => String(user?.id || "") === userId)) {
+      blockedUsers.push({
+        id: userId,
+        name,
+        identifier: userId
+      });
+
+      saveBlockedUsers(blockedUsers);
+    }
+
+    window.location.href = "blocked-users.html";
   }
 
   button.addEventListener("click", event => {
@@ -45,14 +100,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (action === "info") {
       closeMenu();
 
-      const params = new URLSearchParams(window.location.search);
-      const userId = String(params.get("user") || "").trim();
+      const userId = getChatUserId();
 
       if (userId) {
         window.location.href =
           `profile.html?user=${encodeURIComponent(userId)}`;
       }
 
+      return;
+    }
+
+    if (action === "block") {
+      closeMenu();
+      blockCurrentUser();
       return;
     }
 
@@ -72,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (action === "theme") {
-      alert("Chat wallpaper and theme settings will be available here.");
+      alert("Wallpaper and theme settings will be available here.");
       return;
     }
 
@@ -87,17 +147,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (action === "export") {
-      alert("Chat export will be connected here.");
-      return;
-    }
-
-    if (action === "block") {
-      alert("Block will be connected here.");
+      alert("Export chat will be connected here.");
       return;
     }
 
     if (action === "report") {
-      alert("Report will be connected here.");
+      closeMenu();
+
+      const userId = getChatUserId();
+
+      if (userId) {
+        window.location.href =
+          `contact-support.html?category=Report%20a%20user&subject=${encodeURIComponent(
+            `Report ZakiChat user ${userId}`
+          )}`;
+      }
+
+      return;
     }
   });
 

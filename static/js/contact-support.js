@@ -18,6 +18,25 @@
     return;
   }
 
+  function applyReportPrefill() {
+    const params = new URLSearchParams(window.location.search);
+    const requestedCategory = String(params.get("category") || "").trim();
+    const requestedSubject = String(params.get("subject") || "").trim();
+
+    if (
+      requestedCategory &&
+      [...category.options].some(
+        option => option.value === requestedCategory
+      )
+    ) {
+      category.value = requestedCategory;
+    }
+
+    if (requestedSubject && !subject.value.trim()) {
+      subject.value = requestedSubject;
+    }
+  }
+
   function updateCounter() {
     counter.textContent = `${message.value.length} / 5000`;
   }
@@ -146,5 +165,6 @@
     }
   });
 
+  applyReportPrefill();
   updateCounter();
 })();

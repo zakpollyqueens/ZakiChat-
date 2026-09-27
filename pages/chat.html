@@ -33,20 +33,20 @@
 
       <div class="chat-header-actions">
 
-        <button id="voice-call-button" type="button" aria-label="Voice call">
+        <button class="chat-icon-button" id="voice-call-button" type="button" aria-label="Voice call">
           ☎
         </button>
 
-        <button id="video-call-button" type="button" aria-label="Video call">
+        <button class="chat-icon-button" id="video-call-button" type="button" aria-label="Video call">
           ▣
         </button>
 
-        <button id="search-chat-button" type="button" aria-label="Search">
+        <button class="chat-icon-button" id="search-chat-button" type="button" aria-label="Search">
           ⌕
         </button>
 
         <div id="chat-more-wrapper">
-          <button id="chat-more-button" type="button" aria-label="More">
+          <button class="chat-icon-button" id="chat-more-button" type="button" aria-label="More">
             ⋮
           </button>
 
@@ -142,8 +142,12 @@
 
   </div>
 
-  <script src="../static/js/auth-guard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../static/js/appearance.js"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/messages.js"></script>
   <script src="../static/js/realtime.js"></script>
   <script src="../static/js/media.js"></script>
@@ -153,6 +157,7 @@
   <script src="../static/js/emoji-picker.js"></script>
   <script src="../static/js/chat-search.js"></script>
   <script src="../static/js/chat-more-menu.js"></script>
+  <script src="../static/js/communication.js"></script>
   <script src="../static/js/chat.js"></script>
 
   <script>
