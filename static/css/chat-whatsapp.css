@@ -798,3 +798,342 @@
     border-radius: 19px;
   }
 }
+
+/* =========================================================
+   ZakiChat mobile keyboard-aware composer
+   WhatsApp-style viewport behavior
+   ========================================================= */
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body.chat-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.chat-shell {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.messages-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.messages-list {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.message-composer {
+  flex: 0 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 100;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  transform: translateY(0);
+  transition: transform .18s ease;
+}
+
+.message-composer.keyboard-raised {
+  transform: translateY(var(--keyboard-offset, 0px));
+}
+
+.message-composer input[type="text"] {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+@media (max-width: 600px) {
+  body.chat-page {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .chat-shell {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .chat-header {
+    flex: 0 0 auto;
+  }
+
+  .messages-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .messages-list {
+    padding-bottom: 14px;
+  }
+
+  .message-composer {
+    min-height: 56px;
+    padding-top: 7px;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .message-composer input[type="text"] {
+    min-height: 42px;
+    height: 42px;
+  }
+
+  #voice-note-button,
+  #send-message-button {
+    flex: 0 0 42px;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+  }
+}
+
+/* Android keyboard compensation */
+body.zaki-keyboard-open .messages-list {
+  scroll-padding-bottom: 90px;
+}
+
+body.zaki-keyboard-open .message-composer {
+  z-index: 999;
+}
+
+
+/* =========================================================
+   ZakiChat Mobile Composer Engine
+   ========================================================= */
+
+html,
+body.chat-page {
+  width: 100%;
+  margin: 0;
+  background: #050b14;
+}
+
+body.chat-page {
+  min-height: var(--zaki-visual-height, 100dvh);
+  height: var(--zaki-visual-height, 100dvh);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.chat-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: var(--zaki-visual-height, 100dvh);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.messages-panel {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.messages-list {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding:
+    14px 10px
+    calc(
+      92px +
+      env(safe-area-inset-bottom)
+    );
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+}
+
+.message-composer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--zaki-composer-bottom, 0px);
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+  width: 100%;
+
+  padding:
+    7px
+    8px
+    max(
+      7px,
+      env(safe-area-inset-bottom)
+    );
+
+  gap: 5px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5,12,23,.78),
+      rgba(5,12,23,.98)
+    );
+
+  border-top:
+    1px solid
+    rgba(255,255,255,.08);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  transform: translate3d(
+    0,
+    0,
+    0
+  );
+
+  transition:
+    bottom .12s ease,
+    box-shadow .18s ease;
+}
+
+body.zaki-keyboard-open
+.message-composer {
+  box-shadow:
+    0 -12px 35px
+    rgba(0,0,0,.34);
+}
+
+.message-composer input[type="text"] {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.message-composer button {
+  flex: 0 0 42px;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+}
+
+.message-composer button[hidden] {
+  display: none !important;
+}
+
+#emoji-button,
+#attach-file-button,
+#voice-note-button,
+#send-message-button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+#voice-note-button {
+  background:
+    rgba(255,255,255,.055);
+}
+
+#send-message-button {
+  background:
+    linear-gradient(
+      135deg,
+      #16d9c5,
+      #536dfe
+    ) !important;
+}
+
+body.zaki-composer-focused
+.message-composer input[type="text"] {
+  border-color:
+    rgba(22,217,197,.25);
+  box-shadow:
+    0 0 0 2px
+    rgba(22,217,197,.05);
+}
+
+@media (max-width: 600px) {
+  .messages-list {
+    padding:
+      10px 7px
+      calc(
+        88px +
+        env(safe-area-inset-bottom)
+      );
+  }
+
+  .message-composer {
+    gap: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .message-composer input[type="text"] {
+    height: 42px;
+    min-height: 42px;
+    padding-left: 14px;
+    padding-right: 14px;
+    font-size: 15px;
+  }
+
+  .message-composer button {
+    flex-basis: 40px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 380px) {
+  .message-composer {
+    gap: 3px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .message-composer button {
+    flex-basis: 38px;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+  }
+
+  .message-composer input[type="text"] {
+    height: 40px;
+    min-height: 40px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (min-width: 601px) {
+  .message-composer {
+    position: relative;
+    bottom: auto;
+  }
+}

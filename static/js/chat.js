@@ -41,7 +41,7 @@ document.addEventListener(
 
     const messagesPanel =
       document.querySelector(
-        ".messages-panel"
+        ".messages-list"
       );
 
     const composer =
@@ -1847,7 +1847,7 @@ document.addEventListener(
                 message.reply_to_message_id
               );
 
-            message.replly_to_content =
+            message.reply_to_content =
               preview ||
               "Message unavailable";
           }
@@ -2028,7 +2028,6 @@ if (
   }, 500);
 }
 
-      subscribeToMessages();
     } catch (error) {
       console.error(
         "ZakiChat chat initialization failed:",
@@ -2042,3 +2041,103 @@ if (
     }
   }
 );
+
+/* =========================================================
+   ZakiChat mobile keyboard-aware composer
+   ========================================================= */
+
+(function setupKeyboardAwareComposer() {
+  const composer = document.querySelector(".message-composer");
+  const messagesPanel = document.querySelector(".messages-panel");
+
+  if (!composer) return;
+
+  const viewport = window.visualViewport;
+
+  function updateKeyboardPosition() {
+    if (!viewport) return;
+
+    const keyboardHeight = Math.max(
+      0,
+      window.innerHeight - viewport.height - viewport.offsetTop
+    );
+
+    const isKeyboardOpen = keyboardHeight > 120;
+
+    document.body.classList.toggle(
+      "zaki-keyboard-open",
+      isKeyboardOpen
+    );
+
+    if (isKeyboardOpen) {
+      composer.style.setProperty(
+        "--keyboard-offset",
+        `${keyboardHeight}px`
+      );
+      composer.classList.add("keyboard-raised");
+
+      requestAnimationFrame(() => {
+        if (messagesPanel) {
+          messagesPanel.scrollTop =
+            messagesPanel.scrollHeight;
+        }
+      });
+    } else {
+      composer.style.removeProperty(
+        "--keyboard-offset"
+      );
+      composer.classList.remove(
+        "keyboard-raised"
+      );
+    }
+  }
+
+  viewport?.addEventListener(
+    "resize",
+    updateKeyboardPosition
+  );
+
+  viewport?.addEventListener(
+    "scroll",
+    updateKeyboardPosition
+  );
+
+  window.addEventListener(
+    "resize",
+    updateKeyboardPosition
+  );
+
+  document.addEventListener(
+    "focusin",
+    event => {
+      if (
+        event.target.matches(
+          ".message-composer input, .message-composer textarea"
+        )
+      ) {
+        setTimeout(
+          updateKeyboardPosition,
+          120
+        );
+      }
+    }
+  );
+
+  document.addEventListener(
+    "focusout",
+    event => {
+      if (
+        event.target.matches(
+          ".message-composer input, .message-composer textarea"
+        )
+      ) {
+        setTimeout(
+          updateKeyboardPosition,
+          180
+        );
+      }
+    }
+  );
+
+  updateKeyboardPosition();
+})();

@@ -579,7 +579,7 @@
     appendMessage(message) {
       const panel =
         document.querySelector(
-          ".messages-panel"
+          ".messages-list"
         );
 
       if (
@@ -1015,7 +1015,7 @@
     ) {
       const panel =
         document.querySelector(
-          ".messages-panel"
+          ".messages-list"
         );
 
       if (!panel || !message) {
