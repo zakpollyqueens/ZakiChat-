@@ -180,15 +180,24 @@
       <button
         type="button"
         id="emoji-button"
+        class="composer-icon-button composer-emoji-button"
         aria-label="Emoji">
-        ☺
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"></circle>
+          <circle cx="9" cy="10" r="0.9" class="fill"></circle>
+          <circle cx="15" cy="10" r="0.9" class="fill"></circle>
+          <path d="M8.5 14c.9 1.4 2.1 2.1 3.5 2.1s2.6-.7 3.5-2.1"></path>
+        </svg>
       </button>
 
       <button
         type="button"
         id="attach-file-button"
+        class="composer-icon-button composer-attach-button"
         aria-label="Attach">
-        ＋
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8.5 12.8 14.9 6.4a3.2 3.2 0 0 1 4.5 4.5l-7.8 7.8a4.6 4.6 0 0 1-6.5-6.5l7.5-7.5"></path>
+        </svg>
       </button>
 
       <input
@@ -196,20 +205,30 @@
         name="message"
         placeholder="Message"
         autocomplete="off"
-        enterkeyhint="send">
+        enterkeyhint="send"
+        aria-label="Message">
 
       <button
         type="button"
         id="voice-note-button"
+        class="composer-icon-button composer-voice-button"
         aria-label="Voice message">
-        🎙
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="9" y="4" width="6" height="11" rx="3"></rect>
+          <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0"></path>
+          <path d="M12 17v3"></path>
+          <path d="M9.5 20h5"></path>
+        </svg>
       </button>
 
       <button
         type="submit"
         id="send-message-button"
+        class="composer-icon-button send-message-button"
         aria-label="Send">
-        ➤
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m4 4 16 8-16 8 3.2-7.1L13 12 7.2 11.1 4 4Z"></path>
+        </svg>
       </button>
 
     </form>
