@@ -88,60 +88,185 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const { error } = await db
-      .from("blocked_users")
-      .upsert(
-        {
-          blocker_id: currentUser.id,
-          blocked_id: userId
-        },
-        {
-          onConflict: "blocker_id,blocked_id"
-        }
-      );
+    const { data: existing, error: checkError } =
+      await db
+        .from("blocked_users")
+        .select("id")
+        .eq("blocker_id", currentUser.id)
+        .eq("blocked_id", userId)
+        .maybeSingle();
 
-    if (error) {
-      console.error("ZakiChat block user:", error);
-      alert("Unable to block this contact right now.");
+    if (checkError) {
+      console.error(
+        "ZakiChat block check:",
+        checkError
+      );
+      alert(
+        checkError.message ||
+        "Unable to check the block status."
+      );
       return;
     }
 
-    window.location.href = "blocked-users.html";
+    if (!existing) {
+      const { error } =
+        await db
+          .from("blocked_users")
+          .insert({
+            blocker_id: currentUser.id,
+            blocked_id: userId
+          });
+
+      if (error) {
+        console.error(
+          "ZakiChat block user:",
+          error
+        );
+        alert(
+          error.message ||
+          "Unable to block this contact right now."
+        );
+        return;
+      }
+    }
+
+    window.location.href =
+      "blocked-users.html";
   }
 
   async function clearChat() {
-    const conversationId = getConversationId();
+    const userId = getUserId();
     const currentUser = await getCurrentUser();
 
-    if (!conversationId || !currentUser || !window.ZakiMessages) {
-      alert("Unable to clear this chat right now.");
+    if (!currentUser) {
+      alert("Please sign in again.");
       return;
     }
 
-    if (!window.confirm("Clear your messages from this chat?")) {
+    if (!userId) {
+      alert("Unable to identify this contact.");
       return;
     }
 
-    const result = await window.ZakiMessages.clearConversation(
-      conversationId,
-      currentUser.id
-    );
+    let conversationId =
+      getConversationId();
+
+    /*
+     * Resolve the conversation directly if the
+     * chat page has not exposed its ID yet.
+     */
+    if (!conversationId) {
+      const { data, error } =
+        await db.rpc(
+          "get_or_create_direct_conversation",
+          {
+            p_other_user_id: userId
+          }
+        );
+
+      if (error) {
+        console.error(
+          "ZakiChat clear conversation lookup:",
+          error
+        );
+
+        alert(
+          error.message ||
+          "Unable to open this conversation."
+        );
+
+        return;
+      }
+
+      conversationId = data;
+    }
+
+    if (!conversationId) {
+      alert(
+        "Unable to identify this conversation."
+      );
+      return;
+    }
+
+    if (
+      !window.ZakiMessages ||
+      typeof window.ZakiMessages.clearConversation !==
+        "function"
+    ) {
+      alert(
+        "Chat tools are not ready yet. Please try again."
+      );
+      return;
+    }
+
+    if (
+      !window.confirm(
+        `Clear your messages with ${getUserName()}?`
+      )
+    ) {
+      return;
+    }
+
+    const result =
+      await window.ZakiMessages.clearConversation(
+        conversationId,
+        currentUser.id
+      );
 
     if (result?.error) {
-      console.error("ZakiChat clear chat:", result.error);
+      console.error(
+        "ZakiChat clear chat:",
+        result.error
+      );
+
       alert(
         result.error.message ||
         "Unable to clear this chat."
       );
+
       return;
     }
 
-    document.querySelector(".messages-list")?.replaceChildren();
+    document
+      .querySelector(".messages-list")
+      ?.replaceChildren();
 
-    alert("Your messages have been cleared from this chat.");
+    alert(
+      "Your messages from this conversation have been cleared from your chat view."
+    );
   }
 
   async function exportChat() {
+    const modal =
+      document.getElementById("export-chat-modal");
+
+    const contact =
+      document.getElementById("export-chat-contact");
+
+    if (!modal) {
+      await performExport();
+      return;
+    }
+
+    if (contact) {
+      contact.textContent = getUserName();
+    }
+
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeExportModal() {
+    const modal =
+      document.getElementById("export-chat-modal");
+
+    if (!modal) return;
+
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  async function performExport() {
     const conversationId = getConversationId();
 
     if (!conversationId || !window.ZakiMessages) {
@@ -155,11 +280,16 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     if (result?.error) {
-      console.error("ZakiChat export chat:", result.error);
+      console.error(
+        "ZakiChat export chat:",
+        result.error
+      );
+
       alert(
         result.error.message ||
         "Unable to export this chat."
       );
+
       return;
     }
 
@@ -181,7 +311,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     messages.forEach(message => {
       const time = message.created_at
-        ? new Date(message.created_at).toLocaleString()
+        ? new Date(
+            message.created_at
+          ).toLocaleString()
         : "";
 
       const content = message.deleted_at
@@ -192,28 +324,46 @@ document.addEventListener("DOMContentLoaded", () => {
             "[Attachment]"
           );
 
-      lines.push(`[${time}] ${content}`);
+      lines.push(
+        `[${time}] ${content}`
+      );
     });
 
     const blob = new Blob(
       [lines.join("\n")],
-      { type: "text/plain;charset=utf-8" }
+      {
+        type:
+          "text/plain;charset=utf-8"
+      }
     );
 
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const url =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement("a");
 
     link.href = url;
+
     link.download =
       `ZakiChat-${getUserName()
-        .replace(/[^a-z0-9-_]+/gi, "-")
-        .replace(/^-+|-+$/g, "") || "chat"}.txt`;
+        .replace(
+          /[^a-z0-9-_]+/gi,
+          "-"
+        )
+        .replace(
+          /^-+|-+$/g,
+          ""
+        ) || "chat"}.txt`;
 
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(
+      () => URL.revokeObjectURL(url),
+      1000
+    );
   }
 
   button.addEventListener("click", event => {

@@ -43,6 +43,12 @@
   const resetButton =
     document.getElementById("resetTheme");
 
+  const customWallpaperInput =
+    document.getElementById("customWallpaperInput");
+
+  const customWallpaperButton =
+    document.getElementById("customWallpaperButton");
+
   let currentUser = null;
   let conversationId = null;
 
@@ -160,8 +166,33 @@
       "wallpaper-aurora",
       "wallpaper-mesh",
       "wallpaper-stars",
-      "wallpaper-waves"
+      "wallpaper-waves",
+      "wallpaper-custom"
     );
+
+    preview.style.removeProperty(
+      "background-image"
+    );
+
+    if (
+      typeof wallpaper === "string" &&
+      wallpaper.startsWith("custom:")
+    ) {
+      preview.classList.add(
+        "wallpaper-custom"
+      );
+
+      preview.style.backgroundImage =
+        `url("${wallpaper.slice(7)}")`;
+
+      setActive(
+        wallpaperGrid,
+        "data-wallpaper",
+        ""
+      );
+
+      return;
+    }
 
     preview.classList.add(
       `wallpaper-${wallpaper}`
@@ -179,7 +210,7 @@
       await db.rpc(
         "get_or_create_direct_conversation",
         {
-          target_user_id: targetUserId
+          p_other_user_id: targetUserId
         }
       );
 
@@ -378,6 +409,104 @@
       );
     }
   );
+  async function createCustomWallpaper(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onload = async () => {
+        const maxSize = 1400;
+
+        const scale =
+          Math.min(
+            1,
+            maxSize /
+              Math.max(
+                image.width,
+                image.height
+              )
+          );
+
+        const canvas =
+          document.createElement("canvas");
+
+        canvas.width =
+          Math.max(
+            1,
+            Math.round(image.width * scale)
+          );
+
+        canvas.height =
+          Math.max(
+            1,
+            Math.round(image.height * scale)
+          );
+
+        const context =
+          canvas.getContext("2d");
+
+        if (!context) {
+          notify("Unable to process this photo.");
+          return;
+        }
+
+        context.drawImage(
+          image,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        const wallpaper =
+          "custom:" +
+          canvas.toDataURL(
+            "image/jpeg",
+            0.82
+          );
+
+        await saveWallpaper(wallpaper);
+
+        notify("Photo wallpaper updated.");
+      };
+
+      image.onerror = () =>
+        notify("Unable to read this photo.");
+
+      image.src = reader.result;
+    };
+
+    reader.onerror = () =>
+      notify("Unable to load this photo.");
+
+    reader.readAsDataURL(file);
+  }
+
+  customWallpaperButton?.addEventListener(
+    "click",
+    () => customWallpaperInput?.click()
+  );
+
+  customWallpaperInput?.addEventListener(
+    "change",
+    event => {
+      const file =
+        event.target.files?.[0];
+
+      if (file) {
+        void createCustomWallpaper(file);
+      }
+
+      event.target.value = "";
+    }
+  );
+
+
 
   resetButton.addEventListener(
     "click",

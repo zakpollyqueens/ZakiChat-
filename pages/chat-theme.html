@@ -107,7 +107,27 @@
         <small>Select a background for this conversation</small>
       </div>
 
-      <div class="wallpaper-grid" id="wallpaperGrid">
+      <div class="custom-wallpaper-picker">
+  <input
+    id="customWallpaperInput"
+    type="file"
+    accept="image/*"
+    hidden
+  >
+  <button
+    id="customWallpaperButton"
+    type="button"
+    class="custom-wallpaper-button"
+  >
+    <span aria-hidden="true">＋</span>
+    <span>
+      <strong>Photo from device</strong>
+      <small>Use your own picture as this chat wallpaper</small>
+    </span>
+  </button>
+</div>
+
+<div class="wallpaper-grid" id="wallpaperGrid">
 
         <button
           type="button"

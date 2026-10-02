@@ -135,6 +135,24 @@ document.addEventListener(
       );
     }
 
+    /*
+     * Capture the chat form before async initialization.
+     * Prevent Android/browser form submission from reloading
+     * the chat page instead of sending the message.
+     */
+    composer?.addEventListener(
+      "submit",
+      event => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (typeof sendMessage === "function") {
+          void sendMessage();
+        }
+      },
+      { capture: true }
+    );
+
     const params =
       new URLSearchParams(
         window.location.search
@@ -400,6 +418,92 @@ document.addEventListener(
       await updateStatusRing();
     }
 
+    async function loadChatAppearance() {
+      if (!currentUser || !conversationId) {
+        return;
+      }
+
+      const chatShell =
+        document.querySelector(".chat-shell");
+
+      if (!chatShell) {
+        return;
+      }
+
+      const wallpaperClasses = [
+        "chat-wallpaper-aurora",
+        "chat-wallpaper-mesh",
+        "chat-wallpaper-stars",
+        "chat-wallpaper-waves"
+      ];
+
+      let wallpaper =
+        localStorage.getItem(
+          `zakichat:chat-theme:${currentUser.id}:${targetUserId}:wallpaper`
+        ) || "aurora";
+
+      const { data, error } =
+        await db
+          .from("conversation_user_settings")
+          .select("wallpaper")
+          .eq("conversation_id", conversationId)
+          .eq("user_id", currentUser.id)
+          .maybeSingle();
+
+      if (!error && data?.wallpaper) {
+        wallpaper = data.wallpaper;
+
+        localStorage.setItem(
+          `zakichat:chat-theme:${currentUser.id}:${targetUserId}:wallpaper`,
+          wallpaper
+        );
+      }
+
+      const isCustomWallpaper =
+        typeof wallpaper === "string" &&
+        wallpaper.startsWith("custom:");
+
+      if (
+        !isCustomWallpaper &&
+        ![
+          "aurora",
+          "mesh",
+          "stars",
+          "waves"
+        ].includes(wallpaper)
+      ) {
+        wallpaper = "aurora";
+      }
+
+      wallpaperClasses.forEach(
+        className =>
+          chatShell.classList.remove(className)
+      );
+
+      chatShell.style.removeProperty(
+        "background-image"
+      );
+
+      if (
+        typeof wallpaper === "string" &&
+        wallpaper.startsWith("custom:")
+      ) {
+        chatShell.classList.add(
+          "chat-wallpaper-custom"
+        );
+
+        chatShell.style.backgroundImage =
+          `url("${wallpaper.slice(7)}")`;
+      } else {
+        chatShell.classList.add(
+          `chat-wallpaper-${wallpaper}`
+        );
+      }
+
+      document.body.dataset.zakiChatWallpaper =
+        wallpaper;
+    }
+
     async function getConversation() {
       const {
         data,
@@ -423,6 +527,17 @@ document.addEventListener(
       }
 
       conversationId = data;
+
+      /*
+       * Make the resolved conversation ID available to
+       * chat-level controls such as Clear and Export.
+       */
+      window.ZakiChatConversationId =
+        conversationId;
+      window.chatConversationId =
+        conversationId;
+
+      await loadChatAppearance();
 
       if (window.ZakiCommunication) {
         window.ZakiCommunication.init(
@@ -1821,15 +1936,6 @@ document.addEventListener(
         refreshChat
       );
 
-    composer?.addEventListener(
-      "submit",
-      async event => {
-        event.preventDefault();
-
-        await sendMessage();
-      }
-    );
-
     if (messageInput) {
       messageInput.addEventListener(
         "keydown",
@@ -1967,6 +2073,9 @@ document.addEventListener(
             `messages:${conversationId}`
           );
         }
+
+        window.ZakiChatConversationId = null;
+        window.chatConversationId = null;
       }
     );
 
@@ -2092,103 +2201,3 @@ if (
     }
   }
 );
-
-/* =========================================================
-   ZakiChat mobile keyboard-aware composer
-   ========================================================= */
-
-(function setupKeyboardAwareComposer() {
-  const composer = document.querySelector(".message-composer");
-  const messagesPanel = document.querySelector(".messages-panel");
-
-  if (!composer) return;
-
-  const viewport = window.visualViewport;
-
-  function updateKeyboardPosition() {
-    if (!viewport) return;
-
-    const keyboardHeight = Math.max(
-      0,
-      window.innerHeight - viewport.height - viewport.offsetTop
-    );
-
-    const isKeyboardOpen = keyboardHeight > 120;
-
-    document.body.classList.toggle(
-      "zaki-keyboard-open",
-      isKeyboardOpen
-    );
-
-    if (isKeyboardOpen) {
-      composer.style.setProperty(
-        "--keyboard-offset",
-        `${keyboardHeight}px`
-      );
-      composer.classList.add("keyboard-raised");
-
-      requestAnimationFrame(() => {
-        if (messagesPanel) {
-          messagesPanel.scrollTop =
-            messagesPanel.scrollHeight;
-        }
-      });
-    } else {
-      composer.style.removeProperty(
-        "--keyboard-offset"
-      );
-      composer.classList.remove(
-        "keyboard-raised"
-      );
-    }
-  }
-
-  viewport?.addEventListener(
-    "resize",
-    updateKeyboardPosition
-  );
-
-  viewport?.addEventListener(
-    "scroll",
-    updateKeyboardPosition
-  );
-
-  window.addEventListener(
-    "resize",
-    updateKeyboardPosition
-  );
-
-  document.addEventListener(
-    "focusin",
-    event => {
-      if (
-        event.target.matches(
-          ".message-composer input, .message-composer textarea"
-        )
-      ) {
-        setTimeout(
-          updateKeyboardPosition,
-          120
-        );
-      }
-    }
-  );
-
-  document.addEventListener(
-    "focusout",
-    event => {
-      if (
-        event.target.matches(
-          ".message-composer input, .message-composer textarea"
-        )
-      ) {
-        setTimeout(
-          updateKeyboardPosition,
-          180
-        );
-      }
-    }
-  );
-
-  updateKeyboardPosition();
-})();

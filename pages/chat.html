@@ -172,6 +172,61 @@
       </section>
     </div>
 
+    <div
+      id="export-chat-modal"
+      class="chat-export-modal"
+      hidden
+      aria-hidden="true"
+    >
+      <div
+        class="chat-export-backdrop"
+        data-export-cancel
+      ></div>
+
+      <section
+        class="chat-export-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="export-chat-title"
+      >
+        <div class="chat-export-icon" aria-hidden="true">
+          ↗
+        </div>
+
+        <h2 id="export-chat-title">
+          Export chat
+        </h2>
+
+        <p>
+          Create a text copy of this conversation
+          that you can save or share.
+        </p>
+
+        <div class="chat-export-summary">
+          <span>Conversation</span>
+          <strong id="export-chat-contact">This contact</strong>
+        </div>
+
+        <div class="chat-export-actions">
+          <button
+            type="button"
+            class="chat-export-cancel"
+            data-export-cancel
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="chat-export-confirm"
+            id="confirm-export-chat"
+          >
+            Export .txt
+          </button>
+        </div>
+      </section>
+    </div>
+
     <div id="message-edit-bar" class="message-action-bar" hidden>
       <div>
         <small>Editing message</small>

@@ -424,3 +424,140 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Custom photo wallpaper */
+.custom-wallpaper-picker {
+  margin: 14px 0 18px;
+}
+
+.custom-wallpaper-button {
+  width: 100%;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 15px;
+  border: 1px solid rgba(0, 255, 214, .22);
+  border-radius: 18px;
+  color: inherit;
+  background: rgba(7, 18, 24, .78);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .24);
+  text-align: left;
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.custom-wallpaper-button > span:first-child {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: rgba(0, 255, 214, .10);
+  color: #8ffff0;
+  font-size: 24px;
+}
+
+.custom-wallpaper-button strong,
+.custom-wallpaper-button small {
+  display: block;
+}
+
+.custom-wallpaper-button small {
+  margin-top: 4px;
+  opacity: .65;
+  font-size: 12px;
+}
+
+.custom-wallpaper-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 255, 214, .48);
+  background: rgba(10, 25, 32, .92);
+}
+
+.custom-wallpaper-button:active {
+  transform: scale(.98);
+}
+
+/* =========================================================
+   CUSTOM PHOTO WALLPAPER
+   ========================================================= */
+
+.custom-wallpaper-picker {
+  margin: 14px 0 18px;
+}
+
+.custom-wallpaper-button {
+  width: 100%;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 15px;
+  border: 1px solid rgba(0, 255, 214, .22);
+  border-radius: 18px;
+  color: inherit;
+  background: rgba(7, 18, 24, .82);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .28);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.custom-wallpaper-button > span:first-child {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  border-radius: 13px;
+  background: rgba(0, 255, 214, .10);
+  color: #8ffff0;
+  font-size: 24px;
+}
+
+.custom-wallpaper-button strong,
+.custom-wallpaper-button small {
+  display: block;
+}
+
+.custom-wallpaper-button strong {
+  font-size: 14px;
+}
+
+.custom-wallpaper-button small {
+  margin-top: 4px;
+  opacity: .65;
+  font-size: 12px;
+}
+
+.custom-wallpaper-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 255, 214, .48);
+  background: rgba(10, 25, 32, .94);
+}
+
+.custom-wallpaper-button:active {
+  transform: scale(.98);
+}
+
+.chat-preview.wallpaper-custom {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+@media (max-width: 600px) {
+  .custom-wallpaper-button {
+    min-height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-wallpaper-button {
+    transition: none;
+  }
+}

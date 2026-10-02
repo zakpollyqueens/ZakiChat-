@@ -166,7 +166,7 @@
       await db.rpc(
         "get_or_create_direct_conversation",
         {
-          target_user_id: userId
+          p_other_user_id: userId
         }
       );
 

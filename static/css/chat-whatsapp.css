@@ -853,7 +853,7 @@ body.chat-page {
 }
 
 .message-composer.keyboard-raised {
-  transform: translateY(var(--keyboard-offset, 0px));
+  transform: none !important;
 }
 
 .message-composer input[type="text"] {
@@ -3683,5 +3683,655 @@ body.zaki-keyboard-open .message-composer#message-composer {
   .chat-header-actions .chat-call-button svg,
   .chat-header-actions .chat-video-button svg {
     transition: none !important;
+  }
+}
+
+/* =========================================================
+   ZAKICHAT AURORA CALL SCREEN
+   ========================================================= */
+
+#zaki-call-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(28, 220, 205, .16), transparent 34%),
+    radial-gradient(circle at 15% 80%, rgba(100, 70, 255, .12), transparent 38%),
+    #070b13;
+  color: #fff;
+  overflow: hidden;
+}
+
+#zaki-call-overlay[hidden],
+#zaki-incoming-call[hidden] {
+  display: none !important;
+}
+
+#zaki-call-overlay .zaki-call-header {
+  min-height: 74px;
+  padding: max(14px, env(safe-area-inset-top)) 18px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8, 13, 24, .78);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(22px);
+}
+
+#zaki-call-overlay .zaki-call-status {
+  text-align: center;
+  flex: 1;
+}
+
+#zaki-call-overlay .zaki-call-name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+#zaki-call-overlay .zaki-call-state {
+  margin-top: 4px;
+  font-size: 13px;
+  color: rgba(255,255,255,.62);
+}
+
+#zaki-call-overlay .zaki-call-close {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-size: 25px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+#zaki-call-overlay .zaki-call-close:hover {
+  transform: rotate(90deg) scale(1.05);
+  background: rgba(255,70,110,.16);
+}
+
+#zaki-call-overlay .zaki-call-video {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+#zaki-call-overlay video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#zaki-call-overlay .zaki-remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #050810;
+}
+
+#zaki-call-overlay .zaki-local-video {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 112px;
+  height: 158px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 14px 40px rgba(0,0,0,.45);
+  background: #101522;
+}
+
+#zaki-call-overlay .zaki-call-avatar {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(145deg, rgba(25,230,210,.25), rgba(95,70,255,.24)),
+    #111827;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 0 0 12px rgba(30,210,200,.035),
+    0 0 55px rgba(30,210,200,.18);
+  animation: zakiCallPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes zakiCallPulse {
+  50% {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 0 20px rgba(30,210,200,.02),
+      0 0 70px rgba(30,210,200,.24);
+  }
+}
+
+#zaki-call-overlay .zaki-call-controls {
+  padding: 18px 18px max(22px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(
+    to top,
+    rgba(5,8,16,.98),
+    rgba(5,8,16,.78)
+  );
+  backdrop-filter: blur(20px);
+}
+
+#zaki-call-overlay .zaki-call-control {
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 50%;
+  background: rgba(255,255,255,.075);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .18s ease, background .18s ease;
+  font-size: 19px;
+}
+
+#zaki-call-overlay .zaki-call-control:hover {
+  transform: translateY(-3px);
+  background: rgba(255,255,255,.13);
+}
+
+#zaki-call-overlay .zaki-call-control:active {
+  transform: scale(.92);
+}
+
+#zaki-call-overlay .zaki-end-call {
+  width: 62px;
+  height: 62px;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ff426d, #d91548);
+  color: #fff;
+  box-shadow: 0 12px 32px rgba(240,30,80,.3);
+  font-size: 22px;
+}
+
+#zaki-call-overlay .zaki-end-call:hover {
+  background: linear-gradient(145deg, #ff547c, #ed1e55);
+  transform: translateY(-3px) scale(1.04);
+}
+
+/* Incoming call */
+
+#zaki-incoming-call {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 11000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(30,220,205,.18), transparent 35%),
+    rgba(3,7,14,.92);
+  backdrop-filter: blur(22px);
+}
+
+#zaki-incoming-call .zaki-incoming-card {
+  width: min(390px, 100%);
+  padding: 34px 24px 26px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 30px;
+  text-align: center;
+  background:
+    linear-gradient(145deg, rgba(18,28,43,.96), rgba(8,14,25,.98));
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.58),
+    0 0 60px rgba(30,210,200,.08);
+}
+
+#zaki-incoming-call .zaki-incoming-avatar {
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 0 45px rgba(30,210,200,.18);
+}
+
+#zaki-incoming-call .zaki-incoming-name {
+  font-size: 23px;
+  font-weight: 750;
+}
+
+#zaki-incoming-call .zaki-incoming-type {
+  margin-top: 6px;
+  color: rgba(255,255,255,.6);
+}
+
+#zaki-incoming-call .zaki-incoming-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+#zaki-incoming-call button {
+  width: 64px;
+  height: 64px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+#zaki-incoming-call button:active {
+  transform: scale(.9);
+}
+
+#zaki-incoming-call .zaki-decline-call {
+  background: linear-gradient(145deg, #ff426d, #d91548);
+  box-shadow: 0 12px 30px rgba(240,30,80,.25);
+}
+
+#zaki-incoming-call .zaki-answer-call {
+  background: linear-gradient(145deg, #19d9c5, #0b9fba);
+  box-shadow: 0 12px 30px rgba(20,210,190,.25);
+}
+
+@media (max-width: 600px) {
+  #zaki-call-overlay .zaki-local-video {
+    width: 92px;
+    height: 130px;
+    right: 12px;
+    top: 12px;
+    border-radius: 14px;
+  }
+
+  #zaki-call-overlay .zaki-call-controls {
+    gap: 10px;
+  }
+
+  #zaki-call-overlay .zaki-call-control {
+    width: 50px;
+    height: 50px;
+  }
+
+  #zaki-call-overlay .zaki-end-call {
+    width: 58px;
+    height: 58px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #zaki-call-overlay .zaki-call-avatar {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   CHAT WALLPAPER PERSISTENCE
+   ========================================================= */
+
+.chat-shell.chat-wallpaper-aurora {
+  background:
+    radial-gradient(
+      circle at 15% 18%,
+      rgba(0, 220, 190, .12),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 88% 72%,
+      rgba(0, 120, 210, .13),
+      transparent 42%
+    ),
+    #07131d !important;
+}
+
+.chat-shell.chat-wallpaper-mesh {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 220, 210, .10),
+      transparent 42%
+    ),
+    linear-gradient(
+      315deg,
+      rgba(80, 100, 255, .10),
+      transparent 46%
+    ),
+    #08151f !important;
+}
+
+.chat-shell.chat-wallpaper-stars {
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      #6bcbd4 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 70% 35%,
+      #79a9d8 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 40% 75%,
+      #75d6c7 0 1px,
+      transparent 2px
+    ),
+    #050d16 !important;
+  background-size:
+    44px 38px,
+    58px 47px,
+    64px 55px !important;
+}
+
+.chat-shell.chat-wallpaper-waves {
+  background:
+    radial-gradient(
+      ellipse at 0% 100%,
+      rgba(0, 190, 200, .18),
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse at 100% 0%,
+      rgba(0, 110, 190, .20),
+      transparent 50%
+    ),
+    #081522 !important;
+}
+
+.chat-shell.chat-wallpaper-aurora .messages-list,
+.chat-shell.chat-wallpaper-mesh .messages-list,
+.chat-shell.chat-wallpaper-stars .messages-list,
+.chat-shell.chat-wallpaper-waves .messages-list {
+  background: transparent !important;
+}
+
+
+/* =========================================================
+   ZAKICHAT CHAT WALLPAPER SYSTEM
+   ========================================================= */
+
+.chat-shell.chat-wallpaper-aurora {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0, 255, 214, .10), transparent 32%),
+    radial-gradient(circle at 85% 15%, rgba(123, 92, 255, .12), transparent 34%),
+    radial-gradient(circle at 50% 90%, rgba(0, 170, 255, .08), transparent 38%),
+    #071014 !important;
+}
+
+.chat-shell.chat-wallpaper-mesh {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(0, 255, 214, .13), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(70, 100, 255, .14), transparent 30%),
+    radial-gradient(circle at 50% 80%, rgba(170, 70, 255, .10), transparent 34%),
+    linear-gradient(135deg, #050b10, #0b111b 48%, #071014) !important;
+}
+
+.chat-shell.chat-wallpaper-stars {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,.22) 0 1px, transparent 2px),
+    radial-gradient(circle at 28% 42%, rgba(0,255,220,.20) 0 1px, transparent 2px),
+    radial-gradient(circle at 62% 24%, rgba(255,255,255,.18) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 58%, rgba(100,150,255,.20) 0 1px, transparent 2px),
+    radial-gradient(circle at 45% 78%, rgba(255,255,255,.16) 0 1px, transparent 2px),
+    linear-gradient(160deg, #03070b, #08111b 55%, #04090d) !important;
+  background-size: 180px 180px, 230px 230px, 270px 270px, 210px 210px, 300px 300px, auto !important;
+}
+
+.chat-shell.chat-wallpaper-waves {
+  background:
+    radial-gradient(
+      ellipse at 20% 10%,
+      rgba(0, 255, 214, .12),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 80% 90%,
+      rgba(80, 90, 255, .13),
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #050b10 0%,
+      #08151a 45%,
+      #060b14 100%
+    ) !important;
+}
+
+.chat-shell[class*="chat-wallpaper-"] .messages-list {
+  background: transparent !important;
+}
+
+.chat-shell[class*="chat-wallpaper-"] .chat-header,
+.chat-shell[class*="chat-wallpaper-"] .message-composer {
+  background-color: rgba(5, 12, 17, .82) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@media (max-width: 600px) {
+  .chat-shell[class*="chat-wallpaper-"] {
+    background-attachment: scroll !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-shell[class*="chat-wallpaper-"] {
+    background-attachment: scroll !important;
+  }
+}
+
+/* =========================================================
+   CUSTOM CHAT WALLPAPER
+   ========================================================= */
+
+.chat-shell.chat-wallpaper-custom {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  background-color: #05090d !important;
+  background-blend-mode: overlay !important;
+}
+
+.chat-shell.chat-wallpaper-custom .messages-list {
+  background:
+    linear-gradient(
+      rgba(3, 8, 12, .48),
+      rgba(3, 8, 12, .58)
+    ) !important;
+}
+
+.chat-shell.chat-wallpaper-custom .chat-header,
+.chat-shell.chat-wallpaper-custom .message-composer {
+  background-color: rgba(4, 10, 15, .86) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@media (max-width: 600px) {
+  .chat-shell.chat-wallpaper-custom {
+    background-attachment: scroll !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-shell.chat-wallpaper-custom {
+    background-attachment: scroll !important;
+  }
+}
+
+/* =========================================================
+   AURORA EXPORT CHAT MODAL
+   ========================================================= */
+
+.chat-export-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 7000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.chat-export-modal[hidden] {
+  display: none;
+}
+
+.chat-export-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 5, 9, .76);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.chat-export-card {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 26px;
+  border: 1px solid rgba(0, 255, 214, .22);
+  border-radius: 26px;
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(0, 255, 214, .12),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(8, 22, 28, .98),
+      rgba(5, 11, 17, .98)
+    );
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, .65),
+    0 0 45px rgba(0, 255, 214, .08);
+}
+
+.chat-export-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+  border-radius: 17px;
+  background: rgba(0, 255, 214, .10);
+  border: 1px solid rgba(0, 255, 214, .20);
+  color: #8ffff0;
+  font-size: 25px;
+}
+
+.chat-export-card h2 {
+  margin: 0;
+  color: #f2ffff;
+  font-size: 21px;
+}
+
+.chat-export-card p {
+  margin: 10px 0 20px;
+  color: rgba(230, 250, 250, .66);
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.chat-export-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 15px;
+  margin-bottom: 22px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .035);
+  border: 1px solid rgba(255, 255, 255, .07);
+}
+
+.chat-export-summary span {
+  color: rgba(230, 250, 250, .55);
+  font-size: 12px;
+}
+
+.chat-export-summary strong {
+  color: #cffff8;
+  font-size: 13px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-export-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-export-actions button {
+  flex: 1;
+  min-height: 46px;
+  border-radius: 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.chat-export-cancel {
+  border: 1px solid rgba(255, 255, 255, .10);
+  color: rgba(235, 250, 250, .72);
+  background: rgba(255, 255, 255, .045);
+}
+
+.chat-export-confirm {
+  border: 1px solid rgba(0, 255, 214, .38);
+  color: #021411;
+  background: linear-gradient(
+    135deg,
+    #8ffff0,
+    #32d9c4
+  );
+  box-shadow:
+    0 10px 28px rgba(0, 255, 214, .16);
+}
+
+.chat-export-actions button:hover {
+  transform: translateY(-1px);
+}
+
+.chat-export-actions button:active {
+  transform: scale(.97);
+}
+
+@media (max-width: 600px) {
+  .chat-export-modal {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .chat-export-card {
+    border-radius: 24px 24px 20px 20px;
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-export-actions button {
+    transition: none;
   }
 }

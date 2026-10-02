@@ -1127,12 +1127,13 @@ async startCall(
         !this.targetUser ||
         !this.conversationId
       ) {
+        alert(
+          "Unable to start this call because the conversation is not ready."
+        );
         return;
       }
 
-      if (
-        this.callId
-      ) {
+      if (this.callId) {
         return;
       }
 
@@ -1142,7 +1143,6 @@ async startCall(
         alert(
           "Calling is not supported by this browser."
         );
-
         return;
       }
 
@@ -1150,6 +1150,14 @@ async startCall(
         type === "video"
           ? "video"
           : "voice";
+
+      /*
+       * Show the call screen immediately.
+       * Do not wait for Android microphone/camera permission.
+       */
+      this.showCallOverlay(
+        "Calling..."
+      );
 
       try {
         const {
@@ -1184,36 +1192,56 @@ async startCall(
         this.callId =
           data.id;
 
+        this.setCallStatus(
+          "Requesting permission..."
+        );
+
         await this.setupLocalMedia(
           this.callType
         );
 
-        this.showCallOverlay(
+        this.setCallStatus(
           "Calling..."
         );
+
+        /*
+         * Create the peer before subscribing to
+         * signaling so the remote offer is handled correctly.
+         */
+        await this.createPeer();
 
         await this.subscribeToCall(
           this.callId
         );
 
         const offer =
-          await this.createPeer();
+          await this.peer.createOffer();
+
+        await this.peer.setLocalDescription(
+          offer
+        );
 
         await this.sendSignal(
           "offer",
           offer
         );
 
-        await this.updateCall(
-          {
-            status:
-              "connecting"
-          }
+        await this.updateCall({
+          status:
+            "connecting"
+        });
+
+        this.setCallStatus(
+          "Ringing..."
         );
       } catch (error) {
         console.error(
           "Failed to start call:",
           error
+        );
+
+        this.setCallStatus(
+          "Call failed"
         );
 
         alert(
@@ -1225,7 +1253,9 @@ async startCall(
           "failed"
         );
       }
-    },async setupLocalMedia(
+    },
+
+    async setupLocalMedia(
       type
     ) {
       this.localStream =
@@ -1943,23 +1973,20 @@ async startCall(
         );
 
       if (incoming) {
-        incoming.hidden =
-          true;
+        incoming.hidden = true;
       }
 
       this.stopIncomingRingtone();
 
-      /*
-       * Incoming-call handling is intentionally completed
-       * through the same call record/signaling channel.
-       * The call record is assigned below.
-       */
       const callId =
         this.pendingIncomingCallId;
 
       if (!callId) {
         return;
       }
+
+      this.pendingIncomingCallId =
+        null;
 
       try {
         const {
@@ -1979,25 +2006,40 @@ async startCall(
           throw error;
         }
 
+        if (
+          data.status !== "ringing" &&
+          data.status !== "connecting"
+        ) {
+          throw new Error(
+            "This call is no longer available."
+          );
+        }
+
         this.callId =
           data.id;
 
         this.callType =
           data.call_type;
 
-        this.targetUser =
-          {
-            id:
-              data.caller_id
-          };
+        this.targetUser = {
+          id:
+            data.caller_id
+        };
+
+        this.showCallOverlay(
+          "Connecting..."
+        );
 
         await this.setupLocalMedia(
           this.callType
         );
 
-        this.showCallOverlay(
-          "Connecting..."
-        );
+        /*
+         * Create the peer before subscribing to
+         * signaling so the caller's offer is handled
+         * by an active WebRTC peer.
+         */
+        await this.createPeer();
 
         await this.subscribeToCall(
           this.callId
@@ -2008,7 +2050,9 @@ async startCall(
             "connecting"
         });
 
-        await this.createPeer();
+        this.setCallStatus(
+          "Connecting..."
+        );
       } catch (error) {
         console.error(
           "Unable to answer call:",
@@ -2024,9 +2068,6 @@ async startCall(
           "failed"
         );
       }
-
-      this.pendingIncomingCallId =
-        null;
     },
 
     async declineIncomingCall() {
