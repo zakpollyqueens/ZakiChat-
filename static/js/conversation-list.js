@@ -15,6 +15,10 @@ return;
 let user=null;
 let filter="all";
 let timer=null;
+let selectionMode=false;
+const selected=new Set();
+let pressTimer=null;
+let suppressClick=false;
 
 function name(c){
 return window.ZakiConversations.getDisplayName(c);
@@ -44,15 +48,22 @@ box.classList.add("group-avatar");
 return box;
 }
 
+function isLocalFlag(id,name){
+return localStorage.getItem(
+`zakichat:${name}:${user?.id||"unknown"}:${id}`
+)==="1";
+}
+
 function filtered(data){
 return data.filter(c=>{
-if(c.is_archived)return false;
+if(isLocalFlag(c.id,"hidden"))return false;
+if(isLocalFlag(c.id,"archived"))return false;
 
 if(filter==="unread")
-return c.unreadCount>0||c.marked_unread;
+return c.unreadCount>0||c.marked_unread||isLocalFlag(c.id,"unread");
 
 if(filter==="favorites")
-return c.is_favorite;
+return c.is_favorite||isLocalFlag(c.id,"favorite");
 
 if(filter==="groups")
 return c.type==="group";
@@ -82,6 +93,12 @@ rows.forEach(c=>{
 const link=document.createElement("a");
 
 link.className="conversation";
+
+if(selected.has(c.id))
+link.classList.add("conversation-selected");
+
+if(selectionMode)
+link.setAttribute("aria-selected",selected.has(c.id)?"true":"false");
 link.href=c.type==="group"
 ?`groups.html?id=${encodeURIComponent(c.id)}`
 :`chat.html?user=${encodeURIComponent(c.profile?.id||"")}`;
@@ -119,13 +136,156 @@ line2.appendChild(badge);
 info.append(line1,line2);
 link.append(avatar(c),info);
 
-link.addEventListener("click",()=>{
+link.addEventListener("pointerdown",event=>{
+if(event.pointerType==="mouse" && event.button!==0)return;
+
+clearTimeout(pressTimer);
+
+pressTimer=setTimeout(()=>{
+selectionMode=true;
+selected.add(c.id);
+updateSelectionUI();
+render(window.ZakiConversations.conversations||[]);
+suppressClick=true;
+},550);
+});
+
+link.addEventListener("pointerup",()=>{
+clearTimeout(pressTimer);
+});
+
+link.addEventListener("pointercancel",()=>{
+clearTimeout(pressTimer);
+});
+
+link.addEventListener("click",event=>{
+if(suppressClick){
+event.preventDefault();
+suppressClick=false;
+return;
+}
+
+if(selectionMode){
+event.preventDefault();
+
+if(selected.has(c.id))
+selected.delete(c.id);
+else
+selected.add(c.id);
+
+if(!selected.size)
+exitSelection();
+else{
+updateSelectionUI();
+render(window.ZakiConversations.conversations||[]);
+}
+
+return;
+}
+
 window.ZakiConversations.select(c.id);
 });
 
 list.appendChild(link);
 });
 }
+
+function updateSelectionUI(){
+const toolbar=document.getElementById("chat-selection-toolbar");
+const count=document.getElementById("chat-selection-count");
+
+if(toolbar)
+toolbar.hidden=!selectionMode;
+
+if(count)
+count.textContent=String(selected.size);
+}
+
+function exitSelection(){
+selectionMode=false;
+selected.clear();
+updateSelectionUI();
+render(window.ZakiConversations.conversations||[]);
+}
+
+document
+.getElementById("cancel-chat-selection")
+?.addEventListener("click",exitSelection);
+
+document
+.getElementById("archive-selected-chats")
+?.addEventListener("click",()=>{
+const ids=[...selected];
+
+if(!ids.length)return;
+
+ids.forEach(id=>{
+localStorage.setItem(
+`zakichat:archived:${user?.id||"unknown"}:${id}`,
+"1"
+);
+});
+
+exitSelection();
+refresh();
+});
+
+document
+.getElementById("delete-selected-chats")
+?.addEventListener("click",()=>{
+const ids=[...selected];
+
+if(!ids.length)return;
+
+if(!window.confirm(
+`Delete ${ids.length} selected chat${ids.length>1?"s":""} from this device?`
+))return;
+
+ids.forEach(id=>{
+localStorage.setItem(
+`zakichat:hidden:${user?.id||"unknown"}:${id}`,
+"1"
+);
+});
+
+exitSelection();
+refresh();
+});
+
+document
+.getElementById("more-selected-chats")
+?.addEventListener("click",()=>{
+const ids=[...selected];
+
+if(!ids.length)return;
+
+const choice=window.prompt(
+"More actions:\n\n1 = Mark as unread\n2 = Favorite\n3 = Mute\n\nEnter 1, 2 or 3:"
+);
+
+if(!choice)return;
+
+const action={
+"1":"unread",
+"2":"favorite",
+"3":"muted"
+}[choice.trim()];
+
+if(!action){
+window.alert("Please choose 1, 2 or 3.");
+return;
+}
+
+ids.forEach(id=>{
+localStorage.setItem(
+`zakichat:${action}:${user?.id||"unknown"}:${id}`,
+"1"
+);
+});
+
+exitSelection();
+refresh();
+});
 
 async function refresh(){
 const result=await window.ZakiConversations.load();
