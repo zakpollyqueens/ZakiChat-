@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#08131d">
+  <title>Wallpaper & Theme | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat-theme.css">
+</head>
+
+<body class="chat-theme-page">
+
+  <main class="chat-theme-shell">
+
+    <header class="chat-theme-header">
+      <a
+        href="javascript:history.back()"
+        class="theme-back"
+        aria-label="Go back"
+      >←</a>
+
+      <div>
+        <span class="theme-eyebrow">CHAT CUSTOMIZATION</span>
+        <h1>Wallpaper & Theme</h1>
+      </div>
+    </header>
+
+    <section class="theme-profile">
+      <div class="theme-avatar" id="themeAvatar">
+        <span id="themeInitials">?</span>
+      </div>
+
+      <div>
+        <strong id="themeName">Loading...</strong>
+        <span id="themeUsername">@username</span>
+      </div>
+    </section>
+
+    <section class="theme-section">
+      <div class="theme-section-title">
+        <span>CHAT THEME</span>
+        <small>Choose the visual style for this chat</small>
+      </div>
+
+      <div class="theme-grid" id="themeGrid">
+
+        <button
+          type="button"
+          class="theme-option active"
+          data-theme="aurora"
+        >
+          <span class="theme-preview aurora-preview">
+            <i></i><i></i><i></i>
+          </span>
+          <strong>Aurora</strong>
+          <small>Deep dark</small>
+          <b>✓</b>
+        </button>
+
+        <button
+          type="button"
+          class="theme-option"
+          data-theme="midnight"
+        >
+          <span class="theme-preview midnight-preview">
+            <i></i><i></i><i></i>
+          </span>
+          <strong>Midnight</strong>
+          <small>Pure dark</small>
+          <b>✓</b>
+        </button>
+
+        <button
+          type="button"
+          class="theme-option"
+          data-theme="ocean"
+        >
+          <span class="theme-preview ocean-preview">
+            <i></i><i></i><i></i>
+          </span>
+          <strong>Ocean</strong>
+          <small>Cool blue</small>
+          <b>✓</b>
+        </button>
+
+        <button
+          type="button"
+          class="theme-option"
+          data-theme="emerald"
+        >
+          <span class="theme-preview emerald-preview">
+            <i></i><i></i><i></i>
+          </span>
+          <strong>Emerald</strong>
+          <small>Dark green</small>
+          <b>✓</b>
+        </button>
+
+      </div>
+    </section>
+
+    <section class="theme-section">
+      <div class="theme-section-title">
+        <span>WALLPAPER</span>
+        <small>Select a background for this conversation</small>
+      </div>
+
+      <div class="wallpaper-grid" id="wallpaperGrid">
+
+        <button
+          type="button"
+          class="wallpaper-option active"
+          data-wallpaper="aurora"
+        >
+          <span class="wallpaper-preview wallpaper-aurora">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <strong>Aurora</strong>
+          <b>✓</b>
+        </button>
+
+        <button
+          type="button"
+          class="wallpaper-option"
+          data-wallpaper="mesh"
+        >
+          <span class="wallpaper-preview wallpaper-mesh">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <strong>Mesh</strong>
+          <b>✓</b>
+        </button>
+
+        <button
+          type="button"
+          class="wallpaper-option"
+          data-wallpaper="stars"
+        >
+          <span class="wallpaper-preview wallpaper-stars">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <strong>Night Sky</strong>
+          <b>✓</b>
+        </button>
+
+        <button
+          type="button"
+          class="wallpaper-option"
+          data-wallpaper="waves"
+        >
+          <span class="wallpaper-preview wallpaper-waves">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <strong>Deep Waves</strong>
+          <b>✓</b>
+        </button>
+
+      </div>
+    </section>
+
+    <section class="theme-section preview-section">
+
+      <div class="theme-section-title">
+        <span>PREVIEW</span>
+        <small>See how your chat will look</small>
+      </div>
+
+      <div id="chatPreview" class="chat-preview wallpaper-aurora">
+
+        <div class="preview-date">TODAY</div>
+
+        <div class="preview-message received">
+          <span>Hey 👋</span>
+          <small>20:41</small>
+        </div>
+
+        <div class="preview-message sent">
+          <span>Hey! Welcome to ZakiChat.</span>
+          <small>20:42 ✓✓</small>
+        </div>
+
+        <div class="preview-message received">
+          <span>This theme looks great 🔥</span>
+          <small>20:42</small>
+        </div>
+
+      </div>
+
+    </section>
+
+    <button
+      type="button"
+      id="resetTheme"
+      class="reset-theme"
+    >
+      Reset chat appearance
+    </button>
+
+    <div
+      id="themeMessage"
+      class="theme-message"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/chat-theme.js"></script>
+
+</body>
+</html>

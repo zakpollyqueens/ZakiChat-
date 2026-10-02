@@ -1,0 +1,241 @@
+.media-page {
+  margin: 0;
+  min-height: 100vh;
+  color: #e4f8fa;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(0,210,195,.13), transparent 35%),
+    radial-gradient(circle at 90% 20%, rgba(0,120,210,.12), transparent 38%),
+    #07121b;
+}
+
+.media-shell {
+  width: min(100%, 760px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding-bottom: 45px;
+  background: rgba(7,18,27,.88);
+}
+
+.media-header {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(7,18,27,.95);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(120,215,220,.08);
+}
+
+.media-back {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #e5ffff;
+  text-decoration: none;
+  font-size: 28px;
+  background: rgba(255,255,255,.045);
+}
+
+.media-title span {
+  display: block;
+  color: #68dfe3;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.media-title h1 {
+  margin: 2px 0 0;
+  font-size: 20px;
+}
+
+.media-title small {
+  display: block;
+  margin-top: 3px;
+  color: #718f99;
+  font-size: 10px;
+}
+
+.media-tabs {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 7px;
+  margin: 16px 14px 0;
+  padding: 5px;
+  border-radius: 17px;
+  background: rgba(16,34,47,.72);
+  border: 1px solid rgba(120,215,220,.07);
+}
+
+.media-tab {
+  min-height: 53px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 13px;
+  color: #75929b;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.media-tab.active {
+  color: #e2ffff;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(25,130,140,.45),
+      rgba(35,80,120,.42)
+    );
+  box-shadow:
+    inset 0 0 0 1px rgba(95,220,220,.12),
+    0 5px 20px rgba(0,0,0,.13);
+}
+
+.tab-icon {
+  color: #65dfe2;
+  font-size: 15px;
+}
+
+.media-panel {
+  min-height: 350px;
+  margin: 14px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(14,31,44,.72);
+  border: 1px solid rgba(120,215,220,.07);
+}
+
+.media-panel-top {
+  min-height: 59px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  border-bottom: 1px solid rgba(120,215,220,.07);
+}
+
+.media-panel-top strong,
+.media-panel-top small {
+  display: block;
+}
+
+.media-panel-top strong {
+  font-size: 13px;
+}
+
+.media-panel-top small {
+  margin-top: 3px;
+  color: #708e98;
+  font-size: 9px;
+}
+
+.content-count {
+  min-width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0 7px;
+  box-sizing: border-box;
+  border-radius: 9px;
+  color: #6cdee1;
+  background: rgba(65,210,210,.08);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.media-empty {
+  min-height: 275px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  color: #69dfe2;
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(90,230,220,.16),
+      transparent 60%
+    ),
+    rgba(40,120,130,.09);
+  border: 1px solid rgba(100,220,220,.1);
+  font-size: 25px;
+}
+
+.media-empty strong {
+  color: #d8eff1;
+  font-size: 14px;
+}
+
+.media-empty span {
+  max-width: 280px;
+  margin-top: 7px;
+  color: #6e8c96;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.media-message {
+  margin: 12px 14px 0;
+  padding: 11px 13px;
+  border-radius: 12px;
+  color: #8de5dc;
+  background: rgba(50,205,190,.07);
+  border: 1px solid rgba(50,205,190,.1);
+  font-size: 11px;
+  text-align: center;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 520px) {
+  .media-header {
+    padding: 0 12px;
+  }
+
+  .media-tabs {
+    margin-left: 9px;
+    margin-right: 9px;
+  }
+
+  .media-panel {
+    margin-left: 9px;
+    margin-right: 9px;
+    border-radius: 17px;
+  }
+
+  .media-tab {
+    min-height: 49px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-tab {
+    transition: none !important;
+  }
+}

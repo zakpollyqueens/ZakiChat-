@@ -1137,3 +1137,948 @@ body.zaki-composer-focused
     bottom: auto;
   }
 }
+
+/* =========================================================
+   ZakiChat Telegram-inspired Chat Experience
+   Dark Aurora edition
+   Visual layer only - preserves existing chat logic
+   ========================================================= */
+
+.chat-page {
+  background: #0b141e;
+  color: #e8f1f8;
+}
+
+.chat-shell {
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(0, 210, 190, .055), transparent 28%),
+    radial-gradient(circle at 85% 75%, rgba(70, 100, 255, .07), transparent 30%),
+    #0b141e;
+}
+
+/* ---------- TELEGRAM-STYLE HEADER ---------- */
+
+.chat-header {
+  height: 62px;
+  min-height: 62px;
+  padding: 0 8px;
+  gap: 6px;
+  background: rgba(14, 27, 40, .97);
+  border-bottom: 1px solid rgba(255,255,255,.055);
+  box-shadow: 0 2px 14px rgba(0,0,0,.22);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.chat-back {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  color: #8bded4;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.chat-back:hover {
+  background: rgba(255,255,255,.065);
+}
+
+.chat-user {
+  gap: 10px;
+}
+
+.chat-user .conversation-avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  flex-basis: 42px;
+  border-radius: 50%;
+  background:
+    linear-gradient(145deg,#17394c,#17283d);
+  border: 1px solid rgba(255,255,255,.07);
+  box-shadow: 0 2px 10px rgba(0,0,0,.24);
+}
+
+.chat-user-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chat-user-details strong,
+.chat-user strong {
+  color: #f1f7fb;
+  font-size: .94rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.chat-user-details span,
+.chat-user span {
+  margin-top: 2px;
+  color: #7891a5;
+  font-size: .69rem;
+}
+
+.chat-user-status.online-status {
+  color: #4bd5b6;
+}
+
+/* ---------- HEADER ACTIONS ---------- */
+
+.chat-header-actions {
+  gap: 1px;
+}
+
+.chat-header-actions .chat-icon-button {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #a9bdcb;
+  font-size: 19px;
+}
+
+.chat-header-actions .chat-icon-button:hover {
+  background: rgba(255,255,255,.07);
+  color: #e5f3fa;
+  box-shadow: none;
+}
+
+.chat-header-actions .chat-icon-button:active {
+  transform: scale(.9);
+  background: rgba(55, 190, 177, .13);
+}
+
+#chat-more-button {
+  font-size: 24px;
+  letter-spacing: 1px;
+}
+
+#chat-more-button[aria-expanded="true"] {
+  background: rgba(55,190,177,.12);
+  color: #65dfce;
+}
+
+/* ---------- TELEGRAM-LIKE CHAT BACKGROUND ---------- */
+
+.messages-panel {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(36, 174, 154, .045), transparent 25%),
+    radial-gradient(circle at 88% 70%, rgba(71, 91, 220, .055), transparent 28%),
+    #0b141e;
+}
+
+.chat-background-overlay {
+  opacity: .45;
+  background-image:
+    radial-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 28px 28px, 43px 43px;
+  background-position: 0 0, 14px 17px;
+}
+
+.messages-list {
+  padding: 18px clamp(8px, 3vw, 42px) 24px;
+  gap: 5px;
+}
+
+/* ---------- DATE DIVIDER ---------- */
+
+.date-divider {
+  width: auto;
+  max-width: max-content;
+  margin: 12px auto 15px;
+  gap: 0;
+  color: #7890a2;
+  font-size: .66rem;
+}
+
+.date-divider::before,
+.date-divider::after {
+  display: none;
+}
+
+.date-divider span {
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(19, 35, 50, .88);
+  box-shadow: 0 2px 7px rgba(0,0,0,.16);
+}
+
+/* ---------- MESSAGE BUBBLES ---------- */
+
+.message-bubble {
+  max-width: min(620px, 76%);
+  padding: 8px 10px 20px;
+  border: 1px solid rgba(255,255,255,.035);
+  border-radius: 14px;
+  font-size: .86rem;
+  line-height: 1.38;
+  box-shadow: 0 2px 4px rgba(0,0,0,.12);
+  transition:
+    transform .14s ease,
+    box-shadow .14s ease;
+}
+
+.message-bubble:hover {
+  box-shadow: 0 4px 13px rgba(0,0,0,.17);
+}
+
+.message-bubble.received-bubble {
+  background: #182633;
+  border-bottom-left-radius: 5px;
+  color: #e4edf3;
+}
+
+.message-bubble.sent-bubble {
+  background:
+    linear-gradient(145deg,#164c58,#15505b);
+  border-bottom-right-radius: 5px;
+  color: #e9fbfa;
+}
+
+.message-text {
+  color: inherit;
+  font-size: .86rem;
+}
+
+/* subtle Telegram-style bubble tails */
+
+.message-bubble.received-bubble::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background: #182633;
+  clip-path: polygon(100% 0,100% 100%,0 100%);
+}
+
+.message-bubble.sent-bubble::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background: #15505b;
+  clip-path: polygon(0 0,100% 100%,0 100%);
+}
+
+/* ---------- MESSAGE META ---------- */
+
+.message-meta {
+  right: 9px;
+  bottom: 4px;
+  gap: 3px;
+  color: #718b9b;
+  font-size: .58rem;
+}
+
+.sent-bubble .message-meta {
+  color: #83b6b6;
+}
+
+.message-read-mark {
+  color: #63d9ca;
+  font-size: .68rem;
+}
+
+/* ---------- REPLY PREVIEW ---------- */
+
+.message-reply-preview {
+  margin-bottom: 6px;
+  padding: 5px 8px;
+  border-left: 3px solid #4bc8bb;
+  border-radius: 5px;
+  background: rgba(0,0,0,.16);
+  color: #9bb2c0;
+  font-size: .68rem;
+}
+
+/* ---------- MESSAGE ACTIONS ---------- */
+
+.message-actions {
+  top: -35px;
+  right: 4px;
+  padding: 3px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 11px;
+  background: #142333;
+  box-shadow: 0 10px 28px rgba(0,0,0,.38);
+}
+
+.message-action {
+  min-width: 32px;
+  height: 30px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  color: #9db2c0;
+}
+
+.message-action:hover {
+  background: rgba(255,255,255,.07);
+  color: #eef7fb;
+}
+
+/* ---------- REACTIONS ---------- */
+
+.message-reactions {
+  margin-top: 4px;
+}
+
+.message-reaction {
+  min-width: 30px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: #142535;
+  border-color: rgba(255,255,255,.075);
+  font-size: .72rem;
+}
+
+.message-reaction.reacted-by-me {
+  background: rgba(51,193,177,.13);
+  border-color: rgba(67,210,193,.55);
+}
+
+/* ---------- REPLY / EDIT BARS ---------- */
+
+.message-action-bar {
+  padding: 8px 12px;
+  background: #101e2c;
+  border-top: 1px solid rgba(255,255,255,.055);
+}
+
+.message-action-bar small {
+  color: #4fd0c1;
+  font-size: .65rem;
+}
+
+.message-action-bar button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.message-action-bar button:hover {
+  background: rgba(255,255,255,.07);
+}
+
+/* ---------- COMPOSER ---------- */
+
+.message-composer {
+  min-height: 58px;
+  padding: 8px 9px;
+  gap: 5px;
+  background: rgba(13, 26, 39, .98);
+  border-top: 1px solid rgba(255,255,255,.055);
+  box-shadow: 0 -4px 18px rgba(0,0,0,.16);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.message-composer button {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  flex-basis: 40px;
+  color: #91a9b8;
+}
+
+.message-composer button:hover {
+  color: #dce9ef;
+  background: rgba(255,255,255,.065);
+}
+
+.message-composer input[type="text"] {
+  height: 42px;
+  padding: 0 15px;
+  border: 1px solid rgba(255,255,255,.065);
+  border-radius: 22px;
+  background: #152534;
+  color: #e8f1f6;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.16);
+}
+
+.message-composer input[type="text"]:focus {
+  border-color: rgba(68,205,190,.38);
+  box-shadow:
+    0 0 0 3px rgba(68,205,190,.055),
+    inset 0 1px 2px rgba(0,0,0,.18);
+}
+
+.message-composer input[type="text"]::placeholder {
+  color: #718999;
+}
+
+/* Telegram-like send button */
+
+#send-message-button {
+  background: linear-gradient(145deg,#32cbb7,#249fa5) !important;
+  color: #061719 !important;
+  border: 0 !important;
+  box-shadow: 0 5px 17px rgba(40,194,174,.18);
+}
+
+#send-message-button:hover {
+  background: linear-gradient(145deg,#42d8c5,#2cabb1) !important;
+}
+
+/* ---------- ATTACHMENT CARDS ---------- */
+
+.attachment-file {
+  background: rgba(7,19,30,.28);
+  border-color: rgba(255,255,255,.075);
+}
+
+.attachment-file-icon {
+  background: rgba(74,197,183,.10);
+  color: #65d7c7;
+}
+
+/* ---------- SEARCH ---------- */
+
+.chat-search-bar {
+  padding: 7px 10px;
+  background: rgba(13,26,39,.98);
+  border-bottom: 1px solid rgba(255,255,255,.055);
+}
+
+.chat-search-bar input {
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(255,255,255,.065);
+  border-radius: 20px;
+  background: #152534;
+}
+
+.chat-search-bar input:focus {
+  border-color: rgba(68,205,190,.35);
+}
+
+/* ---------- THREE-DOT MENU ---------- */
+
+.chat-more-menu {
+  top: 48px;
+  right: 2px;
+  width: 255px;
+  padding: 6px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  background: #142333;
+  box-shadow: 0 18px 50px rgba(0,0,0,.48);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.chat-more-menu button {
+  padding: 10px 13px;
+  border-radius: 8px;
+  color: #dce8ee;
+  font-size: .78rem;
+}
+
+.chat-more-menu button:hover {
+  background: rgba(255,255,255,.065);
+}
+
+.chat-more-menu button:active {
+  background: rgba(55,198,184,.12);
+}
+
+/* ---------- SCROLLBARS ---------- */
+
+.messages-list::-webkit-scrollbar,
+.conversation-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.messages-list::-webkit-scrollbar-track,
+.conversation-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-list::-webkit-scrollbar-thumb,
+.conversation-list::-webkit-scrollbar-thumb {
+  background: rgba(117,145,160,.28);
+  border-radius: 10px;
+}
+
+/* ---------- MOBILE TELEGRAM FEEL ---------- */
+
+@media (max-width: 600px) {
+
+  .chat-header {
+    height: 58px;
+    min-height: 58px;
+    padding: 0 4px;
+  }
+
+  .chat-back {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+  }
+
+  .chat-user {
+    gap: 8px;
+  }
+
+  .chat-user .conversation-avatar {
+    width: 39px;
+    height: 39px;
+    min-width: 39px;
+    flex-basis: 39px;
+  }
+
+  .chat-user-details strong,
+  .chat-user strong {
+    font-size: .87rem;
+  }
+
+  .chat-user-details span,
+  .chat-user span {
+    font-size: .64rem;
+  }
+
+  .chat-header-actions .chat-icon-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  /* Hide video call on very small screens so the header
+     does not become crowded like a desktop layout. */
+  @media (max-width: 380px) {
+    #video-call-button {
+      display: none;
+    }
+  }
+
+  .messages-list {
+    padding: 12px 6px 18px;
+  }
+
+  .message-bubble {
+    max-width: 84%;
+    padding: 8px 9px 19px;
+    border-radius: 13px;
+    font-size: .83rem;
+  }
+
+  .message-text {
+    font-size: .83rem;
+  }
+
+  .message-composer {
+    min-height: 54px;
+    padding: 6px 5px;
+  }
+
+  .message-composer button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    flex-basis: 38px;
+  }
+
+  .message-composer input[type="text"] {
+    height: 40px;
+    padding: 0 13px;
+    font-size: .82rem;
+  }
+
+  .chat-more-menu {
+    top: 44px;
+    right: 0;
+    width: min(255px, calc(100vw - 18px));
+  }
+}
+
+/* ---------- REDUCE MOTION ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .message-bubble,
+  .chat-icon-button,
+  .message-composer button {
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   ZakiChat Aurora in-chat search
+   ========================================================= */
+
+.chat-search-bar {
+  position: relative;
+  z-index: 1100;
+  width: 100%;
+  padding: 7px 9px;
+  box-sizing: border-box;
+  background: rgba(6,15,24,.96);
+  border-bottom: 1px solid rgba(120,215,220,.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.chat-search-field {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 5px 0 12px;
+  box-sizing: border-box;
+  border: 1px solid rgba(100,220,220,.10);
+  border-radius: 15px;
+  background: rgba(18,36,49,.86);
+  box-shadow: 0 8px 25px rgba(0,0,0,.16);
+}
+
+.chat-search-icon {
+  flex: 0 0 auto;
+  color: #63dce0;
+  font-size: 20px;
+  line-height: 1;
+}
+
+#chat-search-input {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 42px;
+  padding: 0 7px;
+  border: 0;
+  outline: 0;
+  color: #e8ffff;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+}
+
+#chat-search-input::placeholder {
+  color: #66828c;
+}
+
+.chat-search-count {
+  flex: 0 0 auto;
+  min-width: 45px;
+  color: #6c9aa0;
+  font-size: 9px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#chat-search-prev,
+#chat-search-next,
+#close-chat-search {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  color: #b9d9dc;
+  background: rgba(255,255,255,.045);
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+#chat-search-prev:hover,
+#chat-search-next:hover {
+  color: #72e1e2;
+  background: rgba(70,210,210,.10);
+}
+
+#close-chat-search {
+  color: #78949b;
+  font-size: 22px;
+}
+
+#close-chat-search:hover {
+  color: #e5ffff;
+  background: rgba(255,255,255,.07);
+}
+
+.message-search-match {
+  outline: 1px solid rgba(75,215,215,.22);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.message-search-current {
+  outline: 2px solid rgba(83,225,220,.62);
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 5px rgba(83,225,220,.06),
+    0 8px 28px rgba(0,0,0,.20);
+}
+
+@media (max-width: 520px) {
+  .chat-search-bar {
+    padding: 6px;
+  }
+
+  .chat-search-field {
+    min-height: 42px;
+    border-radius: 13px;
+    padding-left: 9px;
+  }
+
+  #chat-search-input {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .chat-search-count {
+    min-width: 39px;
+    font-size: 8px;
+  }
+
+  #chat-search-prev,
+  #chat-search-next,
+  #close-chat-search {
+    flex-basis: 32px;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 380px) {
+  .chat-search-count {
+    display: none;
+  }
+
+  .chat-search-field {
+    gap: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-search-current {
+    scroll-behavior: auto;
+  }
+}
+
+/* =========================================================
+   ZakiChat Aurora Clear Chat confirmation
+   ========================================================= */
+
+.chat-confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.chat-confirm-modal[hidden] {
+  display: none !important;
+}
+
+.chat-confirm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,4,10,.72);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+}
+
+.chat-confirm-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 360px);
+  box-sizing: border-box;
+  padding: 24px 20px 18px;
+  text-align: center;
+  border: 1px solid rgba(120,215,220,.10);
+  border-radius: 23px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(45,190,195,.10),
+      transparent 45%
+    ),
+    #0c1d29;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.48),
+    0 0 35px rgba(20,180,190,.05);
+}
+
+.chat-confirm-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 13px;
+  border-radius: 18px;
+  background: rgba(255,75,95,.08);
+  border: 1px solid rgba(255,100,110,.10);
+  font-size: 24px;
+}
+
+.chat-confirm-card h2 {
+  margin: 0;
+  color: #e8ffff;
+  font-size: 18px;
+}
+
+.chat-confirm-card p {
+  margin: 9px auto 20px;
+  max-width: 290px;
+  color: #78949d;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.chat-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.chat-confirm-actions button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 13px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.chat-confirm-cancel {
+  color: #b5d1d5;
+  background: rgba(255,255,255,.055);
+}
+
+.chat-confirm-cancel:hover {
+  background: rgba(255,255,255,.09);
+}
+
+.chat-confirm-danger {
+  color: #fff0f1;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(190,55,75,.88),
+      rgba(145,40,62,.92)
+    );
+  box-shadow:
+    0 8px 22px rgba(160,40,65,.18);
+}
+
+.chat-confirm-danger:hover {
+  filter: brightness(1.08);
+}
+
+body.chat-confirm-open {
+  overflow: hidden;
+}
+
+@media (max-width: 420px) {
+  .chat-confirm-modal {
+    padding: 12px;
+    align-items: end;
+  }
+
+  .chat-confirm-card {
+    width: 100%;
+    border-radius: 22px 22px 16px 16px;
+    padding-bottom: calc(
+      18px + env(safe-area-inset-bottom)
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-confirm-backdrop,
+  .chat-confirm-card {
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   ZakiChat Aurora Export Chat
+   ========================================================= */
+
+.export-chat-card {
+  width: min(100%, 380px);
+}
+
+.export-icon {
+  color: #75e2e2;
+  background:
+    rgba(55,210,210,.08);
+  border-color:
+    rgba(80,220,220,.12);
+  font-size: 29px;
+  font-weight: 800;
+}
+
+.export-chat-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  margin: 0 0 18px;
+  padding: 13px;
+  text-align: left;
+  border-radius: 15px;
+  background: rgba(5,18,28,.62);
+  border: 1px solid rgba(120,215,220,.07);
+}
+
+.export-chat-summary span {
+  color: #66858e;
+  font-size: 10px;
+}
+
+.export-chat-summary strong {
+  max-width: 190px;
+  overflow: hidden;
+  color: #dff7f8;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.export-confirm-button {
+  color: #e9ffff;
+  background:
+    linear-gradient(
+      135deg,
+      #147e83,
+      #245f8e
+    );
+  box-shadow:
+    0 8px 24px rgba(25,150,165,.16);
+}
+
+.export-confirm-button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+@media (max-width: 420px) {
+  .export-chat-card {
+    width: 100%;
+  }
+}

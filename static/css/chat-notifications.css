@@ -1,0 +1,251 @@
+.chat-notifications-page {
+  margin: 0;
+  min-height: 100vh;
+  color: #e6f5f7;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(0,190,190,.13), transparent 34%),
+    radial-gradient(circle at 90% 25%, rgba(0,120,180,.12), transparent 38%),
+    #08131d;
+}
+
+.chat-notifications-shell {
+  width: min(100%, 720px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding-bottom: 42px;
+  background: rgba(8,19,29,.88);
+}
+
+.chat-notifications-header {
+  height: 66px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(8,19,29,.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(130,210,220,.08);
+}
+
+.notifications-back {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #dffcff;
+  text-decoration: none;
+  font-size: 28px;
+  background: rgba(255,255,255,.045);
+}
+
+.eyebrow {
+  display: block;
+  color: #68dce2;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.chat-notifications-header h1 {
+  margin: 2px 0 0;
+  font-size: 21px;
+}
+
+.notification-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 25px 18px;
+  border-bottom: 1px solid rgba(120,210,220,.07);
+}
+
+.notification-avatar {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  color: #e1ffff;
+  font-size: 19px;
+  font-weight: 800;
+  background: linear-gradient(145deg,#176e78,#17344d);
+  box-shadow: 0 8px 25px rgba(0,0,0,.3);
+}
+
+.notification-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.notification-profile strong,
+.notification-profile span {
+  display: block;
+}
+
+.notification-profile strong {
+  font-size: 17px;
+}
+
+.notification-profile span {
+  margin-top: 4px;
+  color: #7699a3;
+  font-size: 13px;
+}
+
+.notification-card,
+.mute-card {
+  margin: 16px 14px 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(17,34,47,.72);
+  border: 1px solid rgba(120,210,220,.07);
+}
+
+.notification-row {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 15px;
+  border-bottom: 1px solid rgba(120,210,220,.07);
+}
+
+.notification-row:last-child {
+  border-bottom: 0;
+}
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #72dfe4;
+  background: rgba(70,210,215,.08);
+}
+
+.notification-copy {
+  flex: 1;
+}
+
+.notification-copy strong,
+.notification-copy small {
+  display: block;
+}
+
+.notification-copy strong {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.notification-copy small {
+  margin-top: 4px;
+  color: #708f99;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.switch {
+  position: relative;
+  width: 47px;
+  height: 27px;
+  flex: 0 0 47px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch span {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  border-radius: 30px;
+  background: #263944;
+  transition: .2s ease;
+}
+
+.switch span::before {
+  content: "";
+  position: absolute;
+  width: 21px;
+  height: 21px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: #9bb0b7;
+  transition: .2s ease;
+}
+
+.switch input:checked + span {
+  background: #167c82;
+}
+
+.switch input:checked + span::before {
+  transform: translateX(20px);
+  background: #dffeff;
+  box-shadow: 0 0 12px rgba(100,230,230,.35);
+}
+
+.mute-card {
+  padding: 17px;
+}
+
+.section-label {
+  color: #64dce1;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.mute-status {
+  margin-top: 9px;
+  color: #e1f4f6;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mute-card p {
+  margin: 7px 0 0;
+  color: #718f99;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.notification-message {
+  margin: 15px 14px 0;
+  padding: 12px 14px;
+  border-radius: 13px;
+  color: #8de5dc;
+  background: rgba(60,210,190,.07);
+  border: 1px solid rgba(60,210,190,.1);
+  font-size: 12px;
+}
+
+@media (max-width: 520px) {
+  .chat-notifications-header {
+    padding: 0 12px;
+  }
+
+  .notification-card,
+  .mute-card {
+    margin-left: 9px;
+    margin-right: 9px;
+    border-radius: 17px;
+  }
+
+  .notification-profile {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}

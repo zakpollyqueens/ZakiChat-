@@ -69,12 +69,36 @@
     </header>
 
     <section class="chat-search-bar" id="chat-search-bar" hidden>
-      <input
-        id="chat-search-input"
-        type="search"
-        placeholder="Search messages"
-        autocomplete="off">
-      <button id="close-chat-search" type="button" aria-label="Close">×</button>
+      <div class="chat-search-field">
+        <span class="chat-search-icon" aria-hidden="true">⌕</span>
+
+        <input
+          id="chat-search-input"
+          type="search"
+          placeholder="Search messages"
+          autocomplete="off"
+          enterkeyhint="search">
+
+        <span
+          id="chat-search-count"
+          class="chat-search-count"
+          aria-live="polite"></span>
+
+        <button
+          id="chat-search-prev"
+          type="button"
+          aria-label="Previous result">↑</button>
+
+        <button
+          id="chat-search-next"
+          type="button"
+          aria-label="Next result">↓</button>
+
+        <button
+          id="close-chat-search"
+          type="button"
+          aria-label="Close search">×</button>
+      </div>
     </section>
 
     <main class="messages-panel" id="messages-panel">
@@ -91,6 +115,56 @@
         <div id="message-reply-preview"></div>
       </div>
       <button type="button" id="cancel-message-reply">×</button>
+    </div>
+
+    <div
+      id="clear-chat-modal"
+      class="chat-confirm-modal"
+      hidden
+      aria-hidden="true"
+    >
+      <div
+        class="chat-confirm-backdrop"
+        data-clear-cancel
+      ></div>
+
+      <section
+        class="chat-confirm-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="clear-chat-title"
+      >
+        <div class="chat-confirm-icon">
+          🗑
+        </div>
+
+        <h2 id="clear-chat-title">
+          Clear chat?
+        </h2>
+
+        <p>
+          Your messages from this conversation
+          will be removed from your chat view.
+        </p>
+
+        <div class="chat-confirm-actions">
+          <button
+            type="button"
+            class="chat-confirm-cancel"
+            data-clear-cancel
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="chat-confirm-danger"
+            id="confirm-clear-chat"
+          >
+            Clear chat
+          </button>
+        </div>
+      </section>
     </div>
 
     <div id="message-edit-bar" class="message-action-bar" hidden>

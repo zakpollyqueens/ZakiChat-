@@ -1,46 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const wrapper =
-    document.getElementById("chat-more-wrapper");
+  const wrapper = document.getElementById("chat-more-wrapper");
+  const button = document.getElementById("chat-more-button");
+  const menu = document.getElementById("chat-more-menu");
+  const searchButton = document.getElementById("search-chat-button");
 
-  const button =
-    document.getElementById("chat-more-button");
+  if (!wrapper || !button || !menu) return;
 
-  const menu =
-    document.getElementById("chat-more-menu");
-
-  const searchButton =
-    document.getElementById("search-chat-button");
-
-  if (!wrapper || !button || !menu) {
-    return;
-  }
-
-  const db =
-    window.ZakiChatAuth?.client;
+  const db = window.ZakiChatAuth?.client;
 
   function closeMenu() {
     menu.hidden = true;
-    button.setAttribute(
-      "aria-expanded",
-      "false"
-    );
+    button.setAttribute("aria-expanded", "false");
   }
 
   function openMenu() {
     menu.hidden = false;
-    button.setAttribute(
-      "aria-expanded",
-      "true"
-    );
+    button.setAttribute("aria-expanded", "true");
   }
 
-  function getChatUserId() {
+  function getUserId() {
     return String(
-      new URLSearchParams(
-        window.location.search
-      ).get("user") || ""
+      new URLSearchParams(window.location.search).get("user") || ""
     ).trim();
   }
 
@@ -52,138 +34,97 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  function getChatUserName() {
+  function getUserName() {
     return (
-      document
-        .querySelector(
-          ".chat-user strong"
-        )
-        ?.textContent
-        ?.trim() ||
+      document.querySelector(".chat-user strong")?.textContent?.trim() ||
       "this contact"
     );
+  }
+
+  function openChatPage(page) {
+    const userId = getUserId();
+
+    if (!userId) {
+      window.location.href = page;
+      return;
+    }
+
+    window.location.href =
+      `${page}?user=${encodeURIComponent(userId)}`;
   }
 
   async function getCurrentUser() {
     if (!db) return null;
 
-    const { data } =
-      await db.auth.getUser();
-
+    const { data } = await db.auth.getUser();
     return data?.user || null;
   }
 
   async function blockCurrentUser() {
-    const userId =
-      getChatUserId();
+    const userId = getUserId();
 
     if (!userId) {
-      alert(
-        "Unable to identify this contact."
-      );
+      alert("Unable to identify this contact.");
       return;
     }
 
-    const currentUser =
-      await getCurrentUser();
+    const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      alert(
-        "Please sign in again."
+      alert("Please sign in again.");
+      return;
+    }
+
+    if (currentUser.id === userId) {
+      alert("You cannot block yourself.");
+      return;
+    }
+
+    if (!window.confirm(`Block ${getUserName()}?`)) {
+      return;
+    }
+
+    const { error } = await db
+      .from("blocked_users")
+      .upsert(
+        {
+          blocker_id: currentUser.id,
+          blocked_id: userId
+        },
+        {
+          onConflict: "blocker_id,blocked_id"
+        }
       );
-      return;
-    }
-
-    if (
-      currentUser.id === userId
-    ) {
-      alert(
-        "You cannot block yourself."
-      );
-      return;
-    }
-
-    const name =
-      getChatUserName();
-
-    if (
-      !window.confirm(
-        `Block ${name}?`
-      )
-    ) {
-      return;
-    }
-
-    const { error } =
-      await db
-        .from("blocked_users")
-        .upsert(
-          {
-            blocker_id:
-              currentUser.id,
-            blocked_id:
-              userId
-          },
-          {
-            onConflict:
-              "blocker_id,blocked_id"
-          }
-        );
 
     if (error) {
-      console.error(
-        "ZakiChat block user:",
-        error
-      );
-
-      alert(
-        "Unable to block this contact right now."
-      );
+      console.error("ZakiChat block user:", error);
+      alert("Unable to block this contact right now.");
       return;
     }
 
-    window.location.href =
-      "blocked-users.html";
+    window.location.href = "blocked-users.html";
   }
 
   async function clearChat() {
-    const conversationId =
-      getConversationId();
+    const conversationId = getConversationId();
+    const currentUser = await getCurrentUser();
 
-    const currentUser =
-      await getCurrentUser();
-
-    if (
-      !conversationId ||
-      !currentUser ||
-      !window.ZakiMessages
-    ) {
-      alert(
-        "Unable to clear this chat right now."
-      );
+    if (!conversationId || !currentUser || !window.ZakiMessages) {
+      alert("Unable to clear this chat right now.");
       return;
     }
 
-    if (
-      !window.confirm(
-        "Clear your messages from this chat?"
-      )
-    ) {
+    if (!window.confirm("Clear your messages from this chat?")) {
       return;
     }
 
-    const result =
-      await window.ZakiMessages.clearConversation(
-        conversationId,
-        currentUser.id
-      );
+    const result = await window.ZakiMessages.clearConversation(
+      conversationId,
+      currentUser.id
+    );
 
     if (result?.error) {
-      console.error(
-        "ZakiChat clear chat:",
-        result.error
-      );
-
+      console.error("ZakiChat clear chat:", result.error);
       alert(
         result.error.message ||
         "Unable to clear this chat."
@@ -191,28 +132,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    document
-      .querySelector(
-        ".messages-list"
-      )
-      ?.replaceChildren();
+    document.querySelector(".messages-list")?.replaceChildren();
 
-    alert(
-      "Your messages have been cleared from this chat."
-    );
+    alert("Your messages have been cleared from this chat.");
   }
 
   async function exportChat() {
-    const conversationId =
-      getConversationId();
+    const conversationId = getConversationId();
 
-    if (
-      !conversationId ||
-      !window.ZakiMessages
-    ) {
-      alert(
-        "Unable to export this chat right now."
-      );
+    if (!conversationId || !window.ZakiMessages) {
+      alert("Unable to export this chat right now.");
       return;
     }
 
@@ -222,11 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     if (result?.error) {
-      console.error(
-        "ZakiChat export chat:",
-        result.error
-      );
-
+      console.error("ZakiChat export chat:", result.error);
       alert(
         result.error.message ||
         "Unable to export this chat."
@@ -234,19 +159,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const messages =
-      result.data || [];
+    const messages = result.data || [];
 
     if (!messages.length) {
-      alert(
-        "There are no messages to export."
-      );
+      alert("There are no messages to export.");
       return;
     }
 
     const lines = [
       "ZakiChat Conversation Export",
-      `Contact: ${getChatUserName()}`,
+      `Contact: ${getUserName()}`,
       `Exported: ${new Date().toLocaleString()}`,
       "",
       "----------------------------------------",
@@ -254,214 +176,143 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     messages.forEach(message => {
-      const time =
-        message.created_at
-          ? new Date(
-              message.created_at
-            ).toLocaleString()
-          : "";
+      const time = message.created_at
+        ? new Date(message.created_at).toLocaleString()
+        : "";
 
-      const content =
-        message.deleted_at
-          ? "[Message deleted]"
-          : (
-              message.content ||
-              message.attachment_name ||
-              "[Attachment]"
-            );
+      const content = message.deleted_at
+        ? "[Message deleted]"
+        : (
+            message.content ||
+            message.attachment_name ||
+            "[Attachment]"
+          );
 
-      lines.push(
-        `[${time}] ${content}`
-      );
+      lines.push(`[${time}] ${content}`);
     });
 
-    const blob =
-      new Blob(
-        [lines.join("\n")],
-        {
-          type:
-            "text/plain;charset=utf-8"
-        }
-      );
+    const blob = new Blob(
+      [lines.join("\n")],
+      { type: "text/plain;charset=utf-8" }
+    );
 
-    const url =
-      URL.createObjectURL(blob);
-
-    const link =
-      document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
 
     link.href = url;
     link.download =
-      `ZakiChat-${getChatUserName()
+      `ZakiChat-${getUserName()
         .replace(/[^a-z0-9-_]+/gi, "-")
-        .replace(/^-+|-+$/g, "") || "chat"
-      }.txt`;
+        .replace(/^-+|-+$/g, "") || "chat"}.txt`;
 
     document.body.appendChild(link);
     link.click();
     link.remove();
 
-    window.setTimeout(
-      () => URL.revokeObjectURL(url),
-      1000
-    );
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  function openWithUser(page) {
-    const userId =
-      getChatUserId();
+  button.addEventListener("click", event => {
+    event.stopPropagation();
 
-    if (!userId) {
-      window.location.href =
-        page;
-      return;
+    if (menu.hidden) {
+      openMenu();
+    } else {
+      closeMenu();
     }
+  });
 
-    window.location.href =
-      `${page}?user=${encodeURIComponent(
-        userId
-      )}`;
-  }
+  menu.addEventListener("click", async event => {
+    event.stopPropagation();
 
-  button.addEventListener(
-    "click",
-    event => {
-      event.stopPropagation();
+    const item = event.target.closest("[data-chat-action]");
+    if (!item) return;
 
-      if (menu.hidden) {
-        openMenu();
-      } else {
+    const action = item.dataset.chatAction;
+
+    switch (action) {
+
+      case "info":
         closeMenu();
-      }
-    }
-  );
+        openChatPage("chat-info.html");
+        break;
 
-  menu.addEventListener(
-    "click",
-    async event => {
-      event.stopPropagation();
-
-      const item =
-        event.target.closest(
-          "[data-chat-action]"
-        );
-
-      if (!item) return;
-
-      const action =
-        item.dataset.chatAction;
-
-      if (action === "search") {
+      case "search":
         closeMenu();
         searchButton?.click();
-        return;
-      }
+        break;
 
-      if (action === "info") {
+      case "media":
         closeMenu();
-        openWithUser(
-          "profile.html"
-        );
-        return;
-      }
+        openChatPage("media.html");
+        break;
 
-      if (action === "block") {
+      case "notifications":
         closeMenu();
-        await blockCurrentUser();
-        return;
-      }
+        openChatPage("chat-notifications.html");
+        break;
 
-      if (action === "media") {
+      case "disappearing":
         closeMenu();
-        openWithUser(
-          "media.html"
-        );
-        return;
-      }
+        openChatPage("disappearing-messages.html");
+        break;
 
-      if (action === "notifications") {
+      case "theme":
         closeMenu();
-        openWithUser(
-          "notifications.html"
-        );
-        return;
-      }
+        openChatPage("chat-theme.html");
+        break;
 
-      if (action === "disappearing") {
+      case "starred":
         closeMenu();
-        openWithUser(
-          "disappearing-messages.html"
-        );
-        return;
-      }
+        openChatPage("starred-messages.html");
+        break;
 
-      if (action === "theme") {
-        closeMenu();
-        openWithUser(
-          "appearance.html"
-        );
-        return;
-      }
-
-      if (action === "starred") {
-        closeMenu();
-        openWithUser(
-          "starred-messages.html"
-        );
-        return;
-      }
-
-      if (action === "clear") {
+      case "clear":
         closeMenu();
         await clearChat();
-        return;
-      }
+        break;
 
-      if (action === "export") {
+      case "export":
         closeMenu();
         await exportChat();
-        return;
-      }
+        break;
 
-      if (action === "report") {
+      case "block":
+        closeMenu();
+        await blockCurrentUser();
+        break;
+
+      case "report": {
         closeMenu();
 
-        const userId =
-          getChatUserId();
+        const userId = getUserId();
 
         if (userId) {
           window.location.href =
-            `contact-support.html?category=Report%20a%20user&subject=${encodeURIComponent(
-              `Report ZakiChat user ${userId}`
-            )}`;
+            `contact-support.html?category=Report%20a%20user&subject=${
+              encodeURIComponent(
+                `Report ZakiChat user ${userId}`
+              )
+            }`;
         }
 
-        return;
+        break;
       }
-    }
-  );
 
-  document.addEventListener(
-    "click",
-    event => {
-      if (
-        !wrapper.contains(
-          event.target
-        )
-      ) {
+      default:
         closeMenu();
-      }
     }
-  );
+  });
 
-  document.addEventListener(
-    "keydown",
-    event => {
-      if (
-        event.key === "Escape"
-      ) {
-        closeMenu();
-      }
+  document.addEventListener("click", event => {
+    if (!wrapper.contains(event.target)) {
+      closeMenu();
     }
-  );
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
 });

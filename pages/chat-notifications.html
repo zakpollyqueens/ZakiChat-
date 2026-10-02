@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#08131d">
+  <title>Notifications | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat-notifications.css">
+</head>
+
+<body class="chat-notifications-page">
+
+  <main class="chat-notifications-shell">
+
+    <header class="chat-notifications-header">
+      <a
+        href="javascript:history.back()"
+        class="notifications-back"
+        aria-label="Go back"
+      >←</a>
+
+      <div>
+        <span class="eyebrow">CHAT SETTINGS</span>
+        <h1>Notifications</h1>
+      </div>
+    </header>
+
+    <section class="notification-profile">
+      <div class="notification-avatar" id="notificationAvatar">
+        <span id="notificationInitials">?</span>
+      </div>
+
+      <div>
+        <strong id="notificationName">Loading...</strong>
+        <span id="notificationUsername">@username</span>
+      </div>
+    </section>
+
+    <section class="notification-card">
+
+      <div class="notification-row">
+        <div class="notification-icon">🔔</div>
+
+        <div class="notification-copy">
+          <strong>Chat notifications</strong>
+          <small>Receive notifications for new messages</small>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="notificationsEnabled"
+            checked
+          >
+          <span></span>
+        </label>
+      </div>
+
+      <div class="notification-row">
+        <div class="notification-icon">♪</div>
+
+        <div class="notification-copy">
+          <strong>Notification sound</strong>
+          <small>Play a sound for new messages</small>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="soundEnabled"
+            checked
+          >
+          <span></span>
+        </label>
+      </div>
+
+      <div class="notification-row">
+        <div class="notification-icon">⌁</div>
+
+        <div class="notification-copy">
+          <strong>Vibration</strong>
+          <small>Vibrate when a message arrives</small>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="vibrationEnabled"
+            checked
+          >
+          <span></span>
+        </label>
+      </div>
+
+      <div class="notification-row">
+        <div class="notification-icon">◉</div>
+
+        <div class="notification-copy">
+          <strong>Message preview</strong>
+          <small>Show message text in notifications</small>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="previewEnabled"
+            checked
+          >
+          <span></span>
+        </label>
+      </div>
+
+    </section>
+
+    <section class="mute-card">
+
+      <div class="section-label">CHAT NOTIFICATION STATUS</div>
+
+      <div class="mute-status" id="notificationStatus">
+        Notifications are enabled
+      </div>
+
+      <p>
+        Notification preferences are personal to your ZakiChat
+        account and this conversation.
+      </p>
+
+    </section>
+
+    <div
+      id="notificationMessage"
+      class="notification-message"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
+  <script src="../static/js/chat-notifications.js"></script>
+
+</body>
+</html>
