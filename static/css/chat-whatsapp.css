@@ -2082,3 +2082,755 @@ body.chat-confirm-open {
     width: 100%;
   }
 }
+
+/* =========================================================
+   ZakiChat Aurora Premium Chat Controls
+   Header • More Menu • Composer
+   ========================================================= */
+
+.chat-icon-button,
+.chat-back,
+.message-composer button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(105, 225, 225, .07);
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(75, 225, 215, .08),
+      transparent 55%
+    ),
+    rgba(12, 28, 43, .72);
+  color: #dffcff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 5px 18px rgba(0,0,0,.14);
+  transition:
+    transform .18s ease,
+    color .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Aurora light sweep */
+
+.chat-icon-button::before,
+.chat-back::before,
+.message-composer button::before {
+  content: "";
+  position: absolute;
+  inset: -70%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      circle,
+      rgba(70, 235, 220, .18),
+      transparent 58%
+    );
+  opacity: 0;
+  transform: scale(.5);
+  transition:
+    opacity .22s ease,
+    transform .22s ease;
+}
+
+/* Header controls */
+
+.chat-header-actions .chat-icon-button {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.chat-back span {
+  font-size: 25px;
+  line-height: 1;
+  transform: translateX(-1px);
+}
+
+/* Hover / focus */
+
+.chat-icon-button:hover,
+.chat-back:hover,
+.message-composer button:hover {
+  color: #70eee3;
+  border-color: rgba(75, 225, 215, .22);
+  background:
+    radial-gradient(
+      circle at 35% 20%,
+      rgba(55, 225, 210, .14),
+      transparent 58%
+    ),
+    rgba(15, 39, 55, .92);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 7px 24px rgba(0, 205, 195, .09),
+    0 0 18px rgba(0, 205, 195, .05);
+  transform: translateY(-1px);
+}
+
+.chat-icon-button:hover::before,
+.chat-back:hover::before,
+.message-composer button:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.chat-icon-button:focus-visible,
+.chat-back:focus-visible,
+.message-composer button:focus-visible {
+  outline: 2px solid rgba(80, 225, 220, .55);
+  outline-offset: 2px;
+}
+
+.chat-icon-button:active,
+.chat-back:active,
+.message-composer button:active {
+  transform: scale(.91);
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,.28),
+    0 2px 10px rgba(0, 205, 195, .08);
+}
+
+/* Special video-call glow */
+
+#video-call-button {
+  color: #bcefff;
+}
+
+#video-call-button:hover {
+  color: #78eaff;
+  border-color: rgba(70, 190, 255, .24);
+  box-shadow:
+    0 7px 25px rgba(35, 160, 235, .12),
+    0 0 18px rgba(50, 180, 255, .06);
+}
+
+/* Special voice-call glow */
+
+#voice-call-button {
+  color: #bceee7;
+}
+
+#voice-call-button:hover {
+  color: #6ce8d7;
+}
+
+/* Search */
+
+#search-chat-button:hover {
+  color: #7de9e4;
+}
+
+/* More / hamburger button */
+
+#chat-more-button {
+  font-size: 21px;
+  font-weight: 700;
+}
+
+#chat-more-button[aria-expanded="true"] {
+  color: #73eee4;
+  border-color: rgba(75, 225, 215, .25);
+  background: rgba(20, 54, 66, .94);
+  box-shadow:
+    0 0 0 4px rgba(40, 210, 200, .055),
+    0 8px 25px rgba(0, 210, 195, .11);
+  transform: rotate(90deg);
+}
+
+/* =========================================================
+   PREMIUM MORE MENU
+   ========================================================= */
+
+.chat-more-menu {
+  width: 270px;
+  padding: 9px;
+  border-radius: 19px;
+  border: 1px solid rgba(105, 225, 225, .13);
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(0, 220, 205, .10),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(80, 90, 255, .09),
+      transparent 42%
+    ),
+    rgba(7, 18, 31, .97);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.55),
+    0 0 35px rgba(0, 205, 195, .06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  animation: zcMenuIn .18s ease-out;
+  transform-origin: top right;
+}
+
+.chat-more-menu button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 2px 0;
+  padding: 10px 13px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  background: transparent;
+  color: #d8e9ed;
+  font-size: .80rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform .16s ease,
+    color .16s ease,
+    background .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Small glowing indicator */
+
+.chat-more-menu button::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  margin-right: 11px;
+  border-radius: 50%;
+  background: rgba(105, 215, 215, .28);
+  box-shadow: 0 0 0 rgba(80,220,215,0);
+  transition:
+    background .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.chat-more-menu button:hover {
+  color: #ecffff;
+  transform: translateX(3px);
+  border-color: rgba(75, 225, 215, .10);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(35, 210, 200, .11),
+      rgba(75, 90, 220, .06)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 5px 18px rgba(0,0,0,.13);
+}
+
+.chat-more-menu button:hover::before {
+  background: #63e8dc;
+  box-shadow: 0 0 10px rgba(70,225,215,.55);
+  transform: scale(1.35);
+}
+
+.chat-more-menu button:active {
+  transform: translateX(2px) scale(.97);
+  background: rgba(45, 210, 200, .15);
+}
+
+@keyframes zcMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   PREMIUM MESSAGE COMPOSER
+   ========================================================= */
+
+.message-composer {
+  gap: 7px;
+}
+
+.message-composer button {
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.message-composer input[type="text"] {
+  border: 1px solid rgba(105, 225, 225, .08);
+  background:
+    radial-gradient(
+      circle at 15% 50%,
+      rgba(45, 215, 205, .045),
+      transparent 45%
+    ),
+    rgba(12, 29, 43, .88);
+  color: #eaffff;
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.message-composer input[type="text"]:focus {
+  border-color: rgba(65, 220, 210, .25);
+  background: rgba(14, 34, 48, .95);
+  box-shadow:
+    0 0 0 3px rgba(45, 210, 200, .045),
+    0 5px 22px rgba(0,0,0,.16);
+}
+
+#send-message-button {
+  color: #071b20;
+  border-color: rgba(90, 245, 225, .28);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(85, 235, 215, .96),
+      rgba(55, 190, 210, .92)
+    );
+  box-shadow:
+    0 7px 22px rgba(25, 205, 195, .15),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+#send-message-button:hover {
+  color: #021517;
+  background:
+    linear-gradient(
+      135deg,
+      #79f1df,
+      #63cce8
+    );
+  box-shadow:
+    0 9px 28px rgba(30, 215, 200, .22),
+    0 0 20px rgba(70, 220, 215, .10);
+}
+
+#send-message-button:active {
+  transform: scale(.89);
+}
+
+/* Composer attachment / emoji / voice */
+
+#emoji-button:hover {
+  color: #f0dc83;
+}
+
+#attach-file-button:hover {
+  color: #78d9ff;
+}
+
+#voice-note-button:hover {
+  color: #7de9d8;
+}
+
+/* =========================================================
+   MOBILE TOUCH POLISH
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .chat-header-actions .chat-icon-button {
+    width: 37px;
+    height: 37px;
+    min-width: 37px;
+    border-radius: 12px;
+  }
+
+  .chat-back {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+
+  .chat-more-menu {
+    width: min(285px, calc(100vw - 16px));
+    padding: 8px;
+    border-radius: 18px;
+  }
+
+  .chat-more-menu button {
+    min-height: 46px;
+    padding: 10px 12px;
+    font-size: .79rem;
+    border-radius: 13px;
+  }
+
+  .message-composer button {
+    border-radius: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-icon-button,
+  .chat-back,
+  .message-composer button,
+  .chat-more-menu button,
+  .chat-more-menu {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .chat-icon-button:active,
+  .chat-back:active,
+  .message-composer button:active,
+  .chat-more-menu button:active {
+    transform: none !important;
+  }
+}
+
+/* =========================================================
+   ZakiChat Aurora Mobile Composer 2.0
+   Keyboard-safe • Floating • Touch polished
+   ========================================================= */
+
+.message-composer {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 60px;
+  padding: 8px 10px;
+  border-top: 1px solid rgba(90,230,220,.10);
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(40,220,205,.08),
+      transparent 38%
+    ),
+    rgba(5,14,26,.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 -10px 35px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.025);
+  transition:
+    transform .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+}
+
+/* Keyboard mode:
+   lift the complete composer above Android keyboard */
+
+body.zaki-keyboard-open .message-composer.keyboard-raised {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--zaki-composer-bottom, 0px);
+  width: 100%;
+  z-index: 5000;
+  margin: 0;
+  transform: translateY(0);
+  box-shadow:
+    0 -14px 42px rgba(0,0,0,.48),
+    0 -2px 22px rgba(30,210,200,.08);
+}
+
+/* Keep messages from hiding underneath floating composer */
+
+body.zaki-keyboard-open .messages-panel {
+  padding-bottom: 72px;
+}
+
+/* Composer buttons */
+
+#emoji-button,
+#attach-file-button,
+#voice-note-button,
+#send-message-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 43px;
+  height: 43px;
+  min-width: 43px;
+  flex: 0 0 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid rgba(110,230,225,.10);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(35,62,76,.88),
+      rgba(10,27,42,.94)
+    );
+  color: #dffefd;
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform .16s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    color .18s ease;
+}
+
+/* Aurora glow */
+
+#emoji-button::before,
+#attach-file-button::before,
+#voice-note-button::before,
+#send-message-button::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      circle,
+      rgba(75,235,220,.28),
+      transparent 60%
+    );
+  opacity: 0;
+  transform: scale(.45);
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+#emoji-button:hover,
+#attach-file-button:hover,
+#voice-note-button:hover {
+  color: #74eee2;
+  border-color: rgba(80,225,215,.25);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,75,82,.95),
+      rgba(11,34,46,.98)
+    );
+  box-shadow:
+    0 7px 22px rgba(0,205,195,.12),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  transform: translateY(-2px);
+}
+
+#emoji-button:hover::before,
+#attach-file-button:hover::before,
+#voice-note-button:hover::before,
+#send-message-button:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#emoji-button:active,
+#attach-file-button:active,
+#voice-note-button:active,
+#send-message-button:active {
+  transform: scale(.88);
+}
+
+/* Emoji */
+
+#emoji-button {
+  color: #f3dc8a;
+}
+
+/* Plus */
+
+#attach-file-button {
+  color: #78dfff;
+  font-size: 25px;
+  font-weight: 300;
+}
+
+/* Voice */
+
+#voice-note-button {
+  color: #72e8d8;
+}
+
+/* Message input */
+
+.message-composer input[type="text"] {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  padding: 0 17px;
+  border: 1px solid rgba(105,225,225,.10);
+  border-radius: 16px;
+  outline: none;
+  background:
+    radial-gradient(
+      circle at 15% 50%,
+      rgba(50,220,205,.06),
+      transparent 48%
+    ),
+    rgba(11,29,43,.94);
+  color: #efffff;
+  font-size: 15px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 4px 16px rgba(0,0,0,.12);
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    transform .18s ease;
+}
+
+.message-composer input[type="text"]:focus {
+  border-color: rgba(70,225,215,.30);
+  background:
+    radial-gradient(
+      circle at 20% 50%,
+      rgba(45,220,205,.09),
+      transparent 52%
+    ),
+    rgba(13,35,50,.98);
+  box-shadow:
+    0 0 0 3px rgba(45,215,205,.055),
+    0 7px 24px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.message-composer input[type="text"]::placeholder {
+  color: rgba(215,240,242,.40);
+}
+
+/* Send button */
+
+#send-message-button {
+  color: #061c20;
+  border-color: rgba(100,245,225,.30);
+  background:
+    linear-gradient(
+      135deg,
+      #70eedc,
+      #54cde8
+    );
+  box-shadow:
+    0 8px 25px rgba(35,215,200,.20),
+    inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+#send-message-button:hover {
+  color: #031518;
+  background:
+    linear-gradient(
+      135deg,
+      #8af5e5,
+      #6ddcf0
+    );
+  box-shadow:
+    0 10px 30px rgba(40,220,205,.28),
+    0 0 22px rgba(70,225,215,.10),
+    inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+/* Hidden send/voice buttons should not leave layout gaps */
+
+#voice-note-button[hidden],
+#send-message-button[hidden] {
+  display: none !important;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .message-composer {
+    min-height: 58px;
+    padding:
+      7px
+      max(7px, env(safe-area-inset-left))
+      calc(7px + env(safe-area-inset-bottom))
+      max(7px, env(safe-area-inset-right));
+    gap: 5px;
+  }
+
+  #emoji-button,
+  #attach-file-button,
+  #voice-note-button,
+  #send-message-button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    flex-basis: 40px;
+    border-radius: 13px;
+  }
+
+  .message-composer input[type="text"] {
+    height: 43px;
+    padding: 0 14px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+
+  body.zaki-keyboard-open .message-composer.keyboard-raised {
+    padding-bottom: 7px;
+  }
+}
+
+/* Very small phones */
+
+@media (max-width: 380px) {
+  .message-composer {
+    gap: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  #emoji-button,
+  #attach-file-button,
+  #voice-note-button,
+  #send-message-button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    flex-basis: 38px;
+    border-radius: 12px;
+    font-size: 18px;
+  }
+
+  .message-composer input[type="text"] {
+    height: 41px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .message-composer,
+  #emoji-button,
+  #attach-file-button,
+  #voice-note-button,
+  #send-message-button,
+  .message-composer input[type="text"] {
+    transition: none !important;
+  }
+}
