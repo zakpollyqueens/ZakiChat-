@@ -19,6 +19,13 @@
       if (!this.composer || !this.input) return;
 
       this.bind();
+
+      /* Always start with a closed hamburger state elsewhere,
+         and a normal non-keyboard composer state. */
+      document.body.classList.remove("zaki-keyboard-open");
+      this.composer.classList.remove("keyboard-raised");
+      this.composer.style.removeProperty("--zaki-composer-bottom");
+
       this.update();
       this.updateButtons();
     },
@@ -26,6 +33,8 @@
     bind() {
       this.input.addEventListener("focus", () => {
         document.body.classList.add("zaki-composer-focused");
+
+        this.schedule();
 
         setTimeout(() => {
           this.update();
@@ -42,20 +51,24 @@
       this.input.addEventListener("blur", () => {
         document.body.classList.remove("zaki-composer-focused");
 
-        setTimeout(() => this.update(), 120);
+        setTimeout(() => {
+          this.update();
+        }, 150);
       });
 
       this.input.addEventListener("input", () => {
         this.updateButtons();
-        this.update();
+        this.schedule();
       });
 
       this.input.addEventListener("click", () => {
         this.keepInputVisible();
       });
 
-      this.viewport?.addEventListener("resize", () => this.schedule());
-      this.viewport?.addEventListener("scroll", () => this.schedule());
+      if (this.viewport) {
+        this.viewport.addEventListener("resize", () => this.schedule());
+        this.viewport.addEventListener("scroll", () => this.schedule());
+      }
 
       window.addEventListener("resize", () => this.schedule());
 
@@ -63,17 +76,7 @@
         setTimeout(() => {
           this.update();
           this.keepInputVisible();
-        }, 250);
-      });
-
-      this.composer.addEventListener("pointerdown", () => {
-        document.body.classList.add("zaki-composer-active");
-      });
-
-      document.addEventListener("pointerdown", event => {
-        if (!this.composer.contains(event.target)) {
-          document.body.classList.remove("zaki-composer-active");
-        }
+        }, 300);
       });
     },
 
@@ -90,21 +93,24 @@
 
       const vv = window.visualViewport;
 
-      const layoutHeight = window.innerHeight;
-
-      let visualHeight = layoutHeight;
       let keyboardHeight = 0;
+      let visualHeight = window.innerHeight;
 
       if (vv) {
         visualHeight = Math.round(vv.height);
 
+        const visibleBottom =
+          Math.round(vv.height + Math.max(0, vv.offsetTop));
+
         keyboardHeight = Math.max(
           0,
-          layoutHeight - vv.height - Math.max(0, vv.offsetTop)
+          Math.round(window.innerHeight - visibleBottom)
         );
       }
 
-      const keyboardOpen = keyboardHeight > 80;
+      const keyboardOpen =
+        keyboardHeight > 80 &&
+        document.activeElement === this.input;
 
       document.documentElement.style.setProperty(
         "--zaki-visual-height",
@@ -126,19 +132,10 @@
         keyboardOpen
       );
 
-      if (keyboardOpen) {
-        this.composer.style.setProperty(
-          "--zaki-composer-bottom",
-          `${keyboardHeight}px`
-        );
-      } else {
-        this.composer.style.setProperty(
-          "--zaki-composer-bottom",
-          "0px"
-        );
-      }
-
-      this.updateButtons();
+      this.composer.style.setProperty(
+        "--zaki-composer-bottom",
+        keyboardOpen ? `${keyboardHeight}px` : "0px"
+      );
 
       if (keyboardOpen) {
         this.keepInputVisible();
@@ -176,12 +173,10 @@
           const vv = window.visualViewport;
 
           const visibleBottom = vv
-            ? vv.height
+            ? vv.height + Math.max(0, vv.offsetTop)
             : window.innerHeight;
 
-          const safeSpace = 18;
-
-          if (rect.bottom > visibleBottom - safeSpace) {
+          if (rect.bottom > visibleBottom - 12) {
             this.input.scrollIntoView({
               block: "nearest",
               inline: "nearest",

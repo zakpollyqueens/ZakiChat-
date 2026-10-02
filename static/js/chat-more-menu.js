@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!wrapper || !button || !menu) return;
 
+  /* The menu must ALWAYS start closed when Chat opens. */
+  menu.hidden = true;
+  button.setAttribute("aria-expanded", "false");
+
   const db = window.ZakiChatAuth?.client;
 
   function closeMenu() {

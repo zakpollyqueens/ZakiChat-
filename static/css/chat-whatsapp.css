@@ -3237,12 +3237,17 @@ body.zaki-keyboard-open .messages-panel {
 
 /* ---------- KEYBOARD MODE ---------- */
 
+/* Android keyboard is handled by the Mobile Composer Engine.
+   Do not translate the composer a second time. */
 body.zaki-keyboard-open .message-composer#message-composer {
-  transform: translateY(
-    calc(-1 * var(--zaki-keyboard-height, 0px))
-  );
-  transition: transform .16s ease;
-  z-index: 100;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--zaki-composer-bottom, 0px);
+  width: 100%;
+  margin: 0;
+  transform: none !important;
+  z-index: 5000;
 }
 
 /* ---------- MOBILE ---------- */
@@ -3593,5 +3598,90 @@ body.zaki-keyboard-open .message-composer#message-composer {
 
   .message-composer#message-composer .composer-icon-button::before {
     display: none;
+  }
+}
+
+/* =========================================================
+   ZakiChat — Native Call Controls + Keyboard Final Fix
+   ========================================================= */
+
+.chat-header-actions .chat-call-button,
+.chat-header-actions .chat-video-button {
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+}
+
+.chat-header-actions .chat-call-button svg,
+.chat-header-actions .chat-video-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+.chat-header-actions .chat-call-button {
+  color: #72e7a0;
+}
+
+.chat-header-actions .chat-call-button:hover {
+  color: #91ffb8;
+  border-color: rgba(74,222,128,.55);
+  box-shadow:
+    0 0 0 4px rgba(74,222,128,.07),
+    0 8px 25px rgba(74,222,128,.18);
+}
+
+.chat-header-actions .chat-call-button:hover svg {
+  transform: rotate(-8deg) scale(1.08);
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.chat-header-actions .chat-call-button:active {
+  transform: scale(.90);
+}
+
+.chat-header-actions .chat-video-button {
+  color: #78ddff;
+}
+
+.chat-header-actions .chat-video-button:hover {
+  color: #9ae8ff;
+  border-color: rgba(73,217,255,.55);
+}
+
+.chat-header-actions .chat-video-button:hover svg {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+/* Never allow the composer to be pushed underneath Android IME. */
+body.zaki-keyboard-open .message-composer#message-composer {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: var(--zaki-composer-bottom, 0px) !important;
+  transform: none !important;
+  z-index: 5000 !important;
+}
+
+@media (max-width: 600px) {
+  body.zaki-keyboard-open .messages-panel {
+    padding-bottom: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-header-actions .chat-call-button svg,
+  .chat-header-actions .chat-video-button svg {
+    transition: none !important;
   }
 }
