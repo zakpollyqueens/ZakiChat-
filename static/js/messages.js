@@ -740,6 +740,76 @@
       return { error };
     },
 
+    async clearConversation(
+      conversationId,
+      currentUserId
+    ) {
+      if (
+        !this.db ||
+        !conversationId ||
+        !currentUserId
+      ) {
+        return {
+          error: new Error(
+            "Messages client is not initialized."
+          )
+        };
+      }
+
+      const { error } =
+        await this.db
+          .from("messages")
+          .delete()
+          .eq(
+            "conversation_id",
+            conversationId
+          )
+          .eq(
+            "sender_id",
+            currentUserId
+          );
+
+      return { error };
+    },
+
+    async exportConversation(
+      conversationId
+    ) {
+      if (
+        !this.db ||
+        !conversationId
+      ) {
+        return {
+          data: [],
+          error: new Error(
+            "Messages client is not initialized."
+          )
+        };
+      }
+
+      return await this.db
+        .from("messages")
+        .select(`
+          id,
+          sender_id,
+          content,
+          message_type,
+          created_at,
+          deleted_at,
+          attachment_name
+        `)
+        .eq(
+          "conversation_id",
+          conversationId
+        )
+        .order(
+          "created_at",
+          {
+            ascending: true
+          }
+        );
+    },
+
     async delete(
       messageId,
       currentUserId

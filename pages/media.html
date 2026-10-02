@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Media, Links & Docs | ZakiChat</title>
+
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/chat.css">
+  <link rel="stylesheet" href="../static/css/responsive.css">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(76, 175, 255, .16),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at bottom right,
+          rgba(151, 71, 255, .16),
+          transparent 40%
+        ),
+        #080b14;
+      color: #f5f7ff;
+    }
+
+    .media-page {
+      width: min(760px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .media-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .media-back {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: inherit;
+      text-decoration: none;
+      background: rgba(255,255,255,.055);
+      backdrop-filter: blur(16px);
+    }
+
+    .media-header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .media-header p {
+      margin: 4px 0 0;
+      opacity: .65;
+      font-size: 13px;
+    }
+
+    .media-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 6px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      background: rgba(255,255,255,.045);
+    }
+
+    .media-tab {
+      border: 0;
+      border-radius: 13px;
+      padding: 11px 8px;
+      color: inherit;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .media-tab.active {
+      background: linear-gradient(
+        135deg,
+        rgba(84, 166, 255, .28),
+        rgba(155, 78, 255, .25)
+      );
+    }
+
+    .media-panel {
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 22px;
+      padding: 22px;
+      background: rgba(255,255,255,.045);
+      backdrop-filter: blur(18px);
+      min-height: 220px;
+    }
+
+    .media-empty {
+      min-height: 180px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      opacity: .7;
+    }
+
+    .media-empty strong {
+      display: block;
+      margin-bottom: 7px;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="media-page">
+    <header class="media-header">
+      <a
+        class="media-back"
+        href="javascript:history.back()"
+        aria-label="Go back"
+      >←</a>
+
+      <div>
+        <h1>Media, links &amp; docs</h1>
+        <p id="mediaContactName">Conversation content</p>
+      </div>
+    </header>
+
+    <nav class="media-tabs" aria-label="Content type">
+      <button
+        type="button"
+        class="media-tab active"
+        data-media-tab="media"
+      >Media</button>
+
+      <button
+        type="button"
+        class="media-tab"
+        data-media-tab="links"
+      >Links</button>
+
+      <button
+        type="button"
+        class="media-tab"
+        data-media-tab="docs"
+      >Docs</button>
+    </nav>
+
+    <section class="media-panel">
+      <div
+        class="media-empty"
+        id="mediaEmpty"
+      >
+        <div>
+          <strong id="mediaEmptyTitle">
+            No media yet
+          </strong>
+          <span id="mediaEmptyText">
+            Photos and videos shared in this chat will appear here.
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const params =
+        new URLSearchParams(window.location.search);
+
+      const userId =
+        params.get("user");
+
+      const name =
+        document.querySelector(".chat-user strong")?.textContent ||
+        (userId ? "This conversation" : "Conversation content");
+
+      document.getElementById(
+        "mediaContactName"
+      ).textContent = name;
+
+      const titles = {
+        media: [
+          "No media yet",
+          "Photos and videos shared in this chat will appear here."
+        ],
+        links: [
+          "No links yet",
+          "Links shared in this chat will appear here."
+        ],
+        docs: [
+          "No documents yet",
+          "Documents shared in this chat will appear here."
+        ]
+      };
+
+      document.querySelectorAll(
+        "[data-media-tab]"
+      ).forEach(tab => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(
+            "[data-media-tab]"
+          ).forEach(item => {
+            item.classList.toggle(
+              "active",
+              item === tab
+            );
+          });
+
+          const content =
+            titles[tab.dataset.mediaTab];
+
+          document.getElementById(
+            "mediaEmptyTitle"
+          ).textContent = content[0];
+
+          document.getElementById(
+            "mediaEmptyText"
+          ).textContent = content[1];
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

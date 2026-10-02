@@ -14,11 +14,11 @@
   <main class="disappearing-page">
 
     <header class="disappearing-header">
-      <a href="settings.html" class="back-button" aria-label="Back to Settings">‹</a>
+      <a href="javascript:history.back()" class="back-button" aria-label="Back">‹</a>
 
       <div>
         <h1>Disappearing Messages</h1>
-        <p>Choose the default timer for new chats.</p>
+        <p>Choose how long new messages remain available.</p>
       </div>
     </header>
 
@@ -26,10 +26,10 @@
       <div class="intro-icon">⏱️</div>
 
       <div>
-        <h2>Default message timer</h2>
+        <h2>Message timer</h2>
         <p>
-          When enabled, new messages in supported chats can be set to
-          disappear automatically after the selected period.
+          When enabled, supported messages can automatically disappear
+          after the selected period.
         </p>
       </div>
     </section>
@@ -37,14 +37,18 @@
     <section class="disappearing-card">
       <div class="current-setting">
         <div>
-          <span class="setting-label">Current default</span>
+          <span class="setting-label">Current setting</span>
           <strong id="currentTimer">Off</strong>
         </div>
 
         <span class="timer-icon">🕐</span>
       </div>
 
-      <div class="timer-options" role="radiogroup" aria-label="Default disappearing message timer">
+      <div
+        class="timer-options"
+        role="radiogroup"
+        aria-label="Disappearing message timer"
+      >
 
         <label class="timer-option">
           <input type="radio" name="disappearingTimer" value="Off">
@@ -59,7 +63,7 @@
           <input type="radio" name="disappearingTimer" value="24 hours">
           <span>
             <strong>24 hours</strong>
-            <small>Messages use a one-day default timer.</small>
+            <small>Messages disappear after one day.</small>
           </span>
           <span class="radio-mark"></span>
         </label>
@@ -68,7 +72,7 @@
           <input type="radio" name="disappearingTimer" value="7 days">
           <span>
             <strong>7 days</strong>
-            <small>Messages use a seven-day default timer.</small>
+            <small>Messages disappear after seven days.</small>
           </span>
           <span class="radio-mark"></span>
         </label>
@@ -77,7 +81,7 @@
           <input type="radio" name="disappearingTimer" value="90 days">
           <span>
             <strong>90 days</strong>
-            <small>Messages use a ninety-day default timer.</small>
+            <small>Messages disappear after ninety days.</small>
           </span>
           <span class="radio-mark"></span>
         </label>
@@ -89,9 +93,9 @@
       <div class="info-icon">ℹ️</div>
 
       <p>
-        This setting is a default preference. A conversation may use a
-        different disappearing-message setting when that chat supports
-        individual controls.
+        This setting is saved to your ZakiChat account when this page is
+        opened for a specific conversation. Your normal default remains
+        available when no conversation is supplied.
       </p>
     </section>
 
@@ -99,6 +103,10 @@
 
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/disappearing-messages.js"></script>
 </body>
 </html>

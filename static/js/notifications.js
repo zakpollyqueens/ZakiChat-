@@ -52,6 +52,212 @@
           () => this.markAllAsRead()
         );
       }
+
+      this.addChatNotificationControl();
+    },
+
+    getTargetUserId() {
+      return String(
+        new URLSearchParams(
+          window.location.search
+        ).get("user") || ""
+      ).trim();
+    },
+
+    async resolveConversationId() {
+      const targetUserId =
+        this.getTargetUserId();
+
+      if (!targetUserId ||
+          !this.db ||
+          !this.userId) {
+        return null;
+      }
+
+      const { data: mine } =
+        await this.db
+          .from("conversation_members")
+          .select("conversation_id")
+          .eq(
+            "user_id",
+            this.userId
+          );
+
+      if (!mine?.length) {
+        return null;
+      }
+
+      const ids =
+        mine.map(
+          row => row.conversation_id
+        );
+
+      const { data: theirs } =
+        await this.db
+          .from("conversation_members")
+          .select("conversation_id")
+          .eq(
+            "user_id",
+            targetUserId
+          )
+          .in(
+            "conversation_id",
+            ids
+          );
+
+      return theirs?.[0]?.conversation_id ||
+        null;
+    },
+
+    async loadChatNotificationSetting() {
+      const conversationId =
+        await this.resolveConversationId();
+
+      if (!conversationId) {
+        return;
+      }
+
+      const { data, error } =
+        await this.db
+          .from("conversation_user_settings")
+          .select("notifications_enabled")
+          .eq(
+            "conversation_id",
+            conversationId
+          )
+          .eq(
+            "user_id",
+            this.userId
+          )
+          .maybeSingle();
+
+      if (error) {
+        console.warn(
+          "Unable to load chat notification setting:",
+          error
+        );
+        return;
+      }
+
+      const enabled =
+        data?.notifications_enabled !== false;
+
+      this.setChatNotificationButton(
+        enabled
+      );
+    },
+
+    setChatNotificationButton(enabled) {
+      const button =
+        document.getElementById(
+          "chatNotificationToggle"
+        );
+
+      if (!button) return;
+
+      button.textContent =
+        enabled
+          ? "🔔 Notifications enabled"
+          : "🔕 Notifications muted";
+
+      button.dataset.enabled =
+        enabled ? "true" : "false";
+    },
+
+    async toggleChatNotifications() {
+      const conversationId =
+        await this.resolveConversationId();
+
+      if (!conversationId) {
+        this.showError(
+          "This notification setting is only available from a conversation."
+        );
+        return;
+      }
+
+      const button =
+        document.getElementById(
+          "chatNotificationToggle"
+        );
+
+      const currentEnabled =
+        button?.dataset.enabled !== "false";
+
+      const nextEnabled =
+        !currentEnabled;
+
+      const { error } =
+        await this.db
+          .from("conversation_user_settings")
+          .upsert(
+            {
+              conversation_id:
+                conversationId,
+              user_id:
+                this.userId,
+              notifications_enabled:
+                nextEnabled
+            },
+            {
+              onConflict:
+                "conversation_id,user_id"
+            }
+          );
+
+      if (error) {
+        console.error(
+          "ZakiChat chat notification update:",
+          error
+        );
+
+        this.showError(
+          "We couldn't update this chat's notifications."
+        );
+
+        return;
+      }
+
+      this.setChatNotificationButton(
+        nextEnabled
+      );
+    },
+
+    addChatNotificationControl() {
+      if (!this.getTargetUserId()) {
+        return;
+      }
+
+      const header =
+        document.querySelector(
+          ".notifications-header"
+        );
+
+      if (!header ||
+          document.getElementById(
+            "chatNotificationToggle"
+          )) {
+        return;
+      }
+
+      const button =
+        document.createElement("button");
+
+      button.type = "button";
+      button.id =
+        "chatNotificationToggle";
+      button.className =
+        "notifications-action";
+      button.textContent =
+        "🔔 Chat notifications";
+
+      button.addEventListener(
+        "click",
+        () => this.toggleChatNotifications()
+      );
+
+      header.appendChild(button);
+
+      this.loadChatNotificationSetting();
     },
 
     async load() {

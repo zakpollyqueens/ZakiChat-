@@ -1158,6 +1158,8 @@ document.addEventListener(
       }
     );
 
+    await loadStarredMessages();
+
     // ------------------------------------------------------------
     // Individual message long-press menu
     // ------------------------------------------------------------
@@ -1172,43 +1174,84 @@ document.addEventListener(
       }
     }
 
-    function getStarredMessages() {
-      try {
-        return JSON.parse(
-          localStorage.getItem(
-            "zakichat-starred-messages"
-          ) || "[]"
-        );
-      } catch {
-        return [];
-      }
-    }
+    const starredMessageIds = new Set();
 
-    function setStarredMessages(ids) {
-      localStorage.setItem(
-        "zakichat-starred-messages",
-        JSON.stringify(ids)
-      );
+    async function loadStarredMessages() {
+      starredMessageIds.clear();
+
+      if (!db || !currentUser) {
+        return;
+      }
+
+      const { data, error } = await db
+        .from("starred_messages")
+        .select("message_id")
+        .eq("user_id", currentUser.id);
+
+      if (error) {
+        console.error(
+          "ZakiChat starred messages load:",
+          error
+        );
+        return;
+      }
+
+      (data || []).forEach(row => {
+        starredMessageIds.add(
+          String(row.message_id)
+        );
+      });
     }
 
     function isMessageStarred(messageId) {
-      return getStarredMessages()
-        .includes(String(messageId));
+      return starredMessageIds.has(
+        String(messageId)
+      );
     }
 
-    function toggleStarredMessage(messageId) {
+    async function toggleStarredMessage(messageId) {
       const id = String(messageId);
-      const ids = getStarredMessages();
-      const index = ids.indexOf(id);
 
-      if (index >= 0) {
-        ids.splice(index, 1);
-      } else {
-        ids.push(id);
+      if (!db || !currentUser) {
+        return false;
       }
 
-      setStarredMessages(ids);
-      return index < 0;
+      if (starredMessageIds.has(id)) {
+        const { error } = await db
+          .from("starred_messages")
+          .delete()
+          .eq("user_id", currentUser.id)
+          .eq("message_id", id);
+
+        if (error) {
+          console.error(
+            "ZakiChat unstar message:",
+            error
+          );
+          return null;
+        }
+
+        starredMessageIds.delete(id);
+        return false;
+      }
+
+      const { error } = await db
+        .from("starred_messages")
+        .insert({
+          user_id: currentUser.id,
+          message_id: id
+        });
+
+      if (error) {
+        console.error(
+          "ZakiChat star message:",
+          error
+        );
+        return null;
+      }
+
+      starredMessageIds.add(id);
+      return true;
     }
 
     function copyMessageText(messageId) {
@@ -1425,9 +1468,17 @@ document.addEventListener(
 
           if (action === "star") {
             const starred =
-              toggleStarredMessage(
+              await toggleStarredMessage(
                 messageId
               );
+
+            if (starred === null) {
+              showStatus(
+                "Unable to update starred message",
+                true
+              );
+              return;
+            }
 
             showStatus(
               starred
