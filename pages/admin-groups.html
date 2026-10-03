@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>Groups Administration | ZakiChat</title>
+  <link rel="stylesheet" href="../static/css/admin-groups.css">
+</head>
+
+<body>
+<main class="admin-groups-page">
+
+  <header class="admin-groups-header">
+    <div class="brand">
+      <div class="logo">Z</div>
+      <div>
+        <span class="eyebrow">ZAKICHAT ADMIN</span>
+        <h1>Groups & Channels</h1>
+        <p>Administrative oversight for communities and channels.</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="refreshBtn" class="ghost-btn" type="button">↻ Refresh</button>
+      <a href="admin-control.html" class="ghost-btn">Dashboard</a>
+      <button id="signOutBtn" class="danger-btn" type="button">Sign Out</button>
+    </div>
+  </header>
+
+  <section id="loadingState" class="state-card">
+    <strong>Verifying administrator session...</strong>
+  </section>
+
+  <section id="deniedState" class="state-card denied hidden">
+    <strong>Administrator access required.</strong>
+    <p>Your secure admin session is missing or expired.</p>
+    <a href="admin.html" class="primary-btn">Admin Sign In</a>
+  </section>
+
+  <section id="adminContent" class="hidden">
+
+    <div class="hero-card">
+      <div>
+        <span class="eyebrow">COMMUNITY CONTROL</span>
+        <h2>Groups & Channels Administration</h2>
+        <p>
+          Monitor community structures, ownership, membership,
+          subscriptions and activity from one protected control surface.
+        </p>
+      </div>
+      <div class="hero-icon">◈</div>
+    </div>
+
+    <section class="metric-grid">
+      <article class="metric-card">
+        <span>GROUPS</span>
+        <strong id="groupCount">—</strong>
+        <small>Protected backend data</small>
+      </article>
+
+      <article class="metric-card">
+        <span>GROUP MEMBERS</span>
+        <strong id="groupMemberCount">—</strong>
+        <small>Protected backend data</small>
+      </article>
+
+      <article class="metric-card">
+        <span>CHANNELS</span>
+        <strong id="channelCount">—</strong>
+        <small>Protected backend data</small>
+      </article>
+
+      <article class="metric-card">
+        <span>SUBSCRIBERS</span>
+        <strong id="subscriberCount">—</strong>
+        <small>Protected backend data</small>
+      </article>
+    </section>
+
+    <section class="workspace">
+
+      <div class="workspace-head">
+        <div>
+          <span class="eyebrow">ADMIN DIRECTORY</span>
+          <h2>Community Directory</h2>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="groups" type="button">
+            Groups
+          </button>
+          <button class="tab" data-tab="channels" type="button">
+            Channels
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search groups or channels..."
+          autocomplete="off">
+
+        <select id="statusFilter">
+          <option value="all">All statuses</option>
+          <option value="active">Active</option>
+          <option value="review">Needs review</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+
+      <div id="directoryList" class="directory-list">
+
+        <article class="empty-card">
+          <div class="empty-icon">◈</div>
+          <strong>Protected community data</strong>
+          <p>
+            Groups and channel records will appear here when the
+            privileged administration backend is connected.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="admin-links">
+
+      <a href="admin-moderation.html" class="link-card">
+        <span>⚠</span>
+        <div>
+          <strong>Moderation</strong>
+          <small>Review reported groups and channels.</small>
+        </div>
+      </a>
+
+      <a href="admin-users.html" class="link-card">
+        <span>♙</span>
+        <div>
+          <strong>Users</strong>
+          <small>Inspect community owners and members.</small>
+        </div>
+      </a>
+
+      <a href="admin-support.html" class="link-card">
+        <span>?</span>
+        <div>
+          <strong>Support</strong>
+          <small>Review community-related support requests.</small>
+        </div>
+      </a>
+
+      <a href="admin-analytics.html" class="link-card">
+        <span>⌁</span>
+        <div>
+          <strong>Analytics</strong>
+          <small>View protected platform activity metrics.</small>
+        </div>
+      </a>
+
+    </section>
+
+    <section class="security-card">
+      <strong>🔐 Protected administration architecture</strong>
+      <p>
+        Community records are intentionally not queried directly with
+        privileged credentials from this browser page. Administrative
+        reads and actions will use a protected backend.
+      </p>
+    </section>
+
+  </section>
+
+</main>
+
+<script src="../static/js/admin-groups.js"></script>
+</body>
+</html>
