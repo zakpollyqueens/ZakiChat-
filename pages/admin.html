@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#050914">
-  <title>Admin | ZakiChat</title>
-
+  <meta name="theme-color" content="#06130f">
+  <title>Admin Sign In | ZakiChat</title>
   <link rel="stylesheet" href="../static/css/admin.css">
 </head>
 
@@ -13,22 +12,50 @@
 
   <main class="admin-shell">
 
-    <section class="admin-card">
+    <section class="admin-card" aria-labelledby="adminTitle">
+
+      <div class="admin-visual" aria-hidden="true">
+        <div class="admin-lamp">
+          <div class="admin-lamp-glow"></div>
+          <div class="admin-lamp-head"></div>
+          <div class="admin-lamp-beam"></div>
+        </div>
+
+        <div class="admin-mascot">
+          <span class="admin-mascot-eye"></span>
+          <span class="admin-mascot-eye"></span>
+          <span class="admin-mascot-smile"></span>
+        </div>
+      </div>
 
       <div class="admin-brand">
         <div class="admin-brand-mark">Z</div>
-        <h1>ZakiChat Admin</h1>
-        <p>Secure administration portal</p>
+        <h1 id="adminTitle">Welcome Back</h1>
+        <p>ZakiChat Administrator Portal</p>
       </div>
 
-      <form id="adminLoginForm">
+      <form id="adminLoginForm" novalidate>
 
         <div class="admin-field">
-          <label for="adminEmail">Administrator email</label>
+          <label for="adminEmail">Admin Email</label>
           <input
             id="adminEmail"
+            name="adminEmail"
             type="email"
             autocomplete="username"
+            placeholder="Enter admin email"
+            required
+          >
+        </div>
+
+        <div class="admin-field">
+          <label for="adminPasscode">Passcode</label>
+          <input
+            id="adminPasscode"
+            name="adminPasscode"
+            type="password"
+            autocomplete="off"
+            placeholder="Enter admin passcode"
             required
           >
         </div>
@@ -37,14 +64,16 @@
           <label for="adminPassword">Password</label>
           <input
             id="adminPassword"
+            name="adminPassword"
             type="password"
             autocomplete="current-password"
+            placeholder="Enter password"
             required
           >
         </div>
 
         <button class="admin-button" type="submit">
-          Secure Sign In
+          Sign In
         </button>
 
         <div
