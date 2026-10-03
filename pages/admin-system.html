@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZakiChat Admin — System & Security</title>
+  <link rel="stylesheet" href="../static/css/admin-center.css">
+  <style>
+    body{margin:0;background:#f5f7fb;color:#172033;font-family:Arial,sans-serif}
+    .system-page{max-width:1200px;margin:auto;padding:24px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .topbar h1{margin:0;font-size:25px}
+    .btn{border:0;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:600}
+    .primary{background:#2563eb;color:#fff}
+    .danger{background:#dc2626;color:#fff}
+    .secondary{background:#e5e7eb;color:#172033}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+    .card h2{margin-top:0;font-size:18px}
+    .row{display:flex;justify-content:space-between;gap:15px;padding:11px 0;border-bottom:1px solid #eef0f4}
+    .row:last-child{border-bottom:0}
+    .label{color:#667085}
+    .value{font-weight:600;text-align:right}
+    .ok{color:#15803d}
+    .warn{color:#b45309}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+    .full{grid-column:1/-1}
+    .notice{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:13px;border-radius:12px;margin-bottom:18px}
+    @media(max-width:600px){.system-page{padding:14px}.row{font-size:14px}}
+  </style>
+</head>
+
+<body>
+  <main class="system-page">
+
+    <div class="topbar">
+      <div>
+        <h1>System & Security</h1>
+        <p>Manage protected ZakiChat system information and administrator security.</p>
+      </div>
+      <button class="btn secondary" onclick="location.href='admin-control.html'">
+        ← Admin Control Center
+      </button>
+    </div>
+
+    <div class="notice">
+      Sensitive credentials and private server secrets are never displayed here.
+      This page provides safe administrative status information only.
+    </div>
+
+    <section class="grid">
+
+      <div class="card">
+        <h2>Application Information</h2>
+
+        <div class="row">
+          <span class="label">Application</span>
+          <span class="value">ZakiChat</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Version</span>
+          <span class="value">zc-vr15</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Environment</span>
+          <span class="value">Production</span>
+        </div>
+
+        <div class="row">
+          <span class="label">System Status</span>
+          <span class="value ok">Operational</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Backend Services</h2>
+
+        <div class="row">
+          <span class="label">Supabase</span>
+          <span class="value ok">Configured</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Authentication</span>
+          <span class="value ok">Protected</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Database</span>
+          <span class="value ok">Connected</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Realtime</span>
+          <span class="value ok">Protected</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Edge Functions</span>
+          <span class="value ok">Available</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Admin Session</h2>
+
+        <div class="row">
+          <span class="label">Role</span>
+          <span class="value" id="adminRole">Checking...</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Session</span>
+          <span class="value ok" id="sessionStatus">Checking...</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Expiry</span>
+          <span class="value" id="sessionExpiry">Checking...</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Protected Entry</span>
+          <span class="value ok">Enabled</span>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" onclick="refreshSession()">Refresh Session</button>
+          <button class="btn danger" onclick="revokeSession()">Sign Out Securely</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Application Settings</h2>
+
+        <div class="row">
+          <span class="label">Registration</span>
+          <span class="value ok">Enabled</span>
+        </div>
+
+        <div class="row">
+          <span class="label">User Accounts</span>
+          <span class="value ok">Enabled</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Maintenance Mode</span>
+          <span class="value">Disabled</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Public Updates</span>
+          <span class="value ok">Enabled</span>
+        </div>
+      </div>
+
+      <div class="card full">
+        <h2>Security Architecture</h2>
+
+        <div class="row">
+          <span class="label">Admin Authentication</span>
+          <span class="value ok">Enabled</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Server-Side Authorization</span>
+          <span class="value ok">Required</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Role Permissions</span>
+          <span class="value warn">Expansion — Phase 8</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Audit Logging</span>
+          <span class="value warn">Expansion — Phase 9</span>
+        </div>
+
+        <div class="row">
+          <span class="label">2FA Hardening</span>
+          <span class="value warn">Phase 10</span>
+        </div>
+      </div>
+
+      <div class="card full">
+        <h2>Security Actions</h2>
+
+        <div class="actions">
+          <button class="btn secondary" onclick="location.href='admin-control.html'">
+            Admin Dashboard
+          </button>
+
+          <button class="btn secondary" onclick="location.href='admin-control.html#analytics'">
+            Analytics
+          </button>
+
+          <button class="btn danger" onclick="revokeSession()">
+            Revoke Current Session
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+<script>
+const FUNCTION_URL =
+  "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+
+const SESSION_KEY = "zakichat-admin-session";
+const ROLE_KEY = "zakichat-admin-role";
+const EXPIRY_KEY = "zakichat-admin-expiry";
+
+function loadSession(){
+  const token = localStorage.getItem(SESSION_KEY);
+  const role = localStorage.getItem(ROLE_KEY);
+  const expiry = localStorage.getItem(EXPIRY_KEY);
+
+  document.getElementById("adminRole").textContent =
+    role || "Unknown";
+
+  if(!token){
+    document.getElementById("sessionStatus").textContent =
+      "Not active";
+    document.getElementById("sessionExpiry").textContent =
+      "No session";
+    return;
+  }
+
+  document.getElementById("sessionStatus").textContent =
+    "Active";
+
+  if(expiry){
+    const date = new Date(Number(expiry));
+    document.getElementById("sessionExpiry").textContent =
+      isNaN(date.getTime()) ? expiry : date.toLocaleString();
+  }else{
+    document.getElementById("sessionExpiry").textContent =
+      "Not provided";
+  }
+}
+
+async function refreshSession(){
+  const token = localStorage.getItem(SESSION_KEY);
+
+  if(!token){
+    location.href = "admin.html";
+    return;
+  }
+
+  try{
+    const response = await fetch(FUNCTION_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"admin-session-verify",
+        adminSessionToken:token
+      })
+    });
+
+    const data = await response.json();
+
+    if(!response.ok || !data.success){
+      clearSession();
+      location.href = "admin.html";
+      return;
+    }
+
+    if(data.role)
+      localStorage.setItem(ROLE_KEY,data.role);
+
+    if(data.expiresAt)
+      localStorage.setItem(EXPIRY_KEY,String(data.expiresAt));
+
+    loadSession();
+    alert("Admin session verified successfully.");
+
+  }catch(error){
+    alert("Unable to verify the admin session.");
+  }
+}
+
+async function revokeSession(){
+  const token = localStorage.getItem(SESSION_KEY);
+
+  if(!token){
+    clearSession();
+    location.href = "admin.html";
+    return;
+  }
+
+  try{
+    await fetch(FUNCTION_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"admin-session-revoke",
+        adminSessionToken:token
+      })
+    });
+  }catch(error){}
+
+  clearSession();
+  location.href = "admin.html";
+}
+
+function clearSession(){
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(ROLE_KEY);
+  localStorage.removeItem(EXPIRY_KEY);
+}
+
+loadSession();
+</script>
+
+</body>
+</html>
