@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#06101d">
+  <title>ZakiChat Admin • Communication Oversight</title>
+  <link rel="stylesheet" href="../static/css/admin-communication.css">
+</head>
+
+<body>
+  <div class="bg-grid"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+
+  <main class="shell">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <a class="brand" href="admin-control.html">
+        <span class="brand-mark">Z</span>
+        <span>
+          <strong>ZakiChat</strong>
+          <small>Admin Control Center</small>
+        </span>
+      </a>
+
+      <div class="top-actions">
+        <a href="admin-control.html" class="top-btn">Dashboard</a>
+        <button id="refreshBtn" class="top-btn">↻ Refresh</button>
+        <button id="signOutBtn" class="top-btn danger">
+          Secure Sign Out
+        </button>
+      </div>
+    </header>
+
+    <!-- LOADING -->
+    <section id="loadingState" class="state-card">
+      <div class="loader"></div>
+      <h2>Securing Communication Center</h2>
+      <p>Verifying administrator session…</p>
+    </section>
+
+    <!-- ACCESS DENIED -->
+    <section id="deniedState" class="state-card hidden">
+      <div class="state-icon">🔐</div>
+      <h2>Administrator Session Required</h2>
+      <p>Your administrator session is missing or has expired.</p>
+      <a href="admin.html" class="primary-btn">
+        Open Admin Login
+      </a>
+    </section>
+
+    <!-- ADMIN CONTENT -->
+    <div id="adminContent" class="hidden">
+
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <span class="eyebrow">
+            PAGE 02 • COMMUNICATION OVERSIGHT
+          </span>
+
+          <h1>
+            Communication <span>Center</span>
+          </h1>
+
+          <p>
+            Review conversation activity, participants and recent
+            messages through protected administrator RPCs.
+          </p>
+        </div>
+
+        <span class="secure-chip">
+          <i></i>
+          Protected Admin Mode
+        </span>
+      </section>
+
+      <!-- MAIN METRICS -->
+      <section class="metric-grid">
+
+        <article class="metric-card">
+          <span>Total Conversations</span>
+          <strong id="totalConversations">—</strong>
+          <small>All platform conversations</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Total Messages</span>
+          <strong id="totalMessages">—</strong>
+          <small>Messages currently recorded</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Messages Today</span>
+          <strong id="todayMessages">—</strong>
+          <small>Created since today</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Active Users 24h</span>
+          <strong id="activeUsers">—</strong>
+          <small>Unique recent senders</small>
+        </article>
+
+      </section>
+
+      <!-- SECONDARY METRICS -->
+      <section class="metric-grid secondary">
+
+        <article class="mini-card">
+          <span>Direct</span>
+          <strong id="directConversations">—</strong>
+        </article>
+
+        <article class="mini-card">
+          <span>Groups</span>
+          <strong id="groupConversations">—</strong>
+        </article>
+
+        <article class="mini-card">
+          <span>Edited</span>
+          <strong id="editedMessages">—</strong>
+        </article>
+
+        <article class="mini-card">
+          <span>Deleted</span>
+          <strong id="deletedMessages">—</strong>
+        </article>
+
+        <article class="mini-card">
+          <span>Attachments</span>
+          <strong id="attachments">—</strong>
+        </article>
+
+      </section>
+
+      <!-- CONVERSATIONS -->
+      <section class="panel">
+
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">DIRECTORY</span>
+            <h2>Conversations</h2>
+            <p>
+              Search and open a conversation for protected inspection.
+            </p>
+          </div>
+
+          <span id="conversationCount" class="count-chip">
+            0 records
+          </span>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search conversation title or ID…"
+          >
+
+          <select id="typeFilter">
+            <option value="all">All types</option>
+            <option value="direct">Direct</option>
+            <option value="group">Group</option>
+          </select>
+
+          <button id="searchBtn" class="primary-btn">
+            Search
+          </button>
+
+        </div>
+
+        <!-- LIST -->
+        <div id="conversationList" class="conversation-list"></div>
+
+        <div id="conversationEmpty" class="empty hidden">
+          No conversations matched your search.
+        </div>
+
+      </section>
+
+      <!-- CONVERSATION DETAILS -->
+      <section id="detailsPanel" class="panel hidden">
+
+        <div class="panel-heading">
+
+          <div>
+            <span class="eyebrow">INSPECTION</span>
+
+            <h2 id="detailsTitle">
+              Conversation
+            </h2>
+
+            <p id="detailsMeta">
+              Protected conversation metadata.
+            </p>
+          </div>
+
+          <button id="closeDetails" class="top-btn">
+            Close
+          </button>
+
+        </div>
+
+        <!-- PRIVACY WARNING -->
+        <div class="warning">
+          ⚠ Message content is shown only after an administrator
+          explicitly opens a conversation.
+        </div>
+
+        <!-- DETAILS STATISTICS -->
+        <div id="detailsStats" class="detail-grid"></div>
+
+        <!-- PARTICIPANTS -->
+        <div class="participants">
+
+          <h3>Participants</h3>
+
+          <div id="participantList"></div>
+
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="messages-heading">
+
+          <h3>Recent Messages</h3>
+
+          <span>
+            Maximum 100
+          </span>
+
+        </div>
+
+        <div id="messageList" class="message-list"></div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <script src="../static/js/admin-communication.js"></script>
+
+</body>
+</html>
