@@ -230,12 +230,121 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const action = body.action || "status";
 
+    if (action === "admin-session-verify") {
+      const token = String(
+        body.adminSessionToken || body.token || ""
+      );
+
+      if (!token) {
+        return json({ valid: false, success: false }, 401);
+      }
+
+      const hash = await hashToken(token);
+
+      const { data: session, error: sessionError } = await admin
+        .from("admin_sessions")
+        .select(
+          "id, admin_user_id, expires_at, revoked_at"
+        )
+        .eq("token_hash", hash)
+        .maybeSingle();
+
+      if (sessionError) throw sessionError;
+
+      if (
+        !session ||
+        session.revoked_at ||
+        new Date(session.expires_at) <= new Date()
+      ) {
+        return json({
+          valid: false,
+          success: false,
+          error: "Admin session expired."
+        }, 401);
+      }
+
+      const { data: adminRow, error: adminError } =
+        await admin
+          .from("admin_users")
+          .select("role, active")
+          .eq("user_id", session.admin_user_id)
+          .maybeSingle();
+
+      if (adminError) throw adminError;
+
+      if (!adminRow?.active) {
+        return json({
+          valid: false,
+          success: false,
+          error: "Administrator access denied."
+        }, 403);
+      }
+
+      const now = new Date().toISOString();
+
+      await admin
+        .from("admin_sessions")
+        .update({ last_seen_at: now })
+        .eq("id", session.id);
+
+      return json({
+        valid: true,
+        success: true,
+        role: adminRow.role,
+        expiresAt: session.expires_at,
+        expires_at: session.expires_at
+      });
+    }
+
+    if (action === "admin-session-revoke") {
+      const token = String(
+        body.adminSessionToken || body.token || ""
+      );
+
+      if (!token) {
+        return json({ ok: true });
+      }
+
+      const hash = await hashToken(token);
+
+      const { data: session, error: sessionError } =
+        await admin
+          .from("admin_sessions")
+          .select("id")
+          .eq("token_hash", hash)
+          .maybeSingle();
+
+      if (sessionError) throw sessionError;
+
+      if (session) {
+        await admin
+          .from("admin_sessions")
+          .update({
+            revoked_at: new Date().toISOString()
+          })
+          .eq("id", session.id);
+      }
+
+      return json({
+        ok: true,
+        success: true
+      });
+    }
+
     if (action === "disable") {
+      const user = await userFromRequest(req);
+
+      if (!user) {
+        return json({
+          error: "Authentication required."
+        }, 401);
+      }
+
       const { error } = await admin
         .from("two_step_verification")
         .update({
           enabled: false,
-          verified_at: null,
+          verified_at: null
         })
         .eq("user_id", user.id);
 
@@ -243,7 +352,80 @@ Deno.serve(async (req) => {
 
       return json({
         ok: true,
-        enabled: false,
+        enabled: false
+      });
+    }
+
+    if (action === "admin-system-status") {
+      const token = String(
+        body.adminSessionToken || body.token || ""
+      );
+
+      if (!token) {
+        return json({
+          success: false,
+          error: "Admin session required."
+        }, 401);
+      }
+
+      const hash = await hashToken(token);
+
+      const { data: session, error: sessionError } =
+        await admin
+          .from("admin_sessions")
+          .select(
+            "id, admin_user_id, expires_at, revoked_at"
+          )
+          .eq("token_hash", hash)
+          .maybeSingle();
+
+      if (sessionError) throw sessionError;
+
+      if (
+        !session ||
+        session.revoked_at ||
+        new Date(session.expires_at) <= new Date()
+      ) {
+        return json({
+          success: false,
+          error: "Admin session expired."
+        }, 401);
+      }
+
+      const { data: adminRow, error: adminError } =
+        await admin
+          .from("admin_users")
+          .select("role, active")
+          .eq("user_id", session.admin_user_id)
+          .maybeSingle();
+
+      if (adminError) throw adminError;
+
+      if (!adminRow?.active) {
+        return json({
+          success: false,
+          error: "Administrator access denied."
+        }, 403);
+      }
+
+      const { data, error } = await admin.rpc(
+        "admin_get_system_status"
+      );
+
+      if (error) throw error;
+
+      await admin
+        .from("admin_sessions")
+        .update({
+          last_seen_at: new Date().toISOString()
+        })
+        .eq("id", session.id);
+
+      return json({
+        success: true,
+        role: adminRow.role,
+        expiresAt: session.expires_at,
+        status: data
       });
     }
 
@@ -257,7 +439,7 @@ Deno.serve(async (req) => {
         error:
           e instanceof Error
             ? e.message
-            : "Server error",
+            : "Server error"
       },
       500
     );

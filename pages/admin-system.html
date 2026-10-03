@@ -55,22 +55,22 @@
 
         <div class="row">
           <span class="label">Application</span>
-          <span class="value">ZakiChat</span>
+          <span class="value" id="applicationName">ZakiChat</span>
         </div>
 
         <div class="row">
           <span class="label">Version</span>
-          <span class="value">zc-vr15</span>
+          <span class="value" id="applicationVersion">zc-vr15</span>
         </div>
 
         <div class="row">
           <span class="label">Environment</span>
-          <span class="value">Production</span>
+          <span class="value" id="environment">Production</span>
         </div>
 
         <div class="row">
           <span class="label">System Status</span>
-          <span class="value ok">Operational</span>
+          <span class="value ok" id="systemStatus">Checking...</span>
         </div>
       </div>
 
@@ -127,8 +127,8 @@
         </div>
 
         <div class="actions">
-          <button class="btn primary" onclick="refreshSession()">Refresh Session</button>
-          <button class="btn danger" onclick="revokeSession()">Sign Out Securely</button>
+          <button class="btn primary" id="refreshSessionBtn">Refresh Session</button>
+          <button class="btn danger" id="revokeSessionBtn">Sign Out Securely</button>
         </div>
       </div>
 
@@ -137,7 +137,7 @@
 
         <div class="row">
           <span class="label">Registration</span>
-          <span class="value ok">Enabled</span>
+          <span class="value ok" id="registrationStatus">Checking...</span>
         </div>
 
         <div class="row">
@@ -147,12 +147,12 @@
 
         <div class="row">
           <span class="label">Maintenance Mode</span>
-          <span class="value">Disabled</span>
+          <span class="value" id="maintenanceStatus">Checking...</span>
         </div>
 
         <div class="row">
           <span class="label">Public Updates</span>
-          <span class="value ok">Enabled</span>
+          <span class="value ok" id="publicUpdatesStatus">Checking...</span>
         </div>
       </div>
 
@@ -206,115 +206,8 @@
     </section>
   </main>
 
-<script>
-const FUNCTION_URL =
-  "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+<script src="../static/js/admin-system.js"></script>
 
-const SESSION_KEY = "zakichat-admin-session";
-const ROLE_KEY = "zakichat-admin-role";
-const EXPIRY_KEY = "zakichat-admin-expiry";
-
-function loadSession(){
-  const token = localStorage.getItem(SESSION_KEY);
-  const role = localStorage.getItem(ROLE_KEY);
-  const expiry = localStorage.getItem(EXPIRY_KEY);
-
-  document.getElementById("adminRole").textContent =
-    role || "Unknown";
-
-  if(!token){
-    document.getElementById("sessionStatus").textContent =
-      "Not active";
-    document.getElementById("sessionExpiry").textContent =
-      "No session";
-    return;
-  }
-
-  document.getElementById("sessionStatus").textContent =
-    "Active";
-
-  if(expiry){
-    const date = new Date(Number(expiry));
-    document.getElementById("sessionExpiry").textContent =
-      isNaN(date.getTime()) ? expiry : date.toLocaleString();
-  }else{
-    document.getElementById("sessionExpiry").textContent =
-      "Not provided";
-  }
-}
-
-async function refreshSession(){
-  const token = localStorage.getItem(SESSION_KEY);
-
-  if(!token){
-    location.href = "admin.html";
-    return;
-  }
-
-  try{
-    const response = await fetch(FUNCTION_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        action:"admin-session-verify",
-        adminSessionToken:token
-      })
-    });
-
-    const data = await response.json();
-
-    if(!response.ok || !data.success){
-      clearSession();
-      location.href = "admin.html";
-      return;
-    }
-
-    if(data.role)
-      localStorage.setItem(ROLE_KEY,data.role);
-
-    if(data.expiresAt)
-      localStorage.setItem(EXPIRY_KEY,String(data.expiresAt));
-
-    loadSession();
-    alert("Admin session verified successfully.");
-
-  }catch(error){
-    alert("Unable to verify the admin session.");
-  }
-}
-
-async function revokeSession(){
-  const token = localStorage.getItem(SESSION_KEY);
-
-  if(!token){
-    clearSession();
-    location.href = "admin.html";
-    return;
-  }
-
-  try{
-    await fetch(FUNCTION_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        action:"admin-session-revoke",
-        adminSessionToken:token
-      })
-    });
-  }catch(error){}
-
-  clearSession();
-  location.href = "admin.html";
-}
-
-function clearSession(){
-  localStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem(ROLE_KEY);
-  localStorage.removeItem(EXPIRY_KEY);
-}
-
-loadSession();
-</script>
 
 </body>
 </html>
