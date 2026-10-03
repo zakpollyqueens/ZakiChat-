@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZakiChat Admin • Releases</title>
+  <link rel="stylesheet" href="../static/css/admin-releases.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="grid-bg"></div>
+
+  <header class="admin-topbar">
+    <a class="brand" href="admin-control.html">
+      <span class="brand-mark">Z</span>
+      <span>
+        <strong>ZakiChat</strong>
+        <small>Admin Control Center</small>
+      </span>
+    </a>
+
+    <div class="top-actions">
+      <button id="refreshBtn" class="top-btn">↻ Refresh</button>
+      <a href="admin-control.html" class="top-btn">Dashboard</a>
+      <button id="signOutBtn" class="top-btn danger">Secure Sign Out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section id="loadingState" class="state-card">
+      <div class="loader"></div>
+      <h2>Verifying admin session</h2>
+      <p>Checking secure administrator access…</p>
+    </section>
+
+    <section id="deniedState" class="state-card hidden">
+      <div class="state-icon">!</div>
+      <h2>Admin access required</h2>
+      <p>Your administrator session is missing or expired.</p>
+      <a href="admin-control.html" class="primary-btn">Return to Admin Login</a>
+    </section>
+
+    <section id="adminContent" class="hidden">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">RELEASE CONTROL</span>
+          <h1>Releases & Upgrades</h1>
+          <p>
+            Manage ZakiChat versions, release notes, download destinations and
+            the upgrade information shown to users.
+          </p>
+        </div>
+
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          Admin Protected
+        </div>
+      </div>
+
+      <section class="metrics">
+        <article class="metric-card">
+          <span class="metric-icon">◈</span>
+          <small>Current Version</small>
+          <strong id="currentVersion">zc-vr15</strong>
+          <em>Application baseline</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">↟</span>
+          <small>Latest Release</small>
+          <strong id="latestVersion">—</strong>
+          <em>Protected release data</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">$</span>
+          <small>Personal Upgrade</small>
+          <strong>$2</strong>
+          <em>Monthly plan</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">◆</span>
+          <small>Business Upgrade</small>
+          <strong>$10</strong>
+          <em>Monthly plan</em>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="panel release-panel">
+          <div class="panel-head">
+            <div>
+              <span class="panel-kicker">NEW RELEASE</span>
+              <h2>Create Release</h2>
+            </div>
+            <span class="status-pill">Protected</span>
+          </div>
+
+          <form id="releaseForm">
+            <div class="two-col">
+              <label>
+                Version
+                <input id="versionInput" type="text" maxlength="30"
+                  placeholder="e.g. zc-vr16">
+              </label>
+
+              <label>
+                Release Channel
+                <select id="channelInput">
+                  <option value="stable">Stable</option>
+                  <option value="beta">Beta</option>
+                  <option value="testing">Testing</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Release Title
+              <input id="titleInput" type="text" maxlength="140"
+                placeholder="Enter release title">
+            </label>
+
+            <label>
+              Description
+              <textarea id="descriptionInput" maxlength="1500"
+                placeholder="Describe this release…"></textarea>
+            </label>
+
+            <label>
+              Download Link
+              <input id="downloadInput" type="url"
+                placeholder="https://…">
+            </label>
+
+            <label>
+              Release Notes
+              <textarea id="notesInput" maxlength="3000"
+                placeholder="List important changes, fixes and improvements…"></textarea>
+            </label>
+
+            <div class="form-actions">
+              <button type="button" id="previewBtn" class="secondary-btn">Preview</button>
+              <button type="submit" class="primary-btn">Save Release</button>
+            </div>
+
+            <p id="formStatus" class="form-status"></p>
+          </form>
+        </div>
+
+        <div class="panel current-panel">
+          <div class="panel-head">
+            <div>
+              <span class="panel-kicker">CURRENT</span>
+              <h2>Active Release</h2>
+            </div>
+            <a href="about.html" class="small-btn">View About</a>
+          </div>
+
+          <div class="release-card">
+            <div class="release-top">
+              <span class="version-chip">zc-vr15</span>
+              <span class="stable-chip">CURRENT</span>
+            </div>
+
+            <h3 id="currentReleaseTitle">ZakiChat Current Release</h3>
+
+            <p id="currentReleaseDescription">
+              The current application release is zc-vr15.
+              Future release details will be managed from this protected center.
+            </p>
+
+            <div class="release-info">
+              <span>Channel: <b id="currentChannel">Stable</b></span>
+              <span>Date: <b id="currentReleaseDate">—</b></span>
+            </div>
+
+            <a href="#" id="currentDownload" class="download-btn">
+              Latest Download
+            </a>
+          </div>
+
+          <div class="upgrade-grid">
+            <div class="upgrade-card">
+              <span class="upgrade-icon">P</span>
+              <strong>Personal</strong>
+              <b>$2 / month</b>
+              <small>Personal upgrade plan</small>
+            </div>
+
+            <div class="upgrade-card">
+              <span class="upgrade-icon">B</span>
+              <strong>Business</strong>
+              <b>$10 / month</b>
+              <small>Business upgrade plan</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel history-panel">
+        <div class="panel-head">
+          <div>
+            <span class="panel-kicker">VERSION HISTORY</span>
+            <h2>Release Library</h2>
+          </div>
+          <button id="clearFiltersBtn" class="small-btn">Clear Filters</button>
+        </div>
+
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Search versions…">
+
+          <select id="channelFilter">
+            <option value="all">All Channels</option>
+            <option value="stable">Stable</option>
+            <option value="beta">Beta</option>
+            <option value="testing">Testing</option>
+          </select>
+
+          <select id="statusFilter">
+            <option value="all">All Status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+
+        <div id="releaseList" class="release-list">
+          <div class="release-history-item">
+            <div>
+              <span class="history-version">zc-vr15</span>
+              <strong>Current application version</strong>
+              <small>Current baseline release</small>
+            </div>
+            <span class="history-status current">CURRENT</span>
+          </div>
+
+          <div class="release-history-item">
+            <div>
+              <span class="history-version">zc-vr14</span>
+              <strong>Previous version</strong>
+              <small>Archived release</small>
+            </div>
+            <span class="history-status">ARCHIVED</span>
+          </div>
+
+          <div class="release-history-item">
+            <div>
+              <span class="history-version">zc-vr13</span>
+              <strong>Archived version</strong>
+              <small>Version history</small>
+            </div>
+            <span class="history-status">ARCHIVED</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-grid">
+        <a href="admin-updates.html" class="quick-card">
+          <span>✦</span>
+          <div><strong>Public Updates</strong><small>Publish notices & announcements</small></div>
+        </a>
+
+        <a href="admin-payments.html" class="quick-card">
+          <span>$</span>
+          <div><strong>Payments & Upgrades</strong><small>Registration & upgrade records</small></div>
+        </a>
+
+        <a href="admin-analytics.html" class="quick-card">
+          <span>◒</span>
+          <div><strong>Analytics</strong><small>Monitor release activity</small></div>
+        </a>
+
+        <a href="admin-control.html" class="quick-card">
+          <span>⌂</span>
+          <div><strong>Admin Dashboard</strong><small>Return to control center</small></div>
+        </a>
+      </section>
+
+      <section class="security-note">
+        <span class="security-icon">🔐</span>
+        <div>
+          <strong>Protected release architecture</strong>
+          <p>
+            Publishing versions, changing active releases and modifying official
+            download destinations must be performed through a protected
+            server-side admin endpoint.
+          </p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="previewModal" class="modal hidden">
+    <div class="modal-card">
+      <button id="closePreviewBtn" class="modal-close">×</button>
+      <span class="panel-kicker">RELEASE PREVIEW</span>
+      <span id="previewVersion" class="version-chip">zc-vr16</span>
+      <h2 id="previewTitle">Release Preview</h2>
+      <p id="previewDescription">Release description will appear here.</p>
+      <div class="preview-notes">
+        <strong>Release Notes</strong>
+        <p id="previewNotes">No release notes entered.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../static/js/admin-releases.js"></script>
+</body>
+</html>

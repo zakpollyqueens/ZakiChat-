@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZakiChat Admin — Reports & Moderation</title>
+<link rel="stylesheet" href="../static/css/admin-moderation.css">
+</head>
+<body>
+
+<div class="bg"><i></i><i></i><i></i><div class="grid"></div></div>
+
+<div id="loading" class="state">
+  <div class="spinner"></div>
+  <h2>Securing Moderation Center</h2>
+  <p>Verifying administrator session...</p>
+</div>
+
+<div id="denied" class="state hidden">
+  <div class="state-icon">!</div>
+  <h2>Administrator Session Required</h2>
+  <p>Your administrator session is missing or expired.</p>
+  <button id="login" class="primary">Open Admin Login</button>
+</div>
+
+<main id="app" class="hidden">
+
+<header class="topbar glass">
+  <a href="admin-control.html" class="brand">
+    <b>Z</b>
+    <span><strong>ZakiChat</strong><small>Reports & Moderation</small></span>
+  </a>
+  <div class="actions">
+    <a href="admin-control.html" class="button">← Dashboard</a>
+    <button id="refresh" class="button">↻ Refresh</button>
+    <button id="logout" class="button danger">⇥ Sign Out</button>
+  </div>
+</header>
+
+<div class="session glass">
+  <span><i></i><strong>Administrator Session Active</strong></span>
+  <span id="session-info">Checking...</span>
+</div>
+
+<section class="hero glass">
+  <div>
+    <label>SAFETY & MODERATION</label>
+    <h1>Reports <span>& Moderation</span></h1>
+    <p>
+      Central review area for reported users, reported content,
+      blocked accounts, groups and channels.
+    </p>
+  </div>
+  <div class="hero-icon">🛡️</div>
+</section>
+
+<section class="metrics">
+  <article class="metric glass">
+    <span>🚩</span>
+    <small>OPEN REPORTS</small>
+    <strong id="open-reports">—</strong>
+    <em>Protected backend data</em>
+  </article>
+  <article class="metric glass">
+    <span>👤</span>
+    <small>REPORTED USERS</small>
+    <strong id="reported-users">—</strong>
+    <em>Protected backend data</em>
+  </article>
+  <article class="metric glass">
+    <span>💬</span>
+    <small>REPORTED CONTENT</small>
+    <strong id="reported-content">—</strong>
+    <em>Protected backend data</em>
+  </article>
+  <article class="metric glass">
+    <span>🚫</span>
+    <small>BLOCKED USERS</small>
+    <strong id="blocked-users">—</strong>
+    <em>Protected backend data</em>
+  </article>
+</section>
+
+<section class="overview glass">
+  <div class="section-head">
+    <div>
+      <label>MODERATION QUEUE</label>
+      <h2>Review Center</h2>
+    </div>
+    <span id="backend-state">Protected moderation endpoint pending</span>
+  </div>
+
+  <div class="queue-grid">
+
+    <button class="queue-card" data-view="reports">
+      <span>🚩</span>
+      <strong>Reports</strong>
+      <small>Review submitted reports</small>
+      <b>→</b>
+    </button>
+
+    <button class="queue-card" data-view="users">
+      <span>👤</span>
+      <strong>Reported Users</strong>
+      <small>Review reported accounts</small>
+      <b>→</b>
+    </button>
+
+    <button class="queue-card" data-view="content">
+      <span>📄</span>
+      <strong>Reported Content</strong>
+      <small>Review reported messages</small>
+      <b>→</b>
+    </button>
+
+    <button class="queue-card" data-view="blocked">
+      <span>🚫</span>
+      <strong>Blocked Users</strong>
+      <small>Review account restrictions</small>
+      <b>→</b>
+    </button>
+
+  </div>
+</section>
+
+<section class="filters glass">
+  <div class="search">
+    <span>⌕</span>
+    <input id="search" type="search"
+      placeholder="Search moderation records...">
+  </div>
+
+  <select id="status">
+    <option value="all">All Statuses</option>
+    <option value="open">Open</option>
+    <option value="reviewing">Reviewing</option>
+    <option value="resolved">Resolved</option>
+  </select>
+
+  <select id="type">
+    <option value="all">All Types</option>
+    <option value="user">User</option>
+    <option value="content">Content</option>
+    <option value="group">Group</option>
+    <option value="channel">Channel</option>
+  </select>
+
+  <button id="clear" class="button">Clear</button>
+</section>
+
+<section class="main-grid">
+
+  <div class="records glass">
+    <div class="section-head">
+      <div>
+        <label>MODERATION RECORDS</label>
+        <h2>Reports Queue</h2>
+      </div>
+      <span id="record-count">Backend connection pending</span>
+    </div>
+
+    <div id="empty" class="empty">
+      <div>🛡️</div>
+      <h3>Moderation queue ready</h3>
+      <p>
+        Real moderation records will appear here when the protected
+        administrator moderation endpoint is connected.
+      </p>
+    </div>
+
+    <div id="record-list" class="record-list"></div>
+  </div>
+
+  <aside class="side">
+
+    <a href="admin-users.html" class="side-card glass">
+      <span>👥</span>
+      <div>
+        <label>USERS</label>
+        <strong>User Management</strong>
+        <p>Review accounts and profiles.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+    <a href="admin-groups.html" class="side-card glass">
+      <span>👨‍👩‍👧</span>
+      <div>
+        <label>GROUPS</label>
+        <strong>Group Administration</strong>
+        <p>Manage group-level administration.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+    <a href="admin-channels.html" class="side-card glass">
+      <span>📢</span>
+      <div>
+        <label>CHANNELS</label>
+        <strong>Channel Administration</strong>
+        <p>Manage channel-level administration.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+    <a href="admin-support.html" class="side-card glass">
+      <span>🛟</span>
+      <div>
+        <label>SUPPORT</label>
+        <strong>Support Center</strong>
+        <p>Handle incoming user support.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+  </aside>
+</section>
+
+<section class="actions-panel glass">
+  <label>ADMINISTRATION</label>
+  <h2>Moderation Tools</h2>
+
+  <div class="tool-grid">
+    <button class="tool" data-action="reports">
+      <span>🚩</span>
+      <strong>Review Reports</strong>
+      <small>Open the moderation queue</small>
+    </button>
+
+    <button class="tool" data-action="users">
+      <span>👤</span>
+      <strong>Account Review</strong>
+      <small>Review reported accounts</small>
+    </button>
+
+    <button class="tool" data-action="blocked">
+      <span>🚫</span>
+      <strong>Blocked Users</strong>
+      <small>Review blocked-account data</small>
+    </button>
+
+    <button class="tool" data-action="support">
+      <span>🛟</span>
+      <strong>Support Reports</strong>
+      <small>Open support requests</small>
+    </button>
+  </div>
+</section>
+
+<section class="security-note glass">
+  <span>🔐</span>
+  <div>
+    <strong>Protected moderation architecture</strong>
+    <p>
+      Moderation actions can affect user accounts and content.
+      Administrative reads and future actions will be performed through
+      the protected admin backend rather than exposing privileged
+      database credentials to the browser.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <strong>ZakiChat Admin Reports & Moderation</strong>
+  <span>zc-vr15</span>
+  <span>•</span>
+  <span>Secure Administrator Area</span>
+</footer>
+
+</main>
+
+<script src="../static/js/admin-moderation.js"></script>
+</body>
+</html>

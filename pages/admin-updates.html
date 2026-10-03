@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZakiChat Admin • Updates</title>
+  <link rel="stylesheet" href="../static/css/admin-updates.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="grid-bg"></div>
+
+  <header class="admin-topbar">
+    <a class="brand" href="admin-control.html">
+      <span class="brand-mark">Z</span>
+      <span>
+        <strong>ZakiChat</strong>
+        <small>Admin Control Center</small>
+      </span>
+    </a>
+
+    <div class="top-actions">
+      <button id="refreshBtn" class="top-btn">↻ Refresh</button>
+      <a href="admin-control.html" class="top-btn">Dashboard</a>
+      <button id="signOutBtn" class="top-btn danger">Secure Sign Out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section id="loadingState" class="state-card">
+      <div class="loader"></div>
+      <h2>Verifying admin session</h2>
+      <p>Checking secure administrator access…</p>
+    </section>
+
+    <section id="deniedState" class="state-card hidden">
+      <div class="state-icon">!</div>
+      <h2>Admin access required</h2>
+      <p>Your administrator session is missing or expired.</p>
+      <a href="admin-control.html" class="primary-btn">Return to Admin Login</a>
+    </section>
+
+    <section id="adminContent" class="hidden">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">PUBLIC COMMUNICATION</span>
+          <h1>Updates & Notices</h1>
+          <p>
+            Control public notices, status updates and the “What’s New” experience
+            shown across ZakiChat.
+          </p>
+        </div>
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          Admin Protected
+        </div>
+      </div>
+
+      <section class="metrics">
+        <article class="metric-card">
+          <span class="metric-icon">!</span>
+          <small>Active Notices</small>
+          <strong id="activeNotices">—</strong>
+          <em>Published notices</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">✦</span>
+          <small>What's New</small>
+          <strong id="whatsNewCount">—</strong>
+          <em>Showcase items</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">◉</span>
+          <small>Status Updates</small>
+          <strong id="statusCount">—</strong>
+          <em>Published updates</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">◷</span>
+          <small>Last Published</small>
+          <strong id="lastPublished">—</strong>
+          <em>Protected records</em>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="panel composer-panel">
+          <div class="panel-head">
+            <div>
+              <span class="panel-kicker">PUBLISH</span>
+              <h2>Create Public Notice</h2>
+            </div>
+            <span class="status-pill">Protected</span>
+          </div>
+
+          <form id="noticeForm">
+            <label>
+              Update Type
+              <select id="updateType">
+                <option value="notice">Public Notice</option>
+                <option value="whats-new">What's New</option>
+                <option value="status">Status Update</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="release">Release Announcement</option>
+              </select>
+            </label>
+
+            <label>
+              Title
+              <input id="noticeTitle" type="text" maxlength="140"
+                placeholder="Enter update title">
+            </label>
+
+            <label>
+              Message
+              <textarea id="noticeMessage" maxlength="1500"
+                placeholder="Write the public update…"></textarea>
+            </label>
+
+            <div class="publish-row">
+              <label>
+                Visibility
+                <select id="visibility">
+                  <option value="public">Public</option>
+                  <option value="users">Signed-in Users</option>
+                  <option value="hidden">Save as Draft</option>
+                </select>
+              </label>
+
+              <label>
+                Priority
+                <select id="priority">
+                  <option value="normal">Normal</option>
+                  <option value="important">Important</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="previewBtn" class="secondary-btn">Preview</button>
+              <button type="submit" class="primary-btn">Publish Update</button>
+            </div>
+
+            <p id="formStatus" class="form-status"></p>
+          </form>
+        </div>
+
+        <div class="panel current-panel">
+          <div class="panel-head">
+            <div>
+              <span class="panel-kicker">LIVE SURFACE</span>
+              <h2>Current Public Notice</h2>
+            </div>
+            <a href="about.html" class="small-btn">View App</a>
+          </div>
+
+          <div class="notice-preview">
+            <span class="live-label"><span></span> PUBLIC NOTICE</span>
+            <h3 id="currentTitle">Protected notice data</h3>
+            <p id="currentMessage">
+              The active public notice will appear here when the protected
+              admin publishing backend is connected.
+            </p>
+            <div class="notice-meta">
+              <span id="currentDate">Date: —</span>
+              <span id="currentPriority">Priority: —</span>
+            </div>
+          </div>
+
+          <div class="surface-links">
+            <a href="about.html">
+              <span>▣</span>
+              <div><strong>About ZakiChat</strong><small>Public notice surface</small></div>
+            </a>
+            <a href="status.html">
+              <span>◉</span>
+              <div><strong>Status & Updates</strong><small>User-facing update area</small></div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="history-panel panel">
+        <div class="panel-head">
+          <div>
+            <span class="panel-kicker">CONTENT LIBRARY</span>
+            <h2>Published Updates</h2>
+          </div>
+          <button id="clearFiltersBtn" class="small-btn">Clear Filters</button>
+        </div>
+
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Search updates…">
+          <select id="typeFilter">
+            <option value="all">All Types</option>
+            <option value="notice">Public Notice</option>
+            <option value="whats-new">What's New</option>
+            <option value="status">Status Update</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="release">Release</option>
+          </select>
+          <select id="statusFilter">
+            <option value="all">All Status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+
+        <div id="updatesList" class="updates-list">
+          <div class="empty-card">
+            <span>✦</span>
+            <h3>Protected update library</h3>
+            <p>
+              Published notices and showcase records will appear here after
+              the protected admin update backend is connected.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-grid">
+        <a href="admin-releases.html" class="quick-card">
+          <span>↟</span>
+          <div><strong>Release Management</strong><small>Versions & release notes</small></div>
+        </a>
+
+        <a href="admin-notifications.html" class="quick-card">
+          <span>◉</span>
+          <div><strong>Notifications</strong><small>Send user notifications</small></div>
+        </a>
+
+        <a href="admin-analytics.html" class="quick-card">
+          <span>◒</span>
+          <div><strong>Analytics</strong><small>Measure update activity</small></div>
+        </a>
+
+        <a href="admin-control.html" class="quick-card">
+          <span>⌂</span>
+          <div><strong>Admin Dashboard</strong><small>Return to control center</small></div>
+        </a>
+      </section>
+
+      <section class="security-note">
+        <span class="security-icon">🔐</span>
+        <div>
+          <strong>Protected publishing architecture</strong>
+          <p>
+            Public publishing, editing, archiving and deletion must be handled
+            through a protected server-side admin endpoint. No service-role key
+            or privileged database credential is exposed to this page.
+          </p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="previewModal" class="modal hidden">
+    <div class="modal-card">
+      <button id="closePreviewBtn" class="modal-close">×</button>
+      <span class="panel-kicker">UPDATE PREVIEW</span>
+      <span id="previewType" class="preview-type">Public Notice</span>
+      <h2 id="previewTitle">Update Preview</h2>
+      <p id="previewMessage">Your public update will appear here.</p>
+      <div class="preview-meta">
+        <span id="previewVisibility">Visibility: Public</span>
+        <span id="previewPriority">Priority: Normal</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="../static/js/admin-updates.js"></script>
+</body>
+</html>

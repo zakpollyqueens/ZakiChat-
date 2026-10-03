@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZakiChat Admin — Support Center</title>
+  <link rel="stylesheet" href="../static/css/admin-support.css">
+</head>
+<body>
+
+<div class="bg"><i></i><i></i><i></i><div class="grid"></div></div>
+
+<div id="loading" class="state">
+  <div class="spinner"></div>
+  <h2>Securing Support Center</h2>
+  <p>Verifying administrator session...</p>
+</div>
+
+<div id="denied" class="state hidden">
+  <div class="state-icon">!</div>
+  <h2>Administrator Session Required</h2>
+  <p>Your administrator session is missing or expired.</p>
+  <button id="login" class="primary">Open Admin Login</button>
+</div>
+
+<main id="app" class="hidden">
+
+<header class="topbar glass">
+  <a href="admin-control.html" class="brand">
+    <b>Z</b>
+    <span><strong>ZakiChat</strong><small>Support Center</small></span>
+  </a>
+
+  <div class="actions">
+    <a href="admin-control.html" class="button">← Dashboard</a>
+    <button id="refresh" class="button">↻ Refresh</button>
+    <button id="logout" class="button danger">⇥ Sign Out</button>
+  </div>
+</header>
+
+<div class="session glass">
+  <span><i></i><strong>Administrator Session Active</strong></span>
+  <span id="session-info">Checking...</span>
+</div>
+
+<section class="hero glass">
+  <div>
+    <label>SUPPORT OPERATIONS</label>
+    <h1>User <span>Support Center</span></h1>
+    <p>
+      Receive, review and manage support requests submitted from
+      ZakiChat users.
+    </p>
+  </div>
+  <div class="hero-icon">🛟</div>
+</section>
+
+<section class="metrics">
+  <article class="metric glass">
+    <span>📨</span>
+    <small>OPEN REQUESTS</small>
+    <strong id="open-count">—</strong>
+    <em>Live support data</em>
+  </article>
+
+  <article class="metric glass">
+    <span>👁</span>
+    <small>READ</small>
+    <strong id="read-count">—</strong>
+    <em>Live support data</em>
+  </article>
+
+  <article class="metric glass">
+    <span>✓</span>
+    <small>RESOLVED</small>
+    <strong id="resolved-count">—</strong>
+    <em>Live support data</em>
+  </article>
+
+  <article class="metric glass">
+    <span>📊</span>
+    <small>TOTAL REQUESTS</small>
+    <strong id="total-count">—</strong>
+    <em>Live support data</em>
+  </article>
+</section>
+
+<section class="filters glass">
+  <div class="search">
+    <span>⌕</span>
+    <input id="search" type="search"
+      placeholder="Search subject, message or user...">
+  </div>
+
+  <select id="status-filter">
+    <option value="all">All Statuses</option>
+    <option value="open">Open</option>
+    <option value="read">Read</option>
+    <option value="resolved">Resolved</option>
+  </select>
+
+  <select id="category-filter">
+    <option value="all">All Categories</option>
+    <option value="general">General</option>
+    <option value="account">Account</option>
+    <option value="payments">Payments</option>
+    <option value="security">Security</option>
+    <option value="bug">Bug</option>
+    <option value="report">Report</option>
+    <option value="other">Other</option>
+  </select>
+
+  <button id="clear" class="button">Clear</button>
+</section>
+
+<section class="main-grid">
+
+  <div class="requests glass">
+
+    <div class="section-head">
+      <div>
+        <label>INBOX</label>
+        <h2>Support Requests</h2>
+      </div>
+      <span id="request-state">Secure backend connection pending</span>
+    </div>
+
+    <div id="empty" class="empty">
+      <div class="empty-icon">💬</div>
+      <h3>Support inbox ready</h3>
+      <p>
+        Real user support requests will appear here after the privileged
+        administrator support endpoint is connected.
+      </p>
+    </div>
+
+    <div id="request-list" class="request-list"></div>
+  </div>
+
+  <aside class="side">
+
+    <a href="admin-users.html" class="side-card glass">
+      <span>👥</span>
+      <div>
+        <label>USERS</label>
+        <strong>User Management</strong>
+        <p>Review user accounts and profiles.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+    <a href="admin-moderation.html" class="side-card glass">
+      <span>🛡</span>
+      <div>
+        <label>REPORTS</label>
+        <strong>Moderation Center</strong>
+        <p>Review user and content reports.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+    <a href="admin-notifications.html" class="side-card glass">
+      <span>🔔</span>
+      <div>
+        <label>NOTIFICATIONS</label>
+        <strong>Notification Center</strong>
+        <p>Manage administrator notifications.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+    <a href="admin-analytics.html" class="side-card glass">
+      <span>📈</span>
+      <div>
+        <label>ANALYTICS</label>
+        <strong>Support Analytics</strong>
+        <p>Review support trends and activity.</p>
+      </div>
+      <b>→</b>
+    </a>
+
+  </aside>
+</section>
+
+<section class="categories glass">
+  <label>SUPPORT CATEGORIES</label>
+  <h2>Request Routing</h2>
+
+  <div class="category-grid">
+
+    <button class="category" data-category="general">
+      <span>💬</span>
+      <strong>General</strong>
+      <small>General assistance</small>
+    </button>
+
+    <button class="category" data-category="account">
+      <span>👤</span>
+      <strong>Account</strong>
+      <small>Account issues</small>
+    </button>
+
+    <button class="category" data-category="payments">
+      <span>💳</span>
+      <strong>Payments</strong>
+      <small>Payment questions</small>
+    </button>
+
+    <button class="category" data-category="security">
+      <span>🔐</span>
+      <strong>Security</strong>
+      <small>Security concerns</small>
+    </button>
+
+    <button class="category" data-category="bug">
+      <span>🐞</span>
+      <strong>Bug Reports</strong>
+      <small>Technical problems</small>
+    </button>
+
+    <button class="category" data-category="report">
+      <span>🚩</span>
+      <strong>User Reports</strong>
+      <small>Users or content</small>
+    </button>
+
+  </div>
+</section>
+
+<section class="security-note glass">
+  <span>🔒</span>
+  <div>
+    <strong>Protected support data</strong>
+    <p>
+      Support requests contain user-submitted information. The browser
+      must never receive a Supabase service-role key. Administrative
+      reads and status changes will go through the protected admin backend.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <strong>ZakiChat Admin Support Center</strong>
+  <span>zc-vr15</span>
+  <span>•</span>
+  <span>Secure Administrator Area</span>
+</footer>
+
+</main>
+
+<script src="../static/js/admin-support.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZakiChat Admin • Notifications</title>
+  <link rel="stylesheet" href="../static/css/admin-notifications.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="grid-bg"></div>
+
+  <header class="admin-topbar">
+    <a class="brand" href="admin-control.html">
+      <span class="brand-mark">Z</span>
+      <span>
+        <strong>ZakiChat</strong>
+        <small>Admin Control Center</small>
+      </span>
+    </a>
+
+    <div class="top-actions">
+      <button id="refreshBtn" class="top-btn">↻ Refresh</button>
+      <a href="admin-control.html" class="top-btn">Dashboard</a>
+      <button id="signOutBtn" class="top-btn danger">Secure Sign Out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section id="loadingState" class="state-card">
+      <div class="loader"></div>
+      <h2>Verifying admin session</h2>
+      <p>Checking secure administrator access…</p>
+    </section>
+
+    <section id="deniedState" class="state-card hidden">
+      <div class="state-icon">!</div>
+      <h2>Admin access required</h2>
+      <p>Your administrator session is missing or expired.</p>
+      <a href="admin-control.html" class="primary-btn">Return to Admin Login</a>
+    </section>
+
+    <section id="adminContent" class="hidden">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">COMMUNICATION CONTROL</span>
+          <h1>Notifications Center</h1>
+          <p>Manage platform notifications, delivery activity and future broadcast controls from one protected center.</p>
+        </div>
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          Admin Protected
+        </div>
+      </div>
+
+      <section class="metrics">
+        <article class="metric-card">
+          <span class="metric-icon">◉</span>
+          <small>Total Notifications</small>
+          <strong id="totalNotifications">—</strong>
+          <em>Protected data</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">✓</span>
+          <small>Delivered</small>
+          <strong id="deliveredNotifications">—</strong>
+          <em>Delivery records</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">◌</span>
+          <small>Unread</small>
+          <strong id="unreadNotifications">—</strong>
+          <em>User notification state</em>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon">↗</span>
+          <small>Broadcasts</small>
+          <strong id="broadcastCount">—</strong>
+          <em>Admin announcements</em>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="panel composer-panel">
+          <div class="panel-head">
+            <div>
+              <span class="panel-kicker">BROADCAST</span>
+              <h2>Send Notification</h2>
+            </div>
+            <span class="status-pill">Protected</span>
+          </div>
+
+          <form id="notificationForm">
+            <label>
+              Notification Type
+              <select id="notificationType">
+                <option value="general">General</option>
+                <option value="update">App Update</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="security">Security</option>
+                <option value="payment">Payments</option>
+                <option value="announcement">Announcement</option>
+              </select>
+            </label>
+
+            <label>
+              Audience
+              <select id="notificationAudience">
+                <option value="all">All Users</option>
+                <option value="active">Active Users</option>
+                <option value="selected">Selected Users</option>
+              </select>
+            </label>
+
+            <label>
+              Title
+              <input id="notificationTitle" type="text" maxlength="120"
+                placeholder="Notification title">
+            </label>
+
+            <label>
+              Message
+              <textarea id="notificationMessage" maxlength="1000"
+                placeholder="Write the notification message…"></textarea>
+            </label>
+
+            <div class="form-actions">
+              <button type="button" id="previewBtn" class="secondary-btn">Preview</button>
+              <button type="submit" class="primary-btn">Send Notification</button>
+            </div>
+
+            <p id="formStatus" class="form-status"></p>
+          </form>
+        </div>
+
+        <div class="panel history-panel">
+          <div class="panel-head">
+            <div>
+              <span class="panel-kicker">HISTORY</span>
+              <h2>Notification History</h2>
+            </div>
+            <button id="clearFiltersBtn" class="small-btn">Clear</button>
+          </div>
+
+          <div class="filters">
+            <input id="searchInput" type="search" placeholder="Search notifications…">
+            <select id="historyFilter">
+              <option value="all">All Types</option>
+              <option value="general">General</option>
+              <option value="update">App Update</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="security">Security</option>
+              <option value="payment">Payments</option>
+              <option value="announcement">Announcement</option>
+            </select>
+          </div>
+
+          <div id="historyList" class="history-list">
+            <div class="empty-card">
+              <span>◎</span>
+              <h3>Protected notification history</h3>
+              <p>Notification records will appear here when the protected admin notification backend is connected.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="quick-grid">
+        <a href="admin-users.html" class="quick-card">
+          <span>♙</span><div><strong>User Management</strong><small>Manage recipient accounts</small></div>
+        </a>
+        <a href="admin-support.html" class="quick-card">
+          <span>?</span><div><strong>Support Center</strong><small>Review user support requests</small></div>
+        </a>
+        <a href="admin-updates.html" class="quick-card">
+          <span>✦</span><div><strong>Public Updates</strong><small>Manage public notices</small></div>
+        </a>
+        <a href="admin-analytics.html" class="quick-card">
+          <span>◒</span><div><strong>Analytics</strong><small>Monitor platform activity</small></div>
+        </a>
+      </section>
+
+      <section class="security-note">
+        <span class="security-icon">🔐</span>
+        <div>
+          <strong>Protected notification architecture</strong>
+          <p>
+            Browser code never receives a service-role key or privileged database credentials.
+            Sending, reading history and delivery statistics must be performed through a protected
+            server-side admin endpoint.
+          </p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="previewModal" class="modal hidden">
+    <div class="modal-card">
+      <button id="closePreviewBtn" class="modal-close">×</button>
+      <span class="panel-kicker">PREVIEW</span>
+      <h2 id="previewTitle">Notification Preview</h2>
+      <span id="previewType" class="preview-type">General</span>
+      <p id="previewMessage">Your notification message will appear here.</p>
+      <small id="previewAudience">Audience: All Users</small>
+    </div>
+  </div>
+
+  <script src="../static/js/admin-notifications.js"></script>
+</body>
+</html>

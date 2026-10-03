@@ -1,117 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050914">
-<title>Admin Control | ZakiChat</title>
-<link rel="stylesheet" href="../static/css/admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZakiChat Admin Control Center</title>
+  <link rel="stylesheet" href="../static/css/admin-center.css">
 </head>
+<body>
 
-<body class="admin-page">
-<main class="admin-shell">
-<section class="admin-card">
-
-<div class="admin-brand">
-<div class="admin-brand-mark">Z</div>
-<h1>Admin Control Center</h1>
-<p id="adminState">Verifying secure session...</p>
+<div class="admin-bg">
+  <span class="orb orb-a"></span>
+  <span class="orb orb-b"></span>
+  <span class="orb orb-c"></span>
+  <div class="grid-layer"></div>
 </div>
 
-<div id="adminPanel" class="admin-hidden">
-<p>Administrator access verified.</p>
-<p id="adminRole"></p>
-<p id="adminExpiry"></p>
-
-<button id="adminLogout" class="admin-button">
-Secure Sign Out
-</button>
+<div id="admin-loading" class="admin-state">
+  <div class="loader"></div>
+  <h2>Securing Control Center</h2>
+  <p>Verifying administrator session...</p>
 </div>
 
-<div id="adminDenied" class="admin-denied admin-hidden">
-<strong>Access denied</strong>
-<span>Administrator session is invalid or expired.</span>
+<div id="admin-denied" class="admin-state hidden">
+  <div class="state-icon">!</div>
+  <h2>Administrator Session Required</h2>
+  <p>Your admin session is missing or has expired.</p>
+  <button id="go-admin-login" class="primary-btn">Open Admin Login</button>
 </div>
 
-</section>
+<main id="admin-app" class="hidden">
+
+  <header class="topbar glass">
+    <a class="brand" href="admin-control.html">
+      <span class="brand-logo">Z</span>
+      <span>
+        <strong>ZakiChat</strong>
+        <small>Admin Control Center</small>
+      </span>
+    </a>
+
+    <div class="top-actions">
+      <button class="top-btn" id="refresh-dashboard">↻ <span>Refresh</span></button>
+      <a class="top-btn" href="../index.html">⌂ <span>View App</span></a>
+      <button class="top-btn danger" id="secure-logout">⇥ <span>Sign Out</span></button>
+    </div>
+  </header>
+
+  <section class="session-strip glass">
+    <div>
+      <span class="live-dot"></span>
+      <strong>Administrator Session Active</strong>
+    </div>
+    <div class="session-info">
+      <span id="admin-role">Administrator</span>
+      <span>•</span>
+      <span id="admin-expiry">Checking expiry...</span>
+    </div>
+  </section>
+
+  <section class="hero glass">
+    <div class="hero-copy">
+      <span class="eyebrow">CONTROL CENTER</span>
+      <h1>Welcome to the <span>Admin Dashboard</span></h1>
+      <p>
+        Manage ZakiChat users, communication, support, moderation,
+        notifications, updates, releases, payments, groups, channels,
+        analytics and system security from one central place.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="admin-analytics.html" class="primary-btn">View Analytics →</a>
+        <a href="admin-users.html" class="secondary-btn">Manage Users</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-ring ring-one"></div>
+      <div class="hero-ring ring-two"></div>
+      <div class="hero-core">Z</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">LIVE OVERVIEW</span>
+        <h2>Analytics & Activity</h2>
+      </div>
+      <a href="admin-analytics.html" class="view-link">Open Analytics →</a>
+    </div>
+
+    <div class="analytics-grid">
+
+      <a href="admin-analytics.html" class="analytics-card">
+        <div class="card-icon">👥</div>
+        <div>
+          <span>Total Users</span>
+          <strong id="stat-users">—</strong>
+          <small>Open user analytics</small>
+        </div>
+      </a>
+
+      <a href="admin-analytics.html?metric=activity" class="analytics-card">
+        <div class="card-icon">⚡</div>
+        <div>
+          <span>Platform Activity</span>
+          <strong id="stat-activity">—</strong>
+          <small>View activity analytics</small>
+        </div>
+      </a>
+
+      <a href="admin-support.html" class="analytics-card">
+        <div class="card-icon">💬</div>
+        <div>
+          <span>Support Requests</span>
+          <strong id="stat-support">—</strong>
+          <small>Open Support Center</small>
+        </div>
+      </a>
+
+      <a href="admin-payments.html" class="analytics-card">
+        <div class="card-icon">💳</div>
+        <div>
+          <span>Payments</span>
+          <strong id="stat-payments">—</strong>
+          <small>Open payment records</small>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">ADMIN TOOLS</span>
+        <h2>Quick Actions</h2>
+      </div>
+    </div>
+
+    <div class="action-grid">
+
+      <a href="admin-users.html" class="action-card blue">
+        <span class="action-number">01</span>
+        <span class="action-icon">👥</span>
+        <strong>Users</strong>
+        <small>Profiles, accounts, activity and status</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-communication.html" class="action-card purple">
+        <span class="action-number">02</span>
+        <span class="action-icon">💬</span>
+        <strong>Communication</strong>
+        <small>Conversations, messages and communication tools</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-support.html" class="action-card green">
+        <span class="action-number">03</span>
+        <span class="action-icon">🛟</span>
+        <strong>Support Center</strong>
+        <small>Receive and manage user support requests</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-moderation.html" class="action-card red">
+        <span class="action-number">04</span>
+        <span class="action-icon">🛡</span>
+        <strong>Moderation</strong>
+        <small>Reports, blocked users and reported content</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-notifications.html" class="action-card orange">
+        <span class="action-number">05</span>
+        <span class="action-icon">🔔</span>
+        <strong>Notifications</strong>
+        <small>Send and manage platform notifications</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-updates.html" class="action-card cyan">
+        <span class="action-number">06</span>
+        <span class="action-icon">📢</span>
+        <strong>Updates</strong>
+        <small>Public notices and What's New content</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-releases.html" class="action-card violet">
+        <span class="action-number">07</span>
+        <span class="action-icon">🚀</span>
+        <strong>Releases</strong>
+        <small>Versions, release notes and downloads</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-payments.html" class="action-card gold">
+        <span class="action-number">08</span>
+        <span class="action-icon">💳</span>
+        <strong>Payments & Upgrades</strong>
+        <small>Registration and upgrade payment records</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-groups.html" class="action-card teal">
+        <span class="action-number">09</span>
+        <span class="action-icon">👨‍👩‍👧‍👦</span>
+        <strong>Groups</strong>
+        <small>Group administration and management</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-channels.html" class="action-card pink">
+        <span class="action-number">10</span>
+        <span class="action-icon">📣</span>
+        <strong>Channels</strong>
+        <small>Channel administration and moderation</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-analytics.html" class="action-card indigo">
+        <span class="action-number">11</span>
+        <span class="action-icon">📊</span>
+        <strong>Analytics</strong>
+        <small>Platform growth, activity and trends</small>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="admin-system.html" class="action-card slate">
+        <span class="action-number">12</span>
+        <span class="action-icon">⚙</span>
+        <strong>System & Security</strong>
+        <small>Configuration, administrators and security</small>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="management-grid">
+
+    <a href="admin-users.html" class="management-card glass">
+      <span class="management-icon">👤</span>
+      <div>
+        <span class="eyebrow">MANAGEMENT 01</span>
+        <h3>User Management</h3>
+        <p>View accounts, profiles, activity and account status.</p>
+      </div>
+      <span class="floating-arrow">↗</span>
+    </a>
+
+    <a href="admin-support.html" class="management-card glass">
+      <span class="management-icon">🛟</span>
+      <div>
+        <span class="eyebrow">MANAGEMENT 02</span>
+        <h3>Support Center</h3>
+        <p>Handle messages sent through Contact & Support.</p>
+      </div>
+      <span class="floating-arrow">↗</span>
+    </a>
+
+    <a href="admin-moderation.html" class="management-card glass">
+      <span class="management-icon">🛡</span>
+      <div>
+        <span class="eyebrow">MANAGEMENT 03</span>
+        <h3>Reports & Moderation</h3>
+        <p>Review reports and moderation-related activity.</p>
+      </div>
+      <span class="floating-arrow">↗</span>
+    </a>
+
+    <a href="admin-notifications.html" class="management-card glass">
+      <span class="management-icon">🔔</span>
+      <div>
+        <span class="eyebrow">MANAGEMENT 04</span>
+        <h3>Notification Center</h3>
+        <p>Control notifications delivered to ZakiChat users.</p>
+      </div>
+      <span class="floating-arrow">↗</span>
+    </a>
+
+    <a href="admin-releases.html" class="management-card glass">
+      <span class="management-icon">🚀</span>
+      <div>
+        <span class="eyebrow">MANAGEMENT 05</span>
+        <h3>Release Management</h3>
+        <p>Manage versions, release notes and update information.</p>
+      </div>
+      <span class="floating-arrow">↗</span>
+    </a>
+
+    <a href="admin-system.html" class="management-card glass">
+      <span class="management-icon">🔐</span>
+      <div>
+        <span class="eyebrow">MANAGEMENT 06</span>
+        <h3>System Security</h3>
+        <p>Review administrator access and session security.</p>
+      </div>
+      <span class="floating-arrow">↗</span>
+    </a>
+
+  </section>
+
+  <section class="bottom-grid">
+
+    <div class="activity-panel glass">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">MONITORING</span>
+          <h2>Recent Activity</h2>
+        </div>
+        <a href="admin-analytics.html?view=activity" class="small-btn">View All</a>
+      </div>
+
+      <div class="activity-empty">
+        <div class="empty-icon">◌</div>
+        <h3>Activity stream ready</h3>
+        <p>
+          Live administrative activity will appear here when the
+          privileged analytics connection is enabled.
+        </p>
+      </div>
+    </div>
+
+    <div class="security-panel glass">
+      <span class="eyebrow">SECURITY</span>
+      <h2>Administrator Access</h2>
+      <p>
+        Your custom administrator session is verified separately from
+        the normal ZakiChat user account.
+      </p>
+
+      <div class="security-status">
+        <span class="live-dot"></span>
+        <span>Secure session active</span>
+      </div>
+
+      <div class="security-actions">
+        <a href="admin-system.html" class="secondary-btn">Security Settings</a>
+        <button id="secure-logout-bottom" class="danger-btn">Secure Sign Out</button>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="admin-footer">
+    <strong>ZakiChat Admin Control Center</strong>
+    <span>zc-vr15</span>
+    <span>•</span>
+    <span>Administrator Access</span>
+  </footer>
+
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../static/js/config.js"></script>
-<script src="../static/js/account-manager.js"></script>
-<script src="../static/js/supabase-client.js"></script>
-
-<script>
-(async()=>{
-"use strict";
-
-const FN="https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
-const token=sessionStorage.getItem("zakichat-admin-session");
-const panel=document.getElementById("adminPanel");
-const denied=document.getElementById("adminDenied");
-const state=document.getElementById("adminState");
-
-function fail(){
-sessionStorage.removeItem("zakichat-admin-session");
-sessionStorage.removeItem("zakichat-admin-role");
-sessionStorage.removeItem("zakichat-admin-expiry");
-location.href="admin.html";
-}
-
-try{
-const {data}=await window.ZakiChatAuth.client.auth.getSession();
-
-if(!data.session||!token)throw new Error("No session");
-
-const r=await fetch(FN,{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-Authorization:`Bearer ${data.session.access_token}`
-},
-body:JSON.stringify({
-action:"admin-session-verify",
-adminSessionToken:token
-})
-});
-
-const result=await r.json();
-
-if(!r.ok||!result.valid)throw new Error("Invalid admin session");
-
-state.textContent="Secure administrator session verified.";
-panel.classList.remove("admin-hidden");
-
-document.getElementById("adminRole").textContent=
-"Role: "+(result.role||"Administrator");
-
-document.getElementById("adminExpiry").textContent=
-"Session expires: "+(result.expiresAt||"");
-
-document.getElementById("adminLogout").onclick=async()=>{
-await fetch(FN,{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-Authorization:`Bearer ${data.session.access_token}`
-},
-body:JSON.stringify({
-action:"admin-session-revoke",
-adminSessionToken:token
-})
-});
-
-sessionStorage.clear();
-await window.ZakiChatAuth.client.auth.signOut();
-location.href="admin.html";
-};
-
-}catch(e){
-denied.classList.remove("admin-hidden");
-state.textContent="Security verification failed.";
-setTimeout(fail,1200);
-}
-})();
-</script>
+<script src="../static/js/admin-center.js"></script>
 </body>
 </html>

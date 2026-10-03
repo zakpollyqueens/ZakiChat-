@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZakiChat Admin Analytics</title>
+  <link rel="stylesheet" href="../static/css/admin-analytics.css">
+</head>
+<body>
+
+<div class="analytics-bg">
+  <span class="orb orb-a"></span>
+  <span class="orb orb-b"></span>
+  <span class="orb orb-c"></span>
+  <div class="grid-layer"></div>
+</div>
+
+<div id="analytics-loading" class="state-screen">
+  <div class="loader"></div>
+  <h2>Loading Analytics</h2>
+  <p>Verifying administrator session...</p>
+</div>
+
+<div id="analytics-denied" class="state-screen hidden">
+  <div class="state-icon">!</div>
+  <h2>Administrator Session Required</h2>
+  <p>Your administrator session is missing or has expired.</p>
+  <button id="go-login" class="primary-btn">Open Admin Login</button>
+</div>
+
+<main id="analytics-app" class="hidden">
+
+  <header class="topbar glass">
+    <a href="admin-control.html" class="brand">
+      <span class="brand-logo">Z</span>
+      <span>
+        <strong>ZakiChat</strong>
+        <small>Analytics Center</small>
+      </span>
+    </a>
+
+    <div class="top-actions">
+      <a href="admin-control.html" class="top-btn">← Dashboard</a>
+      <button id="refresh-analytics" class="top-btn">↻ Refresh</button>
+      <button id="logout" class="top-btn danger">⇥ Sign Out</button>
+    </div>
+  </header>
+
+  <section class="session-strip glass">
+    <div>
+      <span class="live-dot"></span>
+      <strong>Analytics Control Active</strong>
+    </div>
+    <div>
+      <span id="admin-role">Administrator</span>
+      <span>•</span>
+      <span id="admin-expiry">Checking...</span>
+    </div>
+  </section>
+
+  <section class="hero glass">
+    <div>
+      <span class="eyebrow">PLATFORM INTELLIGENCE</span>
+      <h1>Analytics & <span>Growth</span></h1>
+      <p>
+        Monitor ZakiChat growth, communication activity, support,
+        registrations, payments and platform trends from one place.
+      </p>
+
+      <div class="hero-actions">
+        <button class="primary-btn" id="load-data">Refresh Data</button>
+        <button class="secondary-btn" id="activity-focus">Activity View</button>
+      </div>
+    </div>
+
+    <div class="hero-chart">
+      <div class="chart-orbit orbit-one"></div>
+      <div class="chart-orbit orbit-two"></div>
+      <div class="chart-core">↗</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">PLATFORM OVERVIEW</span>
+        <h2>Key Metrics</h2>
+      </div>
+      <span class="data-state" id="data-state">Waiting for secure analytics connection</span>
+    </div>
+
+    <div class="metrics-grid">
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span class="metric-icon">👥</span>
+          <span class="metric-label">USERS</span>
+        </div>
+        <strong id="total-users">—</strong>
+        <span>Total registered users</span>
+        <small id="users-note">Secure data connection pending</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span class="metric-icon">💬</span>
+          <span class="metric-label">MESSAGES</span>
+        </div>
+        <strong id="total-messages">—</strong>
+        <span>Total messages</span>
+        <small id="messages-note">Secure data connection pending</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span class="metric-icon">👨‍👩‍👧‍👦</span>
+          <span class="metric-label">GROUPS</span>
+        </div>
+        <strong id="total-groups">—</strong>
+        <span>Total groups</span>
+        <small id="groups-note">Secure data connection pending</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span class="metric-icon">📣</span>
+          <span class="metric-label">CHANNELS</span>
+        </div>
+        <strong id="total-channels">—</strong>
+        <span>Total channels</span>
+        <small id="channels-note">Secure data connection pending</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span class="metric-icon">🛟</span>
+          <span class="metric-label">SUPPORT</span>
+        </div>
+        <strong id="total-support">—</strong>
+        <span>Support requests</span>
+        <small id="support-note">Secure data connection pending</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span class="metric-icon">💳</span>
+          <span class="metric-label">PAYMENTS</span>
+        </div>
+        <strong id="total-payments">—</strong>
+        <span>Registration payments</span>
+        <small id="payments-note">Secure data connection pending</small>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">GROWTH MONITOR</span>
+        <h2>Platform Trends</h2>
+      </div>
+    </div>
+
+    <div class="trend-grid">
+
+      <article class="trend-card glass">
+        <div class="panel-heading">
+          <div>
+            <span class="panel-icon">📈</span>
+            <h3>User Growth</h3>
+          </div>
+          <span class="period">30 DAYS</span>
+        </div>
+
+        <div class="chart-placeholder">
+          <div class="bars">
+            <i style="height:25%"></i>
+            <i style="height:39%"></i>
+            <i style="height:32%"></i>
+            <i style="height:52%"></i>
+            <i style="height:47%"></i>
+            <i style="height:65%"></i>
+            <i style="height:58%"></i>
+            <i style="height:76%"></i>
+            <i style="height:70%"></i>
+            <i style="height:88%"></i>
+          </div>
+          <div class="chart-message">
+            <strong>Live growth chart</strong>
+            <span>Awaiting privileged analytics data</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="trend-card glass">
+        <div class="panel-heading">
+          <div>
+            <span class="panel-icon">⚡</span>
+            <h3>Activity</h3>
+          </div>
+          <span class="period">TODAY</span>
+        </div>
+
+        <div class="activity-meter">
+          <div class="meter-circle">
+            <strong id="activity-value">—</strong>
+            <span>activity</span>
+          </div>
+          <div class="meter-info">
+            <div><span>Messages</span><b id="activity-messages">—</b></div>
+            <div><span>Groups</span><b id="activity-groups">—</b></div>
+            <div><span>Support</span><b id="activity-support">—</b></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">ADMIN MONITORING</span>
+        <h2>Activity Center</h2>
+      </div>
+    </div>
+
+    <div class="activity-grid">
+
+      <a href="admin-users.html" class="activity-card glass">
+        <span>👥</span>
+        <div>
+          <strong>User Activity</strong>
+          <small>Open user management</small>
+        </div>
+        <b>→</b>
+      </a>
+
+      <a href="admin-communication.html" class="activity-card glass">
+        <span>💬</span>
+        <div>
+          <strong>Communication Activity</strong>
+          <small>Conversations and messages</small>
+        </div>
+        <b>→</b>
+      </a>
+
+      <a href="admin-support.html" class="activity-card glass">
+        <span>🛟</span>
+        <div>
+          <strong>Support Activity</strong>
+          <small>User support requests</small>
+        </div>
+        <b>→</b>
+      </a>
+
+      <a href="admin-payments.html" class="activity-card glass">
+        <span>💳</span>
+        <div>
+          <strong>Payment Activity</strong>
+          <small>Registration and upgrades</small>
+        </div>
+        <b>→</b>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="insight-panel glass">
+      <div class="insight-icon">✦</div>
+      <div>
+        <span class="eyebrow">ANALYTICS ENGINE</span>
+        <h2>Secure Data Architecture</h2>
+        <p>
+          Dashboard figures remain blank until the privileged Admin Analytics
+          connection is enabled. This prevents the Admin Center from displaying
+          invented or client-side estimates.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <strong>ZakiChat Admin Analytics</strong>
+    <span>zc-vr15</span>
+    <span>•</span>
+    <span>Secure Administrator Area</span>
+  </footer>
+
+</main>
+
+<script src="../static/js/admin-analytics.js"></script>
+</body>
+</html>

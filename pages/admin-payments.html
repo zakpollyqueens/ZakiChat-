@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color" content="#07111f">
+  <title>ZakiChat Admin • Payments & Upgrades</title>
+  <link rel="stylesheet" href="../static/css/admin-payments.css">
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-grid"></div>
+
+  <main class="admin-shell">
+    <header class="topbar">
+      <a class="brand" href="admin-control.html">
+        <span class="brand-mark">Z</span>
+        <span>
+          <strong>ZakiChat</strong>
+          <small>Admin Control Center</small>
+        </span>
+      </a>
+
+      <div class="top-actions">
+        <a href="admin-control.html" class="top-btn">Dashboard</a>
+        <button id="refreshBtn" class="top-btn">↻ Refresh</button>
+        <button id="signOutBtn" class="top-btn danger">Secure Sign Out</button>
+      </div>
+    </header>
+
+    <section id="loadingState" class="state-card">
+      <div class="loader"></div>
+      <h2>Securing Payments Center</h2>
+      <p>Verifying administrator session…</p>
+    </section>
+
+    <section id="deniedState" class="state-card hidden">
+      <div class="state-icon">🔐</div>
+      <h2>Admin Access Required</h2>
+      <p>Your administrator session is missing or expired.</p>
+      <a href="admin-control.html" class="primary-btn">Return to Admin Login</a>
+    </section>
+
+    <div id="adminContent" class="hidden">
+
+      <section class="hero">
+        <div>
+          <span class="eyebrow">PAGE 09 • PAYMENTS & UPGRADES</span>
+          <h1>Payments & <span>Upgrades</span></h1>
+          <p>
+            Control paid upgrades, manual customer payments, payment records,
+            renewals and subscription expiry from one secure center.
+          </p>
+        </div>
+
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          Protected Admin Mode
+        </div>
+      </section>
+
+      <section class="metric-grid">
+        <article class="metric-card">
+          <span>Registration Payments</span>
+          <strong id="registrationMetric">—</strong>
+          <small>Existing registration-payment records</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Upgrade Payments</span>
+          <strong id="upgradeMetric">—</strong>
+          <small>Verified upgrade transactions</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Active Upgrades</span>
+          <strong id="activeMetric">—</strong>
+          <small>Currently active paid plans</small>
+        </article>
+
+        <article class="metric-card">
+          <span>Expiring Soon</span>
+          <strong id="expiringMetric">—</strong>
+          <small>Plans requiring attention</small>
+        </article>
+      </section>
+
+      <section class="workspace">
+
+        <div class="main-column">
+
+          <article class="panel upgrade-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">MANUAL CONTROL</span>
+                <h2>Manual Customer Upgrade</h2>
+                <p>
+                  Upgrade a customer after receiving payment directly.
+                </p>
+              </div>
+              <span class="secure-chip">🔒 Admin Only</span>
+            </div>
+
+            <form id="manualUpgradeForm">
+
+              <div class="field">
+                <label for="customerIdentifier">Customer Email or Phone</label>
+                <input
+                  id="customerIdentifier"
+                  name="customerIdentifier"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="customer@example.com or +256..."
+                  required
+                >
+                <small>
+                  The secure backend will locate the ZakiChat account using
+                  this identifier.
+                </small>
+              </div>
+
+              <div class="field-row">
+
+                <div class="field">
+                  <label for="upgradePlan">Upgrade Plan</label>
+                  <select id="upgradePlan" name="upgradePlan">
+                    <option value="personal_monthly">Personal — $2/month</option>
+                    <option value="business_monthly">Business — $10/month</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="paymentMethod">Payment Method</label>
+                  <select id="paymentMethod" name="paymentMethod">
+                    <option value="cash">Cash</option>
+                    <option value="mobile_money">Mobile Money</option>
+                    <option value="bank">Bank Transfer</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <div class="field-row">
+
+                <div class="field">
+                  <label for="amountReceived">Amount Received</label>
+                  <input
+                    id="amountReceived"
+                    name="amountReceived"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="2.00"
+                    required
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="paymentReference">Payment Reference</label>
+                  <input
+                    id="paymentReference"
+                    name="paymentReference"
+                    type="text"
+                    placeholder="CASH-001"
+                  >
+                </div>
+
+              </div>
+
+              <div class="field">
+                <label for="upgradeNotes">Admin Notes</label>
+                <textarea
+                  id="upgradeNotes"
+                  name="upgradeNotes"
+                  rows="4"
+                  placeholder="Customer paid directly to administrator..."
+                ></textarea>
+              </div>
+
+              <div class="form-notice">
+                <span>⚠</span>
+                <div>
+                  <strong>Secure operation</strong>
+                  <p>
+                    This button will only perform a real upgrade after the
+                    protected upgrade backend is connected. The browser will
+                    never directly grant paid privileges.
+                  </p>
+                </div>
+              </div>
+
+              <button type="submit" class="primary-btn wide">
+                ⬆ Upgrade Account
+              </button>
+
+              <div id="manualResult" class="result-box hidden"></div>
+            </form>
+          </article>
+
+          <article class="panel automatic-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">AUTOMATIC SYSTEM</span>
+                <h2>Automatic Payment Upgrades</h2>
+                <p>
+                  Payment platforms can notify the secure backend when a
+                  customer successfully pays.
+                </p>
+              </div>
+              <span class="status-chip pending">Backend Connection</span>
+            </div>
+
+            <div class="flow">
+              <div class="flow-step">
+                <b>01</b>
+                <span>Customer</span>
+                <small>Chooses an upgrade</small>
+              </div>
+              <i>→</i>
+              <div class="flow-step">
+                <b>02</b>
+                <span>Payment Platform</span>
+                <small>Processes payment</small>
+              </div>
+              <i>→</i>
+              <div class="flow-step">
+                <b>03</b>
+                <span>Secure Webhook</span>
+                <small>Verifies transaction</small>
+              </div>
+              <i>→</i>
+              <div class="flow-step">
+                <b>04</b>
+                <span>ZakiChat</span>
+                <small>Applies upgrade</small>
+              </div>
+            </div>
+
+            <div class="integration-grid">
+              <div class="integration-card">
+                <span>Payment Verification</span>
+                <strong>Pending Backend</strong>
+                <small>Server-side confirmation required</small>
+              </div>
+
+              <div class="integration-card">
+                <span>Automatic Account Matching</span>
+                <strong>Email / Phone</strong>
+                <small>Customer identity is matched securely</small>
+              </div>
+
+              <div class="integration-card">
+                <span>Upgrade Activation</span>
+                <strong>Automatic</strong>
+                <small>Activated after verified payment</small>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel plans-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">AVAILABLE PLANS</span>
+                <h2>ZakiChat Upgrade Plans</h2>
+              </div>
+            </div>
+
+            <div class="plan-grid">
+              <article class="plan-card personal">
+                <span class="plan-icon">👤</span>
+                <h3>Personal</h3>
+                <strong>$2<span>/month</span></strong>
+                <p>For individual ZakiChat users.</p>
+                <button class="outline-btn plan-select" data-plan="personal_monthly">
+                  Select Personal
+                </button>
+              </article>
+
+              <article class="plan-card business">
+                <span class="plan-icon">🏢</span>
+                <h3>Business</h3>
+                <strong>$10<span>/month</span></strong>
+                <p>For business and organizational accounts.</p>
+                <button class="outline-btn plan-select" data-plan="business_monthly">
+                  Select Business
+                </button>
+              </article>
+            </div>
+          </article>
+
+          <article class="panel records-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-kicker">PAYMENT RECORDS</span>
+                <h2>Upgrade History</h2>
+                <p>Verified automatic and manual upgrade transactions.</p>
+              </div>
+            </div>
+
+            <div class="filters">
+              <input id="recordSearch" type="search" placeholder="Search email, phone or reference...">
+
+              <select id="recordType">
+                <option value="all">All Types</option>
+                <option value="automatic">Automatic</option>
+                <option value="manual">Manual</option>
+              </select>
+
+              <select id="recordStatus">
+                <option value="all">All Statuses</option>
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+                <option value="expired">Expired</option>
+                <option value="manually_upgraded">Manually Upgraded</option>
+              </select>
+            </div>
+
+            <div id="recordsEmpty" class="empty-state">
+              <div>🧾</div>
+              <h3>No upgrade records loaded</h3>
+              <p>
+                Protected payment records will appear here when the secure
+                backend is connected.
+              </p>
+            </div>
+
+            <div id="recordsList" class="records-list hidden"></div>
+          </article>
+
+        </div>
+
+        <aside class="side-column">
+
+          <article class="panel side-panel">
+            <span class="panel-kicker">ADMIN ACTIONS</span>
+            <h2>Upgrade Operations</h2>
+
+            <button class="action-card" data-scroll="manualUpgradeForm">
+              <span>💵</span>
+              <div>
+                <strong>Manual Upgrade</strong>
+                <small>Upgrade a customer after direct payment</small>
+              </div>
+            </button>
+
+            <button class="action-card" data-scroll="automatic-panel">
+              <span>⚡</span>
+              <div>
+                <strong>Automatic Payments</strong>
+                <small>View payment integration status</small>
+              </div>
+            </button>
+
+            <button class="action-card" data-scroll="records-panel">
+              <span>🧾</span>
+              <div>
+                <strong>Payment History</strong>
+                <small>Review upgrade transactions</small>
+              </div>
+            </button>
+
+            <a class="action-card" href="admin-users.html">
+              <span>👥</span>
+              <div>
+                <strong>User Management</strong>
+                <small>Open customer accounts</small>
+              </div>
+            </a>
+
+            <a class="action-card" href="admin-releases.html">
+              <span>🚀</span>
+              <div>
+                <strong>Release Management</strong>
+                <small>Manage ZakiChat versions</small>
+              </div>
+            </a>
+          </article>
+
+          <article class="panel side-panel security-panel">
+            <span class="panel-kicker">SECURITY</span>
+            <h2>Payment Protection</h2>
+
+            <ul>
+              <li>Payment confirmation happens server-side.</li>
+              <li>Admin credentials never enter customer-facing code.</li>
+              <li>Manual upgrades are recorded as admin actions.</li>
+              <li>Automatic upgrades require verified webhooks.</li>
+              <li>Registration payments remain separately recorded.</li>
+            </ul>
+          </article>
+
+          <article class="panel side-panel links-panel">
+            <span class="panel-kicker">CONTROL CENTER</span>
+            <h2>Related Sections</h2>
+
+            <a href="admin-analytics.html">Analytics</a>
+            <a href="admin-support.html">Support Center</a>
+            <a href="admin-notifications.html">Notifications</a>
+            <a href="admin-updates.html">Updates</a>
+            <a href="admin-moderation.html">Moderation</a>
+            <a href="admin-control.html">Dashboard</a>
+          </article>
+
+        </aside>
+      </section>
+
+      <footer class="admin-footer">
+        <span>ZakiChat <b>zc-vr15</b></span>
+        <span>Payments & Upgrades • Protected Admin Center</span>
+      </footer>
+
+    </div>
+  </main>
+
+  <script src="../static/js/admin-payments.js"></script>
+</body>
+</html>

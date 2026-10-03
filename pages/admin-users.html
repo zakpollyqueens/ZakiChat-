@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZakiChat Admin — Users</title>
+  <link rel="stylesheet" href="../static/css/admin-users.css">
+</head>
+<body>
+
+<div class="bg"><i></i><i></i><i></i><div class="grid"></div></div>
+
+<div id="loading" class="state">
+  <div class="spinner"></div>
+  <h2>Securing User Management</h2>
+  <p>Verifying administrator session...</p>
+</div>
+
+<div id="denied" class="state hidden">
+  <div class="state-icon">!</div>
+  <h2>Administrator Session Required</h2>
+  <p>Your administrator session is missing or expired.</p>
+  <button id="login" class="primary">Open Admin Login</button>
+</div>
+
+<main id="app" class="hidden">
+
+  <header class="topbar glass">
+    <a href="admin-control.html" class="brand">
+      <b>Z</b>
+      <span><strong>ZakiChat</strong><small>User Management</small></span>
+    </a>
+
+    <div class="actions">
+      <a href="admin-control.html" class="button">← Dashboard</a>
+      <button id="refresh" class="button">↻ Refresh</button>
+      <button id="logout" class="button danger">⇥ Sign Out</button>
+    </div>
+  </header>
+
+  <div class="session glass">
+    <span><i></i><strong>Administrator Session Active</strong></span>
+    <span id="session-info">Checking...</span>
+  </div>
+
+  <section class="hero glass">
+    <div>
+      <label>USER ADMINISTRATION</label>
+      <h1>Manage <span>ZakiChat Users</span></h1>
+      <p>
+        Central administration for user accounts, profiles, account status,
+        activity and user-related controls.
+      </p>
+    </div>
+
+    <div class="hero-icon">👥</div>
+  </section>
+
+  <section class="toolbar glass">
+    <div class="search">
+      <span>⌕</span>
+      <input id="search" type="search" placeholder="Search users by username, name or email...">
+    </div>
+
+    <select id="status-filter">
+      <option value="all">All Accounts</option>
+      <option value="active">Active</option>
+      <option value="disabled">Disabled</option>
+      <option value="blocked">Blocked</option>
+    </select>
+
+    <button id="clear-search" class="button">Clear</button>
+  </section>
+
+  <section class="metrics">
+    <article class="metric glass">
+      <span>👥</span>
+      <small>TOTAL USERS</small>
+      <strong id="total-users">—</strong>
+      <em>Secure backend data</em>
+    </article>
+
+    <article class="metric glass">
+      <span>🟢</span>
+      <small>ACTIVE</small>
+      <strong id="active-users">—</strong>
+      <em>Account status data</em>
+    </article>
+
+    <article class="metric glass">
+      <span>🚫</span>
+      <small>RESTRICTED</small>
+      <strong id="restricted-users">—</strong>
+      <em>Moderation data</em>
+    </article>
+
+    <article class="metric glass">
+      <span>📈</span>
+      <small>NEW USERS</small>
+      <strong id="new-users">—</strong>
+      <em>Registration analytics</em>
+    </article>
+  </section>
+
+  <section class="content-grid">
+
+    <div class="users-panel glass">
+      <div class="heading">
+        <div>
+          <label>ACCOUNT DIRECTORY</label>
+          <h2>Users</h2>
+        </div>
+        <span id="result-count">Backend connection pending</span>
+      </div>
+
+      <div id="empty" class="empty">
+        <div>👤</div>
+        <h3>User directory ready</h3>
+        <p>
+          User records will appear here when the privileged Admin User
+          Management backend is connected.
+        </p>
+      </div>
+
+      <div id="users-list" class="users-list"></div>
+    </div>
+
+    <aside class="side-panel">
+
+      <a href="admin-analytics.html" class="side-card glass">
+        <span>📊</span>
+        <div>
+          <label>ANALYTICS</label>
+          <strong>User Analytics</strong>
+          <p>Monitor registration and growth trends.</p>
+        </div>
+        <b>→</b>
+      </a>
+
+      <a href="admin-moderation.html" class="side-card glass">
+        <span>🛡</span>
+        <div>
+          <label>MODERATION</label>
+          <strong>Account Restrictions</strong>
+          <p>Review moderation and reported-account activity.</p>
+        </div>
+        <b>→</b>
+      </a>
+
+      <a href="admin-support.html" class="side-card glass">
+        <span>🛟</span>
+        <div>
+          <label>SUPPORT</label>
+          <strong>User Support</strong>
+          <p>Handle requests submitted by users.</p>
+        </div>
+        <b>→</b>
+      </a>
+
+      <a href="admin-communication.html" class="side-card glass">
+        <span>💬</span>
+        <div>
+          <label>COMMUNICATION</label>
+          <strong>Conversations</strong>
+          <p>Open communication administration.</p>
+        </div>
+        <b>→</b>
+      </a>
+
+    </aside>
+  </section>
+
+  <section class="tools glass">
+    <label>USER TOOLS</label>
+    <h2>Administration Shortcuts</h2>
+
+    <div class="tool-grid">
+      <button class="tool" data-action="profiles">
+        <span>👤</span>
+        <strong>Profiles</strong>
+        <small>View profile records</small>
+      </button>
+
+      <button class="tool" data-action="activity">
+        <span>⚡</span>
+        <strong>User Activity</strong>
+        <small>Review platform activity</small>
+      </button>
+
+      <button class="tool" data-action="status">
+        <span>🔐</span>
+        <strong>Account Status</strong>
+        <small>Review account controls</small>
+      </button>
+
+      <button class="tool" data-action="payments">
+        <span>💳</span>
+        <strong>User Payments</strong>
+        <small>Registration payments</small>
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <strong>ZakiChat Admin User Management</strong>
+    <span>zc-vr15</span>
+    <span>•</span>
+    <span>Secure Administrator Area</span>
+  </footer>
+
+</main>
+
+<script src="../static/js/admin-users.js"></script>
+</body>
+</html>
