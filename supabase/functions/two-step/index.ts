@@ -1,10 +1,30 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const url = Deno.env.get("SUPABASE_URL")!;
-const secretKeys = JSON.parse(
-  Deno.env.get("SUPABASE_SECRET_KEYS") || "{}"
-);
-const serviceKey = secretKeys.default;
+const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
+let secretKeyFromMap: string | undefined;
+
+if (secretKeysRaw) {
+  try {
+    const parsed = JSON.parse(secretKeysRaw);
+    if (parsed && typeof parsed.default === "string") {
+      secretKeyFromMap = parsed.default;
+    }
+  } catch {
+    console.error("SUPABASE_SECRET_KEYS is not valid JSON.");
+  }
+}
+
+// Prefer the legacy JWT service-role key when available.
+const serviceKey =
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+  secretKeyFromMap;
+
+if (!serviceKey) {
+  throw new Error(
+    "Missing Supabase admin key. Check the Edge Function runtime key configuration."
+  );
+}
 const encKey = Deno.env.get("ZAKICHAT_2FA_ENCRYPTION_KEY");
 const adminEmail = Deno.env.get("ZAKICHAT_ADMIN_EMAIL");
 const adminPassword = Deno.env.get("ZAKICHAT_ADMIN_PASSWORD");
