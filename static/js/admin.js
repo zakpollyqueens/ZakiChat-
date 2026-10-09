@@ -34,7 +34,8 @@
       const response = await fetch(FN, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "apikey": window.ZakiChatConfig?.supabaseKey || ""
         },
         body: JSON.stringify({
           action: "admin-verify",
