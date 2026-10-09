@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>Channel Administration | ZakiChat</title>
+  <link rel="stylesheet" href="../static/css/admin-channels.css">
+</head>
+<body>
+<main class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">Z</div>
+      <div>
+        <small>ZAKICHAT ADMIN</small>
+        <h1>Channel Administration</h1>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="refreshBtn" class="btn">↻ Refresh</button>
+      <a href="admin-control.html" class="btn">Dashboard</a>
+      <button id="signOutBtn" class="btn danger">Sign Out</button>
+    </div>
+  </header>
+
+  <section id="loadingState" class="state">
+    <strong>Verifying administrator session...</strong>
+  </section>
+
+  <section id="deniedState" class="state hidden">
+    <strong>Administrator access required.</strong>
+    <p>Your administrator session is missing or expired.</p>
+    <a href="admin.html" class="btn primary">Admin Sign In</a>
+  </section>
+
+  <main id="content" class="hidden">
+
+    <section class="hero">
+      <div>
+        <small>COMMUNITY CONTROL</small>
+        <h2>Channels</h2>
+        <p>
+          Inspect public channels, subscribers, moderation status,
+          reports and channel activity from the protected administrator
+          control surface.
+        </p>
+      </div>
+      <div class="hero-icon">📣</div>
+    </section>
+
+    <section class="metrics">
+      <article>
+        <span>CHANNELS</span>
+        <strong id="channelCount">—</strong>
+      </article>
+      <article>
+        <span>SUBSCRIBERS</span>
+        <strong id="subscriberCount">—</strong>
+      </article>
+      <article>
+        <span>OPEN REPORTS</span>
+        <strong id="reportCount">—</strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <small>PROTECTED DIRECTORY</small>
+          <h2>Channel Directory</h2>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search channels..."
+          autocomplete="off"
+        >
+
+        <select id="statusFilter">
+          <option value="all">All statuses</option>
+          <option value="normal">Normal</option>
+          <option value="under_review">Under review</option>
+          <option value="action_required">Action required</option>
+          <option value="restricted">Restricted</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+
+      <div id="directoryList" class="directory">
+        <div class="empty">Loading channels...</div>
+      </div>
+    </section>
+
+  </main>
+</main>
+
+<script src="../static/js/config.js"></script>
+<script src="../static/js/admin-channels.js"></script>
+</body>
+</html>

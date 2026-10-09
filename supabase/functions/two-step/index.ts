@@ -18,7 +18,8 @@ const json = (data: unknown, status = 200) =>
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "authorization, content-type",
+      "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
     },
   });
 
@@ -229,6 +230,75 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json().catch(() => ({}));
     const action = body.action || "status";
+
+
+    if (action === "admin-verify") {
+      const email = String(body.email || "").trim().toLowerCase();
+      const password = String(body.password || "");
+      const passcode = String(body.passcode || "");
+
+      if (!email || !password || !passcode) {
+        return json({ error: "Enter all administrator credentials." }, 400);
+      }
+
+      if (!adminPasscode || passcode !== adminPasscode) {
+        return json({ error: "Invalid administrator credentials." }, 401);
+      }
+
+      // Use an isolated Auth client for this login attempt.
+      // Do not share its user session with other function requests.
+      const authClient = createClient(url, serviceKey, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      });
+
+      const { data: authData, error: authError } =
+        await authClient.auth.signInWithPassword({ email, password });
+
+      if (authError || !authData.user) {
+        return json({ error: "Invalid administrator credentials." }, 401);
+      }
+
+      const user = authData.user;
+
+      const { data: adminRow, error: adminError } = await admin
+        .from("admin_users")
+        .select("user_id, role, active")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (adminError) throw adminError;
+
+      if (!adminRow || !adminRow.active) {
+        return json({ error: "Administrator access denied." }, 403);
+      }
+
+      const token = await sessionToken();
+      const tokenHash = await hashToken(token);
+      const expiresAt = new Date(
+        Date.now() + 8 * 60 * 60 * 1000
+      ).toISOString();
+
+      const { error: insertError } = await admin
+        .from("admin_sessions")
+        .insert({
+          admin_user_id: user.id,
+          token_hash: tokenHash,
+          expires_at: expiresAt
+        });
+
+      if (insertError) throw insertError;
+
+      return json({
+        success: true,
+        adminSessionToken: token,
+        role: adminRow.role,
+        expiresAt
+      });
+    }
 
     if (action === "admin-session-verify") {
       const token = String(
