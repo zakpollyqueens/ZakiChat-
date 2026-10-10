@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../static/css/chat.css">
   <link rel="stylesheet" href="../static/css/chat-whatsapp.css">
   <link rel="stylesheet" href="../static/css/telegram-inspired-chat.css">
+  <link rel="stylesheet" href="../static/css/app-lock.css">
 </head>
 
 <body class="chat-page">
@@ -46,6 +47,8 @@
             <path d="m16 10 4-2v8l-4-2z"></path>
           </svg>
         </button>
+
+        <button class="chat-icon-button zaki-app-lock-button" data-zaki-app-lock type="button" aria-label="Lock ZakiChat" title="Lock app" aria-pressed="false">🔓</button>
 
         <button class="chat-icon-button" id="search-chat-button" type="button" aria-label="Search">
           ⌕
@@ -316,6 +319,7 @@
   <script src="../static/js/chat-mobile-composer.js"></script>
   <script src="../static/js/communication.js"></script>
   <script src="../static/js/chat.js"></script>
+  <script src="../static/js/app-lock.js"></script>
 
   <script>
     document.getElementById("back-to-chats")?.addEventListener("click", () => {
