@@ -314,18 +314,14 @@
   <script src="../static/js/chat-mobile-composer.js"></script>
   <script src="../static/js/communication.js"></script>
   <script src="../static/js/chat.js"></script>
+  <script src="../static/js/chat-header-interactions.js"></script>
 
   <script>
     document.getElementById("back-to-chats")?.addEventListener("click", () => {
       window.location.href = "chats.html";
     });
 
-    document.getElementById("chat-user-button")?.addEventListener("click", () => {
-      const user = new URLSearchParams(location.search).get("user");
-      if (user) {
-        window.location.href = "profile.html?user=" + encodeURIComponent(user);
-      }
-    });
+
   </script>
 
 </body>
