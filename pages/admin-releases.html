@@ -129,9 +129,19 @@
             </label>
 
             <label>
-              Download Link
-              <input id="downloadInput" type="url"
-                placeholder="https://…">
+              Release Package (.apk, .aab, or .zip; maximum 100 MB)
+              <input id="downloadFile" type="file"
+                accept=".apk,.aab,.zip,application/vnd.android.package-archive,application/zip,application/octet-stream"
+                required>
+            </label>
+
+            <label>
+              Publication Status
+              <select id="statusInput">
+                <option value="draft">Save as Draft</option>
+                <option value="published">Publish Release</option>
+                <option value="archived">Archive</option>
+              </select>
             </label>
 
             <label>
@@ -306,7 +316,8 @@
     </div>
   </div>
 
-  <script src="../static/js/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../static/js/config.js"></script>
 <script src="../static/js/admin-releases.js"></script>
 </body>
 </html>
