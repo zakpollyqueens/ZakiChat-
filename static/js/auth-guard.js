@@ -16,6 +16,25 @@
     return;
   }
 
+  // Load the shared app-lock layer on every page protected by this guard.
+  // The lock overlay persists across navigation and refreshes.
+  (function loadAppLock() {
+    if (!document.querySelector('link[data-zaki-lock-styles]')) {
+      const style = document.createElement("link");
+      style.rel = "stylesheet";
+      style.href = "../static/css/app-lock.css";
+      style.dataset.zakiLockStyles = "true";
+      document.head.appendChild(style);
+    }
+    if (!document.querySelector('script[data-zaki-lock-script]')) {
+      const script = document.createElement("script");
+      script.src = "../static/js/app-lock.js";
+      script.dataset.zakiLockScript = "true";
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  })();
+
   async function protectPage() {
     const { data, error } =
       await supabaseClient.auth.getSession();
