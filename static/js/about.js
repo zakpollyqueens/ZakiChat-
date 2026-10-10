@@ -460,56 +460,105 @@
 })();
 
 /* =========================================================
-   ZAKICHAT UPGRADE PLAN CONTROLLER
-   Payment and entitlement activation will be connected
-   through the secure backend in a later implementation.
+   ZAKICHAT UPGRADE REQUEST CONTROLLER
+   Requests are recorded securely; no plan is activated until payment is verified.
    ========================================================= */
-
 (function () {
   'use strict';
 
   const upgradePlans = {
-    personal_monthly: {
-      id: 'personal_monthly',
-      accountType: 'Personal',
-      price: 2,
-      currency: 'USD',
-      billingInterval: 'monthly'
-    },
-
-    business_monthly: {
-      id: 'business_monthly',
-      accountType: 'Business',
-      price: 10,
-      currency: 'USD',
-      billingInterval: 'monthly'
-    }
+    personal_monthly: { id: 'personal_monthly', accountType: 'Personal', price: 2, currency: 'USD', billingInterval: 'monthly' },
+    business_monthly: { id: 'business_monthly', accountType: 'Business', price: 10, currency: 'USD', billingInterval: 'monthly' }
   };
 
-  function handleUpgrade(planId) {
+  function showUpgradeStatus(message, isError = false, showLoginLink = false) {
+    let status = document.getElementById('upgradeCheckoutStatus');
+    if (!status) {
+      status = document.createElement('p');
+      status.id = 'upgradeCheckoutStatus';
+      status.className = 'upgrade-checkout-status';
+      status.setAttribute('role', 'status');
+      document.querySelector('.upgrade-plans-grid')?.prepend(status);
+    }
+    status.hidden = false;
+    status.classList.toggle('error', isError);
+    status.replaceChildren(document.createTextNode(message));
+    if (showLoginLink) {
+      status.appendChild(document.createTextNode(' '));
+      const link = document.createElement('a');
+      link.href = 'login.html';
+      link.textContent = 'Sign in';
+      status.appendChild(link);
+      status.appendChild(document.createTextNode(', then return here and select your plan again.'));
+    }
+    status.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function handleUpgrade(planId, button) {
     const plan = upgradePlans[planId];
-
     if (!plan) return;
+    const client = window.ZakiChatAuth?.client;
+    const config = window.ZakiChatConfig;
+    if (!client || !config?.supabaseUrl || !config?.supabaseKey) {
+      showUpgradeStatus('ZakiChat sign-in is still initializing. Refresh the page and try again.', true);
+      return;
+    }
 
-    const message =
-      `${plan.accountType} upgrade selected.\n\n` +
-      `Price: $${plan.price}/month\n` +
-      `Billing: Monthly\n\n` +
-      `Secure payment and subscription activation will be connected after ` +
-      `the ZakiChat Admin and payment system are completed.`;
+    const oldText = button?.textContent || 'Request Upgrade';
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Submitting...';
+    }
 
-    window.alert(message);
+    try {
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+      if (sessionError) throw sessionError;
+      const session = sessionData?.session;
+      if (!session?.access_token) {
+        showUpgradeStatus('Sign in to request the ' + plan.accountType + ' plan. No payment has been taken.', false, true);
+        return;
+      }
+
+      const response = await fetch(config.supabaseUrl + '/functions/v1/upgrade-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: config.supabaseKey,
+          Authorization: 'Bearer ' + session.access_token
+        },
+        body: JSON.stringify({ planId: plan.id })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true) {
+        throw new Error(result.error || 'Unable to submit your upgrade request.');
+      }
+
+      if (result.alreadyActive) {
+        showUpgradeStatus(result.message || 'This plan is already active on your account.');
+        return;
+      }
+
+      showUpgradeStatus(
+        (result.message || 'Your upgrade request has been recorded.') +
+        ' Request reference: ' + result.requestId +
+        '. No charge has been made. Automatic checkout still needs the approved payment-provider credentials and webhook verification.'
+      );
+    } catch (error) {
+      console.error('Upgrade request failed:', error);
+      showUpgradeStatus(error.message || 'Unable to submit your upgrade request. Please try again later.', true);
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = oldText;
+      }
+    }
   }
 
   function bindUpgradeButtons() {
-    document.querySelectorAll('[data-upgrade-plan]').forEach((button) => {
+    document.querySelectorAll('[data-upgrade-plan]').forEach(button => {
       if (button.dataset.upgradeBound === 'true') return;
-
       button.dataset.upgradeBound = 'true';
-
-      button.addEventListener('click', () => {
-        handleUpgrade(button.dataset.upgradePlan);
-      });
+      button.addEventListener('click', () => handleUpgrade(button.dataset.upgradePlan, button));
     });
   }
 
@@ -518,84 +567,4 @@
   } else {
     bindUpgradeButtons();
   }
-})();
-
-/*
- * ============================================================
- * SHOWCASE → UPGRADE ROUTING
- * ============================================================
- *
- * A showcase item may open:
- *
- *   about.html?upgrade=personal_monthly#paid-upgrades
- *   about.html?upgrade=business_monthly#paid-upgrades
- *
- * This only selects/highlights the relevant plan.
- * Payment and entitlement activation remain backend-controlled.
- * ============================================================
- */
-(function () {
-  'use strict';
-
-  function focusUpgradePlan() {
-    const params = new URLSearchParams(
-      window.location.search
-    );
-
-    const requestedPlan =
-      params.get('upgrade');
-
-    if (!requestedPlan) {
-      return;
-    }
-
-    const plan =
-      document.querySelector(
-        `[data-upgrade-plan="${CSS.escape(requestedPlan)}"]`
-      );
-
-    if (!plan) {
-      console.warn(
-        'Requested upgrade plan was not found:',
-        requestedPlan
-      );
-      return;
-    }
-
-    const card =
-      plan.closest('.upgrade-plan-card');
-
-    if (!card) {
-      return;
-    }
-
-    window.setTimeout(function () {
-      card.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
-
-      card.classList.add(
-        'upgrade-plan-highlight'
-      );
-
-      window.setTimeout(function () {
-        card.classList.remove(
-          'upgrade-plan-highlight'
-        );
-      }, 2200);
-    }, 150);
-  }
-
-  if (
-    document.readyState === 'loading'
-  ) {
-    document.addEventListener(
-      'DOMContentLoaded',
-      focusUpgradePlan
-    );
-  } else {
-    focusUpgradePlan();
-  }
-
 })();
