@@ -4,6 +4,15 @@
   const ZakiMedia = {
     db: null,
     bucket: "message-attachments",
+    premiumBucket: "message-attachments-premium",
+
+    resolveBucketPath(path) {
+      const value = String(path || "");
+      if (value.startsWith("premium/")) {
+        return { bucket: this.premiumBucket, path: value.slice("premium/".length) };
+      }
+      return { bucket: this.bucket, path: value };
+    },
 
     init(config) {
       if (!window.supabase || !config) {
@@ -161,13 +170,15 @@
               .toString(36)
               .slice(2)}`;
 
-      const path =
+      const storagePath =
         `${conversationId}/${userId}/${Date.now()}-${randomPart}.${extension}`;
+      const premium = Boolean(window.ZakiChatAppearance?.isPremium?.());
+      const targetBucket = premium ? this.premiumBucket : this.bucket;
 
       const { error } =
         await this.db.storage
-          .from(this.bucket)
-          .upload(path, file, {
+          .from(targetBucket)
+          .upload(storagePath, file, {
             cacheControl: "3600",
             upsert: false,
             contentType:
@@ -180,8 +191,8 @@
       }
 
       return {
-        bucket: this.bucket,
-        path,
+        bucket: targetBucket,
+        path: premium ? "premium/" + storagePath : storagePath,
         name: file.name,
         size: file.size,
         mime_type:
@@ -199,11 +210,12 @@
         return null;
       }
 
+      const target = this.resolveBucketPath(path);
       const { data, error } =
         await this.db.storage
-          .from(this.bucket)
+          .from(target.bucket)
           .createSignedUrl(
-            path,
+            target.path,
             expiresIn
           );
 
@@ -254,10 +266,11 @@
         return false;
       }
 
+      const target = this.resolveBucketPath(path);
       const { error } =
         await this.db.storage
-          .from(this.bucket)
-          .remove([path]);
+          .from(target.bucket)
+          .remove([target.path]);
 
       if (error) {
         console.error(
