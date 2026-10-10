@@ -168,7 +168,22 @@ Deno.serve(async (req: Request) => {
         ...(row.details || {}),
         created_at: row.created_at
       }));
-      return json({ success: true, campaigns });
+      const [{ count: totalCount, error: totalError }, { count: unreadCount, error: unreadError }] = await Promise.all([
+        db.from("notifications").select("id", { count: "exact", head: true }),
+        db.from("notifications").select("id", { count: "exact", head: true }).is("read_at", null)
+      ]);
+      if (totalError) throw totalError;
+      if (unreadError) throw unreadError;
+      return json({
+        success: true,
+        campaigns,
+        metrics: {
+          total: totalCount || 0,
+          delivered: totalCount || 0,
+          unread: unreadCount || 0,
+          broadcasts: campaigns.length
+        }
+      });
     }
 
     if (action === "admin-notification-broadcast") {
