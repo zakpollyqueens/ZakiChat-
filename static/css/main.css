@@ -25,7 +25,8 @@ html{
 
 body{
   min-height:100vh;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:var(--zakichat-font-family,Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);
+  font-size:var(--zakichat-font-size,16px);
   background:var(--bg);
   color:var(--text);
   line-height:1.6;
@@ -634,3 +635,6 @@ body::before {
   background-repeat: no-repeat;
   opacity: .42;
 }
+
+:root[data-zakichat-chat-style="rounded"] .message-bubble{border-radius:22px!important}
+:root[data-zakichat-chat-style="glass"] .message-bubble{backdrop-filter:blur(14px);background:rgba(255,255,255,.09)!important;border:1px solid rgba(255,255,255,.12)}
