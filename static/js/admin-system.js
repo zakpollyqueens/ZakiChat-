@@ -19,6 +19,7 @@ async function adminSystemRequest(body) {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
+      "apikey": window.ZakiChatConfig?.supabaseKey || ""
     },
     body: JSON.stringify(body)
   });
