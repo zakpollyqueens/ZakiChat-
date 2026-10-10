@@ -149,77 +149,52 @@
     },
 
     update() {
-      if (!this.composer) {
-        return;
-      }
+      if (!this.composer) return;
 
       const vv = window.visualViewport;
-      const visibleBottom = vv
-        ? Math.round(vv.height + Math.max(0, vv.offsetTop || 0))
-        : Math.round(window.innerHeight || 0);
+      const visualHeight = Math.round(
+        vv ? vv.height : (window.innerHeight || document.documentElement.clientHeight || 0)
+      );
+      const visibleBottom = Math.round(
+        vv ? vv.height + Math.max(0, vv.offsetTop || 0) : visualHeight
+      );
       const focused = document.activeElement === this.input;
       if (!focused || visibleBottom > this.baselineHeight) {
-        this.baselineHeight = Math.max(visibleBottom, Math.round(window.innerHeight || 0));
+        this.baselineHeight = Math.max(
+          visibleBottom,
+          Math.round(window.innerHeight || 0)
+        );
       }
-      const visualHeight = vv ? Math.round(vv.height) : Math.round(window.innerHeight || 0);
+
       const keyboardHeight = focused
         ? Math.max(0, Math.round(this.baselineHeight - visibleBottom))
         : 0;
-      const keyboardOpen = keyboardHeight > 80 && focused;
+      const keyboardOpen = focused && keyboardHeight > 80;
 
+      /* Let the chat shell follow Android's actual visual viewport. Avoid
+         repeatedly measuring and offsetting the composer, which can create
+         a feedback loop and make the input jump when the keyboard animates. */
       document.documentElement.style.setProperty(
         "--zaki-visual-height",
         `${visualHeight}px`
       );
-
       document.documentElement.style.setProperty(
         "--zaki-keyboard-height",
         `${keyboardHeight}px`
       );
-
-      document.body.classList.toggle(
-        "zaki-keyboard-open",
-        keyboardOpen
-      );
-
-      this.composer.classList.toggle(
-        "keyboard-raised",
-        keyboardOpen
-      );
-
-      /*
-       * Android WebViews differ: some move fixed elements with the visual
-       * viewport, while others leave them at the layout-viewport bottom.
-       * Measure the composer instead of assuming either behaviour. Adding
-       * the current offset back gives the unadjusted bottom edge, preventing
-       * the correction from oscillating across resize events.
-       */
-      this.syncComposerBottom(visibleBottom);
+      document.body.classList.toggle("zaki-keyboard-open", keyboardOpen);
+      this.composer.classList.toggle("keyboard-raised", keyboardOpen);
+      this.composer.style.removeProperty("--zaki-composer-bottom");
 
       if (keyboardOpen) {
         this.scrollMessagesToBottom();
-        this.keepInputVisible();
       }
     },
 
-    syncComposerBottom(visibleBottom) {
-      if (!this.composer) return;
-      requestAnimationFrame(() => {
-        if (!this.composer?.isConnected) return;
-        const currentOffset = Number.parseFloat(
-          this.composer.style.getPropertyValue("--zaki-composer-bottom")
-        ) || 0;
-        const rect = this.composer.getBoundingClientRect();
-        const unadjustedBottom = rect.bottom + currentOffset;
-        const requiredOffset = Math.max(
-          0,
-          Math.round(unadjustedBottom - visibleBottom)
-        );
-        const nextValue = `${requiredOffset}px`;
-        if (this.composer.style.getPropertyValue("--zaki-composer-bottom") !== nextValue) {
-          this.composer.style.setProperty("--zaki-composer-bottom", nextValue);
-        }
-      });
+    syncComposerBottom() {
+      if (this.composer) {
+        this.composer.style.removeProperty("--zaki-composer-bottom");
+      }
     },
 
     updateButtons() {
