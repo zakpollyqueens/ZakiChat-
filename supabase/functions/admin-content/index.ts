@@ -269,13 +269,28 @@ Deno.serve(async (req: Request) => {
     if (action === "admin-moderation-list") {
       const status = clean(body.status, 30) || "all";
       const communityType = clean(body.communityType, 20) || "all";
-      const { data, error } = await db.rpc("admin_community_reports", {
-        p_token: clean(body.adminSessionToken, 500),
-        p_status: status,
-        p_community_type: communityType
-      });
+      const [{ data, error }, { data: communityStatuses, error: statusError }] = await Promise.all([
+        db.rpc("admin_community_reports", {
+          p_token: clean(body.adminSessionToken, 500),
+          p_status: status,
+          p_community_type: communityType
+        }),
+        db.from("community_admin_status").select("community_type, community_id, status")
+      ]);
       if (error) throw error;
-      return json({ success: true, reports: Array.isArray(data) ? data : (data?.reports || []) });
+      if (statusError) throw statusError;
+      const reports = Array.isArray(data) ? data : (data?.reports || []);
+      const statuses = communityStatuses || [];
+      return json({
+        success: true,
+        reports,
+        metrics: {
+          openReports: reports.filter((report: any) => report.status === "open").length,
+          groupReports: reports.filter((report: any) => report.community_type === "group").length,
+          channelReports: reports.filter((report: any) => report.community_type === "channel").length,
+          restrictedCommunities: statuses.filter(row => ["restricted", "suspended"].includes(row.status)).length
+        }
+      });
     }
 
     if (action === "admin-moderation-action") {
