@@ -28,7 +28,7 @@
 
     if (
       !session.token ||
-      session.role !== "admin" ||
+      !["admin", "super_admin"].includes(session.role) ||
       !expiryMs ||
       Date.now() >= expiryMs
     ) {
