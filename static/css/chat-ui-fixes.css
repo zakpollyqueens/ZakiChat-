@@ -357,3 +357,146 @@ body.chat-page .bottom-nav > a:active {
   body.chat-page .sidebar-top .top-actions .updates-indicator:active,
   body.chat-page .bottom-nav > a:active {transform:none!important}
 }
+
+
+/* Final mobile layout correction: override shared responsive.css rules that
+   were forcing .top-actions to full width and stretching every child equally. */
+body.chat-page .sidebar,
+body.chat-page .sidebar > .sidebar-top,
+body.chat-page .sidebar > .bottom-nav {
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+body.chat-page .sidebar-top {
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:clamp(8px,2.5vw,16px)!important;
+  overflow:visible!important;
+}
+body.chat-page .sidebar-top > .app-brand {
+  flex:1 1 auto!important;
+  width:auto!important;
+  min-width:0!important;
+}
+body.chat-page .sidebar-top > .top-actions {
+  flex:0 0 auto!important;
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  gap:clamp(7px,2vw,12px)!important;
+  margin:0 0 0 auto!important;
+}
+body.chat-page .sidebar-top > .top-actions > .icon-button,
+body.chat-page .sidebar-top > .top-actions > .updates-indicator,
+body.chat-page .sidebar-top > .top-actions > .top-more-wrapper {
+  flex:0 0 40px!important;
+  width:40px!important;
+  min-width:40px!important;
+  max-width:40px!important;
+}
+body.chat-page .sidebar-top > .top-actions > .top-more-wrapper {
+  display:block!important;
+  position:relative!important;
+  height:40px!important;
+}
+body.chat-page .sidebar-top > .top-actions > .top-more-wrapper > #top-more-button {
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+}
+body.chat-page .bottom-nav {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  gap:clamp(10px,3vw,16px)!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:12px 0 0!important;
+  padding:12px clamp(12px,3vw,18px) max(12px,env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;
+}
+body.chat-page .bottom-nav > a,
+body.chat-page .bottom-nav > .bottom-nav-item {
+  display:flex!important;
+  flex:initial!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  min-height:68px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  white-space:nowrap;
+  box-sizing:border-box!important;
+}
+@media(max-width:420px) {
+  body.chat-page .sidebar-top {
+    gap:6px!important;
+    padding-inline:10px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions {
+    gap:5px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions > .icon-button,
+  body.chat-page .sidebar-top > .top-actions > .updates-indicator,
+  body.chat-page .sidebar-top > .top-actions > .top-more-wrapper {
+    flex-basis:34px!important;
+    width:34px!important;
+    min-width:34px!important;
+    max-width:34px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions > .top-more-wrapper,
+  body.chat-page .sidebar-top > .top-actions > .top-more-wrapper > #top-more-button {
+    height:36px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions > .icon-button,
+  body.chat-page .sidebar-top > .top-actions > .updates-indicator {
+    height:36px!important;
+    min-height:36px!important;
+    border-radius:11px!important;
+  }
+  body.chat-page .bottom-nav {
+    gap:8px!important;
+    padding-inline:10px!important;
+  }
+  body.chat-page .bottom-nav > a,
+  body.chat-page .bottom-nav > .bottom-nav-item {
+    min-height:64px!important;
+    padding-inline:3px!important;
+  }
+}
+@media(max-width:350px) {
+  body.chat-page .sidebar-top > .app-brand strong {display:none!important}
+  body.chat-page .sidebar-top > .app-brand {flex:0 0 34px!important}
+  body.chat-page .sidebar-top > .app-brand img {
+    width:32px!important;
+    height:32px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions {
+    gap:4px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions > .icon-button,
+  body.chat-page .sidebar-top > .top-actions > .updates-indicator,
+  body.chat-page .sidebar-top > .top-actions > .top-more-wrapper {
+    flex-basis:31px!important;
+    width:31px!important;
+    min-width:31px!important;
+    max-width:31px!important;
+  }
+  body.chat-page .sidebar-top > .top-actions > .top-more-wrapper > #top-more-button {
+    width:31px!important;
+    min-width:31px!important;
+  }
+}
