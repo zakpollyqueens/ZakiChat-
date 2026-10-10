@@ -313,7 +313,7 @@ const ids=[...selected];
 if(!ids.length)return;
 
 const choice=window.prompt(
-"More actions:\n\n1 = Mark as unread\n2 = Favorite\n3 = Mute\n\nEnter 1, 2 or 3:"
+"More actions:\n\n1 = Mark as unread\n2 = Favorite\n3 = Mute\n4 = Pin / unpin\n\nEnter 1, 2, 3 or 4:"
 );
 
 if(!choice)return;
