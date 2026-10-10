@@ -33,7 +33,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return respond({ success: false, error: "Method not allowed." }, 405);
   const authHeader = req.headers.get("Authorization") || "";
-  const token = authHeader.replace(/^Bearer\\s+/i, "").trim();
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
   if (!token) return respond({ success: false, error: "Sign in to manage business invitations." }, 401);
   const { data: authData, error: authError } = await admin.auth.getUser(token);
   const user = authData?.user;
