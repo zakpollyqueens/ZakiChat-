@@ -51,6 +51,8 @@
 
   let currentUser = null;
   let conversationId = null;
+  let hasPremium = false;
+  const BASIC_THEMES = ["dark", "light", "cyan"];
 
   function key(name) {
     return [
@@ -278,6 +280,13 @@
   }
 
   function saveTheme(theme) {
+    if (!BASIC_THEMES.includes(theme) && !hasPremium) {
+      notify("This chat theme is part of Customized Personal.");
+      if (confirm("Upgrade to Customized Personal to unlock this theme?")) {
+        window.location.href = "about.html?upgrade=personal_monthly#paid-upgrades";
+      }
+      return;
+    }
     localStorage.setItem(
       key("theme"),
       theme
@@ -288,9 +297,13 @@
   }
 
   async function loadPreferences() {
-    const localTheme =
+    let localTheme =
       localStorage.getItem(key("theme")) ||
-      "aurora";
+      "dark";
+    if (!BASIC_THEMES.includes(localTheme) && !hasPremium) {
+      localTheme = "dark";
+      localStorage.setItem(key("theme"), localTheme);
+    }
 
     const localWallpaper =
       localStorage.getItem(key("wallpaper"));
@@ -372,7 +385,8 @@
       key("wallpaper")
     );
 
-    applyTheme("aurora");
+    applyTheme("dark");
+    localStorage.setItem(key("theme"), "dark");
     saveWallpaper("aurora");
 
     notify("Chat appearance reset.");
@@ -521,6 +535,8 @@
       return;
     }
 
+    await window.ZakiChatAppearance?.loadPlan?.();
+    hasPremium = Boolean(window.ZakiChatAppearance?.isPremium?.());
     const { data } =
       await db.auth.getSession();
 
