@@ -2119,7 +2119,20 @@ showComposerError(message) {
     );
 
     if (button) {
-      button.href = data.downloadUrl || '#';
+      const downloadUrl = data.downloadUrl || '';
+      if (downloadUrl) {
+        button.href = downloadUrl;
+        button.removeAttribute('aria-disabled');
+        button.removeAttribute('tabindex');
+        button.classList.remove('is-disabled');
+        button.textContent = 'Download Latest Version';
+      } else {
+        button.href = '#';
+        button.setAttribute('aria-disabled', 'true');
+        button.setAttribute('tabindex', '-1');
+        button.classList.add('is-disabled');
+        button.textContent = 'No published download yet';
+      }
     }
   }
 
@@ -2176,27 +2189,52 @@ showComposerError(message) {
   }
 
   async function loadAdminPublishedReleases() {
+    const config = window.ZakiChatConfig;
+    if (!config?.supabaseUrl || !config?.supabaseKey) {
+      renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: '' });
+      renderPaidUpgrades(fallbackPaidUpgrades);
+      return;
+    }
 
-    /*
-     * Future implementation:
-     *
-     * const response = await fetch('/api/public/releases');
-     *
-     * The backend will return separately:
-     *
-     * {
-     *   latest: {...},
-     *   upgrades: [...]
-     * }
-     *
-     * This information will come from the Admin Dashboard.
-     *
-     * No admin credentials or secret keys belong here.
-     */
+    try {
+      const response = await fetch(
+        `${config.supabaseUrl}/functions/v1/release-management`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: config.supabaseKey,
+            Authorization: `Bearer ${config.supabaseKey}`
+          },
+          body: JSON.stringify({ action: 'public-list' })
+        }
+      );
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.success !== true) {
+        throw new Error(payload.error || 'Unable to load published releases.');
+      }
 
-    renderLatestRelease(fallbackLatestRelease);
-
-    renderPaidUpgrades(fallbackPaidUpgrades);
+      const releases = Array.isArray(payload.releases) ? payload.releases : [];
+      const latest = releases.find(item => item.channel === 'stable') || releases[0];
+      if (!latest) {
+        renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: '' });
+      } else {
+        renderLatestRelease({
+          version: latest.version,
+          description: latest.description,
+          channel: latest.channel
+            ? latest.channel.charAt(0).toUpperCase() + latest.channel.slice(1)
+            : 'Stable',
+          releaseDate: latest.publishedAt,
+          downloadUrl: latest.downloadUrl || ''
+        });
+      }
+      renderPaidUpgrades(fallbackPaidUpgrades);
+    } catch (error) {
+      console.error('Unable to load published releases on the Updates page:', error);
+      renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: '' });
+      renderPaidUpgrades(fallbackPaidUpgrades);
+    }
   }
 
   if (document.readyState === 'loading') {
