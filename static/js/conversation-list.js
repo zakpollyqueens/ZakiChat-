@@ -184,6 +184,7 @@ if(pointerType!=="mouse" && Math.abs(dx)>75 && Math.abs(dy)<65){
 event.preventDefault();
 event.stopPropagation();
 suppressClick=true;
+setTimeout(()=>{suppressClick=false;},500);
 localStorage.setItem(
 `zakichat:archived:${user?.id||"unknown"}:${c.id}`,
 showArchived && dx<0 ? "0" : dx>0 ? "1" : "0"
