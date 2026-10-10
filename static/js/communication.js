@@ -530,6 +530,11 @@
     },
 
     async sendFile(file) {
+      const onProgress = event => {
+        const percent = Number(event.detail?.percent);
+        if (Number.isFinite(percent)) this.setCallStatus("Uploading " + percent + "%");
+      };
+      window.addEventListener("zakichat:upload-progress", onProgress);
       try {
         this.setCallStatus(
           "Uploading..."
@@ -574,6 +579,8 @@
           error?.message ||
           "Unable to send the file."
         );
+      } finally {
+        window.removeEventListener("zakichat:upload-progress", onProgress);
       }
     },
 
