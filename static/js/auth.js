@@ -166,6 +166,7 @@
      SIGNUP WIZARD
      ======================================================= */
 
+  const PENDING_UPGRADE_KEY = "zakichat_pending_upgrade";
   const signupState = {
     step: 1,
     accountCreated: false,
@@ -700,7 +701,15 @@
         "success"
       );
 
-      setTimeout(redirectToChats, 500);
+      const pendingUpgrade = localStorage.getItem(PENDING_UPGRADE_KEY);
+      if (pendingUpgrade === "personal_monthly" || pendingUpgrade === "business_monthly") {
+        showMessage(message, "Phone verified. Your account is ready. Opening your selected upgrade plan...", "success");
+        setTimeout(() => {
+          window.location.href = "about.html?upgrade=" + encodeURIComponent(pendingUpgrade) + "#paid-upgrades";
+        }, 650);
+      } else {
+        setTimeout(redirectToChats, 500);
+      }
 
     } catch (error) {
       console.error("OTP verification error:", error);
@@ -917,8 +926,58 @@
      PAGE SETUP
      ======================================================= */
 
+  function initAccountPlanShowcase() {
+    const slides = Array.from(document.querySelectorAll("[data-account-slide]"));
+    const dots = Array.from(document.querySelectorAll("[data-plan-slide-to]"));
+    if (!slides.length) return;
+    let activeIndex = 0;
+    const showSlide = index => {
+      activeIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        slide.hidden = i !== activeIndex;
+        slide.classList.toggle("is-active", i === activeIndex);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("is-active", i === activeIndex);
+        dot.setAttribute("aria-pressed", String(i === activeIndex));
+      });
+    };
+    document.getElementById("accountPlanPrevious")?.addEventListener("click", () => showSlide(activeIndex - 1));
+    document.getElementById("accountPlanNext")?.addEventListener("click", () => showSlide(activeIndex + 1));
+    dots.forEach(dot => dot.addEventListener("click", () => showSlide(Number(dot.dataset.planSlideTo) || 0)));
+    document.querySelectorAll("[data-plan-choice]").forEach(button => {
+      button.addEventListener("click", () => {
+        const choice = button.dataset.planChoice;
+        if (choice === "local") {
+          localStorage.removeItem(PENDING_UPGRADE_KEY);
+          document.getElementById("signupForm")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          document.getElementById("username")?.focus({ preventScroll: true });
+          return;
+        }
+        if (choice !== "personal_monthly" && choice !== "business_monthly") return;
+        localStorage.setItem(PENDING_UPGRADE_KEY, choice);
+        document.getElementById("signupForm")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        document.getElementById("username")?.focus({ preventScroll: true });
+        const message = document.getElementById("signupMessage");
+        if (message) {
+          message.className = "auth-message";
+          message.textContent = (choice === "personal_monthly" ? "Customized Personal" : "Customized Business") +
+            " selected. Complete account setup and phone verification; your selected upgrade page will open next. Payment must be verified before premium features unlock.";
+        }
+      });
+    });
+    const requested = new URLSearchParams(location.search).get("upgrade");
+    if (requested === "personal_monthly" || requested === "business_monthly") {
+      localStorage.setItem(PENDING_UPGRADE_KEY, requested);
+      showSlide(requested === "personal_monthly" ? 1 : 2);
+    } else {
+      showSlide(0);
+    }
+  }
+
   function setupSignupPage() {
     redirectIfAlreadySignedIn();
+    initAccountPlanShowcase();
 
     document
       .querySelectorAll(".next-step")
