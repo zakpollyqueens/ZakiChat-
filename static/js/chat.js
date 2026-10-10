@@ -1122,6 +1122,11 @@ document.addEventListener(
       }
     }
 
+    window.addEventListener("zakichat:upload-progress", event => {
+      const percent = Number(event.detail?.percent);
+      if (Number.isFinite(percent)) showStatus("Uploading attachment… " + percent + "%");
+    });
+
     async function handleAttachment(
       file
     ) {
