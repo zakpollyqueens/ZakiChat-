@@ -13,6 +13,27 @@ function clearAdminSession(){localStorage.removeItem(SESSION_KEY);localStorage.r
 async function rpc(name,body){
   const cfg=window.ZakiChatConfig;
   if(!cfg?.supabaseUrl||!cfg?.supabaseKey)throw new Error("Supabase configuration is unavailable.");
+  const map={
+    admin_list_groups:"admin-list-groups",
+    admin_list_channels:"admin-list-channels",
+    admin_community_overview:"admin-community-overview",
+    admin_community_details:"admin-community-details"
+  };
+  if(map[name]){
+    const payload={action:map[name],adminSessionToken:body?.p_token};
+    if(name==="admin_list_groups"||name==="admin_list_channels"){
+      payload.search=body?.p_search||"";
+      payload.status=body?.p_status||"all";
+    }
+    if(name==="admin_community_details"){
+      payload.communityType=body?.p_community_type;
+      payload.communityId=body?.p_community_id;
+    }
+    const res=await fetch(cfg.supabaseUrl+"/functions/v1/admin-content",{method:"POST",headers:{"Content-Type":"application/json","apikey":cfg.supabaseKey,"Authorization":"Bearer "+cfg.supabaseKey},body:JSON.stringify(payload)});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||data.success!==true)throw new Error(data.error||"Administrator request failed.");
+    return data.result;
+  }
   const res=await fetch(cfg.supabaseUrl+"/rest/v1/rpc/"+name,{method:"POST",headers:{"Content-Type":"application/json","apikey":cfg.supabaseKey},body:JSON.stringify(body)});
   const data=await res.json().catch(()=>null);
   if(!res.ok)throw new Error(data?.message||data?.error_description||data?.hint||data?.details||data?.error||"Administrator request failed.");
