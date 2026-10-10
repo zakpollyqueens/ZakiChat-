@@ -35,6 +35,22 @@ function clearAdminSession() {
 }
 
 async function rpc(name, body) {
+  const actionMap = {
+    admin_upgrade_overview: "admin-upgrade-overview",
+    admin_upgrade_records: "admin-upgrade-records",
+    admin_manual_upgrade: "admin-manual-upgrade"
+  };
+  if (actionMap[name]) {
+    const args = { ...(body || {}) };
+    delete args.p_token;
+    const result = await adminContentRequest({
+      action: actionMap[name],
+      adminSessionToken: getToken(),
+      ...args
+    });
+    return result.result;
+  }
+
   const response = await fetch(
     `${SUPABASE_URL}/rest/v1/rpc/${name}`,
     {
@@ -47,21 +63,13 @@ async function rpc(name, body) {
       body: JSON.stringify(body)
     }
   );
-
-  const data =
-    await response.json().catch(() => null);
-
+  const data = await response.json().catch(() => null);
   if (!response.ok) {
     throw new Error(
-      data?.message ||
-      data?.error_description ||
-      data?.hint ||
-      data?.details ||
-      data?.error ||
-      "Supabase RPC request failed."
+      data?.message || data?.error_description || data?.hint ||
+      data?.details || data?.error || "Supabase RPC request failed."
     );
   }
-
   return data;
 }
 
@@ -96,16 +104,27 @@ async function verifyAdminSession() {
   }
 
   try {
-    const adminId = await rpc(
-      "admin_session_user",
-      { p_token: token }
-    );
-
-    if (!adminId) {
+    const response = await fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({
+        action: "admin-session-verify",
+        adminSessionToken: token
+      })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !(data.success === true || data.valid === true || data.active === true)) {
       clearAdminSession();
       return false;
     }
-
+    if (data.role) localStorage.setItem(ROLE_KEY, data.role);
+    if (data.expiresAt || data.expires_at) {
+      localStorage.setItem(EXPIRY_KEY, data.expiresAt || data.expires_at);
+    }
     return true;
   } catch (error) {
     console.error(
