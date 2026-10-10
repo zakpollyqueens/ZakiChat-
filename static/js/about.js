@@ -100,6 +100,13 @@
       'latest-download-button'
     );
 
+    if (button && button.dataset.downloadGuarded !== 'true') {
+      button.dataset.downloadGuarded = 'true';
+      button.addEventListener('click', event => {
+        if (button.getAttribute('aria-disabled') === 'true') event.preventDefault();
+      });
+    }
+
     if (button) {
       const downloadUrl = data.downloadUrl || '';
       if (downloadUrl) {
