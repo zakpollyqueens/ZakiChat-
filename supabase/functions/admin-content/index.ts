@@ -188,7 +188,7 @@ Deno.serve(async (req: Request) => {
         if (error) throw error;
         return value || 0;
       };
-      const [users, online, newUsers, messages, recentMessages, groups, channels, support, openSupport, payments, paidPayments, conversations] = await Promise.all([
+      const [users, online, newUsers, messages, recentMessages, groups, channels, support, openSupport, payments, paidPayments, registrationPayments, paidRegistrationPayments, conversations] = await Promise.all([
         count("profiles"),
         count("profiles", "id", q => q.eq("is_online", true)),
         count("profiles", "id", q => q.gte("created_at", since)),
@@ -200,6 +200,8 @@ Deno.serve(async (req: Request) => {
         count("support_requests", "id", q => q.eq("status", "open")),
         count("upgrade_payments"),
         count("upgrade_payments", "id", q => q.eq("status", "paid")),
+        count("registration_payments"),
+        count("registration_payments", "id", q => q.eq("status", "paid")),
         count("conversations")
       ]);
       return json({
@@ -210,6 +212,8 @@ Deno.serve(async (req: Request) => {
           totalGroups: groups, totalChannels: channels,
           totalSupport: support, openSupport,
           totalPayments: payments, paidPayments,
+          totalRegistrationPayments: registrationPayments,
+          paidRegistrationPayments,
           totalConversations: conversations
         }
       });
