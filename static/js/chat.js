@@ -85,12 +85,7 @@ document.addEventListener(
         ".chat-user .conversation-avatar"
       );
 
-    chatAvatar?.addEventListener("click", () => {
-      if (targetUserId) {
-        window.location.href =
-          `profile.html?user=${encodeURIComponent(targetUserId)}`;
-      }
-    });
+    // Avatar/profile actions are handled by chat-header-interactions.js.
 
     const editBar =
       document.querySelector(
