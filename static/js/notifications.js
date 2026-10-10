@@ -498,6 +498,9 @@
         case "system":
           return "ℹ";
 
+        case "business_task_assigned":
+          return "📋";
+
         case "message":
         default:
           return "💬";
