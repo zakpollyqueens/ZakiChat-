@@ -132,6 +132,7 @@
       $("notificationForm").reset();
       toggleSelectedRecipients();
       await loadHistory();
+      await loadZakiTechNotifications();
     } catch (error) {
       console.error("Notification broadcast failed:", error);
       setStatus(error.message || "Unable to send the notification.", true);
@@ -179,6 +180,70 @@
     renderHistory();
   }
 
+  async function loadZakiTechNotifications() {
+    const status = $("zakitechNotificationsStatus");
+    const list = $("zakitechNotificationsList");
+    if (status) status.textContent = "Loading published notifications from ZakiTech…";
+    if (list) list.replaceChildren();
+    try {
+      const response = await fetch("https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-zakichat-bridge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "list-published-notifications", adminSessionToken: sessionData().token })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true) throw new Error(result.error || "Could not load ZakiTech notifications.");
+      const items = Array.isArray(result.notifications) ? result.notifications : [];
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-card";
+        empty.textContent = "No published ZakiTech notifications are available yet.";
+        list.append(empty);
+      } else {
+        items.forEach(item => {
+          const card = document.createElement("article");
+          card.className = "history-item";
+          const content = document.createElement("div");
+          const kicker = document.createElement("span");
+          kicker.className = "notification-type";
+          kicker.textContent = (item.product?.name || "ZakiTech") + " · " + (item.notification_type || "general");
+          const title = document.createElement("strong");
+          title.textContent = item.title || "Notification";
+          const message = document.createElement("p");
+          message.textContent = item.body || "";
+          const meta = document.createElement("small");
+          meta.textContent = (item.audience || "product_users").replaceAll("_", " ") + " · Published " + (item.published_at ? new Date(item.published_at).toLocaleString() : "date unavailable");
+          const use = document.createElement("button");
+          use.type = "button";
+          use.className = "small-btn";
+          use.textContent = "Load into composer";
+          use.addEventListener("click", () => {
+            $("notificationTitle").value = item.title || "";
+            $("notificationMessage").value = item.body || "";
+            const type = ["general", "update", "maintenance", "security", "announcement"].includes(item.notification_type) ? item.notification_type : "general";
+            $("notificationType").value = type;
+            $("notificationAudience").value = "all";
+            toggleSelectedRecipients();
+            setStatus("ZakiTech notification loaded. Review the content and choose the intended audience, then press Send Notification.");
+            $("notificationForm").scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          content.append(kicker, title, message, meta, use);
+          card.append(content);
+          list.append(card);
+        });
+      }
+      if (status) status.textContent = items.length + " published ZakiTech notification(s) loaded. Select one to review it in the composer.";
+    } catch (error) {
+      if (status) status.textContent = error.message || "Could not load ZakiTech notifications.";
+      if (list) {
+        const empty = document.createElement("div");
+        empty.className = "empty-card";
+        empty.textContent = error.message || "ZakiTech notification feed unavailable.";
+        list.append(empty);
+      }
+    }
+  }
+
   function clearFilters() {
     $("searchInput") && ($("searchInput").value = "");
     $("historyFilter").value = "all";
@@ -205,6 +270,7 @@
 
   $("signOutBtn")?.addEventListener("click", secureSignOut);
   $("refreshBtn")?.addEventListener("click", () => loadHistory().catch(error => setStatus(error.message, true)));
+  $("refreshZakiTechNotifications")?.addEventListener("click", loadZakiTechNotifications);
   $("previewBtn")?.addEventListener("click", previewNotification);
   $("closePreviewBtn")?.addEventListener("click", closePreview);
   $("notificationForm")?.addEventListener("submit", submitNotification);
