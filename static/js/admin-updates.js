@@ -40,6 +40,7 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "apikey": window.ZakiChatConfig?.supabaseKey || "",
           "Authorization": `Bearer ${session.token}`
         },
         body: JSON.stringify({
