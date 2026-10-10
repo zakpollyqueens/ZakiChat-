@@ -5,6 +5,7 @@
 
   const defaults = {
     theme: "dark",
+    keyboardMode: "zaki",
     keySize: "medium",
     numberRow: false,
     emojiRow: true,
@@ -67,6 +68,11 @@
         button.dataset.theme === settings.theme
       );
     });
+
+    const modeZaki = $("#keyboardModeZaki");
+    const modeSystem = $("#keyboardModeSystem");
+    if (modeZaki) modeZaki.checked = settings.keyboardMode !== "system";
+    if (modeSystem) modeSystem.checked = settings.keyboardMode === "system";
 
     const keySize = $("#keySize");
     const numberRow = $("#numberRow");
@@ -131,6 +137,18 @@
   }
 
   function bind() {
+    document.querySelectorAll('input[name="keyboardMode"]').forEach(input => {
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        settings.keyboardMode = input.value === "system" ? "system" : "zaki";
+        save(settings);
+        apply();
+        updateStatus(settings.keyboardMode === "system"
+          ? "Device keyboard selected. Gboard will open if it is your Android keyboard."
+          : "ZakiChat Keyboard selected.");
+      });
+    });
+
     document
       .querySelectorAll(".keyboard-theme")
       .forEach(button => {
