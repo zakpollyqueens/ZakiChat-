@@ -505,6 +505,7 @@
             return;
           }
 
+          await window.ZakiChatAppearance?.loadPlan?.();
           const validation =
             window.ZakiMedia.validate(
               file
