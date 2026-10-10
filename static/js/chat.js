@@ -145,13 +145,18 @@ document.addEventListener(
       event => {
         event.preventDefault();
         event.stopPropagation();
-
-        if (typeof sendMessage === "function") {
-          void sendMessage();
-        }
+        void sendMessage();
       },
       { capture: true }
     );
+
+    // Handle a direct tap on Send as well as keyboard/form submission.
+    // Prevent the click from triggering a second form submission.
+    sendButton?.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      void sendMessage();
+    });
 
     const params =
       new URLSearchParams(
@@ -1034,11 +1039,16 @@ document.addEventListener(
     }
 
     async function sendMessage() {
-      if (
-        !currentUser ||
-        !conversationId ||
-        uploadingAttachment
-      ) {
+      if (!currentUser) {
+        showStatus("Still connecting to your account. Please wait a moment.", true);
+        return;
+      }
+      if (!conversationId) {
+        showStatus("Chat is not ready yet. Wait until the conversation finishes loading.", true);
+        return;
+      }
+      if (uploadingAttachment) {
+        showStatus("Please wait for the attachment upload to finish.");
         return;
       }
 
@@ -1259,42 +1269,61 @@ document.addEventListener(
 
     document
       .querySelector("#voice-note-button")
-      ?.addEventListener("click", async () => {
-        if (!window.ZakiCommunication) {
-          alert("Voice notes are not available right now.");
-          return;
-        }
-
+      ?.addEventListener("click", async event => {
+        event.preventDefault();
         if (!currentUser || !conversationId) {
+          showStatus("Voice notes will be available when this chat finishes connecting.", true);
+          return;
+        }
+        if (!window.ZakiCommunication) {
+          showStatus("Voice-note service is unavailable. Please refresh the chat.", true);
           return;
         }
 
+        try {
+          window.ZakiCommunication.setConversation({
+            currentUser,
+            targetUser: targetProfile,
+            conversationId
+          });
+          await window.ZakiCommunication.startRecording();
+        } catch (error) {
+          console.error("Voice-note button failed:", error);
+          showStatus(error?.message || "Unable to start voice recording.", true);
+        }
+      });
+
+    // One attachment click path only. The old code opened both the
+    // communication share menu and a second file picker on the same tap.
+    attachButton?.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      if (!currentUser || !conversationId) {
+        showStatus("Attachments will be available when this chat finishes connecting.", true);
+        return;
+      }
+      if (uploadingAttachment) {
+        showStatus("Please wait for the current upload to finish.");
+        return;
+      }
+
+      if (window.ZakiCommunication?.toggleShareMenu) {
         window.ZakiCommunication.setConversation({
           currentUser,
           targetUser: targetProfile,
           conversationId
         });
-
-        await window.ZakiCommunication.startRecording();
-      });
-
-    attachButton?.addEventListener(
-      "click",
-      () => {
-        if (
-          uploadingAttachment ||
-          !currentUser ||
-          !conversationId
-        ) {
-          return;
-        }
-
-        window.ZakiMedia.createPicker({
-          onSelect:
-            handleAttachment
-        });
+        window.ZakiCommunication.toggleShareMenu();
+        return;
       }
-    );
+
+      if (window.ZakiMedia?.createPicker) {
+        window.ZakiMedia.createPicker({ onSelect: handleAttachment });
+      } else {
+        showStatus("Attachment picker is unavailable. Please refresh the chat.", true);
+      }
+    });
 
     await loadStarredMessages();
 
