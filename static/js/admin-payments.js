@@ -13,6 +13,9 @@ const SUPABASE_KEY =
 const SESSION_KEY = "zakichat-admin-session";
 const ROLE_KEY = "zakichat-admin-role";
 const EXPIRY_KEY = "zakichat-admin-expiry";
+const ADMIN_CONTENT_URL = `${SUPABASE_URL}/functions/v1/admin-content`;
+let upgradeRequests = [];
+let selectedUpgradeRequestId = null;
 
 const $ = id => document.getElementById(id);
 
@@ -59,6 +62,23 @@ async function rpc(name, body) {
     );
   }
 
+  return data;
+}
+
+async function adminContentRequest(body) {
+  const response = await fetch(ADMIN_CONTENT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`
+    },
+    body: JSON.stringify(body)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.success === false) {
+    throw new Error(data.error || "Admin content request failed.");
+  }
   return data;
 }
 
@@ -352,6 +372,21 @@ async function handleManualUpgrade(event) {
 
     event.target.reset();
 
+    if (selectedUpgradeRequestId) {
+      try {
+        await adminContentRequest({
+          action: "admin-upgrade-request-close",
+          adminSessionToken: getToken(),
+          id: selectedUpgradeRequestId,
+          reason: "Manually processed after payment verification. Upgrade ID: " + (upgrade.id || "recorded")
+        });
+        selectedUpgradeRequestId = null;
+      } catch (closeError) {
+        console.warn("Upgrade succeeded but the request could not be closed:", closeError);
+        showManualResult("Upgrade was recorded, but the original request remains pending. Close it from Pending Customer Upgrade Requests.", true);
+      }
+    }
+
     const amountField =
       $("amountReceived");
 
@@ -594,11 +629,84 @@ function setupFilters() {
   );
 }
 
+async function loadUpgradeRequests() {
+  const data = await adminContentRequest({
+    action: "admin-upgrade-requests",
+    adminSessionToken: getToken()
+  });
+  upgradeRequests = Array.isArray(data.requests) ? data.requests : [];
+  const list = $("upgradeRequestsList");
+  const empty = $("upgradeRequestsEmpty");
+  $("upgradeRequestsCount").textContent = upgradeRequests.length + " pending request(s)";
+  if (!upgradeRequests.length) {
+    list.innerHTML = "";
+    empty?.removeAttribute("hidden");
+    return;
+  }
+  empty?.setAttribute("hidden", "");
+  list.innerHTML = upgradeRequests.map(request => {
+    const name = request.user?.full_name || request.user?.username || request.user?.phone || request.user_id || "Customer";
+    const plan = request.plan === "business_monthly" ? "Business" : "Personal";
+    return `
+      <article class="upgrade-request-card">
+        <div>
+          <strong>${escapeHtml(name)}</strong>
+          <span>${escapeHtml(plan)} · USD ${escapeHtml(Number(request.amount).toFixed(2))}/month</span>
+          <small>${escapeHtml(request.user?.phone || "Phone not available")} · ${escapeHtml(formatDate(request.created_at))}</small>
+          <small>User ID: ${escapeHtml(request.user_id)} · Request: ${escapeHtml(request.id)}</small>
+        </div>
+        <div class="upgrade-request-actions">
+          <button type="button" data-use-upgrade-request="${escapeHtml(request.id)}">Use in Manual Upgrade</button>
+          <button type="button" data-close-upgrade-request="${escapeHtml(request.id)}">Close Request</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  list.querySelectorAll("[data-use-upgrade-request]").forEach(button => {
+    button.addEventListener("click", () => useUpgradeRequest(button.dataset.useUpgradeRequest));
+  });
+  list.querySelectorAll("[data-close-upgrade-request]").forEach(button => {
+    button.addEventListener("click", () => closeUpgradeRequest(button.dataset.closeUpgradeRequest));
+  });
+}
+
+function useUpgradeRequest(id) {
+  const request = upgradeRequests.find(item => item.id === id);
+  if (!request) return;
+  selectedUpgradeRequestId = request.id;
+  $("customerIdentifier").value = request.user_id;
+  $("upgradePlan").value = request.plan;
+  $("amountReceived").value = Number(request.amount).toFixed(2);
+  $("upgradeNotes").value = "Customer upgrade request " + request.id + ". Verify the actual payment before approving.";
+  showManualResult("Request loaded. Verify payment externally and enter the payment method/reference before granting the upgrade.");
+  $("manualUpgradeForm").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function closeUpgradeRequest(id) {
+  const reason = window.prompt("Reason for closing this unpaid upgrade request:");
+  if (!reason || reason.trim().length < 3) return;
+  if (!window.confirm("Close this request without activating an upgrade?")) return;
+  try {
+    await adminContentRequest({
+      action: "admin-upgrade-request-close",
+      adminSessionToken: getToken(),
+      id,
+      reason: reason.trim()
+    });
+    if (selectedUpgradeRequestId === id) selectedUpgradeRequestId = null;
+    await loadUpgradeRequests();
+  } catch (error) {
+    window.alert(error.message || "Unable to close the request.");
+  }
+}
+
 async function loadAll() {
   try {
     await loadOverview();
     await loadRecords();
     applyFilters();
+    await loadUpgradeRequests();
   } catch (error) {
     console.error(
       "Admin payments data load failed:",
@@ -610,7 +718,14 @@ async function loadAll() {
 function setupEvents() {
   $("refreshBtn")?.addEventListener(
     "click",
-    () => location.reload()
+    () => loadAll().catch(error => showManualResult(error.message, true))
+  );
+
+  $("refreshUpgradeRequests")?.addEventListener(
+    "click",
+    () => loadUpgradeRequests().catch(error => {
+      $("upgradeRequestsCount").textContent = error.message || "Unable to load requests";
+    })
   );
 
   $("signOutBtn")?.addEventListener(
