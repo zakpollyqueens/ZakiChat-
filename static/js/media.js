@@ -160,7 +160,7 @@
       const location = start.headers.get("Location");
       if (!location) throw new Error("The storage service did not return an upload location.");
       const uploadUrl = new URL(location, baseUrl).toString();
-      const chunkSize = 8 * 1024 * 1024;
+      const chunkSize = 6 * 1024 * 1024;
       let offset = Number(start.headers.get("Upload-Offset") || 0);
       while (offset < file.size) {
         const startingOffset = offset;
