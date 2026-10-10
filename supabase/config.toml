@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.two-step]
 verify_jwt = false
+
+[functions.release-management]
+verify_jwt = false
