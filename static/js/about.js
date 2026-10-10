@@ -416,6 +416,15 @@
       renderNotes(notes);
 
       try {
+        let noticeSessionToken = '';
+        try {
+          const authClient = window.ZakiChatAuth?.client;
+          const sessionResult = authClient ? await authClient.auth.getSession() : null;
+          noticeSessionToken = sessionResult?.data?.session?.access_token || '';
+        } catch (sessionError) {
+          console.warn('Unable to read notice visibility session:', sessionError);
+        }
+        const noticeAction = noticeSessionToken ? 'user-notices' : 'public-notices';
         const noticeResponse = await fetch(
           `${config.supabaseUrl}/functions/v1/admin-content`,
           {
@@ -423,9 +432,9 @@
             headers: {
               'Content-Type': 'application/json',
               apikey: config.supabaseKey,
-              Authorization: `Bearer ${config.supabaseKey}`
+              Authorization: `Bearer ${noticeSessionToken || config.supabaseKey}`
             },
-            body: JSON.stringify({ action: 'public-notices' })
+            body: JSON.stringify({ action: noticeAction })
           }
         );
         const noticePayload = await noticeResponse.json().catch(() => ({}));
