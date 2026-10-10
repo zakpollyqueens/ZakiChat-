@@ -359,6 +359,7 @@
       return;
     }
     show("adminContent");
+    if (getSession().role !== "super_admin") hide("importZakiTechRelease");
     try {
       await loadReleases();
     } catch (error) {
