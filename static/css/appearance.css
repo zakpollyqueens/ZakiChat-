@@ -309,3 +309,12 @@
 .chat-style-preview.rounded:before{border-radius:16px 16px 16px 4px}.chat-style-preview.rounded:after{border-radius:16px 16px 4px 16px}
 .chat-style-preview.glass{background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(39,211,162,.16));backdrop-filter:blur(8px)}
 @media(max-width:480px){.chat-style-options{grid-template-columns:1fr 1fr}}
+
+.theme-preview-lavender{background:linear-gradient(135deg,#171329,#a78bfa,#e879f9)}
+.theme-preview-ocean{background:linear-gradient(135deg,#061a2a,#38bdf8,#2dd4bf)}
+.theme-preview-midnight{background:linear-gradient(135deg,#090d1d,#818cf8,#60a5fa)}
+.theme-preview-graphite{background:linear-gradient(135deg,#17191d,#64748b,#cbd5e1)}
+.theme-preview-cherry{background:linear-gradient(135deg,#220b18,#f472b6,#fb7185)}
+.theme-preview-gold{background:linear-gradient(135deg,#211a08,#facc15,#f59e0b)}
+.theme-preview-mint{background:linear-gradient(135deg,#071c19,#6ee7b7,#2dd4bf)}
+.theme-preview-violet{background:linear-gradient(135deg,#170c2c,#c084fc,#818cf8)}
