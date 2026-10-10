@@ -319,3 +319,12 @@
 .keyboard-mode-option{cursor:pointer}
 .keyboard-mode-option input[type="radio"]{width:22px;height:22px;flex:0 0 auto;accent-color:var(--accent-color,#7184e8);cursor:pointer}
 .keyboard-mode-help{margin:10px 0 0;color:var(--text-secondary,#9aa6bb);font-size:.88rem;line-height:1.55}
+
+.keyboard-provider-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:14px}
+.keyboard-provider-option{display:flex;min-height:116px;flex-direction:column;align-items:flex-start;gap:7px;padding:14px;border:1px solid var(--border-color,rgba(150,170,200,.22));border-radius:16px;background:var(--card-soft,rgba(255,255,255,.035));cursor:pointer}
+.keyboard-provider-option input{accent-color:var(--accent-color,#7184e8);width:18px;height:18px}
+.keyboard-provider-option strong{font-size:.93rem}
+.keyboard-provider-option small{font-size:.78rem;color:var(--text-secondary,#9aa6bb);line-height:1.4}
+.keyboard-provider-option .provider-icon{font-size:1.35rem}
+.keyboard-provider-option.premium-locked{border-style:dashed;opacity:.88}
+.keyboard-provider-option:has(input:checked){border-color:var(--accent-color,#7184e8);box-shadow:0 0 0 1px var(--accent-color,#7184e8)}
