@@ -6,7 +6,7 @@
   const CONTENT_URL =
     "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/admin-content";
   let userRows = [];
-  let userMetrics = [];
+  let userMetrics = {};
 
   const TOKEN_KEY = "zakichat-admin-session";
   const ROLE_KEY = "zakichat-admin-role";
@@ -191,7 +191,7 @@
       const matchesStatus = status === "all" ||
         (status === "active" && user.account_status === "active") ||
         (status === "suspended" && user.account_status === "suspended");
-      const searchable = [user.username, user.full_name, user.phone, user.id].join(" ").toLowerCase();
+      const searchable = [user.username, user.full_name, user.phone, user.email, user.id].join(" ").toLowerCase();
       return matchesStatus && (!query || searchable.includes(query));
     });
 
@@ -217,6 +217,10 @@
           : `<button type="button" data-user-action="suspend" data-user-id="${escapeHtml(user.id)}">Suspend</button>`}
       </article>
     `).join("");
+
+    list.querySelectorAll("[data-user-action]").forEach(button => {
+      button.addEventListener("click", () => updateUserStatus(button.dataset.userId, button.dataset.userAction));
+    });
 
     empty?.classList.toggle("hidden", rows.length > 0);
     if (!rows.length) {
