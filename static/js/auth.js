@@ -173,7 +173,8 @@
     username: "",
     displayName: "",
     phone: "",
-    location: ""
+    location: "",
+    paidRegistrationPaymentId: null
   };
 
   function getSignupSteps() {
@@ -464,6 +465,8 @@
         throw new Error(feeData.error || "Unable to verify the registration fee. Your account has not been created.");
       }
 
+      signupState.paidRegistrationPaymentId = feeData.paidRegistrationPaymentId || null;
+
       if (feeData.paymentRequired) {
         showMessage(
           message,
@@ -655,6 +658,40 @@
         throw new Error(
           "Verification succeeded, but no session was created."
         );
+      }
+
+      if (signupState.paidRegistrationPaymentId && data.user?.id) {
+        try {
+          const cfg = window.ZakiChatConfig;
+          const claimResponse = await fetch(REGISTRATION_PAYMENT_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": cfg.supabaseKey,
+              "Authorization": "Bearer " + data.session.access_token
+            },
+            body: JSON.stringify({
+              action: "claim-paid-registration",
+              phone: signupState.phone,
+              userId: data.user.id,
+              paymentId: signupState.paidRegistrationPaymentId
+            })
+          });
+          const claimData = await claimResponse.json().catch(() => ({}));
+          if (!claimResponse.ok || claimData.success !== true) {
+            throw new Error(claimData.error || "Unable to link the paid registration reference.");
+          }
+          signupState.paidRegistrationPaymentId = null;
+        } catch (claimError) {
+          console.error("Paid registration claim failed:", claimError);
+          showMessage(
+            message,
+            "Your phone is verified, but we could not link the registration payment automatically. Please contact support before retrying signup.",
+            "error"
+          );
+          setTimeout(redirectToChats, 1800);
+          return;
+        }
       }
 
       showMessage(
