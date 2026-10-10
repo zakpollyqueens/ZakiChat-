@@ -203,3 +203,17 @@ create policy chat_attachment_delete_owner on storage.objects for delete to auth
 using(bucket_id='chat-attachments' and (storage.foldername(name))[2]=(select auth.uid())::text and public.is_conversation_member(((storage.foldername(name))[1])::uuid,(select auth.uid())));
 
 do $$ begin alter publication supabase_realtime add table public.messages; exception when duplicate_object then null; when undefined_object then null; end $$;
+
+-- Column-level permissions: prevent changing ownership, sender identity, timestamps or roles.
+revoke update on public.conversations from authenticated;
+grant update(title,description,avatar_url,updated_at) on public.conversations to authenticated;
+revoke insert on public.conversation_members from authenticated;
+grant insert(conversation_id,user_id) on public.conversation_members to authenticated;
+revoke insert on public.messages from authenticated;
+grant insert(conversation_id,sender_id,body,message_type,attachments,reply_to_id,forwarded_from_id) on public.messages to authenticated;
+revoke insert on public.message_reactions from authenticated;
+grant insert(message_id,user_id,emoji) on public.message_reactions to authenticated;
+revoke insert on public.starred_messages from authenticated;
+grant insert(user_id,message_id) on public.starred_messages to authenticated;
+revoke update on public.contacts from authenticated;
+grant update(display_name) on public.contacts to authenticated;
