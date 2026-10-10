@@ -94,6 +94,158 @@ Deno.serve(async (req: Request) => {
     const admin = await verifySuperAdmin(clean(body.adminSessionToken, 500));
     if (!admin) return json({ success: false, error: "An active super-administrator session is required." }, 403);
 
+    if (action === "admin-users-list") {
+      const search = clean(body.search, 120).toLowerCase();
+      const status = clean(body.status, 20) || "all";
+      const [{ data: rows, error: rowsError }, { count: total, error: totalError }, { count: online, error: onlineError }, { count: newUsers, error: newError }] = await Promise.all([
+        db.from("profiles").select("id, username, full_name, phone, is_online, last_seen, created_at").order("created_at", { ascending: false }).limit(1000),
+        db.from("profiles").select("id", { count: "exact", head: true }),
+        db.from("profiles").select("id", { count: "exact", head: true }).eq("is_online", true),
+        db.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 7 * 86400000).toISOString())
+      ]);
+      if (rowsError) throw rowsError;
+      if (totalError) throw totalError;
+      if (onlineError) throw onlineError;
+      if (newError) throw newError;
+      const users = (rows || []).filter(user => {
+        const matchesStatus = status === "all" ||
+          (status === "online" && user.is_online === true) ||
+          (status === "offline" && user.is_online !== true);
+        const text = [user.username, user.full_name, user.phone, user.id].join(" ").toLowerCase();
+        return matchesStatus && (!search || text.includes(search));
+      });
+      return json({
+        success: true,
+        users,
+        metrics: {
+          total: total || 0,
+          online: online || 0,
+          newUsers: newUsers || 0,
+          restricted: null
+        },
+        truncated: (rows || []).length === 1000
+      });
+    }
+
+    if (action === "admin-support-list") {
+      const { data: requests, error } = await db.from("support_requests")
+        .select("id, user_id, category, subject, message, status, created_at, read_at, resolved_at")
+        .order("created_at", { ascending: false })
+        .limit(500);
+      if (error) throw error;
+      const userIds = [...new Set((requests || []).map(row => row.user_id).filter(Boolean))];
+      let profileMap = new Map<string, Record<string, unknown>>();
+      if (userIds.length) {
+        const { data: profiles, error: profileError } = await db.from("profiles")
+          .select("id, username, full_name, phone")
+          .in("id", userIds);
+        if (profileError) throw profileError;
+        profileMap = new Map((profiles || []).map(profile => [profile.id, profile]));
+      }
+      const items = (requests || []).map(row => ({
+        ...row,
+        user: profileMap.get(row.user_id) || null
+      }));
+      return json({
+        success: true,
+        requests: items,
+        metrics: {
+          total: items.length,
+          open: items.filter(row => row.status === "open").length,
+          read: items.filter(row => row.status === "read").length,
+          resolved: items.filter(row => row.status === "resolved").length
+        }
+      });
+    }
+
+    if (action === "admin-support-update") {
+      const id = clean(body.id, 80);
+      const status = clean(body.status, 20);
+      if (!id || !["open", "read", "resolved"].includes(status)) {
+        return json({ success: false, error: "A valid support request and status are required." }, 400);
+      }
+      const now = new Date().toISOString();
+      const update: Record<string, unknown> = { status };
+      if (status === "read" || status === "resolved") update.read_at = now;
+      if (status === "resolved") update.resolved_at = now;
+      else update.resolved_at = null;
+      const { data: saved, error } = await db.from("support_requests")
+        .update(update).eq("id", id)
+        .select("id, user_id, category, subject, message, status, created_at, read_at, resolved_at")
+        .maybeSingle();
+      if (error) throw error;
+      if (!saved) return json({ success: false, error: "Support request not found." }, 404);
+      await audit(admin.userId, "support_request_updated", "support_request", id, { status });
+      return json({ success: true, request: saved });
+    }
+
+    if (action === "admin-analytics-summary") {
+      const since = new Date(Date.now() - 7 * 86400000).toISOString();
+      const count = async (table: string, column = "id", filter?: (query: any) => any) => {
+        let query = db.from(table).select(column, { count: "exact", head: true });
+        if (filter) query = filter(query);
+        const { count: value, error } = await query;
+        if (error) throw error;
+        return value || 0;
+      };
+      const [users, online, newUsers, messages, recentMessages, groups, channels, support, openSupport, payments, paidPayments, conversations] = await Promise.all([
+        count("profiles"),
+        count("profiles", "id", q => q.eq("is_online", true)),
+        count("profiles", "id", q => q.gte("created_at", since)),
+        count("messages"),
+        count("messages", "id", q => q.gte("created_at", since)),
+        count("groups"),
+        count("channels"),
+        count("support_requests"),
+        count("support_requests", "id", q => q.eq("status", "open")),
+        count("upgrade_payments"),
+        count("upgrade_payments", "id", q => q.eq("status", "paid")),
+        count("conversations")
+      ]);
+      return json({
+        success: true,
+        metrics: {
+          totalUsers: users, onlineUsers: online, newUsers7d: newUsers,
+          totalMessages: messages, messages7d: recentMessages,
+          totalGroups: groups, totalChannels: channels,
+          totalSupport: support, openSupport,
+          totalPayments: payments, paidPayments,
+          totalConversations: conversations
+        }
+      });
+    }
+
+    if (action === "admin-moderation-list") {
+      const status = clean(body.status, 30) || "all";
+      const communityType = clean(body.communityType, 20) || "all";
+      const { data, error } = await db.rpc("admin_community_reports", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_status: status,
+        p_community_type: communityType
+      });
+      if (error) throw error;
+      return json({ success: true, reports: Array.isArray(data) ? data : (data?.reports || []) });
+    }
+
+    if (action === "admin-moderation-action") {
+      const { data, error } = await db.rpc("admin_moderation_action", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_community_type: clean(body.communityType, 20),
+        p_community_id: clean(body.communityId, 80),
+        p_action: clean(body.moderationAction, 40),
+        p_reason: clean(body.reason, 2000),
+        p_report_id: clean(body.reportId, 80) || null
+      });
+      if (error) throw error;
+      await audit(admin.userId, "community_moderation_action", "community", clean(body.communityId, 80), {
+        community_type: clean(body.communityType, 20),
+        moderation_action: clean(body.moderationAction, 40),
+        reason: clean(body.reason, 2000),
+        report_id: clean(body.reportId, 80)
+      });
+      return json({ success: true, result: data });
+    }
+
     if (action === "admin-notices-list") {
       const { data, error } = await db.from("admin_system_notices")
         .select("*")
