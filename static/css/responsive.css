@@ -1,0 +1,183 @@
+/* Shared responsive safeguards for ZakiChat pages.
+   Page-specific styles remain responsible for their own component layouts. */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img, video, canvas, svg, iframe {
+  max-width: 100%;
+}
+
+input, select, textarea, button {
+  max-width: 100%;
+  font: inherit;
+}
+
+input, select, textarea {
+  min-width: 0;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent, #63b3ff);
+  outline-offset: 3px;
+}
+
+.iti {
+  width: 100%;
+}
+
+.iti input[type="tel"] {
+  width: 100%;
+  min-width: 0;
+}
+
+.hidden, [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .container {
+    width: min(100% - 32px, 100%);
+  }
+
+  .hero-grid, .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .topbar, .nav-container {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .top-actions, .main-nav {
+    flex-wrap: wrap;
+  }
+
+  .admin-shell, .auth-shell, .settings-layout, .chat-layout,
+  .chats-layout, .conversation-layout {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: min(100% - 24px, 100%);
+  }
+
+  .features-grid, .metric-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .main-nav {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .main-nav a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 9vw, 3.2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .auth-shell {
+    padding: 16px 12px;
+  }
+
+  .auth-card {
+    width: 100%;
+    padding: clamp(18px, 5vw, 28px);
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .top-actions {
+    width: 100%;
+  }
+
+  .top-actions > * {
+    flex: 1 1 auto;
+  }
+
+  .panel, .metric-card, .state-card {
+    min-width: 0;
+    padding: 16px;
+  }
+
+  .messages-list, .conversation-list, .chat-sidebar {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .message-composer, .composer-row {
+    gap: 8px;
+  }
+
+  .message-composer input, .composer-row input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal, .modal-content, .dialog {
+    width: calc(100% - 24px);
+    max-width: 100%;
+    margin-inline: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
