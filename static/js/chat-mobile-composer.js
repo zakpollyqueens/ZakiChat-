@@ -10,6 +10,15 @@
     raf: 0,
     baselineHeight: 0,
 
+    isSystemKeyboardMode() {
+      try {
+        const prefs = JSON.parse(localStorage.getItem("zakichat_keyboard_settings") || "{}");
+        return prefs.keyboardMode === "system";
+      } catch (_) {
+        return false;
+      }
+    },
+
     init() {
       this.composer =
         document.getElementById("message-composer");
@@ -40,12 +49,15 @@
         return;
       }
 
-      // Always allow Android/iOS to open the device keyboard (Gboard, etc.).
-      // A stale readonly attribute can silently prevent the native IME.
-      this.input.readOnly = false;
-      this.input.removeAttribute("readonly");
-      this.input.setAttribute("inputmode", "text");
-      this.input.setAttribute("enterkeyhint", "send");
+      // The native Android keyboard (such as Gboard) must receive focus in
+      // system mode. In ZakiChat mode, preserve readonly so the custom
+      // on-screen keyboard remains the sole text-entry surface.
+      if (this.isSystemKeyboardMode()) {
+        this.input.readOnly = false;
+        this.input.removeAttribute("readonly");
+        this.input.setAttribute("inputmode", "text");
+        this.input.setAttribute("enterkeyhint", "send");
+      }
 
       this.bind();
 
@@ -69,13 +81,17 @@
       // Do not preventDefault on pointer/touch events here: Android WebView
       // requires a real user gesture to open the system keyboard.
       this.input.addEventListener("pointerdown", () => {
-        this.input.readOnly = false;
-        this.input.removeAttribute("readonly");
+        if (this.isSystemKeyboardMode()) {
+          this.input.readOnly = false;
+          this.input.removeAttribute("readonly");
+        }
       }, { passive: true });
 
       this.input.addEventListener("touchend", () => {
-        this.input.readOnly = false;
-        this.input.removeAttribute("readonly");
+        if (this.isSystemKeyboardMode()) {
+          this.input.readOnly = false;
+          this.input.removeAttribute("readonly");
+        }
       }, { passive: true });
 
       this.input.addEventListener(
