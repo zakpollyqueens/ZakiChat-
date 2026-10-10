@@ -133,6 +133,55 @@ Deno.serve(async (req) => {
         secretKey
       );
 
+    const action = String(body?.action || "preflight");
+
+    if (action === "claim-paid-registration") {
+      const userId = String(body?.userId || "").trim();
+      const paymentId = String(body?.paymentId || "").trim();
+      const authorization = req.headers.get("Authorization") || "";
+      const accessToken = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      if (!userId || !paymentId || !accessToken) {
+        return jsonResponse({ success: false, error: "A valid signed-in session and payment reference are required." }, 401);
+      }
+
+      const { data: authData, error: authError } = await supabaseAdmin.auth.getUser(accessToken);
+      if (authError || !authData.user || authData.user.id !== userId) {
+        return jsonResponse({ success: false, error: "The signed-in account could not be verified." }, 401);
+      }
+      const authenticatedPhone = parsePhoneNumberFromString(authData.user.phone || "");
+      if (!authenticatedPhone || authenticatedPhone.number !== phoneE164) {
+        return jsonResponse({ success: false, error: "The verified account phone does not match the paid registration phone." }, 403);
+      }
+
+      const { data: claimed, error: claimError } = await supabaseAdmin
+        .from("registration_payments")
+        .update({ user_id: userId, updated_at: new Date().toISOString() })
+        .eq("id", paymentId)
+        .eq("phone", phoneE164)
+        .eq("status", "paid")
+        .is("user_id", null)
+        .select("id, user_id")
+        .maybeSingle();
+      if (claimError) throw claimError;
+      if (claimed) return jsonResponse({ success: true, claimed: true, paymentId: claimed.id });
+
+      const { data: alreadyClaimed, error: existingClaimError } = await supabaseAdmin
+        .from("registration_payments")
+        .select("id, user_id")
+        .eq("id", paymentId)
+        .eq("phone", phoneE164)
+        .eq("status", "paid")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (existingClaimError) throw existingClaimError;
+      if (alreadyClaimed) return jsonResponse({ success: true, claimed: true, paymentId: alreadyClaimed.id });
+      return jsonResponse({ success: false, error: "This paid registration request has already been claimed or is no longer available." }, 409);
+    }
+
+    if (action !== "preflight") {
+      return jsonResponse({ success: false, error: "Unsupported registration payment action." }, 400);
+    }
+
     /*
      * Free countries do not need a payment record.
      * The signup flow can proceed directly to Supabase Auth.
@@ -146,6 +195,32 @@ Deno.serve(async (req) => {
         phone: phoneE164,
         countryCode,
         isAfrican
+      });
+    }
+
+    const { data: paidPayment, error: paidPaymentError } = await supabaseAdmin
+      .from("registration_payments")
+      .select("id, phone, country_code, country_name, fee_usd, currency, status, paid_at")
+      .eq("phone", phoneE164)
+      .eq("status", "paid")
+      .is("user_id", null)
+      .order("paid_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (paidPaymentError) throw paidPaymentError;
+    if (paidPayment) {
+      return jsonResponse({
+        success: true,
+        paymentRequired: false,
+        paidRegistrationFee: true,
+        paidRegistrationPaymentId: paidPayment.id,
+        feeUsd: Number(paidPayment.fee_usd),
+        currency: paidPayment.currency,
+        phone: phoneE164,
+        countryCode,
+        countryName,
+        isAfrican,
+        message: "A verified registration payment was found. You can create your account now."
       });
     }
 
