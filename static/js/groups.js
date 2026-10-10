@@ -210,7 +210,7 @@
 
   function initials(profile) {
     const text = profile?.full_name || profile?.username || "U";
-    return text.trim().split(/\\s+/).slice(0,2).map(x => x[0]).join("").toUpperCase();
+    return text.trim().split(/\s+/).slice(0,2).map(x => x[0]).join("").toUpperCase();
   }
 
   function renderContacts(term = "") {
