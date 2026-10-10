@@ -313,6 +313,48 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, result: data });
     }
 
+    if (action === "admin-upgrade-overview") {
+      const { data, error } = await db.rpc("admin_upgrade_overview", {
+        p_token: clean(body.adminSessionToken, 500)
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-upgrade-records") {
+      const { data, error } = await db.rpc("admin_upgrade_records", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_search: clean(body.p_search, 120),
+        p_status: clean(body.p_status, 30) || "all",
+        p_plan: clean(body.p_plan, 60) || "all"
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-manual-upgrade") {
+      const identifier = clean(body.p_identifier, 200);
+      const plan = clean(body.p_plan, 60);
+      const amount = Number(body.p_amount);
+      const paymentMethod = clean(body.p_payment_method, 80);
+      const paymentReference = clean(body.p_payment_reference, 200);
+      const notes = clean(body.p_notes, 2000);
+      if (!identifier || !plan || !Number.isFinite(amount) || amount <= 0) {
+        return json({ success: false, error: "A customer, valid plan and positive amount are required." }, 400);
+      }
+      const { data, error } = await db.rpc("admin_manual_upgrade", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_identifier: identifier,
+        p_plan: plan,
+        p_amount: amount,
+        p_payment_method: paymentMethod,
+        p_payment_reference: paymentReference,
+        p_notes: notes
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
     if (action === "admin-upgrade-requests") {
       const { data: payments, error } = await db.from("upgrade_payments")
         .select("id, user_id, plan, amount, currency, status, created_at, metadata")
