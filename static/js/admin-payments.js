@@ -384,6 +384,7 @@ async function handleManualUpgrade(event) {
       } catch (closeError) {
         console.warn("Upgrade succeeded but the request could not be closed:", closeError);
         showManualResult("Upgrade was recorded, but the original request remains pending. Close it from Pending Customer Upgrade Requests.", true);
+        selectedUpgradeRequestId = null;
       }
     }
 
