@@ -3069,3 +3069,12 @@ body.new-chat-open {
     min-height: 56px;
   }
 }
+
+
+/* Local and premium themes for chat-list conversations */
+:root[data-zakichat-theme="light"] .message-bubble.received-bubble{background:#fff!important;color:#152235;border:1px solid rgba(15,35,60,.09)}
+:root[data-zakichat-theme="light"] .message-bubble.sent-bubble{background:linear-gradient(135deg,#0891b2,#2563eb)!important;color:#fff}
+:root[data-zakichat-theme="light"] .message-actions,:root[data-zakichat-theme="light"] .message-reply-bar,:root[data-zakichat-theme="light"] .message-edit-bar{background:#fff;color:#152235}
+:root[data-zakichat-theme="cyan"] .message-bubble.received-bubble{background:#10394f!important;color:#e9fbff}
+:root[data-zakichat-theme="cyan"] .message-bubble.sent-bubble{background:linear-gradient(135deg,#0e7490,#2563eb)!important;color:#fff}
+:root[data-zakichat-theme="cyan"] .message-actions,:root[data-zakichat-theme="cyan"] .message-reply-bar,:root[data-zakichat-theme="cyan"] .message-edit-bar{background:#0a2638}
