@@ -59,11 +59,31 @@
     }
   }
 
-  function signOut() {
-    localStorage.removeItem(SESSION_KEY);
-    localStorage.removeItem(ROLE_KEY);
-    localStorage.removeItem(EXPIRY_KEY);
-    window.location.href = "admin-control.html";
+  async function signOut() {
+    const token = localStorage.getItem(SESSION_KEY);
+
+    try {
+      if (token) {
+        await fetch(FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": window.ZakiChatConfig?.supabaseKey || ""
+          },
+          body: JSON.stringify({
+            action: "admin-session-revoke",
+            adminSessionToken: token
+          })
+        });
+      }
+    } catch (error) {
+      console.warn("Remote admin sign-out failed:", error);
+    } finally {
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(ROLE_KEY);
+      localStorage.removeItem(EXPIRY_KEY);
+      window.location.href = "admin.html";
+    }
   }
 
   function preview() {
