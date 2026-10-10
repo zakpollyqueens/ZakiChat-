@@ -93,11 +93,29 @@
       <label class="keyboard-row keyboard-mode-option">
         <span>
           <strong>Google Gboard / Device keyboard</strong>
-          <small>Use the keyboard selected in Android, such as Gboard, if installed and enabled.</small>
+          <small>Use the keyboard currently selected in Android. Gboard is free to use if installed and enabled.</small>
         </span>
         <input type="radio" name="keyboardMode" value="system" id="keyboardModeSystem">
       </label>
-      <p class="keyboard-mode-help">ZakiChat cannot install or switch Android keyboards for you. If Gboard is not available, enable it in your phone's Android keyboard settings first.</p>
+      <div class="keyboard-provider-grid" aria-label="Premium external keyboard preferences">
+        <label class="keyboard-provider-option" data-provider-option="swiftkey">
+          <input type="radio" name="keyboardProvider" value="swiftkey">
+          <span class="provider-icon">⌨️</span><strong>Microsoft SwiftKey</strong><small>Premium preference 🔒</small>
+        </label>
+        <label class="keyboard-provider-option" data-provider-option="samsung">
+          <input type="radio" name="keyboardProvider" value="samsung">
+          <span class="provider-icon">📱</span><strong>Samsung Keyboard</strong><small>Premium preference 🔒</small>
+        </label>
+        <label class="keyboard-provider-option" data-provider-option="fleksy">
+          <input type="radio" name="keyboardProvider" value="fleksy">
+          <span class="provider-icon">✨</span><strong>Fleksy</strong><small>Premium preference 🔒</small>
+        </label>
+        <label class="keyboard-provider-option" data-provider-option="grammarly">
+          <input type="radio" name="keyboardProvider" value="grammarly">
+          <span class="provider-icon">✍️</span><strong>Grammarly Keyboard</strong><small>Premium preference 🔒</small>
+        </label>
+      </div>
+      <p class="keyboard-mode-help">Gboard, SwiftKey, Samsung Keyboard, Fleksy and Grammarly Keyboard are separate Android apps. ZakiChat can save your preferred option, but Android must have that keyboard installed and selected in system settings. Premium options require an active Customized Personal or Customized Business entitlement.</p>
     </section>
 
     <section class="keyboard-card">
