@@ -97,6 +97,9 @@ Deno.serve(async (req) => {
 
     const countryCode = parsed.country;
     const phoneE164 = parsed.number;
+    const countryName = countryCode
+      ? (new Intl.DisplayNames(["en"], { type: "region" }).of(countryCode) || countryCode)
+      : "Unknown";
     const feeUsd = calculateRegistrationFee(countryCode);
     const isAfrican = AFRICAN_COUNTRIES.has(countryCode);
 
@@ -147,10 +150,41 @@ Deno.serve(async (req) => {
     }
 
     /*
+     * Reuse an existing pending request for the same phone so repeated
+     * signup attempts do not create duplicate unpaid registration rows.
+     */
+    const { data: existingPayment, error: existingError } = await supabaseAdmin
+      .from("registration_payments")
+      .select("id, phone, country_code, fee_usd, currency, status, provider, created_at")
+      .eq("phone", phoneE164)
+      .eq("status", "pending")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (existingError) throw existingError;
+    if (existingPayment) {
+      return jsonResponse({
+        success: true,
+        paymentRequired: true,
+        paymentId: existingPayment.id,
+        feeUsd: Number(existingPayment.fee_usd),
+        currency: existingPayment.currency,
+        phone: existingPayment.phone,
+        countryCode: existingPayment.country_code,
+        countryName,
+        isAfrican,
+        provider: existingPayment.provider,
+        status: existingPayment.status,
+        checkoutReady: false,
+        message: "A pending registration payment already exists for this phone number. Checkout is not configured yet."
+      });
+    }
+
+    /*
      * Paid registration:
-     * Create a pending payment record.
-     *
-     * Jjuma checkout will be connected later.
+     * Create a pending payment record. Checkout must be configured before
+     * signup is allowed to proceed for a fee-paying country.
      */
     const { data: payment, error } =
       await supabaseAdmin
@@ -158,7 +192,7 @@ Deno.serve(async (req) => {
         .insert({
           phone: phoneE164,
           country_code: countryCode,
-          country_name: countryCode,
+          country_name: countryName,
           fee_usd: feeUsd,
           currency: "USD",
           status: "pending",
