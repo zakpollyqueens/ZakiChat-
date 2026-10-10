@@ -40,6 +40,13 @@
         return;
       }
 
+      // Always allow Android/iOS to open the device keyboard (Gboard, etc.).
+      // A stale readonly attribute can silently prevent the native IME.
+      this.input.readOnly = false;
+      this.input.removeAttribute("readonly");
+      this.input.setAttribute("inputmode", "text");
+      this.input.setAttribute("enterkeyhint", "send");
+
       this.bind();
 
       document.body.classList.remove(
@@ -59,11 +66,29 @@
     },
 
     bind() {
+      // Do not preventDefault on pointer/touch events here: Android WebView
+      // requires a real user gesture to open the system keyboard.
+      this.input.addEventListener("pointerdown", () => {
+        this.input.readOnly = false;
+        this.input.removeAttribute("readonly");
+      }, { passive: true });
+
+      this.input.addEventListener("touchend", () => {
+        this.input.readOnly = false;
+        this.input.removeAttribute("readonly");
+      }, { passive: true });
+
       this.input.addEventListener(
         "focus",
         () => {
           document.body.classList.add(
             "zaki-composer-focused"
+          );
+          // Refresh baseline immediately before the Android IME resizes
+          // the visual viewport, avoiding a false zero keyboard height.
+          this.baselineHeight = Math.max(
+            this.baselineHeight,
+            Math.round(window.innerHeight || 0)
           );
 
           this.schedule();
@@ -105,6 +130,11 @@
       this.input.addEventListener(
         "click",
         () => {
+          // Focus from the direct tap (not from a timer) so the OS keyboard
+          // is permitted to appear in Android WebView.
+          if (document.activeElement !== this.input) {
+            this.input.focus({ preventScroll: true });
+          }
           this.keepInputVisible();
           this.scrollMessagesToBottom();
         }
