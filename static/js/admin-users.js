@@ -6,6 +6,7 @@
   const CONTENT_URL =
     "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/admin-content";
   let userRows = [];
+  let userMetrics = [];
 
   const TOKEN_KEY = "zakichat-admin-session";
   const ROLE_KEY = "zakichat-admin-role";
@@ -181,15 +182,15 @@
       .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
   }
 
-  function renderUsers(metrics = {}) {
+  function renderUsers(metrics = userMetrics) {
     const list = $("users-list");
     const empty = $("empty");
     const query = ($("search").value || "").trim().toLowerCase();
     const status = $("status-filter").value || "all";
     const rows = userRows.filter(user => {
       const matchesStatus = status === "all" ||
-        (status === "online" && user.is_online === true) ||
-        (status === "offline" && user.is_online !== true);
+        (status === "active" && user.account_status === "active") ||
+        (status === "suspended" && user.account_status === "suspended");
       const searchable = [user.username, user.full_name, user.phone, user.id].join(" ").toLowerCase();
       return matchesStatus && (!query || searchable.includes(query));
     });
@@ -206,16 +207,44 @@
         <div class="user-details">
           <strong>${escapeHtml(user.full_name || user.username || "ZakiChat user")}</strong>
           <span>@${escapeHtml(user.username || "no-username")}</span>
-          <small>${escapeHtml(user.phone || "Phone not available")} · Joined ${escapeHtml(user.created_at ? new Date(user.created_at).toLocaleDateString() : "date unavailable")}</small>
+          <small>${escapeHtml(user.email || "Email not available")} · ${escapeHtml(user.phone || "Phone not available")}</small>
+          <small>Joined ${escapeHtml(user.created_at ? new Date(user.created_at).toLocaleDateString() : "date unavailable")} · ${user.is_online ? "Online" : "Offline"}</small>
           <small>ID: ${escapeHtml(user.id)}</small>
         </div>
-        <span class="user-status ${user.is_online ? "online" : "offline"}">${user.is_online ? "Online" : "Offline"}</span>
+        <span class="user-status ${user.account_status === "suspended" ? "offline" : "online"}">${escapeHtml(user.account_status || "active")}</span>
+        ${user.account_status === "suspended"
+          ? `<button type="button" data-user-action="restore" data-user-id="${escapeHtml(user.id)}">Restore</button>`
+          : `<button type="button" data-user-action="suspend" data-user-id="${escapeHtml(user.id)}">Suspend</button>`}
       </article>
     `).join("");
 
     empty?.classList.toggle("hidden", rows.length > 0);
     if (!rows.length) {
       empty.innerHTML = "<div>👤</div><h3>No matching users</h3><p>Try another search or account activity filter.</p>";
+    }
+  }
+
+  async function updateUserStatus(userId, action) {
+    const current = userRows.find(user => user.id === userId);
+    if (!current) return;
+    let reason = "";
+    if (action === "suspend") {
+      reason = window.prompt("Enter a reason for suspending this account:");
+      if (!reason || reason.trim().length < 3) return;
+      if (!window.confirm("Suspend " + (current.username || current.full_name || "this user") + "? They will not be able to sign in until restored.")) return;
+    } else if (!window.confirm("Restore " + (current.username || current.full_name || "this user") + "'s sign-in access?")) {
+      return;
+    }
+    try {
+      await adminRequest({
+        action: action === "suspend" ? "admin-user-suspend" : "admin-user-restore",
+        adminSessionToken: Admin.token(),
+        userId,
+        reason
+      });
+      await loadUsers();
+    } catch (error) {
+      window.alert(error.message || "Unable to update this account.");
     }
   }
 
@@ -227,7 +256,8 @@
       status: $("status-filter").value
     });
     userRows = Array.isArray(data.users) ? data.users : [];
-    renderUsers(data.metrics || {});
+    userMetrics = data.metrics || {};
+    renderUsers();
     if (data.truncated) $("result-count").textContent += " (latest 1,000; refine search)";
   }
 
