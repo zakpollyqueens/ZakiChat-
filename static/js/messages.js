@@ -1070,6 +1070,8 @@
       bubble.dataset.messageId =
         message.id;
 
+      bubble.dataset.dateKey = this.getDateKey(message.created_at);
+
       const replyPreview =
         this.getReplyPreview(
           message
@@ -1258,22 +1260,49 @@
       );
     },
 
+    getDateKey(value) {
+      const date = value ? new Date(value) : new Date();
+      if (Number.isNaN(date.getTime())) return "unknown";
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    },
+
+    getDateLabel(value) {
+      const date = value ? new Date(value) : new Date();
+      if (Number.isNaN(date.getTime())) return "Earlier";
+      const today = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(today.getDate() - 1);
+      const key = this.getDateKey(date);
+      if (key === this.getDateKey(today)) return "Today";
+      if (key === this.getDateKey(yesterday)) return "Yesterday";
+      return date.toLocaleDateString([], { day: "numeric", month: "long", year: date.getFullYear() === today.getFullYear() ? undefined : "numeric" });
+    },
+
+    appendDateDivider(container, value) {
+      const divider = document.createElement("div");
+      divider.className = "date-divider";
+      divider.dataset.dateKey = this.getDateKey(value);
+      const label = document.createElement("span");
+      label.textContent = this.getDateLabel(value);
+      divider.appendChild(label);
+      container.appendChild(divider);
+    },
+
     renderInto(
       container,
       messages,
       currentUserId
     ) {
       if (!container) return;
-
       container.innerHTML = "";
-
-      this.render(
-        messages,
-        currentUserId
-      ).forEach(element => {
-        container.appendChild(
-          element
-        );
+      let previousDateKey = null;
+      (messages || []).forEach(message => {
+        const dateKey = this.getDateKey(message.created_at);
+        if (dateKey !== previousDateKey) {
+          this.appendDateDivider(container, message.created_at);
+          previousDateKey = dateKey;
+        }
+        container.appendChild(this.renderMessage(message, currentUserId));
       });
     },
 
@@ -1282,30 +1311,17 @@
       message,
       currentUserId
     ) {
-      if (
-        !container ||
-        !message?.id
-      ) {
-        return false;
-      }
+      if (!container || !message?.id) return false;
+      if (container.querySelector(`[data-message-id="${CSS.escape(message.id)}"]`)) return false;
 
-      if (
-        container.querySelector(
-          `[data-message-id="${CSS.escape(
-            message.id
-          )}"]`
-        )
-      ) {
-        return false;
-      }
-
-      container.appendChild(
-        this.renderMessage(
-          message,
-          currentUserId
-        )
-      );
-
+      const lastMessage = container.querySelector(".message-bubble:last-of-type");
+      const lastKey = lastMessage?.dataset.dateKey || null;
+      const dateKey = this.getDateKey(message.created_at);
+      // Set the key on bubbles so live messages can reuse the existing date group.
+      if (lastKey !== dateKey) this.appendDateDivider(container, message.created_at);
+      const bubble = this.renderMessage(message, currentUserId);
+      bubble.dataset.dateKey = dateKey;
+      container.appendChild(bubble);
       return true;
     },
 
