@@ -658,6 +658,7 @@
 
         this.recording =
           true;
+        document.getElementById("voice-note-button")?.classList.add("is-recording");
 
         this.recordingStartedAt =
           Date.now();
@@ -782,6 +783,7 @@
 
       this.recording =
         false;
+      document.getElementById("voice-note-button")?.classList.remove("is-recording");
 
       const bar =
         document.getElementById(
@@ -810,6 +812,7 @@
 
       this.recording =
         false;
+      document.getElementById("voice-note-button")?.classList.remove("is-recording");
 
       const bar =
         document.getElementById(
