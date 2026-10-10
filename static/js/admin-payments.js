@@ -804,6 +804,7 @@ async function loadAll() {
     await loadRecords();
     applyFilters();
     await loadUpgradeRequests();
+    await loadRegistrationPaymentRequests();
   } catch (error) {
     console.error(
       "Admin payments data load failed:",
