@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17212b">
+<title>Chats · ZakiChat</title>
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/telegram-chat.css">
+</head>
+<body class="tg-app tg-list-page">
+<main class="tg-shell">
+  <header class="tg-list-header">
+    <div class="tg-brand-row">
+      <div class="tg-brand-mark" aria-hidden="true">Z</div>
+      <div><span class="tg-kicker">ZAKICHAT</span><h1>Chats</h1></div>
+      <button class="tg-icon-btn" id="new-chat" aria-label="Start a new chat" title="New chat">＋</button>
+    </div>
+    <label class="tg-search"><span aria-hidden="true">⌕</span><input id="chat-search" type="search" placeholder="Search people or messages" autocomplete="off"><button id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label>
+    <div class="tg-filter-row" role="group" aria-label="Chat filters">
+      <button class="tg-filter is-active" data-filter="all" type="button">All chats</button>
+      <button class="tg-filter" data-filter="personal" type="button">Personal</button>
+      <button class="tg-filter" data-filter="groups" type="button">Groups</button>
+      <button class="tg-filter" data-filter="channels" type="button">Channels</button>
+    </div>
+  </header>
+
+  <section class="tg-list-content" aria-label="Conversation list">
+    <a class="tg-archive-row" href="#archived" id="archive-toggle">
+      <span class="tg-archive-icon" aria-hidden="true">▣</span>
+      <span class="tg-archive-copy"><strong>Archived Chats</strong><small id="archive-subtitle">Your archived conversations appear here</small></span>
+      <span class="tg-chevron" aria-hidden="true">›</span>
+    </a>
+    <div id="archive-panel" class="tg-archive-panel" hidden>
+      <div class="tg-empty-icon" aria-hidden="true">▣</div><strong>No archived chats</strong><p>Swipe a conversation to the right to archive it. Archived chats stay out of your main list.</p>
+    </div>
+    <div class="tg-empty-state" id="chats-empty">
+      <div class="tg-empty-art" aria-hidden="true"><span>✉</span></div>
+      <h2>Your chats, your space</h2>
+      <p>Your new Telegram-inspired chat experience is being set up. Start a conversation when chat services are connected.</p>
+      <a class="tg-primary-btn" href="chat.html?preview=1">Preview the new chat</a>
+    </div>
+    <div id="chat-list-results" class="tg-chat-list" hidden></div>
+  </section>
+
+  <nav class="tg-bottom-nav" aria-label="Main navigation">
+    <a class="is-current" href="chats.html" aria-current="page"><span aria-hidden="true">▤</span><span>Chats</span></a>
+    <a href="settings.html"><span aria-hidden="true">⚙</span><span>Settings</span></a>
+    <a href="status.html"><span aria-hidden="true">◉</span><span>Updates</span></a>
+  </nav>
+</main>
+<div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
+<script src="../static/js/telegram-chat.js"></script>
+</body>
+</html>

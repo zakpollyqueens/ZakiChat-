@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17212b">
+<title>Chat · ZakiChat</title>
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/telegram-chat.css">
+</head>
+<body class="tg-app tg-conversation-page">
+<main class="tg-conversation-shell" id="tg-conversation-shell">
+  <header class="tg-chat-header">
+    <a class="tg-icon-btn tg-back-btn" href="chats.html" aria-label="Back to chats" title="Back">‹</a>
+    <button class="tg-person-button" id="open-chat-info" type="button">
+      <span class="tg-avatar tg-avatar-large" id="peer-avatar">Z</span>
+      <span class="tg-person-copy"><strong id="peer-name">New conversation</strong><small id="peer-status">ZakiChat · new chat</small></span>
+    </button>
+    <div class="tg-header-actions">
+      <button class="tg-icon-btn" type="button" data-action="call" aria-label="Voice call" title="Voice call">☎</button>
+      <button class="tg-icon-btn" type="button" data-action="video" aria-label="Video call" title="Video call">▣</button>
+      <button class="tg-icon-btn" type="button" id="chat-menu-button" aria-label="More options" title="More options">⋮</button>
+    </div>
+  </header>
+
+  <div class="tg-chat-menu" id="chat-menu" hidden>
+    <button type="button" data-action="search">⌕ <span>Search in chat</span></button>
+    <button type="button" data-action="mute">♩ <span>Mute notifications</span></button>
+    <button type="button" data-action="clear">⌫ <span>Clear preview messages</span></button>
+    <button type="button" data-action="info">ⓘ <span>Chat information</span></button>
+  </div>
+
+  <section class="tg-message-area" id="message-area" aria-label="Messages">
+    <div class="tg-day-pill">Today</div>
+    <div class="tg-chat-intro">
+      <div class="tg-chat-intro-avatar">✉</div>
+      <strong>Your private conversation</strong>
+      <p>Telegram-inspired layout, rebuilt for ZakiChat. Messages you type here are local previews until the new chat database is connected.</p>
+    </div>
+    <div class="tg-messages" id="tg-messages" aria-live="polite"></div>
+    <div class="tg-typing-indicator" id="typing-indicator" hidden><span></span><span></span><span></span><small>typing…</small></div>
+  </section>
+
+  <div class="tg-reply-preview" id="reply-preview" hidden>
+    <span class="tg-reply-accent"></span><span><strong>Replying to</strong><small id="reply-preview-text"></small></span>
+    <button type="button" id="cancel-reply" aria-label="Cancel reply">×</button>
+  </div>
+
+  <form class="tg-composer" id="tg-composer" autocomplete="off">
+    <div class="tg-composer-tools">
+      <button class="tg-composer-icon" id="attach-button" type="button" aria-label="Attach file" title="Attach file">＋</button>
+      <div class="tg-input-wrap">
+        <textarea id="message-input" rows="1" maxlength="10000" placeholder="Message" aria-label="Message" enterkeyhint="send"></textarea>
+        <button class="tg-composer-icon tg-emoji-button" id="emoji-button" type="button" aria-label="Emoji" title="Emoji">☺</button>
+      </div>
+      <button class="tg-send-button" id="send-button" type="submit" aria-label="Send message" title="Send">➤</button>
+      <button class="tg-send-button tg-mic-button" id="mic-button" type="button" aria-label="Record voice message" title="Record voice message">🎙</button>
+    </div>
+    <div class="tg-recording-bar" id="recording-bar" hidden>
+      <button type="button" class="tg-record-cancel" id="record-cancel" aria-label="Cancel recording">×</button>
+      <span class="tg-record-dot"></span><span class="tg-record-label">Recording voice message</span><strong id="record-timer">00:00</strong>
+      <button type="button" class="tg-record-send" id="record-send">Send audio</button>
+    </div>
+    <div class="tg-composer-hint" id="composer-hint" aria-live="polite">Chat preview mode · messages are not saved to a server yet</div>
+  </form>
+
+  <input id="file-input" type="file" hidden multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
+  <div class="tg-attach-menu" id="attach-menu" hidden>
+    <button type="button" data-file-kind="media">▧ <span>Photos &amp; videos</span></button>
+    <button type="button" data-file-kind="document">▤ <span>Document</span></button>
+    <button type="button" data-file-kind="audio">♫ <span>Audio file</span></button>
+  </div>
+  <div class="tg-emoji-panel" id="emoji-panel" hidden aria-label="Emoji picker"></div>
+  <aside class="tg-info-panel" id="chat-info-panel" hidden>
+    <div class="tg-info-head"><strong>Chat information</strong><button id="close-chat-info" type="button" aria-label="Close information">×</button></div>
+    <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Telegram-inspired chat preview</p><div class="tg-info-note">Profile and conversation details will connect when the new chat service is built.</div>
+  </aside>
+</main>
+<div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
+<script src="../static/js/telegram-chat.js"></script>
+</body>
+</html>
