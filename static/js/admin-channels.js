@@ -85,13 +85,15 @@ async function signOut(){
 
   try{
     if(t){
-      await fetch(FN,{
+      const cfg=window.ZakiChatConfig;
+      if(cfg?.supabaseKey)await fetch(FN,{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
-          "Authorization":"Bearer "+t
+          "apikey":cfg.supabaseKey,
+          "Authorization":"Bearer "+cfg.supabaseKey
         },
-        body:JSON.stringify({action:"admin-session-revoke",adminSessionToken:token})
+        body:JSON.stringify({action:"admin-session-revoke",adminSessionToken:t})
       });
     }
   }catch(e){}
