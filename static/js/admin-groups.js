@@ -22,7 +22,7 @@ async function rpc(name,body){
 async function verifyAdminSession(){
   const token=getToken();
   if(!token)return false;
-  const expiry=Number(localStorage.getItem(EXPIRY_KEY)||0);
+  const expiry=(Date.parse(localStorage.getItem(EXPIRY_KEY)||"")||Number(localStorage.getItem(EXPIRY_KEY)||0));
   if(expiry&&Date.now()>=expiry){clearAdminSession();return false;}
   try{return !!(await rpc("admin_session_user",{p_token:token}));}
   catch(error){console.error("Admin session verification failed:",error);return false;}
@@ -31,7 +31,7 @@ async function verifyAdminSession(){
 async function secureSignOut(){
   const token=getToken();
   try{
-    if(token)await fetch(FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({action:"admin-session-revoke"})});
+    if(token)await fetch(FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({action:"admin-session-revoke",adminSessionToken:token})});
   }catch(error){console.warn("Remote admin sign-out failed:",error);}
   clearAdminSession();
   location.href="admin.html";
