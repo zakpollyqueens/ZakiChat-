@@ -78,6 +78,16 @@
       const result=await client.from("user_upgrades").select("plan,status,expires_at").eq("user_id",user.id).eq("status","active").gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1).maybeSingle();
       if(result.error)throw result.error;
       plan=result.data&&result.data.plan||"local";premium=["personal_monthly","business_monthly"].includes(plan);
+      if(!premium){
+        const {data:memberships,error:membershipError}=await client.from("business_members").select("business_id").eq("user_id",user.id).eq("status","active");
+        if(membershipError)throw membershipError;
+        for(const membership of memberships||[]){
+          const {data:workspace}=await client.from("business_workspaces").select("owner_user_id").eq("id",membership.business_id).maybeSingle();
+          if(!workspace?.owner_user_id)continue;
+          const {data:businessUpgrade}=await client.from("user_upgrades").select("plan").eq("user_id",workspace.owner_user_id).eq("plan","business_monthly").eq("status","active").gt("expires_at",new Date().toISOString()).limit(1).maybeSingle();
+          if(businessUpgrade){plan="business_monthly";premium=true;break;}
+        }
+      }
       localStorage.setItem(PLAN_KEY,JSON.stringify({plan:plan,checkedAt:Date.now()}));
     }catch(error){
       console.warn("Could not verify ZakiChat plan",error);
