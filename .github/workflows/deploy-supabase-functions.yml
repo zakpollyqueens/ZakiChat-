@@ -158,3 +158,19 @@ jobs:
           done
           echo "Upgrade-checkout deployment failed after 3 attempts." >&2
           exit 1
+
+      - name: Deploy business-workspace (retry transient deployment conflicts)
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            echo "Business-workspace deploy attempt $attempt of 3"
+            if supabase functions deploy business-workspace --use-api --project-ref "$SUPABASE_PROJECT_ID"; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 5))
+            fi
+          done
+          echo "Business-workspace deployment failed after 3 attempts." >&2
+          exit 1
