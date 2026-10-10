@@ -63,19 +63,19 @@
   </article>
   <article class="metric glass">
     <span>👤</span>
-    <small>REPORTED USERS</small>
+    <small>GROUP REPORTS</small>
     <strong id="reported-users">—</strong>
     <em>Protected backend data</em>
   </article>
   <article class="metric glass">
     <span>💬</span>
-    <small>REPORTED CONTENT</small>
+    <small>CHANNEL REPORTS</small>
     <strong id="reported-content">—</strong>
     <em>Protected backend data</em>
   </article>
   <article class="metric glass">
     <span>🚫</span>
-    <small>BLOCKED USERS</small>
+    <small>RESTRICTED COMMUNITIES</small>
     <strong id="blocked-users">—</strong>
     <em>Protected backend data</em>
   </article>
@@ -101,22 +101,22 @@
 
     <button class="queue-card" data-view="users">
       <span>👤</span>
-      <strong>Reported Users</strong>
-      <small>Review reported accounts</small>
+      <strong>Group Reports</strong>
+      <small>Review reports involving groups</small>
       <b>→</b>
     </button>
 
     <button class="queue-card" data-view="content">
       <span>📄</span>
-      <strong>Reported Content</strong>
-      <small>Review reported messages</small>
+      <strong>Channel Reports</strong>
+      <small>Review reports involving channels</small>
       <b>→</b>
     </button>
 
     <button class="queue-card" data-view="blocked">
       <span>🚫</span>
-      <strong>Blocked Users</strong>
-      <small>Review account restrictions</small>
+      <strong>Restricted Communities</strong>
+      <small>Review restricted or suspended communities</small>
       <b>→</b>
     </button>
 
@@ -133,14 +133,13 @@
   <select id="status">
     <option value="all">All Statuses</option>
     <option value="open">Open</option>
-    <option value="reviewing">Reviewing</option>
+    <option value="under_review">Under Review</option>
+    <option value="action_required">Action Required</option>
     <option value="resolved">Resolved</option>
   </select>
 
   <select id="type">
     <option value="all">All Types</option>
-    <option value="user">User</option>
-    <option value="content">Content</option>
     <option value="group">Group</option>
     <option value="channel">Channel</option>
   </select>
