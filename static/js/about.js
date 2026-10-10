@@ -576,6 +576,20 @@
       button.dataset.upgradeBound = 'true';
       button.addEventListener('click', () => handleUpgrade(button.dataset.upgradePlan, button));
     });
+    const requested = new URLSearchParams(window.location.search).get('upgrade');
+    if (requested === 'personal_monthly' || requested === 'business_monthly') {
+      const selected = document.querySelector('[data-upgrade-plan="' + requested + '"]');
+      selected?.classList.add('upgrade-plan-requested');
+      document.getElementById('paid-upgrades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (selected) {
+        selected.setAttribute('aria-current', 'true');
+        setTimeout(() => selected.focus({ preventScroll: true }), 350);
+      }
+      showUpgradeStatus(
+        (requested === 'personal_monthly' ? 'Customized Personal' : 'Customized Business') +
+        ' selected. Submit the request below to record your plan interest. Automatic payment checkout is not configured yet; no charge will be taken and premium access will not activate until payment is verified.'
+      );
+    }
   }
 
   if (document.readyState === 'loading') {
