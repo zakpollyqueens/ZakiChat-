@@ -163,10 +163,11 @@
       const chunkSize = 8 * 1024 * 1024;
       let offset = Number(start.headers.get("Upload-Offset") || 0);
       while (offset < file.size) {
-        const chunk = file.slice(offset, Math.min(offset + chunkSize, file.size));
-        let completed = false;
+        const startingOffset = offset;
+        const chunk = file.slice(startingOffset, Math.min(startingOffset + chunkSize, file.size));
+        let advanced = false;
         let lastError = null;
-        for (let attempt = 0; attempt < 3 && !completed; attempt++) {
+        for (let attempt = 0; attempt < 3 && !advanced; attempt++) {
           try {
             const response = await fetch(uploadUrl, {
               method: "PATCH",
@@ -180,7 +181,7 @@
             if (response.status === 204) {
               const nextOffset = Number(response.headers.get("Upload-Offset"));
               offset = Number.isFinite(nextOffset) && nextOffset > offset ? nextOffset : offset + chunk.size;
-              completed = true;
+              advanced = true;
             } else {
               const detail = await response.text().catch(() => "");
               lastError = new Error(detail || "Large-file upload failed (" + response.status + ").");
@@ -189,23 +190,23 @@
           } catch (error) {
             lastError = error;
           }
-          if (!completed) {
+          if (!advanced) {
             try {
-              const head = await fetch(uploadUrl, {
-                method: "HEAD",
-                headers: { ...headers }
-              });
+              const head = await fetch(uploadUrl, { method: "HEAD", headers: { ...headers } });
               if (head.ok) {
                 const serverOffset = Number(head.headers.get("Upload-Offset"));
-                if (Number.isFinite(serverOffset) && serverOffset >= 0) {
+                if (Number.isFinite(serverOffset) && serverOffset > offset) {
                   offset = serverOffset;
-                  if (offset >= file.size) completed = true;
+                  advanced = true;
+                } else if (Number.isFinite(serverOffset) && serverOffset === file.size) {
+                  offset = serverOffset;
+                  advanced = true;
                 }
               }
             } catch (_) {}
           }
         }
-        if (!completed && offset < file.size) throw lastError || new Error("Large-file upload could not continue.");
+        if (!advanced && offset < file.size) throw lastError || new Error("Large-file upload could not continue.");
         window.dispatchEvent(new CustomEvent("zakichat:upload-progress", {
           detail: { uploaded: offset, total: file.size, percent: Math.min(100, Math.round(offset / file.size * 100)) }
         }));
