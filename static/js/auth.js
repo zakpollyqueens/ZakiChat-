@@ -43,7 +43,8 @@
   }
 
   /* INTERNATIONAL PHONE INPUT */
-  let signupPhoneInput = null;
+  let authPhoneInput = null;
+  let passwordResetInProgress = false;
 
   function setupInternationalPhoneInput() {
     const input = document.getElementById("phone");
@@ -52,7 +53,7 @@
       return;
     }
 
-    signupPhoneInput = window.intlTelInput(input, {
+    authPhoneInput = window.intlTelInput(input, {
       initialCountry: "ug",
       separateDialCode: true,
       nationalMode: true,
@@ -66,25 +67,25 @@
 
     input.addEventListener("blur", function () {
       if (
-        signupPhoneInput &&
+        authPhoneInput &&
         input.value.trim() &&
-        signupPhoneInput.isValidNumber()
+        authPhoneInput.isValidNumber()
       ) {
         input.classList.remove("input-error");
       }
     });
   }
 
-  function getSignupPhoneE164() {
-    if (!signupPhoneInput) {
+  function getPhoneE164() {
+    if (!authPhoneInput) {
       return "";
     }
 
-    if (!signupPhoneInput.isValidNumber()) {
+    if (!authPhoneInput.isValidNumber()) {
       return "";
     }
 
-    return signupPhoneInput.getNumber();
+    return authPhoneInput.getNumber();
   }
 
   function setupPasswordToggle(buttonId, inputId) {
@@ -131,64 +132,29 @@
 
   async function handleLogin(event) {
     event.preventDefault();
-
     const form = event.currentTarget;
-    const email =
-      document.getElementById("email").value.trim();
-    const password =
-      document.getElementById("password").value;
-    const message =
-      document.getElementById("loginMessage");
-    const button =
-      form.querySelector('button[type="submit"]');
-
+    const phone = getPhoneE164();
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("loginMessage");
+    const button = form.querySelector('button[type="submit"]');
     showMessage(message, "", "");
 
-    if (!email || !password) {
-      showMessage(
-        message,
-        "Please enter your email and password.",
-        "error"
-      );
+    if (!phone || !password) {
+      showMessage(message, "Enter a valid phone number and your password.", "error");
+      document.getElementById("phone")?.focus();
       return;
     }
 
     setLoading(button, true, "Sign In");
-
     try {
-      const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-      if (error) {
-        throw error;
-      }
-
-      if (!data.session) {
-        throw new Error(
-          "Sign-in succeeded, but no session was created."
-        );
-      }
-
-      showMessage(
-        message,
-        "Signed in successfully. Opening ZakiChat...",
-        "success"
-      );
-
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ phone, password });
+      if (error) throw error;
+      if (!data.session) throw new Error("Sign-in succeeded, but no session was created.");
+      showMessage(message, "Signed in successfully. Opening ZakiChat...", "success");
       setTimeout(redirectToChats, 250);
     } catch (error) {
       console.error("Login error:", error);
-
-      showMessage(
-        message,
-        error.message ||
-          "Unable to sign in. Please try again.",
-        "error"
-      );
-
+      showMessage(message, error.message || "Unable to sign in. Check your phone number and password.", "error");
       setLoading(button, false, "Sign In");
     }
   }
@@ -363,7 +329,7 @@
     signupState.displayName =
       displayName.value.trim();
 
-    const phoneE164 = getSignupPhoneE164();
+    const phoneE164 = getPhoneE164();
 
     if (!phoneE164) {
       showMessage(
@@ -757,69 +723,123 @@
      FORGOT PASSWORD
      ======================================================= */
 
-  async function handleForgotPassword(event) {
-    event.preventDefault();
+  function ensurePasswordResetPanel() {
+    let panel = document.getElementById("passwordResetPanel");
+    if (panel) return panel;
 
-    const emailInput =
-      document.getElementById("email");
+    panel = document.createElement("section");
+    panel.id = "passwordResetPanel";
+    panel.className = "auth-card password-reset-panel";
+    panel.hidden = true;
+    panel.innerHTML = `
+      <h2>Reset your password</h2>
+      <p id="passwordResetStatus" class="auth-message" role="status">We'll send a verification code to your phone number.</p>
+      <button type="button" class="button button-secondary" id="sendPasswordResetCode">Send verification code</button>
+      <div id="passwordResetFields" hidden>
+        <label for="passwordResetOtp">SMS verification code</label>
+        <input id="passwordResetOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}">
+        <label for="newPassword">New password</label>
+        <input id="newPassword" type="password" autocomplete="new-password" minlength="8">
+        <label for="confirmNewPassword">Confirm new password</label>
+        <input id="confirmNewPassword" type="password" autocomplete="new-password" minlength="8">
+        <button type="button" class="button button-primary" id="confirmPasswordReset">Verify code &amp; change password</button>
+      </div>
+      <button type="button" class="button auth-secondary" id="cancelPasswordReset">Cancel</button>
+    `;
+    document.getElementById("loginForm")?.insertAdjacentElement("afterend", panel);
 
-    const email =
-      emailInput
-        ? emailInput.value.trim()
-        : "";
+    document.getElementById("sendPasswordResetCode")?.addEventListener("click", async () => {
+      const phone = getPhoneE164();
+      const status = document.getElementById("passwordResetStatus");
+      const button = document.getElementById("sendPasswordResetCode");
+      if (!phone) {
+        showMessage(status, "Enter a valid phone number on the sign-in form first.", "error");
+        document.getElementById("phone")?.focus();
+        return;
+      }
+      button.disabled = true;
+      button.textContent = "Sending...";
+      passwordResetInProgress = true;
+      try {
+        const { error } = await supabaseClient.auth.signInWithOtp({
+          phone,
+          options: { shouldCreateUser: false }
+        });
+        if (error) throw error;
+        showMessage(status, "Verification code sent by SMS. Enter it below with your new password.", "success");
+        document.getElementById("passwordResetFields").hidden = false;
+        document.getElementById("passwordResetOtp")?.focus();
+      } catch (error) {
+        passwordResetInProgress = false;
+        showMessage(status, error.message || "Unable to send a reset code. Check the phone number and try again.", "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Resend verification code";
+      }
+    });
 
-    const message =
-      document.getElementById(
-        "loginMessage"
-      );
+    document.getElementById("passwordResetOtp")?.addEventListener("input", event => {
+      event.target.value = event.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+    });
 
-    if (!email) {
-      showMessage(
-        message,
-        "Enter your email address first, then choose Forgot password.",
-        "error"
-      );
-      emailInput?.focus();
-      return;
-    }
+    document.getElementById("confirmPasswordReset")?.addEventListener("click", async () => {
+      const phone = getPhoneE164();
+      const token = document.getElementById("passwordResetOtp")?.value.trim() || "";
+      const password = document.getElementById("newPassword")?.value || "";
+      const confirm = document.getElementById("confirmNewPassword")?.value || "";
+      const status = document.getElementById("passwordResetStatus");
+      const button = document.getElementById("confirmPasswordReset");
 
-    try {
-      const redirectUrl =
-        new URL(
-          "reset-password.html",
-          window.location.href
-        ).href;
-
-      const { error } =
-        await supabaseClient.auth.resetPasswordForEmail(
-          email,
-          {
-            redirectTo: redirectUrl
-          }
-        );
-
-      if (error) {
-        throw error;
+      if (!phone || !/^[0-9]{6}$/.test(token)) {
+        showMessage(status, "Enter the valid phone number and the 6-digit SMS code.", "error");
+        return;
+      }
+      if (password.length < 8) {
+        showMessage(status, "Your new password must contain at least 8 characters.", "error");
+        return;
+      }
+      if (password !== confirm) {
+        showMessage(status, "The new passwords do not match.", "error");
+        return;
       }
 
-      showMessage(
-        message,
-        "If an account exists for that email, a password-reset link has been sent.",
-        "success"
-      );
+      button.disabled = true;
+      button.textContent = "Verifying...";
+      passwordResetInProgress = true;
+      try {
+        const { error: verifyError } = await supabaseClient.auth.verifyOtp({ phone, token, type: "sms" });
+        if (verifyError) throw verifyError;
+        const { error: updateError } = await supabaseClient.auth.updateUser({ password });
+        if (updateError) throw updateError;
+        showMessage(status, "Password changed successfully. You're now signed in; opening ZakiChat...", "success");
+        setTimeout(redirectToChats, 700);
+      } catch (error) {
+        showMessage(status, error.message || "Unable to reset the password. The code may be invalid or expired.", "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Verify code & change password";
+      }
+    });
 
-    } catch (error) {
-      console.error(
-        "Password reset error:",
-        error
-      );
+    document.getElementById("cancelPasswordReset")?.addEventListener("click", () => {
+      passwordResetInProgress = false;
+      panel.hidden = true;
+    });
+    return panel;
+  }
 
+  async function handleForgotPassword(event) {
+    event.preventDefault();
+    const panel = ensurePasswordResetPanel();
+    panel.hidden = false;
+    panel.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (!getPhoneE164()) {
       showMessage(
-        message,
-        error.message ||
-          "Unable to send the password-reset email.",
+        document.getElementById("passwordResetStatus"),
+        "Enter a valid phone number above, then request a verification code.",
         "error"
       );
+      document.getElementById("phone")?.focus();
     }
   }
 
@@ -965,6 +985,7 @@
 
       if (
         isLoginPage &&
+        !passwordResetInProgress &&
         session &&
         (
           event === "SIGNED_IN" ||
@@ -977,7 +998,7 @@
     }
   );
 
-  if (isSignupPage) {
+  if (isSignupPage || isLoginPage) {
     setupInternationalPhoneInput();
   }
 
