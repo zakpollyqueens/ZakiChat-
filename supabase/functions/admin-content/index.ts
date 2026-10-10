@@ -91,6 +91,26 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, notices: data || [] });
     }
 
+    if (action === "user-notices") {
+      const authorization = req.headers.get("Authorization") || "";
+      const userToken = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
+      if (!userToken) return json({ success: false, error: "A signed-in session is required." }, 401);
+      const { data: authData, error: authError } = await db.auth.getUser(userToken);
+      if (authError || !authData.user) return json({ success: false, error: "Your sign-in session is invalid or expired." }, 401);
+      const now = new Date().toISOString();
+      const { data, error } = await db.from("admin_system_notices")
+        .select("id, title, message, notice_type, priority, starts_at, ends_at, created_at")
+        .eq("is_active", true)
+        .eq("status", "published")
+        .in("visibility", ["public", "users"])
+        .or(`starts_at.is.null,starts_at.lte.${now}`)
+        .or(`ends_at.is.null,ends_at.gte.${now}`)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      if (error) throw error;
+      return json({ success: true, notices: data || [] });
+    }
+
     const admin = await verifySuperAdmin(clean(body.adminSessionToken, 500));
     if (!admin) return json({ success: false, error: "An active super-administrator session is required." }, 403);
 
