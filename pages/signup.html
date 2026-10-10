@@ -32,6 +32,44 @@
       </p>
     </div>
 
+    <section class="account-plan-showcase" aria-labelledby="accountPlanTitle">
+      <div class="account-plan-showcase-head">
+        <span class="section-label">CHOOSE YOUR ZAKICHAT</span>
+        <h2 id="accountPlanTitle">One app. Three ways to connect.</h2>
+        <p>Start free, or choose a plan with more ways to personalize and manage your conversations.</p>
+      </div>
+      <div class="account-plan-slides" id="accountPlanSlides">
+        <article class="account-plan-slide is-active" data-account-slide="0">
+          <div class="account-plan-icon">💬</div><span class="account-plan-badge">LOCAL ACCOUNT</span>
+          <h3>Local</h3><p>Everyday private chats with the essentials.</p>
+          <ul><li>Black, white and cyan themes</li><li>Core chat and group features</li><li>Standard file upload allowance</li></ul>
+          <button type="button" class="account-plan-cta" data-plan-choice="local">Create Local Account</button>
+        </article>
+        <article class="account-plan-slide" data-account-slide="1" hidden>
+          <div class="account-plan-icon">✨</div><span class="account-plan-badge">PERSONAL CUSTOM</span>
+          <h3>Customized Personal</h3><p>Make ZakiChat feel like yours.</p>
+          <ul><li>Expanded font and theme collections</li><li>Premium keyboard themes and chat styles</li><li>Higher attachment allowance, subject to upload limits</li></ul>
+          <button type="button" class="account-plan-cta premium" data-plan-choice="personal_monthly">Choose Personal · $2/month</button>
+        </article>
+        <article class="account-plan-slide" data-account-slide="2" hidden>
+          <div class="account-plan-icon">🏢</div><span class="account-plan-badge">BUSINESS WORKSPACE</span>
+          <h3>Customized Business</h3><p>A branded workspace for a business and its team.</p>
+          <ul><li>Business name, logo, email and profile</li><li>Staff invitations, roles and assignments</li><li>Shared tasks and business workspace tools</li></ul>
+          <button type="button" class="account-plan-cta business" data-plan-choice="business_monthly">Choose Business · $10/month</button>
+        </article>
+      </div>
+      <div class="account-plan-controls" aria-label="Account plan slides">
+        <button type="button" id="accountPlanPrevious" aria-label="Previous account plan">‹</button>
+        <div class="account-plan-dots">
+          <button type="button" class="is-active" data-plan-slide-to="0" aria-label="Show Local plan"></button>
+          <button type="button" data-plan-slide-to="1" aria-label="Show Personal plan"></button>
+          <button type="button" data-plan-slide-to="2" aria-label="Show Business plan"></button>
+        </div>
+        <button type="button" id="accountPlanNext" aria-label="Next account plan">›</button>
+      </div>
+      <p class="account-plan-note">Paid plans require a signed-in account and verified payment before premium features are activated. Selecting a plan saves your choice and opens its upgrade page after phone verification.</p>
+    </section>
+
     <div class="signup-progress" aria-label="Signup progress">
       <div class="signup-progress-track">
         <div id="signupProgressBar" class="signup-progress-bar"></div>
