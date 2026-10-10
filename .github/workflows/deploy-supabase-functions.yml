@@ -29,7 +29,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@ab058987d8d6c725971f6cf9d0b5c98467e30bd1
         with:
-          version: latest
+          version: 2.58.5
 
       - name: Deploy two-step (retry transient deployment conflicts)
         shell: bash
