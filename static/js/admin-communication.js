@@ -4,12 +4,49 @@
   const SUPABASE_URL = "https://xdpevlurgtvgduwzyoue.supabase.co";
   const SUPABASE_KEY = "sb_publishable_aMRHrU5gtNmpsytQNaz61w_Yc-yh_Pk";
   const TOKEN_KEY = "zakichat-admin-session";
+  const CONTENT_URL = `${SUPABASE_URL}/functions/v1/admin-content`;
+  const TWO_STEP_URL = `${SUPABASE_URL}/functions/v1/two-step`;
 
   const $ = id => document.getElementById(id);
 
   const token = () => localStorage.getItem(TOKEN_KEY);
 
   async function rpc(name, params = {}) {
+    const actionMap = {
+      admin_communication_overview: "admin-communication-overview",
+      admin_list_conversations: "admin-communication-conversations",
+      admin_conversation_details: "admin-communication-conversation-details",
+      admin_list_messages: "admin-communication-messages"
+    };
+    if (actionMap[name]) {
+      const body = {
+        action: actionMap[name],
+        adminSessionToken: token()
+      };
+      if (name === "admin_list_conversations") {
+        body.search = params.p_search || "";
+        body.type = params.p_type || "all";
+      } else if (name === "admin_conversation_details" || name === "admin_list_messages") {
+        body.conversationId = params.p_conversation_id;
+      }
+      if (name === "admin_list_messages") body.limit = params.p_limit || 50;
+
+      const response = await fetch(CONTENT_URL, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true) {
+        throw new Error(result.error || "Protected administrator request failed.");
+      }
+      return result.result;
+    }
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/rpc/${name}`,
       {
@@ -22,18 +59,10 @@
         body: JSON.stringify(params)
       }
     );
-
     const data = await response.json().catch(() => null);
-
     if (!response.ok) {
-      throw new Error(
-        data?.message ||
-        data?.hint ||
-        data?.error ||
-        "Protected administrator request failed."
-      );
+      throw new Error(data?.message || data?.hint || data?.error || "Protected administrator request failed.");
     }
-
     return data;
   }
 
@@ -66,12 +95,20 @@
     }
 
     try {
-      return await rpc(
-        "admin_communication_session_valid",
-        {
-          p_token: t
-        }
-      ) === true;
+      const response = await fetch(TWO_STEP_URL, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          action: "admin-session-verify",
+          adminSessionToken: t
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      return response.ok && (data.success === true || data.valid === true || data.active === true);
 
     } catch (error) {
       console.error(
