@@ -252,6 +252,7 @@
     }
 
     if (!Array.isArray(updates) || updates.length === 0) {
+      container.innerHTML = '<p class="empty-state">No public updates have been published yet.</p>';
       return;
     }
 
@@ -406,6 +407,34 @@
         .map(note => note.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, '').trim())
         .filter(Boolean);
       renderNotes(notes);
+
+      try {
+        const noticeResponse = await fetch(
+          `${config.supabaseUrl}/functions/v1/admin-content`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              apikey: config.supabaseKey,
+              Authorization: `Bearer ${config.supabaseKey}`
+            },
+            body: JSON.stringify({ action: 'public-notices' })
+          }
+        );
+        const noticePayload = await noticeResponse.json().catch(() => ({}));
+        if (!noticeResponse.ok || noticePayload.success !== true) {
+          throw new Error(noticePayload.error || 'Unable to load public notices.');
+        }
+        renderPublicUpdates((noticePayload.notices || []).map(notice => ({
+          type: notice.notice_type,
+          date: notice.created_at,
+          title: notice.title,
+          message: notice.message
+        })));
+      } catch (noticeError) {
+        console.warn('Unable to load public updates:', noticeError);
+        renderPublicUpdates([]);
+      }
     } catch (error) {
       console.error('Unable to load published ZakiChat releases:', error);
       renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: '' });
