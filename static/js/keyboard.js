@@ -6,6 +6,7 @@
   const defaults = {
     theme: "dark",
     keyboardMode: "zaki",
+    keyboardProvider: "gboard",
     keySize: "medium",
     numberRow: false,
     emojiRow: true,
@@ -49,13 +50,39 @@
 
   let settings = load();
   let hasPremium = false;
+  const PREMIUM_PROVIDERS = ["swiftkey", "samsung", "fleksy", "grammarly"];
   const BASIC_THEMES = ["dark", "light", "cyan"];
   async function verifyPlan() {
     try {
       await window.ZakiChatAppearance?.loadPlan?.();
       hasPremium = Boolean(window.ZakiChatAppearance?.isPremium?.());
     } catch (error) { console.warn("Unable to verify keyboard theme entitlement", error); }
+    // A staff member receives Business keyboard entitlements through the active
+    // workspace owner's subscription, never through a client-side flag alone.
+    try {
+      const client = window.ZakiChatAuth?.client;
+      const { data: sessionData } = await client?.auth?.getSession?.() || {};
+      const userId = sessionData?.session?.user?.id;
+      if (!hasPremium && userId && client) {
+        const { data: memberships } = await client.from("business_members")
+          .select("business_id").eq("user_id", userId).eq("status", "active");
+        for (const membership of memberships || []) {
+          const { data: workspace } = await client.from("business_workspaces")
+            .select("owner_user_id").eq("id", membership.business_id).maybeSingle();
+          if (!workspace?.owner_user_id) continue;
+          const { data: upgrade } = await client.from("user_upgrades")
+            .select("plan").eq("user_id", workspace.owner_user_id).eq("plan", "business_monthly")
+            .eq("status", "active").gt("expires_at", new Date().toISOString())
+            .order("expires_at", { ascending: false }).limit(1).maybeSingle();
+          if (upgrade) { hasPremium = true; break; }
+        }
+      }
+    } catch (error) { console.warn("Unable to verify business keyboard entitlement", error); }
     if (!hasPremium && !BASIC_THEMES.includes(settings.theme)) { settings.theme = "dark"; save(settings); }
+    if (!hasPremium && PREMIUM_PROVIDERS.includes(settings.keyboardProvider)) {
+      settings.keyboardProvider = "gboard"; save(settings);
+    }
+    apply();
   }
 
   function apply() {
@@ -73,6 +100,12 @@
     const modeSystem = $("#keyboardModeSystem");
     if (modeZaki) modeZaki.checked = settings.keyboardMode !== "system";
     if (modeSystem) modeSystem.checked = settings.keyboardMode === "system";
+    document.querySelectorAll('input[name="keyboardProvider"]').forEach(input => {
+      input.checked = input.value === (settings.keyboardProvider || "gboard");
+      const option = input.closest("[data-provider-option]");
+      option?.classList.toggle("premium-locked", !hasPremium);
+      input.setAttribute("aria-label", input.value + (hasPremium ? "" : " (locked; Customized plan required)"));
+    });
 
     const keySize = $("#keySize");
     const numberRow = $("#numberRow");
@@ -137,10 +170,31 @@
   }
 
   function bind() {
+    document.querySelectorAll('input[name="keyboardProvider"]').forEach(input => {
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        if (PREMIUM_PROVIDERS.includes(input.value) && !hasPremium) {
+          input.checked = false;
+          if (confirm("This keyboard preference is included with Customized Personal or Customized Business. View upgrade plans?")) {
+            window.location.href = "about.html?upgrade=personal_monthly#paid-upgrades";
+          }
+          apply();
+          return;
+        }
+        settings.keyboardProvider = input.value;
+        settings.keyboardMode = "system";
+        save(settings);
+        apply();
+        updateStatus("Preference saved. Select this keyboard in Android settings if it is installed.");
+      });
+    });
+
     document.querySelectorAll('input[name="keyboardMode"]').forEach(input => {
       input.addEventListener("change", () => {
         if (!input.checked) return;
         settings.keyboardMode = input.value === "system" ? "system" : "zaki";
+        if (settings.keyboardMode === "zaki") settings.keyboardProvider = "zaki";
+        else if (!settings.keyboardProvider || settings.keyboardProvider === "zaki") settings.keyboardProvider = "gboard";
         save(settings);
         apply();
         updateStatus(settings.keyboardMode === "system"
