@@ -21,7 +21,7 @@ $("businessWorkspaceName").textContent=workspace.business_name;$("businessWorksp
 const img=$("businessLogoPreview");if(workspace.logo_url){img.src=workspace.logo_url;img.hidden=false;}else{img.removeAttribute("src");img.hidden=true;}
 fillProfile("edit",workspace);
 const canManage=(isOwner&&hasBusinessPlan)||(memberRole==="manager"&&hasBusinessPlan);
-$("businessProfilePanel").hidden=!isOwner;$("businessInviteForm").hidden=!canManage;$("businessTaskForm").hidden=!canManage;
+$("businessProfilePanel").hidden=!isOwner||!hasBusinessPlan;$("businessInviteForm").hidden=!canManage;$("businessTaskForm").hidden=!canManage;
 $("businessInvitations").hidden=true;
 await Promise.all([loadMembers(),loadTasks()]);
 }
