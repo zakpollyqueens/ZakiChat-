@@ -56,7 +56,7 @@ async function verify(){
   const t=token();
   if(!t)return false;
 
-  const expiry=Number(localStorage.getItem(EXPIRY_KEY)||0);
+  const expiry=(Date.parse(localStorage.getItem(EXPIRY_KEY)||"")||Number(localStorage.getItem(EXPIRY_KEY)||0));
 
   if(expiry&&Date.now()>=expiry){
     clearSession();
@@ -82,7 +82,7 @@ async function signOut(){
           "Content-Type":"application/json",
           "Authorization":"Bearer "+t
         },
-        body:JSON.stringify({action:"admin-session-revoke"})
+        body:JSON.stringify({action:"admin-session-revoke",adminSessionToken:token})
       });
     }
   }catch(e){}
