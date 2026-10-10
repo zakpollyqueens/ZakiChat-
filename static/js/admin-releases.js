@@ -311,6 +311,36 @@
     renderReleases();
   }
 
+  async function importLatestZakiTechRelease() {
+    const button = $("importZakiTechRelease");
+    const session = getSession();
+    if (!session.token) {
+      setStatus("Your administrator session is missing. Sign in again.", true);
+      return;
+    }
+    if (!window.confirm("Import and publish the latest already-published ZakiTech build into ZakiChat Release Management?")) return;
+    button.disabled = true;
+    button.textContent = "Importing release…";
+    setStatus("Verifying administrator access and transferring the published package from ZakiTech…");
+    try {
+      const response = await fetch("https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-zakichat-bridge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "sync-latest-release", adminSessionToken: session.token })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true) throw new Error(result.error || "Could not import the ZakiTech release.");
+      setStatus(result.message || "ZakiTech release imported successfully.");
+      await loadReleases();
+    } catch (error) {
+      console.error("ZakiTech release import failed:", error);
+      setStatus(error.message || "ZakiTech release import failed.", true);
+    } finally {
+      button.disabled = false;
+      button.textContent = "Import latest published ZakiTech build ↗";
+    }
+  }
+
   function clearFilters() {
     $("searchInput").value = "";
     $("channelFilter").value = "all";
@@ -340,6 +370,7 @@
 
   $("signOutBtn")?.addEventListener("click", signOut);
   $("refreshBtn")?.addEventListener("click", () => loadReleases().catch(error => setStatus(error.message, true)));
+  $("importZakiTechRelease")?.addEventListener("click", importLatestZakiTechRelease);
   $("previewBtn")?.addEventListener("click", previewRelease);
   $("closePreviewBtn")?.addEventListener("click", closePreview);
   $("releaseForm")?.addEventListener("submit", saveRelease);
