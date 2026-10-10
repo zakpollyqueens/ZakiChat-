@@ -144,7 +144,11 @@
     const list = $("historyList");
     if (!list) return;
     const filter = $("historyFilter")?.value || "all";
-    const filtered = campaigns.filter(item => filter === "all" || item.type === filter);
+    const query = ($("searchInput")?.value || "").trim().toLowerCase();
+    const filtered = campaigns.filter(item =>
+      (filter === "all" || item.type === filter) &&
+      (!query || [item.title, item.message, item.type, item.audience].some(value => String(value || "").toLowerCase().includes(query)))
+    );
     if (!filtered.length) {
       list.innerHTML = '<div class="empty-card"><span>◎</span><h3>No broadcasts found</h3><p>Sent administrator notifications will appear here.</p></div>';
       return;
@@ -207,6 +211,7 @@
   $("notificationAudience")?.addEventListener("change", toggleSelectedRecipients);
   $("clearFiltersBtn")?.addEventListener("click", clearFilters);
   $("historyFilter")?.addEventListener("change", renderHistory);
+  $("searchInput")?.addEventListener("input", renderHistory);
   $("previewModal")?.addEventListener("click", event => {
     if (event.target === $("previewModal")) closePreview();
   });
