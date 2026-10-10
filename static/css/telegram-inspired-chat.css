@@ -134,3 +134,24 @@ body.chat-page .message-composer#message-composer [hidden]{
     padding-bottom:max(7px,env(safe-area-inset-bottom));
   }
 }
+
+
+/* Telegram-style archive folder and swipe-ready conversation rows. */
+body.chat-page .archived-folder-row{
+  width:100%;display:flex;align-items:center;gap:13px;padding:13px 15px;
+  border:0;border-bottom:1px solid var(--zt-line);background:transparent;
+  color:var(--zt-peach);text-align:left;cursor:pointer;font:inherit;
+  min-height:72px;transition:background .18s;
+}
+body.chat-page .archived-folder-row:hover,
+body.chat-page .archived-folder-row:focus-visible{background:#261d18}
+body.chat-page .archived-folder-icon{
+  display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;
+  border-radius:50%;background:#342a3c;color:#c6c8ff;font-size:23px;
+}
+body.chat-page .archived-folder-label{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+body.chat-page .archived-folder-label strong{font-size:1rem;font-weight:650}
+body.chat-page .archived-folder-label small{color:var(--zt-muted);font-size:.83rem}
+body.chat-page .archived-folder-chevron{font-size:27px;color:var(--zt-muted)}
+body.chat-page .archived-folder-back .archived-folder-icon{background:#2d2924;color:var(--zt-peach)}
+body.chat-page .conversation{touch-action:pan-y;user-select:none;-webkit-user-select:none}
