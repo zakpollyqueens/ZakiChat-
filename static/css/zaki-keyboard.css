@@ -377,3 +377,12 @@
     transition: none !important;
   }
 }
+
+.zaki-keyboard[data-theme="cyan"]{background:linear-gradient(180deg,#082538,#061826);border-top:1px solid rgba(34,211,238,.24)}
+.zaki-keyboard[data-theme="cyan"] .zaki-key{background:#12394d;color:#e9fbff;border-color:rgba(103,232,249,.14)}
+.zaki-keyboard[data-theme="aurora"]{background:linear-gradient(180deg,#10272b,#07151a)}
+.zaki-keyboard[data-theme="aurora"] .zaki-key{background:#17363a;color:#effff6}
+.zaki-keyboard[data-theme="rose"]{background:linear-gradient(180deg,#2b1828,#1d111c)}
+.zaki-keyboard[data-theme="rose"] .zaki-key{background:#3a2035;color:#fff1f6}
+.zaki-keyboard[data-theme="sunset"]{background:linear-gradient(180deg,#321d16,#21130f)}
+.zaki-keyboard[data-theme="sunset"] .zaki-key{background:#4a291b;color:#fff7ed}
