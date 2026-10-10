@@ -4581,3 +4581,105 @@ body.zaki-keyboard-open .message-composer#message-composer {
   .message-composer .send-message-button { width: 32px; min-width: 32px; flex-basis: 32px; }
   .message-composer { gap: 1px; }
 }
+
+
+/* Telegram-like date grouping and interactive profile photo */
+.date-divider {
+  position: sticky;
+  top: 7px;
+  z-index: 2;
+  width: fit-content;
+  max-width: 85%;
+  margin: 8px auto 12px;
+  color: #e2eaf2;
+  font-size: 12px;
+  line-height: 1.2;
+  pointer-events: none;
+}
+.date-divider::before,
+.date-divider::after { display: none; }
+.date-divider span {
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(28, 43, 57, .88);
+  box-shadow: 0 1px 2px rgba(0,0,0,.12);
+  backdrop-filter: blur(8px);
+}
+.chat-user .conversation-avatar { cursor: pointer; }
+.chat-user-details { cursor: pointer; min-width: 0; }
+.chat-user-details strong,
+.chat-user-details span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-header-actions button,
+.chat-back,
+.message-composer button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color .14s ease, transform .12s ease, opacity .14s ease;
+}
+.chat-header-actions button:focus-visible,
+.chat-back:focus-visible,
+.message-composer button:focus-visible,
+.chat-user-avatar:focus-visible {
+  outline: 2px solid #62b0ff;
+  outline-offset: 2px;
+}
+.chat-header-actions button.is-pressed,
+.chat-back.is-pressed,
+.message-composer button.is-pressed { transform: scale(.94); }
+.message-composer button:disabled { opacity: .45; cursor: wait; }
+.zaki-avatar-viewer[hidden] { display: none !important; }
+.zaki-avatar-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(5, 12, 19, .96);
+  color: #f4f7fb;
+}
+.zaki-avatar-viewer-close {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top));
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+}
+.zaki-avatar-viewer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: min(100%, 520px);
+}
+.zaki-avatar-viewer-image {
+  width: min(78vw, 420px);
+  height: min(78vw, 420px);
+  border-radius: 50%;
+  background: #17212b center / contain no-repeat;
+  box-shadow: 0 14px 50px rgba(0,0,0,.3);
+}
+.zaki-avatar-viewer-name { font-size: 18px; }
+.zaki-avatar-viewer-profile {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 22px;
+  background: #202d3a;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+body.zaki-avatar-viewer-open { overflow: hidden; }
+@media (max-width: 420px) {
+  .chat-user .conversation-avatar { width: 39px; height: 39px; flex-basis: 39px; }
+  .chat-user-details strong { max-width: 35vw; }
+  .chat-user-details span { max-width: 35vw; font-size: 11px; }
+}
