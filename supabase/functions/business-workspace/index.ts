@@ -70,6 +70,15 @@ Deno.serve(async (req: Request) => {
         .eq("id", invitationId).eq("phone", phone).eq("status", "invited").maybeSingle();
       if (lookupError) throw lookupError;
       if (!invitation) return respond({ success: false, error: "No pending invitation matches this signed-in phone number." }, 404);
+      const { data: ownerWorkspace, error: ownerWorkspaceError } = await admin.from("business_workspaces")
+        .select("owner_user_id").eq("id", invitation.business_id).maybeSingle();
+      if (ownerWorkspaceError) throw ownerWorkspaceError;
+      if (!ownerWorkspace) return respond({ success: false, error: "This business workspace is unavailable." }, 404);
+      const { data: ownerPlan, error: ownerPlanError } = await admin.from("user_upgrades")
+        .select("id").eq("user_id", ownerWorkspace.owner_user_id).eq("plan", "business_monthly")
+        .eq("status", "active").gt("expires_at", new Date().toISOString()).limit(1).maybeSingle();
+      if (ownerPlanError) throw ownerPlanError;
+      if (!ownerPlan) return respond({ success: false, error: "The business subscription is expired. The owner must renew it before staff can join." }, 403);
       if (invitation.user_id && invitation.user_id !== user.id) {
         return respond({ success: false, error: "This invitation has already been accepted by another account." }, 409);
       }
