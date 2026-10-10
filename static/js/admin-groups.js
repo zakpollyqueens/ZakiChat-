@@ -65,7 +65,8 @@ async function verifyAdminSession(){
 async function secureSignOut(){
   const token=getToken();
   try{
-    if(token)await fetch(FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({action:"admin-session-revoke",adminSessionToken:token})});
+    const cfg=window.ZakiChatConfig;
+    if(token&&cfg?.supabaseKey)await fetch(FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":cfg.supabaseKey,"Authorization":"Bearer "+cfg.supabaseKey},body:JSON.stringify({action:"admin-session-revoke",adminSessionToken:token})});
   }catch(error){console.warn("Remote admin sign-out failed:",error);}
   clearAdminSession();
   location.href="admin.html";
