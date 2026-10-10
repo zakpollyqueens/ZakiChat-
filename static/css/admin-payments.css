@@ -454,3 +454,12 @@ justify-content:space-between;
   .record{grid-template-columns:1fr 1fr}
   .admin-footer{display:block;line-height:1.8}
 }
+
+
+.upgrade-request-card{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px;margin:12px 0;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.025);min-width:0}
+.upgrade-request-card>div:first-child{display:grid;gap:7px;min-width:0}
+.upgrade-request-card strong,.upgrade-request-card span,.upgrade-request-card small{overflow-wrap:anywhere}
+.upgrade-request-card small{opacity:.72}
+.upgrade-request-actions{display:flex;gap:8px;flex-wrap:wrap}
+.upgrade-request-actions button{border:1px solid rgba(120,180,255,.3);border-radius:9px;padding:8px 11px;background:rgba(80,150,255,.08);color:inherit;cursor:pointer}
+@media(max-width:640px){.upgrade-request-card{flex-direction:column}.upgrade-request-actions{width:100%}.upgrade-request-actions button{flex:1}}
