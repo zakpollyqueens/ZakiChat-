@@ -187,13 +187,39 @@
         keyboardOpen
       );
 
-      /* The shell already follows visualViewport height. Offset zero avoids double-lifting the fixed composer. */
-      this.composer.style.setProperty("--zaki-composer-bottom", "0px");
+      /*
+       * Android WebViews differ: some move fixed elements with the visual
+       * viewport, while others leave them at the layout-viewport bottom.
+       * Measure the composer instead of assuming either behaviour. Adding
+       * the current offset back gives the unadjusted bottom edge, preventing
+       * the correction from oscillating across resize events.
+       */
+      this.syncComposerBottom(visibleBottom);
 
       if (keyboardOpen) {
         this.scrollMessagesToBottom();
         this.keepInputVisible();
       }
+    },
+
+    syncComposerBottom(visibleBottom) {
+      if (!this.composer) return;
+      requestAnimationFrame(() => {
+        if (!this.composer?.isConnected) return;
+        const currentOffset = Number.parseFloat(
+          this.composer.style.getPropertyValue("--zaki-composer-bottom")
+        ) || 0;
+        const rect = this.composer.getBoundingClientRect();
+        const unadjustedBottom = rect.bottom + currentOffset;
+        const requiredOffset = Math.max(
+          0,
+          Math.round(unadjustedBottom - visibleBottom)
+        );
+        const nextValue = `${requiredOffset}px`;
+        if (this.composer.style.getPropertyValue("--zaki-composer-bottom") !== nextValue) {
+          this.composer.style.setProperty("--zaki-composer-bottom", nextValue);
+        }
+      });
     },
 
     updateButtons() {
