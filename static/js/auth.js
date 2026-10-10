@@ -471,7 +471,7 @@
         showMessage(
           message,
           "A one-time registration fee of $" + Number(feeData.feeUsd).toFixed(2) +
-            " USD is required for your country. The payment checkout is not configured yet, so your account has not been created. Please try again once registration payments are enabled.",
+            " USD is required for your country. Automatic checkout is not configured yet, so your account has not been created. Your pending request has been recorded. Contact ZakiChat support for approved payment instructions, and retry signup with this phone after your payment is verified.",
           "error"
         );
         setLoading(button, false, "Create Account");
