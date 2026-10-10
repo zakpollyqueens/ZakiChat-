@@ -14,7 +14,7 @@ const json = (data: unknown, status = 200) =>
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "authorization, content-type",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
     },
   });
@@ -37,13 +37,14 @@ async function verifyAdminSession(token: string) {
 
   const { data: session, error: sessionError } = await db
     .from("admin_sessions")
-    .select("admin_user_id,expires_at")
+    .select("admin_user_id,expires_at,revoked_at")
     .eq("token_hash", tokenHash)
     .maybeSingle();
 
   if (sessionError || !session) return null;
 
   if (
+    session.revoked_at ||
     new Date(session.expires_at).getTime() <= Date.now()
   ) {
     return null;
@@ -55,7 +56,7 @@ async function verifyAdminSession(token: string) {
     .eq("user_id", session.admin_user_id)
     .maybeSingle();
 
-  if (adminError || !adminRow?.active) {
+  if (adminError || !adminRow?.active || adminRow.role !== "super_admin") {
     return null;
   }
 
