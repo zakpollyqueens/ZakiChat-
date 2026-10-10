@@ -250,22 +250,20 @@
 
     syncComposerBottom(visibleBottom) {
       if (!this.composer) return;
-      requestAnimationFrame(() => {
-        if (!this.composer?.isConnected) return;
-        const currentOffset = Number.parseFloat(
-          this.composer.style.getPropertyValue("--zaki-composer-bottom")
-        ) || 0;
-        const rect = this.composer.getBoundingClientRect();
-        const unadjustedBottom = rect.bottom + currentOffset;
-        const requiredOffset = Math.max(
-          0,
-          Math.round(unadjustedBottom - visibleBottom)
-        );
-        const nextValue = `${requiredOffset}px`;
-        if (this.composer.style.getPropertyValue("--zaki-composer-bottom") !== nextValue) {
-          this.composer.style.setProperty("--zaki-composer-bottom", nextValue);
-        }
-      });
+      const focused = document.activeElement === this.input;
+      const vv = window.visualViewport;
+      const visualBottom = vv
+        ? Math.round(vv.height + Math.max(0, vv.offsetTop || 0))
+        : Math.round(window.innerHeight || visibleBottom || 0);
+      const keyboardHeight = focused
+        ? Math.max(0, Math.round(this.baselineHeight - visualBottom))
+        : 0;
+      // CSS uses this value directly. Do not infer the offset from the
+      // composer's own rectangle: that creates a feedback loop on WebView.
+      this.composer.style.setProperty(
+        "--zaki-composer-bottom",
+        `${keyboardHeight}px`
+      );
     },
 
     updateButtons() {
