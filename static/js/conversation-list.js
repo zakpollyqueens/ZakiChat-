@@ -87,7 +87,7 @@ back.className="archived-folder-row archived-folder-back";
 back.innerHTML='<span class="archived-folder-icon" aria-hidden="true">←</span><span class="archived-folder-label"><strong>Back to chats</strong><small>Return to your conversations</small></span>';
 back.addEventListener("click",()=>{showArchived=false;render(window.ZakiConversations.conversations||[]);});
 list.appendChild(back);
-}else if(archived.length){
+}else{
 const folder=document.createElement("button");
 folder.type="button";
 folder.className="archived-folder-row";
