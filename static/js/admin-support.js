@@ -6,6 +6,8 @@
   const CONTENT_URL =
     "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/admin-content";
   let supportRows = [];
+  const syncedToZakiTech = new Set();
+  const ZAKITECH_BRIDGE_URL = "https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-zakichat-bridge";
 
   const TOKEN_KEY = "zakichat-admin-session";
   const ROLE_KEY = "zakichat-admin-role";
@@ -216,6 +218,7 @@
         <div class="request-actions">
           ${row.status !== "read" ? `<button type="button" data-request-status="read" data-request-id="${escapeHtml(row.id)}">Mark Read</button>` : ""}
           ${row.status !== "resolved" ? `<button type="button" data-request-status="resolved" data-request-id="${escapeHtml(row.id)}">Resolve</button>` : `<button type="button" data-request-status="open" data-request-id="${escapeHtml(row.id)}">Reopen</button>`}
+          ${'<button type="button" data-sync-zakitech="' + escapeHtml(row.id) + '" ' + (syncedToZakiTech.has(String(row.id)) ? "disabled" : "") + ">" + (syncedToZakiTech.has(String(row.id)) ? "Synced to ZakiTech" : "Send to ZakiTech") + "</button>"}
         </div>
       </article>
     `).join("");
@@ -226,6 +229,40 @@
     list.querySelectorAll("[data-request-status]").forEach(button => {
       button.addEventListener("click", () => updateRequestStatus(button.dataset.requestId, button.dataset.requestStatus));
     });
+    list.querySelectorAll("[data-sync-zakitech]").forEach(button => {
+      button.addEventListener("click", () => syncToZakiTech(button.dataset.syncZakitech, button));
+    });
+  }
+
+  async function syncToZakiTech(id, button) {
+    const row = supportRows.find(item => String(item.id) === String(id));
+    if (!row) return;
+    button.disabled = true;
+    button.textContent = "Sending securely…";
+    try {
+      const response = await fetch(ZAKITECH_BRIDGE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          adminSessionToken: Admin.token(),
+          external_message_id: String(row.id),
+          sender_name: row.user?.full_name || row.user?.username || row.user?.phone || "ZakiChat user",
+          sender_email: row.user?.email || "",
+          subject: row.subject || "ZakiChat support request",
+          message: row.message || "",
+          received_at: row.created_at || ""
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true) throw new Error(result.error || "Could not send this request to ZakiTech.");
+      syncedToZakiTech.add(String(row.id));
+      $("request-state").textContent = result.message || "Support request sent to ZakiTech.";
+      renderRequests();
+    } catch (error) {
+      button.disabled = false;
+      button.textContent = "Retry ZakiTech sync";
+      $("request-state").textContent = error.message || "ZakiTech integration failed.";
+    }
   }
 
   async function loadRequests() {
