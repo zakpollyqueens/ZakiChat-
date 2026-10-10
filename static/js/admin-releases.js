@@ -16,18 +16,21 @@
     return {
       token: localStorage.getItem(SESSION_KEY),
       role: localStorage.getItem(ROLE_KEY),
-      expiry: Number(localStorage.getItem(EXPIRY_KEY) || 0)
+      expiry: localStorage.getItem(EXPIRY_KEY) || ""
     };
   }
 
   async function verifyAdminSession() {
     const session = getSession();
 
+    const expiryTime = Date.parse(session.expiry) || Number(session.expiry);
+
     if (
       !session.token ||
       session.role !== "admin" ||
       !session.expiry ||
-      Date.now() >= session.expiry
+      !Number.isFinite(expiryTime) ||
+      Date.now() >= expiryTime
     ) {
       return false;
     }
@@ -37,9 +40,12 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.token}`
+          "apikey": window.ZakiChatConfig?.supabaseKey || ""
         },
-        body: JSON.stringify({ action: "admin-session-verify" })
+        body: JSON.stringify({
+          action: "admin-session-verify",
+          adminSessionToken: session.token
+        })
       });
 
       if (!response.ok) return false;
@@ -53,11 +59,31 @@
     }
   }
 
-  function signOut() {
-    localStorage.removeItem(SESSION_KEY);
-    localStorage.removeItem(ROLE_KEY);
-    localStorage.removeItem(EXPIRY_KEY);
-    window.location.href = "admin-control.html";
+  async function signOut() {
+    const token = localStorage.getItem(SESSION_KEY);
+
+    try {
+      if (token) {
+        await fetch(FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": window.ZakiChatConfig?.supabaseKey || ""
+          },
+          body: JSON.stringify({
+            action: "admin-session-revoke",
+            adminSessionToken: token
+          })
+        });
+      }
+    } catch (error) {
+      console.warn("Remote admin sign-out failed:", error);
+    } finally {
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(ROLE_KEY);
+      localStorage.removeItem(EXPIRY_KEY);
+      window.location.href = "admin.html";
+    }
   }
 
   function previewRelease() {
