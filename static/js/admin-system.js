@@ -18,7 +18,7 @@ async function adminSystemRequest(body) {
   const response = await fetch(ADMIN_SYSTEM_CONFIG.functionUrl, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
       "apikey": window.ZakiChatConfig?.supabaseKey || ""
     },
     body: JSON.stringify(body)
