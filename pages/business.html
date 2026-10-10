@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>Business Workspace | ZakiChat</title>
+  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="../static/css/business.css">
+</head>
+<body class="business-page">
+  <main class="business-shell">
+    <header class="business-header">
+      <a href="settings.html" class="business-back">← Settings</a>
+      <div><span class="business-eyebrow">ZAKICHAT BUSINESS</span><h1>Business workspace</h1><p>Manage your brand, people and work in one place.</p></div>
+      <a href="chats.html" class="business-open-chat">Open chats ↗</a>
+    </header>
+    <div id="businessNotice" class="business-notice" role="status" aria-live="polite"></div>
+    <section id="businessLocked" class="business-panel" hidden>
+      <div class="business-lock-icon">🏢</div><span class="business-eyebrow">BUSINESS PLAN</span>
+      <h2>Turn ZakiChat into your team workspace</h2>
+      <p>Customized Business includes a business profile, team invitations, role-based access and task assignments. A verified active Business subscription is required to create and manage a workspace.</p>
+      <a class="business-primary" href="about.html?upgrade=business_monthly#paid-upgrades">Explore Customized Business · $10/month</a>
+      <p class="business-muted">Payment checkout is not yet configured. This page will not activate a paid plan or charge you until a payment provider is connected and verified.</p>
+    </section>
+    <section id="businessInvitations" class="business-panel" hidden>
+      <div class="business-section-heading"><div><span class="business-eyebrow">INVITATIONS</span><h2>Business invitations</h2></div></div>
+      <div id="businessInvitationList"></div>
+    </section>
+    <section id="businessSetup" class="business-panel" hidden>
+      <div class="business-section-heading"><div><span class="business-eyebrow">FIRST STEP</span><h2>Create your business profile</h2><p>This profile represents the business, not your personal display name.</p></div></div>
+      <form id="businessProfileForm" class="business-form">
+        <label>Business name<input id="businessName" required minlength="2" maxlength="120" placeholder="e.g. Zakmolanitech Solutions"></label>
+        <label>Business title / industry<input id="businessTitle" maxlength="120" placeholder="e.g. Technology and Communications"></label>
+        <label>Business email<input id="businessEmail" type="email" required maxlength="254" placeholder="business@example.com"></label>
+        <label>About the business<textarea id="businessDescription" rows="3" maxlength="1200" placeholder="What does your business do?"></textarea></label>
+        <label>Business logo<input id="businessLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small>PNG, JPG, WEBP or SVG · maximum 5 MB</small></label>
+        <button class="business-primary" type="submit">Create Business Workspace</button>
+      </form>
+    </section>
+    <section id="businessWorkspace" hidden>
+      <div class="business-overview business-panel">
+        <div class="business-brand-row"><img id="businessLogoPreview" alt="Business logo" hidden><div><span class="business-eyebrow">ACTIVE WORKSPACE</span><h2 id="businessWorkspaceName">Business</h2><p id="businessWorkspaceTitle"></p></div></div>
+        <p id="businessWorkspaceDescription"></p>
+        <div class="business-metrics"><div><strong id="businessMemberCount">0</strong><span>Team members</span></div><div><strong id="businessOpenTasks">0</strong><span>Open tasks</span></div><div><strong id="businessCompletedTasks">0</strong><span>Completed tasks</span></div></div>
+      </div>
+      <section id="businessProfilePanel" class="business-panel">
+        <div class="business-section-heading"><div><span class="business-eyebrow">BRAND SETTINGS</span><h2>Business profile</h2></div></div>
+        <form id="businessUpdateForm" class="business-form">
+          <label>Business name<input id="editBusinessName" required minlength="2" maxlength="120"></label>
+          <label>Business title / industry<input id="editBusinessTitle" maxlength="120"></label>
+          <label>Business email<input id="editBusinessEmail" type="email" required maxlength="254"></label>
+          <label>About the business<textarea id="editBusinessDescription" rows="3" maxlength="1200"></textarea></label>
+          <label>Replace logo<input id="editBusinessLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small>Optional · maximum 5 MB</small></label>
+          <button class="business-primary" type="submit">Save Business Profile</button>
+        </form>
+      </section>
+      <section class="business-panel">
+        <div class="business-section-heading"><div><span class="business-eyebrow">PEOPLE</span><h2>Staff and roles</h2><p>Invite a staff member using their ZakiChat phone number in international format.</p></div></div>
+        <form id="businessInviteForm" class="business-form business-inline-form">
+          <label>Staff phone number<input id="staffPhone" type="tel" placeholder="+2567XXXXXXXX" required></label>
+          <label>Staff name<input id="staffName" maxlength="100" placeholder="Staff member name"></label>
+          <label>Staff email (optional)<input id="staffEmail" type="email" maxlength="254" placeholder="staff@example.com"></label>
+          <label>Role<select id="staffRole"><option value="staff">Staff</option><option value="manager">Manager</option><option value="viewer">Viewer</option></select></label>
+          <button class="business-primary" type="submit">Invite Staff</button>
+        </form>
+        <p class="business-muted">Invitations are linked to the exact phone number. The invited person must sign in with that number and accept the invitation in their Business Workspace page.</p>
+        <div id="businessMemberList" class="business-list"></div>
+      </section>
+      <section class="business-panel">
+        <div class="business-section-heading"><div><span class="business-eyebrow">WORKFLOW</span><h2>Team tasks</h2><p>Assign work, track progress and see what is due.</p></div></div>
+        <form id="businessTaskForm" class="business-form">
+          <label>Task title<input id="taskTitle" required minlength="2" maxlength="180" placeholder="What needs to be done?"></label>
+          <label>Description<textarea id="taskDescription" rows="2" maxlength="2000" placeholder="Task details and expected outcome"></textarea></label>
+          <div class="business-form-grid">
+            <label>Assign to<select id="taskAssignee"><option value="">Unassigned</option></select></label>
+            <label>Priority<select id="taskPriority"><option value="normal">Normal</option><option value="low">Low</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>
+            <label>Due date<input id="taskDue" type="date"></label>
+          </div>
+          <button class="business-primary" type="submit">Create Task</button>
+        </form>
+        <div id="businessTaskList" class="business-list"></div>
+      </section>
+    </section>
+    <footer class="business-footer">ZakiChat Business · Team access follows workspace roles and active subscription permissions.</footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/business.js"></script>
+</body>
+</html>
