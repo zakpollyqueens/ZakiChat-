@@ -178,10 +178,12 @@
       return;
     }
 
-    const list =
-      Array.isArray(versions) && versions.length
-        ? versions
-        : fallbackVersions;
+    const list = Array.isArray(versions) ? versions : fallbackVersions;
+
+    if (list.length === 0) {
+      container.innerHTML = '<p class="empty-state">No published release history is available yet.</p>';
+      return;
+    }
 
     container.innerHTML = list
       .map(function (item) {
@@ -224,6 +226,7 @@
     }
 
     if (!Array.isArray(notes) || notes.length === 0) {
+      container.innerHTML = '<div class="note-item"><p>No release notes have been published yet.</p></div>';
       return;
     }
 
@@ -407,7 +410,7 @@
       console.error('Unable to load published ZakiChat releases:', error);
       renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: '' });
       renderPaidUpgrades(fallbackPaidUpgrades);
-      renderVersions(fallbackVersions);
+      renderVersions([]);
     }
   }
 
