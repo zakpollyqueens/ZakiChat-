@@ -18,3 +18,6 @@ a{color:inherit;text-decoration:none}
 @media(min-width:760px){.tg-shell,.tg-conversation-shell{border-radius:0;box-shadow:0 0 45px #0004}.tg-chat-header{padding-left:16px;padding-right:16px}.tg-message-area{padding-left:26px;padding-right:26px}.tg-composer{padding-left:18px;padding-right:18px}.tg-chat-intro{margin-top:60px;margin-bottom:auto}}
 @media(max-width:370px){.tg-chat-header{gap:2px;padding-inline:4px}.tg-header-actions .tg-icon-btn{width:31px;min-width:31px;font-size:17px}.tg-person-button{gap:7px}.tg-avatar-large{width:37px;height:37px}.tg-back-btn{width:30px;min-width:30px}.tg-composer-tools{gap:2px}.tg-composer-icon{width:34px;min-width:34px}.tg-send-button{width:39px;min-width:39px;height:39px}.tg-message{max-width:88%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Supabase connection status for the rebuilt chat interface */
+.tg-backend-status{margin:10px 0 0;padding:7px 10px;border:1px solid rgba(85,170,130,.24);border-radius:9px;background:rgba(46,139,98,.10);color:var(--tg-muted,#9fb0bf);font-size:11px;line-height:1.4}
