@@ -248,26 +248,26 @@
       }
     },
 
-    syncComposerBottom(visibleBottom) {
+    syncComposerBottom() {
       if (!this.composer) return;
-      const focused = document.activeElement === this.input;
+
+      /*
+       * Use one source of truth: the difference between the layout viewport
+       * and the visible visual viewport. Android WebViews either resize the
+       * layout viewport with Gboard or only resize VisualViewport. In the
+       * first case the difference is zero; in the second it is the keyboard
+       * overlap. This avoids stale baseline measurements and double-lifting.
+       */
       const vv = window.visualViewport;
-      const visualBottom = vv
+      const layoutHeight = Math.round(window.innerHeight || vv?.height || 0);
+      const visibleBottom = vv
         ? Math.round(vv.height + Math.max(0, vv.offsetTop || 0))
-        : Math.round(window.innerHeight || visibleBottom || 0);
-      const keyboardHeight = focused
-        ? Math.max(0, Math.round(this.baselineHeight - visualBottom))
-        : 0;
-      // Some Android WebViews resize the layout viewport when the IME opens;
-      // others only resize VisualViewport. In the first case fixed-bottom
-      // elements are already above the keyboard, so adding keyboardHeight
-      // would lift the composer twice.
-      const layoutViewportResized = focused &&
-        Math.round(window.innerHeight || 0) < this.baselineHeight - 80;
-      const composerOffset = layoutViewportResized ? 0 : keyboardHeight;
+        : layoutHeight;
+      const overlap = Math.max(0, layoutHeight - visibleBottom);
+
       this.composer.style.setProperty(
         "--zaki-composer-bottom",
-        `${composerOffset}px`
+        `${overlap}px`
       );
     },
 
