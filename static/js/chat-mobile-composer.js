@@ -258,11 +258,16 @@
       const keyboardHeight = focused
         ? Math.max(0, Math.round(this.baselineHeight - visualBottom))
         : 0;
-      // CSS uses this value directly. Do not infer the offset from the
-      // composer's own rectangle: that creates a feedback loop on WebView.
+      // Some Android WebViews resize the layout viewport when the IME opens;
+      // others only resize VisualViewport. In the first case fixed-bottom
+      // elements are already above the keyboard, so adding keyboardHeight
+      // would lift the composer twice.
+      const layoutViewportResized = focused &&
+        Math.round(window.innerHeight || 0) < this.baselineHeight - 80;
+      const composerOffset = layoutViewportResized ? 0 : keyboardHeight;
       this.composer.style.setProperty(
         "--zaki-composer-bottom",
-        `${keyboardHeight}px`
+        `${composerOffset}px`
       );
     },
 
