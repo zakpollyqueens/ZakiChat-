@@ -136,7 +136,17 @@ Deno.serve(async (req: Request) => {
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
-      return json({ success: true, releases: data || [] });
+      const releases = await Promise.all((data || []).map(async (release) => {
+        if (release.status !== "published") return release;
+        const { data: signed, error: signedError } = await db.storage
+          .from(BUCKET)
+          .createSignedUrl(release.download_path, 60 * 60);
+        return {
+          ...release,
+          download_url_signed: signedError ? null : signed?.signedUrl || null
+        };
+      }));
+      return json({ success: true, releases });
     }
 
     if (action === "admin-upload-url") {
