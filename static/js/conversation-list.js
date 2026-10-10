@@ -14,6 +14,7 @@ return;
 
 let user=null;
 let filter="all";
+let showArchived=false;
 let timer=null;
 let selectionMode=false;
 const selected=new Set();
@@ -57,7 +58,7 @@ return localStorage.getItem(
 function filtered(data){
 return data.filter(c=>{
 if(isLocalFlag(c.id,"hidden"))return false;
-if(isLocalFlag(c.id,"archived"))return false;
+if(isLocalFlag(c.id,"archived")!==showArchived)return false;
 
 if(filter==="unread")
 return c.unreadCount>0||c.marked_unread||isLocalFlag(c.id,"unread");
@@ -75,12 +76,30 @@ return true;
 function render(data){
 list.innerHTML="";
 
+const visibleData=data.filter(c=>!isLocalFlag(c.id,"hidden"));
+const archived=visibleData.filter(c=>isLocalFlag(c.id,"archived"));
 const rows=filtered(data);
+
+if(showArchived){
+const back=document.createElement("button");
+back.type="button";
+back.className="archived-folder-row archived-folder-back";
+back.innerHTML='<span class="archived-folder-icon" aria-hidden="true">←</span><span class="archived-folder-label"><strong>Back to chats</strong><small>Return to your conversations</small></span>';
+back.addEventListener("click",()=>{showArchived=false;render(window.ZakiConversations.conversations||[]);});
+list.appendChild(back);
+}else if(archived.length){
+const folder=document.createElement("button");
+folder.type="button";
+folder.className="archived-folder-row";
+folder.innerHTML='<span class="archived-folder-icon" aria-hidden="true">▣</span><span class="archived-folder-label"><strong>Archived Chats</strong><small>'+archived.length+' archived conversation'+(archived.length===1?"":"s")+'</small></span><span class="archived-folder-chevron" aria-hidden="true">›</span>';
+folder.addEventListener("click",()=>{showArchived=true;render(window.ZakiConversations.conversations||[]);});
+list.appendChild(folder);
+}
 
 if(!rows.length){
 const empty=document.createElement("div");
 empty.className="conversation-empty";
-empty.textContent=
+empty.textContent=showArchived?"No archived conversations":
 filter==="unread"?"No unread conversations":
 filter==="favorites"?"No favorite conversations":
 filter==="groups"?"No group conversations":
@@ -136,8 +155,15 @@ line2.appendChild(badge);
 info.append(line1,line2);
 link.append(avatar(c),info);
 
+let startX=0;
+let startY=0;
+let pointerType="";
+
 link.addEventListener("pointerdown",event=>{
 if(event.pointerType==="mouse" && event.button!==0)return;
+startX=event.clientX;
+startY=event.clientY;
+pointerType=event.pointerType;
 
 clearTimeout(pressTimer);
 
@@ -150,8 +176,20 @@ suppressClick=true;
 },550);
 });
 
-link.addEventListener("pointerup",()=>{
+link.addEventListener("pointerup",event=>{
 clearTimeout(pressTimer);
+const dx=event.clientX-startX;
+const dy=event.clientY-startY;
+if(pointerType!=="mouse" && Math.abs(dx)>75 && Math.abs(dy)<65){
+event.preventDefault();
+event.stopPropagation();
+suppressClick=true;
+localStorage.setItem(
+`zakichat:archived:${user?.id||"unknown"}:${c.id}`,
+showArchived && dx<0 ? "0" : dx>0 ? "1" : "0"
+);
+refresh();
+}
 });
 
 link.addEventListener("pointercancel",()=>{
@@ -222,7 +260,7 @@ if(!ids.length)return;
 ids.forEach(id=>{
 localStorage.setItem(
 `zakichat:archived:${user?.id||"unknown"}:${id}`,
-"1"
+showArchived?"0":"1"
 );
 });
 
@@ -308,6 +346,7 @@ document.querySelectorAll("[data-filter]")
 
 button.classList.add("active");
 filter=button.dataset.filter||"all";
+showArchived=false;
 
 render(window.ZakiConversations.conversations||[]);
 });
