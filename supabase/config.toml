@@ -21,3 +21,6 @@ verify_jwt = true
 
 [functions.security-auth]
 verify_jwt = true
+
+[functions.business-workspace]
+verify_jwt = true
