@@ -37,3 +37,5 @@
 .business-card-actions button{border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:9px;padding:8px 11px;cursor:pointer}
 .business-footer{padding:18px 4px;color:var(--muted);font-size:.75rem;text-align:center}
 @media(max-width:640px){.business-header{display:grid;grid-template-columns:1fr auto;gap:12px}.business-header>div{grid-row:2;grid-column:1/-1}.business-inline-form,.business-form-grid{grid-template-columns:1fr}.business-metrics{gap:6px}.business-metrics div{padding:10px}.business-metrics strong{font-size:1.25rem}.business-metrics span{font-size:.68rem}}
+
+.business-form[hidden],.business-panel[hidden],#businessWorkspace[hidden],#businessInvitations[hidden],#businessSetup[hidden],#businessLocked[hidden]{display:none!important}
