@@ -72,3 +72,65 @@ body.chat-page [hidden]{display:none!important}
  body.chat-page .quick-create{z-index:35}
 }
 @media(prefers-reduced-motion:reduce){body.chat-page *,body.chat-page *:before,body.chat-page *:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Mobile IME fix: keep the composer reachable and let the native Android
+   keyboard (including Gboard) handle text entry. No fake keyboard overlay. */
+body.chat-page .chat-shell{
+  min-height:100dvh;
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+body.chat-page .chat-header{flex:0 0 auto}
+body.chat-page .messages-panel,
+body.chat-page .messages-list{min-height:0}
+body.chat-page .message-composer#message-composer{
+  flex:0 0 auto;
+  position:relative;
+  z-index:20;
+  pointer-events:auto;
+  transform:none;
+}
+body.chat-page .message-composer#message-composer input[name="message"]{
+  position:relative;
+  z-index:2;
+  display:block;
+  flex:1 1 auto;
+  min-width:0;
+  min-height:44px;
+  pointer-events:auto;
+  user-select:text;
+  -webkit-user-select:text;
+  -webkit-appearance:none;
+  touch-action:manipulation;
+  opacity:1;
+}
+body.chat-page .message-composer#message-composer input[name="message"]:focus{
+  outline:none;
+}
+body.chat-page .message-composer#message-composer .composer-icon-button{
+  flex:0 0 40px;
+  position:relative;
+  z-index:3;
+  pointer-events:auto;
+}
+body.chat-page .message-composer#message-composer [hidden]{
+  display:none!important;
+}
+@media(max-width:700px){
+  body.chat-page .chat-shell{
+    height:100dvh;
+    height:100svh;
+  }
+  body.chat-page .messages-panel{
+    flex:1 1 auto;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  body.chat-page .message-composer#message-composer{
+    margin:0;
+    padding-bottom:max(7px,env(safe-area-inset-bottom));
+  }
+}
