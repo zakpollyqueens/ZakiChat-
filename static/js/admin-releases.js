@@ -55,7 +55,7 @@
 
   async function verifyAdminSession() {
     const session = getSession();
-    if (!session.token || session.role !== "admin" ||
+    if (!session.token || !["admin", "super_admin"].includes(session.role) ||
         !expiryTime(session.expiry) || Date.now() >= expiryTime(session.expiry)) {
       return false;
     }
