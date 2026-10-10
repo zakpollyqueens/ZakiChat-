@@ -38,7 +38,7 @@
         const response = await fetch(FUNCTION_URL, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
             "apikey": window.ZakiChatConfig?.supabaseKey || ""
           },
           body: JSON.stringify({
@@ -76,7 +76,7 @@
           await fetch(FUNCTION_URL, {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
               "apikey": window.ZakiChatConfig?.supabaseKey || ""
             },
             body: JSON.stringify({
