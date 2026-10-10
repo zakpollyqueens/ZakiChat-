@@ -3,6 +3,9 @@
 
   const FUNCTION_URL =
     "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+  const CONTENT_URL =
+    "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/admin-content";
+  let supportRows = [];
 
   const TOKEN_KEY = "zakichat-admin-session";
   const ROLE_KEY = "zakichat-admin-role";
@@ -43,7 +46,7 @@
           },
           body: JSON.stringify({
             action: "admin-session-verify",
-            token
+            adminSessionToken: token
           })
         });
 
@@ -51,14 +54,14 @@
 
         const data = await response.json();
 
-        if (!data.valid) return false;
+        if (!(data.success === true || data.valid === true || data.active === true)) return false;
 
         if (data.role) {
           localStorage.setItem(ROLE_KEY, data.role);
         }
 
-        if (data.expires_at) {
-          localStorage.setItem(EXPIRY_KEY, data.expires_at);
+        if (data.expiresAt || data.expires_at) {
+          localStorage.setItem(EXPIRY_KEY, data.expiresAt || data.expires_at);
         }
 
         return true;
@@ -81,7 +84,7 @@
             },
             body: JSON.stringify({
               action: "admin-session-revoke",
-              token
+              adminSessionToken: token
             })
           });
         }
@@ -156,47 +159,130 @@
     $("denied")?.classList.remove("hidden");
   }
 
+  async function adminRequest(body) {
+    const cfg = window.ZakiChatConfig;
+    if (!cfg?.supabaseKey) throw new Error("Supabase configuration is unavailable.");
+    const response = await fetch(CONTENT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": cfg.supabaseKey,
+        "Authorization": `Bearer ${cfg.supabaseKey}`
+      },
+      body: JSON.stringify(body)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.success === false) throw new Error(data.error || "Support request failed.");
+    return data;
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+  }
+  function formatDate(value) {
+    if (!value) return "—";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString();
+  }
+
+  function renderRequests(metrics = {}) {
+    const list = $("request-list");
+    const query = ($("search").value || "").trim().toLowerCase();
+    const status = $("status-filter").value || "all";
+    const category = $("category-filter").value || "all";
+    const rows = supportRows.filter(row => {
+      const user = row.user || {};
+      const matchesStatus = status === "all" || row.status === status;
+      const matchesCategory = category === "all" || row.category === category;
+      const searchable = [row.subject, row.message, row.category, user.username, user.full_name, user.phone, row.user_id].join(" ").toLowerCase();
+      return matchesStatus && matchesCategory && (!query || searchable.includes(query));
+    });
+    $("open-count").textContent = String(metrics.open ?? supportRows.filter(row => row.status === "open").length);
+    $("read-count").textContent = String(metrics.read ?? supportRows.filter(row => row.status === "read").length);
+    $("resolved-count").textContent = String(metrics.resolved ?? supportRows.filter(row => row.status === "resolved").length);
+    $("total-count").textContent = String(metrics.total ?? supportRows.length);
+    $("request-state").textContent = `Protected backend connected · ${rows.length} shown`;
+
+    list.innerHTML = rows.map(row => `
+      <article class="request-card">
+        <div class="request-card-head">
+          <span class="request-category">${escapeHtml(row.category || "general")}</span>
+          <span class="request-status ${escapeHtml(row.status || "open")}">${escapeHtml(row.status || "open")}</span>
+        </div>
+        <h3>${escapeHtml(row.subject || "Support request")}</h3>
+        <p>${escapeHtml(row.message || "")}</p>
+        <small>From ${escapeHtml(row.user?.full_name || row.user?.username || row.user?.phone || row.user_id || "User")} · ${escapeHtml(formatDate(row.created_at))}</small>
+        <div class="request-actions">
+          ${row.status !== "read" ? `<button type="button" data-request-status="read" data-request-id="${escapeHtml(row.id)}">Mark Read</button>` : ""}
+          ${row.status !== "resolved" ? `<button type="button" data-request-status="resolved" data-request-id="${escapeHtml(row.id)}">Resolve</button>` : `<button type="button" data-request-status="open" data-request-id="${escapeHtml(row.id)}">Reopen</button>`}
+        </div>
+      </article>
+    `).join("");
+    $("empty")?.classList.toggle("hidden", rows.length > 0);
+    if (!rows.length) {
+      $("empty").innerHTML = "<div class='empty-icon'>💬</div><h3>No matching requests</h3><p>Try another search or filter.</p>";
+    }
+    list.querySelectorAll("[data-request-status]").forEach(button => {
+      button.addEventListener("click", () => updateRequestStatus(button.dataset.requestId, button.dataset.requestStatus));
+    });
+  }
+
+  async function loadRequests() {
+    const data = await adminRequest({
+      action: "admin-support-list",
+      adminSessionToken: Admin.token()
+    });
+    supportRows = Array.isArray(data.requests) ? data.requests : [];
+    renderRequests(data.metrics || {});
+  }
+
+  async function updateRequestStatus(id, status) {
+    try {
+      const result = await adminRequest({
+        action: "admin-support-update",
+        adminSessionToken: Admin.token(),
+        id,
+        status
+      });
+      supportRows = supportRows.map(row => row.id === id ? { ...row, ...result.request } : row);
+      renderRequests();
+    } catch (error) {
+      console.error("Support status update failed:", error);
+      $("request-state").textContent = error.message || "Unable to update request.";
+    }
+  }
+
   function clearFilters() {
     $("search").value = "";
     $("status-filter").value = "all";
     $("category-filter").value = "all";
-    $("request-state").textContent =
-      "Secure backend connection pending";
+    renderRequests();
   }
-
   function selectCategory(category) {
     $("category-filter").value = category;
+    renderRequests();
     $("search").focus();
-  }
-
-  /*
-   * IMPORTANT:
-   * No service-role key or direct privileged Supabase query is placed
-   * in this browser code.
-   *
-   * The support_requests table contains:
-   * open, read and resolved states.
-   *
-   * Actual administrator reads, message details and status updates
-   * will be supplied by the protected Admin backend.
-   */
-  function prepareSupportCenter() {
-    $("request-state").textContent =
-      "Protected support endpoint pending";
   }
 
   async function initialize() {
     const valid = await Admin.verify();
-
     if (!valid) {
       Admin.clear();
       showDenied();
       return;
     }
-
-    prepareSupportCenter();
     showApp();
+    try {
+      await loadRequests();
+    } catch (error) {
+      console.error("Unable to load support requests:", error);
+      $("request-state").textContent = error.message || "Support backend unavailable.";
+      $("empty").classList.remove("hidden");
+      $("empty").innerHTML = "<div class='empty-icon'>!</div><h3>Could not load support requests</h3><p>" + escapeHtml(error.message) + "</p>";
+    }
   }
+
 
   $("login")?.addEventListener("click", () => {
     window.location.href = "admin.html";
@@ -211,6 +297,9 @@
   });
 
   $("clear")?.addEventListener("click", clearFilters);
+  $("search")?.addEventListener("input", renderRequests);
+  $("status-filter")?.addEventListener("change", renderRequests);
+  $("category-filter")?.addEventListener("change", renderRequests);
 
   document.querySelectorAll(".category").forEach(button => {
     button.addEventListener("click", () => {
