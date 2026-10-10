@@ -101,7 +101,20 @@
     );
 
     if (button) {
-      button.href = data.downloadUrl || '#';
+      const downloadUrl = data.downloadUrl || '';
+      if (downloadUrl) {
+        button.href = downloadUrl;
+        button.removeAttribute('aria-disabled');
+        button.removeAttribute('tabindex');
+        button.classList.remove('is-disabled');
+        button.textContent = 'Download Latest Version';
+      } else {
+        button.href = '#';
+        button.setAttribute('aria-disabled', 'true');
+        button.setAttribute('tabindex', '-1');
+        button.classList.add('is-disabled');
+        button.textContent = 'No published download yet';
+      }
     }
 
     setText(
@@ -333,19 +346,69 @@
 
 
   async function loadAdminPublishedInformation() {
+    try {
+      const config = window.ZakiChatConfig;
+      if (!config?.supabaseUrl || !config?.supabaseKey) {
+        throw new Error('Supabase configuration is unavailable.');
+      }
 
-    /*
-     * Admin/Supabase integration will be connected here when
-     * the administration database and release API are created.
-     *
-     * Until then, safe fallback information is displayed.
-     */
+      const response = await fetch(
+        `${config.supabaseUrl}/functions/v1/release-management`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: config.supabaseKey,
+            Authorization: `Bearer ${config.supabaseKey}`
+          },
+          body: JSON.stringify({ action: 'public-list' })
+        }
+      );
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || payload.success !== true) {
+        throw new Error(payload.error || 'Unable to load published releases.');
+      }
 
-    renderLatestVersion(fallbackLatestVersion);
+      const releases = Array.isArray(payload.releases) ? payload.releases : [];
+      if (!releases.length) {
+        renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: '' });
+        renderPaidUpgrades(fallbackPaidUpgrades);
+        renderVersions([]);
+        return;
+      }
 
-    renderPaidUpgrades(fallbackPaidUpgrades);
+      const latest = releases.find(item => item.channel === 'stable') || releases[0];
+      renderLatestVersion({
+        version: latest.version,
+        title: latest.title,
+        description: latest.description,
+        releaseDate: latest.publishedAt,
+        channel: latest.channel
+          ? latest.channel.charAt(0).toUpperCase() + latest.channel.slice(1)
+          : 'Stable',
+        downloadUrl: latest.downloadUrl || ''
+      });
 
-    renderVersions(fallbackVersions);
+      renderPaidUpgrades(fallbackPaidUpgrades);
+      renderVersions(releases.map((item, index) => ({
+        version: item.version,
+        title: item.title,
+        description: item.description,
+        state: index === 0 ? 'Latest' : 'Previous',
+        current: index === 0
+      })));
+
+      const notes = String(latest.releaseNotes || '')
+        .split(/\r?\n/)
+        .map(note => note.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, '').trim())
+        .filter(Boolean);
+      renderNotes(notes);
+    } catch (error) {
+      console.error('Unable to load published ZakiChat releases:', error);
+      renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: '' });
+      renderPaidUpgrades(fallbackPaidUpgrades);
+      renderVersions(fallbackVersions);
+    }
   }
 
 
