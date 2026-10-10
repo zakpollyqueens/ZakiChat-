@@ -39,6 +39,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json"
+            "apikey": window.ZakiChatConfig?.supabaseKey || ""
           },
           body: JSON.stringify({
             action: "admin-session-verify",
@@ -76,6 +77,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json"
+              "apikey": window.ZakiChatConfig?.supabaseKey || ""
             },
             body: JSON.stringify({
               action: "admin-session-revoke",
