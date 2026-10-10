@@ -1,0 +1,75 @@
+name: ZakiChat Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done < <(find static/js -type f -name '*.js' ! -name '*.bak*' -print0)
+
+      - name: Check local HTML asset references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlparse
+          import sys
+
+          root = Path('.').resolve()
+          missing = []
+
+          class RefParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.refs = []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  for key in ('src', 'href'):
+                      value = attrs.get(key, '')
+                      if value:
+                          self.refs.append(value)
+
+          for html in root.rglob('*.html'):
+              if any(part in {'.git', 'node_modules'} for part in html.parts):
+                  continue
+              parser = RefParser()
+              try:
+                  parser.feed(html.read_text(encoding='utf-8'))
+              except UnicodeDecodeError:
+                  continue
+              for ref in parser.refs:
+                  parsed = urlparse(ref)
+                  if parsed.scheme or ref.startswith(('#', '//')) or not parsed.path:
+                      continue
+                  target = (root / parsed.path.lstrip('/')) if parsed.path.startswith('/') else (html.parent / parsed.path)
+                  target = target.resolve()
+                  if root not in target.parents and target != root:
+                      continue
+                  if not target.exists():
+                      missing.append(f'{html.relative_to(root)} -> {ref}')
+
+          if missing:
+              print('Missing local HTML references:')
+              print('\n'.join(f'  - {item}' for item in missing))
+              sys.exit(1)
+          print('All local HTML href/src references exist.')
+          PY
