@@ -386,3 +386,22 @@
 .zaki-keyboard[data-theme="rose"] .zaki-key{background:#3a2035;color:#fff1f6}
 .zaki-keyboard[data-theme="sunset"]{background:linear-gradient(180deg,#321d16,#21130f)}
 .zaki-keyboard[data-theme="sunset"] .zaki-key{background:#4a291b;color:#fff7ed}
+
+.zaki-keyboard[data-theme="emerald"]{background:linear-gradient(180deg,#061b17,#07111f);border-top-color:#34d399}
+.zaki-keyboard[data-theme="emerald"] .zaki-key{background:#061b17;color:#f5f8fc;border-color:#34d399}
+.zaki-keyboard[data-theme="lavender"]{background:linear-gradient(180deg,#171329,#07111f);border-top-color:#a78bfa}
+.zaki-keyboard[data-theme="lavender"] .zaki-key{background:#171329;color:#f5f8fc;border-color:#a78bfa}
+.zaki-keyboard[data-theme="ocean"]{background:linear-gradient(180deg,#061a2a,#07111f);border-top-color:#38bdf8}
+.zaki-keyboard[data-theme="ocean"] .zaki-key{background:#061a2a;color:#f5f8fc;border-color:#38bdf8}
+.zaki-keyboard[data-theme="midnight"]{background:linear-gradient(180deg,#090d1d,#07111f);border-top-color:#818cf8}
+.zaki-keyboard[data-theme="midnight"] .zaki-key{background:#090d1d;color:#f5f8fc;border-color:#818cf8}
+.zaki-keyboard[data-theme="graphite"]{background:linear-gradient(180deg,#17191d,#07111f);border-top-color:#64748b}
+.zaki-keyboard[data-theme="graphite"] .zaki-key{background:#17191d;color:#f5f8fc;border-color:#64748b}
+.zaki-keyboard[data-theme="cherry"]{background:linear-gradient(180deg,#220b18,#07111f);border-top-color:#f472b6}
+.zaki-keyboard[data-theme="cherry"] .zaki-key{background:#220b18;color:#f5f8fc;border-color:#f472b6}
+.zaki-keyboard[data-theme="gold"]{background:linear-gradient(180deg,#211a08,#07111f);border-top-color:#facc15}
+.zaki-keyboard[data-theme="gold"] .zaki-key{background:#211a08;color:#f5f8fc;border-color:#facc15}
+.zaki-keyboard[data-theme="mint"]{background:linear-gradient(180deg,#071c19,#07111f);border-top-color:#6ee7b7}
+.zaki-keyboard[data-theme="mint"] .zaki-key{background:#071c19;color:#f5f8fc;border-color:#6ee7b7}
+.zaki-keyboard[data-theme="violet"]{background:linear-gradient(180deg,#170c2c,#07111f);border-top-color:#c084fc}
+.zaki-keyboard[data-theme="violet"] .zaki-key{background:#170c2c;color:#f5f8fc;border-color:#c084fc}
