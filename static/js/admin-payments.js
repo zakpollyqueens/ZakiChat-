@@ -68,7 +68,7 @@ async function verifyAdminSession() {
   if (!token) return false;
 
   const expiry =
-    Number(localStorage.getItem(EXPIRY_KEY) || 0);
+    (Date.parse(localStorage.getItem(EXPIRY_KEY) || "") || Number(localStorage.getItem(EXPIRY_KEY) || 0));
 
   if (expiry && Date.now() >= expiry) {
     clearAdminSession();
@@ -108,7 +108,8 @@ async function secureSignOut() {
           "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-          action: "admin-session-revoke"
+          action: "admin-session-revoke",
+          adminSessionToken: token
         })
       });
     }
