@@ -54,11 +54,13 @@
           <small>Dark interface</small>
         </button>
 
-        <button type="button" class="theme-option" data-theme-choice="system">
-          <span class="theme-preview theme-preview-system"></span>
-          <strong>System</strong>
-          <small>Follow device</small>
+        <button type="button" class="theme-option" data-theme-choice="cyan">
+          <span class="theme-preview theme-preview-cyan"></span><strong>Cyan Blue</strong><small>Local account theme</small>
         </button>
+        <button type="button" class="theme-option premium-theme" data-theme-choice="aurora" data-premium="true"><span class="theme-preview theme-preview-aurora"></span><strong>Aurora 🔒</strong><small>Personal Custom</small></button>
+        <button type="button" class="theme-option premium-theme" data-theme-choice="rose" data-premium="true"><span class="theme-preview theme-preview-rose"></span><strong>Rose 🔒</strong><small>Personal Custom</small></button>
+        <button type="button" class="theme-option premium-theme" data-theme-choice="sunset" data-premium="true"><span class="theme-preview theme-preview-sunset"></span><strong>Sunset 🔒</strong><small>Personal Custom</small></button>
+        <button type="button" class="theme-option premium-theme" data-theme-choice="emerald" data-premium="true"><span class="theme-preview theme-preview-emerald"></span><strong>Emerald 🔒</strong><small>Personal Custom</small></button>
       </div>
     </section>
 
@@ -169,19 +171,15 @@
           <span class="appearance-icon">💬</span>
           <h2>Chat appearance</h2>
         </div>
-        <p>More chat customization options are coming.</p>
+        <p>Choose a message style for your conversations.</p>
       </div>
 
-      <div class="coming-feature">
-        <span>✨</span>
-        <div>
-          <strong>More customization</strong>
-          <p>
-            Chat bubble styles, message background opacity,
-            accent colors and spacing can be added here.
-          </p>
-        </div>
+      <div class="chat-style-options">
+        <button type="button" class="chat-style-option" data-chat-style="classic"><span class="chat-style-preview classic"></span><strong>Classic</strong></button>
+        <button type="button" class="chat-style-option" data-chat-style="rounded" data-premium="true"><span class="chat-style-preview rounded"></span><strong>Rounded ✨</strong></button>
+        <button type="button" class="chat-style-option" data-chat-style="glass" data-premium="true"><span class="chat-style-preview glass"></span><strong>Glass ✨</strong></button>
       </div>
+      <p id="appearanceStatus" class="appearance-status" aria-live="polite"></p>
     </section>
 
   </main>
