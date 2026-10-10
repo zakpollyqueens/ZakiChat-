@@ -233,6 +233,10 @@
         );
       }
 
+      // Resolve the current entitlement before choosing the upload limit and bucket.
+      // This prevents a newly signed-in premium user from racing the async plan lookup.
+      await window.ZakiChatAppearance?.loadPlan?.();
+
       const validation =
         this.validate(file);
 
