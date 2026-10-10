@@ -426,6 +426,54 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, result: data });
     }
 
+    if (action === "admin-registration-payment-requests") {
+      const { data, error } = await db.from("registration_payments")
+        .select("id, user_id, phone, country_code, country_name, fee_usd, currency, status, provider, payment_reference, created_at")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      return json({ success: true, requests: data || [] });
+    }
+
+    if (action === "admin-registration-payment-update") {
+      const id = clean(body.id, 80);
+      const status = clean(body.status, 20);
+      const paymentReference = clean(body.paymentReference, 200);
+      const reason = clean(body.reason, 1000);
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+        return json({ success: false, error: "A valid registration payment ID is required." }, 400);
+      }
+      if (!["paid", "cancelled"].includes(status)) {
+        return json({ success: false, error: "Choose Paid or Cancelled." }, 400);
+      }
+      if (status === "paid" && paymentReference.length < 3) {
+        return json({ success: false, error: "Enter the verified payment transaction reference before marking this payment paid." }, 400);
+      }
+      if (status === "cancelled" && reason.length < 3) {
+        return json({ success: false, error: "Enter a reason for cancelling this payment request." }, 400);
+      }
+      const { data: existing, error: findError } = await db.from("registration_payments")
+        .select("id, phone, country_code, country_name, fee_usd, status")
+        .eq("id", id).eq("status", "pending").maybeSingle();
+      if (findError) throw findError;
+      if (!existing) return json({ success: false, error: "Pending registration payment not found." }, 404);
+      const update = status === "paid"
+        ? { status: "paid", provider: "manual", payment_reference: paymentReference, paid_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        : { status: "cancelled", provider: "manual", payment_reference: null, updated_at: new Date().toISOString() };
+      const { data: saved, error: updateError } = await db.from("registration_payments")
+        .update(update).eq("id", id)
+        .select("id, phone, country_code, country_name, fee_usd, currency, status, provider, payment_reference, paid_at, updated_at")
+        .single();
+      if (updateError) throw updateError;
+      await audit(admin.userId, status === "paid" ? "registration_payment_marked_paid" : "registration_payment_cancelled", "registration_payment", id, {
+        phone: existing.phone, country_code: existing.country_code, fee_usd: existing.fee_usd,
+        payment_reference: status === "paid" ? paymentReference : null,
+        reason: status === "cancelled" ? reason : null
+      });
+      return json({ success: true, request: saved });
+    }
+
     if (action === "admin-upgrade-requests") {
       const { data: payments, error } = await db.from("upgrade_payments")
         .select("id, user_id, plan, amount, currency, status, created_at, metadata")
