@@ -8,6 +8,7 @@
     sendButton: null,
     viewport: null,
     raf: 0,
+    baselineHeight: 0,
 
     init() {
       this.composer =
@@ -30,6 +31,10 @@
 
       this.viewport =
         window.visualViewport || null;
+      this.baselineHeight = Math.max(
+        window.innerHeight || 0,
+        this.viewport ? this.viewport.height + Math.max(0, this.viewport.offsetTop || 0) : 0
+      );
 
       if (!this.composer || !this.input) {
         return;
@@ -148,40 +153,19 @@
         return;
       }
 
-      const vv =
-        window.visualViewport;
-
-      let keyboardHeight = 0;
-      let visualHeight =
-        window.innerHeight;
-
-      if (vv) {
-        visualHeight =
-          Math.round(vv.height);
-
-        const visibleBottom =
-          Math.round(
-            vv.height +
-            Math.max(
-              0,
-              vv.offsetTop
-            )
-          );
-
-        keyboardHeight =
-          Math.max(
-            0,
-            Math.round(
-              window.innerHeight -
-              visibleBottom
-            )
-          );
+      const vv = window.visualViewport;
+      const visibleBottom = vv
+        ? Math.round(vv.height + Math.max(0, vv.offsetTop || 0))
+        : Math.round(window.innerHeight || 0);
+      const focused = document.activeElement === this.input;
+      if (!focused || visibleBottom > this.baselineHeight) {
+        this.baselineHeight = Math.max(visibleBottom, Math.round(window.innerHeight || 0));
       }
-
-      const keyboardOpen =
-        keyboardHeight > 80 &&
-        document.activeElement ===
-          this.input;
+      const visualHeight = vv ? Math.round(vv.height) : Math.round(window.innerHeight || 0);
+      const keyboardHeight = focused
+        ? Math.max(0, Math.round(this.baselineHeight - visibleBottom))
+        : 0;
+      const keyboardOpen = keyboardHeight > 80 && focused;
 
       document.documentElement.style.setProperty(
         "--zaki-visual-height",
@@ -203,12 +187,8 @@
         keyboardOpen
       );
 
-      this.composer.style.setProperty(
-        "--zaki-composer-bottom",
-        keyboardOpen
-          ? `${keyboardHeight}px`
-          : "0px"
-      );
+      /* The shell already follows visualViewport height. Offset zero avoids double-lifting the fixed composer. */
+      this.composer.style.setProperty("--zaki-composer-bottom", "0px");
 
       if (keyboardOpen) {
         this.scrollMessagesToBottom();
