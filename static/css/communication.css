@@ -66,10 +66,11 @@
 }
 
 .zaki-recording-bar {
-  position: absolute;
+  position: fixed;
+  z-index: 1200;
   left: 12px;
   right: 12px;
-  bottom: 70px;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   display: flex;
   align-items: center;
   gap: 12px;
@@ -336,3 +337,12 @@
     bottom: 70px;
   }
 }
+
+/* Recording controls stay visible above the mobile composer and system keyboard. */
+.zaki-recording-bar { max-width:720px; margin-inline:auto; color:var(--text,#f5f7fa); }
+.zaki-recording-bar button { min-height:40px; font-weight:700; white-space:nowrap; }
+.zaki-recording-bar button:disabled { opacity:.55; cursor:wait; }
+#voice-note-button.is-recording { color:#ff6577; background:rgba(255,101,119,.14); animation:zakiRecordingPulse 1s infinite; }
+.voice-note-bubble { overflow:visible; }
+.voice-note-avatar { position:absolute; left:-39px; bottom:8px; width:30px; height:30px; border:2px solid rgba(255,255,255,.25); border-radius:50%; background-color:#233b52; background-size:cover; background-position:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+@media (max-width:420px) { .zaki-recording-bar { left:8px; right:8px; bottom:calc(66px + env(safe-area-inset-bottom,0px)); gap:7px; padding:10px; } .zaki-recording-bar button { padding:8px 10px; } .voice-note-avatar { left:-31px; width:24px; height:24px; } }
