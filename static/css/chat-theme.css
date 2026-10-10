@@ -561,3 +561,17 @@
     transition: none;
   }
 }
+
+
+/* Local-account and premium chat theme preview states */
+.theme-option.premium-locked{opacity:.88}
+.theme-option.premium-locked:after{content:"PERSONAL";position:absolute;top:9px;right:9px;padding:3px 6px;border-radius:7px;background:rgba(167,139,250,.18);color:#c4b5fd;font-size:.55rem;font-weight:900;letter-spacing:.05em}
+.theme-option{position:relative}
+:root[data-zaki-chat-theme="light"] .preview-message.received{background:#fff;color:#152235;border:1px solid rgba(15,35,60,.1)}
+:root[data-zaki-chat-theme="light"] .preview-message.sent{background:linear-gradient(135deg,#0891b2,#2563eb);color:#fff}
+:root[data-zaki-chat-theme="cyan"] .preview-message.received{background:#10394f;color:#e9fbff}
+:root[data-zaki-chat-theme="cyan"] .preview-message.sent{background:linear-gradient(135deg,#0e7490,#2563eb);color:#fff}
+:root[data-zaki-chat-theme="aurora"] .preview-message.sent{background:linear-gradient(135deg,#34d399,#a78bfa);color:#052e2b}
+:root[data-zaki-chat-theme="midnight"] .preview-message.received{background:#111827;color:#f8fafc}
+:root[data-zaki-chat-theme="ocean"] .preview-message.received{background:#0e7490;color:#f0f9ff}
+:root[data-zaki-chat-theme="emerald"] .preview-message.received{background:#065f46;color:#ecfdf5}
