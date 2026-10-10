@@ -615,3 +615,13 @@ footer strong{color:#a9b6cc}
  .actions .button{padding:9px 10px;font-size:11px}
  footer{flex-wrap:wrap}
 }
+
+
+.request-card{padding:18px;border:1px solid rgba(255,255,255,.1);border-radius:16px;margin:12px 0;background:rgba(255,255,255,.025);min-width:0}
+.request-card h3{overflow-wrap:anywhere;margin:10px 0}
+.request-card p{white-space:pre-wrap;overflow-wrap:anywhere}
+.request-card small{display:block;opacity:.72;margin-top:8px;overflow-wrap:anywhere}
+.request-card-head,.request-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.request-status,.request-category{font-size:11px;text-transform:uppercase;font-weight:800}
+.request-actions{justify-content:flex-start;margin-top:14px}
+.request-actions button{border:1px solid rgba(120,180,255,.3);border-radius:9px;padding:8px 11px;background:rgba(80,150,255,.08);color:inherit;cursor:pointer}
