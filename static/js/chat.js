@@ -430,6 +430,23 @@ document.addEventListener(
         return;
       }
 
+      const themeClasses = [
+        "chat-theme-dark", "chat-theme-light", "chat-theme-cyan",
+        "chat-theme-aurora", "chat-theme-midnight", "chat-theme-ocean", "chat-theme-emerald"
+      ];
+      await window.ZakiChatAppearance?.loadPlan?.();
+      const premiumTheme = Boolean(window.ZakiChatAppearance?.isPremium?.());
+      let chatTheme = localStorage.getItem(
+        `zakichat:chat-theme:${currentUser.id}:${targetUserId}:theme`
+      ) || "dark";
+      if (!["dark","light","cyan","aurora","midnight","ocean","emerald"].includes(chatTheme)) chatTheme = "dark";
+      if (!["dark","light","cyan"].includes(chatTheme) && !premiumTheme) {
+        chatTheme = "dark";
+        localStorage.setItem(`zakichat:chat-theme:${currentUser.id}:${targetUserId}:theme`, chatTheme);
+      }
+      themeClasses.forEach(className => chatShell.classList.remove(className));
+      chatShell.classList.add("chat-theme-" + chatTheme);
+
       const wallpaperClasses = [
         "chat-wallpaper-aurora",
         "chat-wallpaper-mesh",
