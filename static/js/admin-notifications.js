@@ -22,14 +22,16 @@
     return {
       token: localStorage.getItem(SESSION_KEY),
       role: localStorage.getItem(ROLE_KEY),
-      expiry: Number(localStorage.getItem(EXPIRY_KEY) || 0)
+      expiry: localStorage.getItem(EXPIRY_KEY) || ""
     };
   }
 
   async function verifyAdminSession() {
     const s = sessionData();
 
-    if (!s.token || s.role !== "admin" || !s.expiry || Date.now() >= s.expiry) {
+    const expiryMs = Date.parse(s.expiry) || Number(s.expiry);
+
+    if (!s.token || s.role !== "admin" || !expiryMs || Date.now() >= expiryMs) {
       return false;
     }
 
@@ -40,7 +42,10 @@
           "Content-Type": "application/json",
           "Authorization": `Bearer ${s.token}`
         },
-        body: JSON.stringify({ action: "admin-session-verify" })
+        body: JSON.stringify({
+          action: "admin-session-verify",
+          adminSessionToken: s.token
+        })
       });
 
       if (!response.ok) return false;
