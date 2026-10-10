@@ -3,6 +3,8 @@
 
   const FUNCTION_URL =
     "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+  const CONTENT_URL =
+    "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/admin-content";
 
   const TOKEN_KEY = "zakichat-admin-session";
   const ROLE_KEY = "zakichat-admin-role";
@@ -43,7 +45,7 @@
           },
           body: JSON.stringify({
             action: "admin-session-verify",
-            token
+            adminSessionToken: token
           })
         });
 
@@ -51,14 +53,14 @@
 
         const data = await response.json();
 
-        if (!data.valid) return false;
+        if (!(data.success === true || data.valid === true || data.active === true)) return false;
 
         if (data.role) {
           localStorage.setItem(ROLE_KEY, data.role);
         }
 
-        if (data.expires_at) {
-          localStorage.setItem(EXPIRY_KEY, data.expires_at);
+        if (data.expiresAt || data.expires_at) {
+          localStorage.setItem(EXPIRY_KEY, data.expiresAt || data.expires_at);
         }
 
         return true;
@@ -81,7 +83,7 @@
             },
             body: JSON.stringify({
               action: "admin-session-revoke",
-              token
+              adminSessionToken: token
             })
           });
         }
@@ -162,20 +164,41 @@
     $("analytics-denied")?.classList.remove("hidden");
   }
 
-  /*
-   * Real analytics are intentionally not fabricated here.
-   *
-   * The next secure backend connection will expose privileged,
-   * aggregated analytics through the Admin Edge Function.
-   *
-   * Never place a Supabase service-role key in this browser file.
-   */
-  function prepareAnalytics() {
-    const state = $("data-state");
-
-    if (state) {
-      state.textContent = "Secure analytics backend ready for connection";
-    }
+  async function loadAnalytics() {
+    const cfg = window.ZakiChatConfig;
+    if (!cfg?.supabaseKey) throw new Error("Supabase configuration is unavailable.");
+    const response = await fetch(CONTENT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": cfg.supabaseKey,
+        "Authorization": `Bearer ${cfg.supabaseKey}`
+      },
+      body: JSON.stringify({
+        action: "admin-analytics-summary",
+        adminSessionToken: Admin.token()
+      })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.success !== true) throw new Error(data.error || "Unable to load platform analytics.");
+    const m = data.metrics || {};
+    $("total-users").textContent = String(m.totalUsers ?? 0);
+    $("users-note").textContent = `${m.onlineUsers ?? 0} currently online · ${m.newUsers7d ?? 0} new in 7 days`;
+    $("total-messages").textContent = String(m.totalMessages ?? 0);
+    $("messages-note").textContent = `${m.messages7d ?? 0} messages in the last 7 days`;
+    $("total-groups").textContent = String(m.totalGroups ?? 0);
+    $("groups-note").textContent = "Groups currently recorded in the database";
+    $("total-channels").textContent = String(m.totalChannels ?? 0);
+    $("channels-note").textContent = "Channels currently recorded in the database";
+    $("total-support").textContent = String(m.totalSupport ?? 0);
+    $("support-note").textContent = `${m.openSupport ?? 0} open support requests`;
+    $("total-payments").textContent = String(m.totalRegistrationPayments ?? 0);
+    $("payments-note").textContent = `${m.paidRegistrationPayments ?? 0} marked paid · upgrade payments: ${m.paidPayments ?? 0}`;
+    $("activity-value").textContent = String(m.onlineUsers ?? 0);
+    $("activity-messages").textContent = String(m.messages7d ?? 0);
+    $("activity-groups").textContent = String(m.totalGroups ?? 0);
+    $("activity-support").textContent = String(m.openSupport ?? 0);
+    $("data-state").textContent = `Live database summary refreshed ${new Date().toLocaleTimeString()}`;
   }
 
   async function initialize() {
@@ -187,8 +210,13 @@
       return;
     }
 
-    prepareAnalytics();
     showApp();
+    try {
+      await loadAnalytics();
+    } catch (error) {
+      console.error("Analytics backend request failed:", error);
+      $("data-state").textContent = error.message || "Analytics backend unavailable";
+    }
   }
 
   $("go-login")?.addEventListener("click", () => {
@@ -196,11 +224,11 @@
   });
 
   $("refresh-analytics")?.addEventListener("click", () => {
-    window.location.reload();
+    loadAnalytics().catch(error => { $("data-state").textContent = error.message; });
   });
 
   $("load-data")?.addEventListener("click", () => {
-    window.location.reload();
+    loadAnalytics().catch(error => { $("data-state").textContent = error.message; });
   });
 
   $("activity-focus")?.addEventListener("click", () => {
