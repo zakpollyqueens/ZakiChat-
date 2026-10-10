@@ -97,21 +97,35 @@ Deno.serve(async (req: Request) => {
     if (action === "admin-users-list") {
       const search = clean(body.search, 120).toLowerCase();
       const status = clean(body.status, 20) || "all";
-      const [{ data: rows, error: rowsError }, { count: total, error: totalError }, { count: online, error: onlineError }, { count: newUsers, error: newError }] = await Promise.all([
+      const [{ data: rows, error: rowsError }, { count: total, error: totalError }, { count: online, error: onlineError }, { count: newUsers, error: newError }, { data: authData, error: authError }] = await Promise.all([
         db.from("profiles").select("id, username, full_name, phone, is_online, last_seen, created_at").order("created_at", { ascending: false }).limit(1000),
         db.from("profiles").select("id", { count: "exact", head: true }),
         db.from("profiles").select("id", { count: "exact", head: true }).eq("is_online", true),
-        db.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 7 * 86400000).toISOString())
+        db.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 7 * 86400000).toISOString()),
+        db.auth.admin.listUsers({ page: 1, perPage: 1000 })
       ]);
       if (rowsError) throw rowsError;
       if (totalError) throw totalError;
       if (onlineError) throw onlineError;
       if (newError) throw newError;
-      const users = (rows || []).filter(user => {
+      if (authError) throw authError;
+      const authUsers = authData?.users || [];
+      const authMap = new Map(authUsers.map(user => [user.id, user]));
+      const suspendedCount = authUsers.filter(user => user.banned_until && new Date(user.banned_until).getTime() > Date.now()).length;
+      const users = (rows || []).map(profile => {
+        const authUser = authMap.get(profile.id);
+        const bannedUntil = authUser?.banned_until || null;
+        return {
+          ...profile,
+          email: authUser?.email || null,
+          banned_until: bannedUntil,
+          account_status: bannedUntil && new Date(bannedUntil).getTime() > Date.now() ? "suspended" : "active"
+        };
+      }).filter(user => {
         const matchesStatus = status === "all" ||
-          (status === "online" && user.is_online === true) ||
-          (status === "offline" && user.is_online !== true);
-        const text = [user.username, user.full_name, user.phone, user.id].join(" ").toLowerCase();
+          (status === "active" && user.account_status === "active") ||
+          (status === "suspended" && user.account_status === "suspended");
+        const text = [user.username, user.full_name, user.phone, user.email, user.id].join(" ").toLowerCase();
         return matchesStatus && (!search || text.includes(search));
       });
       return json({
@@ -121,9 +135,42 @@ Deno.serve(async (req: Request) => {
           total: total || 0,
           online: online || 0,
           newUsers: newUsers || 0,
-          restricted: null
+          restricted: suspendedCount
         },
         truncated: (rows || []).length === 1000
+      });
+    }
+
+    if (action === "admin-user-suspend" || action === "admin-user-restore") {
+      const userId = clean(body.userId, 80);
+      const reason = clean(body.reason, 1000);
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)) {
+        return json({ success: false, error: "A valid user ID is required." }, 400);
+      }
+      if (action === "admin-user-suspend" && reason.length < 3) {
+        return json({ success: false, error: "Enter a reason for suspending the account." }, 400);
+      }
+      const { data: adminTarget, error: adminTargetError } = await db.from("admin_users")
+        .select("user_id").eq("user_id", userId).maybeSingle();
+      if (adminTargetError) throw adminTargetError;
+      if (adminTarget) return json({ success: false, error: "Administrator accounts cannot be suspended from the user directory." }, 403);
+
+      const banDuration = action === "admin-user-suspend" ? "876000h" : "none";
+      const { data: updated, error: updateError } = await db.auth.admin.updateUserById(userId, {
+        ban_duration: banDuration
+      });
+      if (updateError) throw updateError;
+      await audit(admin.userId, action === "admin-user-suspend" ? "account_suspended" : "account_restored", "user", userId, {
+        reason: reason || "Account restored by super administrator"
+      });
+      return json({
+        success: true,
+        user: {
+          id: userId,
+          email: updated.user?.email || null,
+          banned_until: updated.user?.banned_until || null,
+          account_status: action === "admin-user-suspend" ? "suspended" : "active"
+        }
       });
     }
 
