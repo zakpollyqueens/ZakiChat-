@@ -6,7 +6,7 @@
   const count = document.getElementById("chat-search-count");
   const previous = document.getElementById("chat-search-prev");
   const next = document.getElementById("chat-search-next");
-  const close = document.getElementById("chat-search-close");
+  const close = document.getElementById("close-chat-search");
   const searchButton = document.getElementById("search-chat-button");
   const panel = document.querySelector(".messages-panel");
 
