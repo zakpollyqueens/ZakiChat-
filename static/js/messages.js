@@ -1241,6 +1241,18 @@
       bubble.innerHTML =
         html;
 
+      if (messageType === "audio") {
+        bubble.classList.add("voice-note-bubble");
+        if (mine && message.sender_avatar_url) {
+          const avatar = document.createElement("span");
+          avatar.className = "voice-note-avatar";
+          avatar.setAttribute("aria-label", "Your profile picture");
+          avatar.title = message.sender_display_name || "You";
+          avatar.style.backgroundImage = "url(" + JSON.stringify(message.sender_avatar_url) + ")";
+          bubble.appendChild(avatar);
+        }
+      }
+
       return bubble;
     },
 
