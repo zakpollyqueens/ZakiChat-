@@ -24,6 +24,33 @@ function name(c){
 return window.ZakiConversations.getDisplayName(c);
 }
 
+function localFlag(id, flag){
+return localStorage.getItem(`zakichat:${flag}:${user?.id||"unknown"}:${id}`)==="1";
+}
+
+function rowTime(c){
+const value=c?.latestMessage?.created_at||c?.created_at;
+if(!value)return"";
+const date=new Date(value);
+if(Number.isNaN(date.getTime()))return"";
+const now=new Date();
+const sameDay=date.toDateString()===now.toDateString();
+const yesterday=new Date(now);
+yesterday.setDate(now.getDate()-1);
+if(sameDay)return date.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+if(date.toDateString()===yesterday.toDateString())return"Yesterday";
+const days=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-new Date(date.getFullYear(),date.getMonth(),date.getDate()))/86400000);
+if(days<7)return date.toLocaleDateString([], {weekday:"short"});
+return date.toLocaleDateString([], {day:"numeric",month:"short"});
+}
+
+function previewText(c){
+const value=window.ZakiConversations.getPreview(c);
+const latest=c?.latestMessage;
+if(latest?.sender_id===user?.id)return"✓ You: "+value;
+return value;
+}
+
 function avatar(c){
 const box=document.createElement("div");
 box.className="conversation-avatar";
@@ -55,7 +82,14 @@ return localStorage.getItem(
 }
 
 function filtered(data){
-return data.filter(c=>{
+return [...data].sort((a,b)=>{
+const ap=isLocalFlag(a.id,"pinned")||a.is_pinned?1:0;
+const bp=isLocalFlag(b.id,"pinned")||b.is_pinned?1:0;
+if(ap!==bp)return bp-ap;
+const at=a.latestMessage?.created_at||a.created_at;
+const bt=b.latestMessage?.created_at||b.created_at;
+return new Date(bt)-new Date(at);
+}).filter(c=>{
 if(isLocalFlag(c.id,"hidden"))return false;
 if(isLocalFlag(c.id,"archived"))return false;
 
@@ -93,6 +127,8 @@ rows.forEach(c=>{
 const link=document.createElement("a");
 
 link.className="conversation";
+if(c.unreadCount>0||localFlag(c.id,"unread"))link.classList.add("has-unread");
+if(localFlag(c.id,"pinned")||c.is_pinned)link.classList.add("is-pinned");
 
 if(selected.has(c.id))
 link.classList.add("conversation-selected");
@@ -113,23 +149,40 @@ const strong=document.createElement("strong");
 strong.textContent=name(c);
 
 const time=document.createElement("time");
-time.textContent=window.ZakiConversations.getTime(c);
+time.textContent=rowTime(c);
+time.dateTime=c.latestMessage?.created_at||c.created_at||"";
+time.title=c.latestMessage?.created_at ? new Date(c.latestMessage.created_at).toLocaleString() : "";
 
-line1.append(strong,time);
+const rowMarks=document.createElement("span");
+rowMarks.className="conversation-row-marks";
+rowMarks.setAttribute("aria-label","Conversation markers");
+if(localFlag(c.id,"pinned")||c.is_pinned){
+const pin=document.createElement("span");pin.className="conversation-marker pin-marker";pin.textContent="⌖";pin.title="Pinned";rowMarks.appendChild(pin);
+}
+if(localFlag(c.id,"favorite")||c.is_favorite){
+const fav=document.createElement("span");fav.className="conversation-marker favorite-marker";fav.textContent="★";fav.title="Favorite";rowMarks.appendChild(fav);
+}
+if(localFlag(c.id,"muted")||c.is_muted){
+const mute=document.createElement("span");mute.className="conversation-marker muted-marker";mute.textContent="◖";mute.title="Muted";rowMarks.appendChild(mute);
+}
+
+line1.append(strong);
+if(rowMarks.childElementCount)line1.appendChild(rowMarks);
+line1.appendChild(time);
 
 const line2=document.createElement("div");
 line2.className="conversation-line";
 
 const preview=document.createElement("span");
 preview.className="conversation-preview";
-preview.textContent=window.ZakiConversations.getPreview(c);
+preview.textContent=previewText(c);
 
 line2.appendChild(preview);
 
-if(c.unreadCount>0){
+if(c.unreadCount>0||localFlag(c.id,"unread")){
 const badge=document.createElement("span");
 badge.className="unread-badge";
-badge.textContent=c.unreadCount>99?"99+":c.unreadCount;
+badge.textContent=c.unreadCount>99?"99+":(c.unreadCount||"•");
 line2.appendChild(badge);
 }
 
@@ -268,19 +321,19 @@ if(!choice)return;
 const action={
 "1":"unread",
 "2":"favorite",
-"3":"muted"
+"3":"muted",
+"4":"pinned"
 }[choice.trim()];
 
 if(!action){
-window.alert("Please choose 1, 2 or 3.");
+window.alert("Please choose 1, 2, 3 or 4.");
 return;
 }
 
 ids.forEach(id=>{
-localStorage.setItem(
-`zakichat:${action}:${user?.id||"unknown"}:${id}`,
-"1"
-);
+const key=`zakichat:${action}:${user?.id||"unknown"}:${id}`;
+if(action==="pinned"&&localStorage.getItem(key)==="1")localStorage.removeItem(key);
+else localStorage.setItem(key,"1");
 });
 
 exitSelection();
