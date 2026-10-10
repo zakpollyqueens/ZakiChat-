@@ -63,8 +63,20 @@ async function verify(){
     return false;
   }
 
-  try{
-    return !!(await rpc("admin_session_user",{p_token:t}));
+  try {
+    const cfg = window.ZakiChatConfig;
+    if (!cfg?.supabaseKey) return false;
+    const response = await fetch(FN, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": cfg.supabaseKey,
+        "Authorization": "Bearer " + cfg.supabaseKey
+      },
+      body: JSON.stringify({ action: "admin-session-verify", adminSessionToken: t })
+    });
+    const data = await response.json().catch(() => ({}));
+    return response.ok && (data.success === true || data.valid === true || data.active === true);
   }catch(e){
     console.error(e);
     return false;
