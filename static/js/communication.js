@@ -6,6 +6,8 @@
     config: null,
     currentUser: null,
     targetUser: null,
+    currentUserAvatarUrl: "",
+    currentUserDisplayName: "You",
     conversationId: null,
 
     callId: null,
@@ -50,6 +52,7 @@
       }
 
       this.createUI();
+      void this.loadCurrentUserAvatar();
 
       this.bindEvents();
       this.listenForIncomingCalls();
@@ -71,6 +74,22 @@
         this.conversationId;
     },
 
+    async loadCurrentUserAvatar() {
+      if (!this.db || !this.currentUser?.id) return;
+      try {
+        const { data, error } = await this.db
+          .from("profiles")
+          .select("avatar_url, full_name, username")
+          .eq("id", this.currentUser.id)
+          .maybeSingle();
+        if (error) throw error;
+        this.currentUserAvatarUrl = data?.avatar_url || this.currentUser?.user_metadata?.avatar_url || "";
+        this.currentUserDisplayName = data?.full_name || data?.username || this.currentUser?.user_metadata?.full_name || this.currentUser?.email || "You";
+      } catch (error) {
+        console.warn("Unable to load voice-note avatar:", error);
+        this.currentUserAvatarUrl = this.currentUser?.user_metadata?.avatar_url || "";
+      }
+    },
     escape(value) {
       const div =
         document.createElement("div");
@@ -566,6 +585,11 @@
           throw error;
         }
 
+        if (data?.message_type === "audio") {
+          data.sender_avatar_url = this.currentUserAvatarUrl;
+          data.sender_display_name = this.currentUserDisplayName || "You";
+        }
+
         this.appendMessage(
           data
         );
@@ -801,86 +825,48 @@
       if (bar) {
         bar.hidden = true;
       }
+      const sendButton = document.getElementById("zaki-send-recording");
+      if (sendButton) { sendButton.disabled = false; sendButton.textContent = "Send"; }
+      const cancelButton = document.getElementById("zaki-cancel-recording");
+      if (cancelButton) cancelButton.disabled = false;
     },
 
     async sendRecording() {
-      if (
-        !this.recording ||
-        !this.mediaRecorder
-      ) {
-        return;
-      }
-
-      const recorder =
-        this.mediaRecorder;
-
-      recorder.stop();
-
+      if (!this.recording || !this.mediaRecorder) return;
+      const recorder = this.mediaRecorder;
+      const sendButton = document.getElementById("zaki-send-recording");
+      const cancelButton = document.getElementById("zaki-cancel-recording");
+      if (sendButton) { sendButton.disabled = true; sendButton.textContent = "Sending…"; }
+      if (cancelButton) cancelButton.disabled = true;
       this.stopRecordingTimer();
-
-      this.recording =
-        false;
+      this.recording = false;
       document.getElementById("voice-note-button")?.classList.remove("is-recording");
-
-      const bar =
-        document.getElementById(
-          "zaki-recording-bar"
-        );
-
-      if (bar) {
-        bar.hidden = true;
-      }
-
-      await new Promise(
-        resolve =>
-          setTimeout(
-            resolve,
-            100
-          )
-      );
-
-      if (
-        !this.recordedChunks.length
-      ) {
+      const bar = document.getElementById("zaki-recording-bar");
+      if (bar) bar.hidden = true;
+      try {
+        // Wait for MediaRecorder final dataavailable event before uploading.
+        await new Promise((resolve, reject) => {
+          recorder.addEventListener("stop", resolve, { once: true });
+          recorder.addEventListener("error", event => reject(event.error || new Error("Voice recording failed.")), { once: true });
+          if (recorder.state !== "inactive") recorder.stop(); else resolve();
+        });
+        if (!this.recordedChunks.length) throw new Error("No audio was captured. Please record your voice note again.");
+        const mime = recorder.mimeType || this.recordedChunks.find(chunk => chunk.type)?.type || "audio/webm";
+        const extension = mime.includes("ogg") ? "ogg" : mime.includes("mp4") ? "m4a" : mime.includes("mpeg") ? "mp3" : "webm";
+        const blob = new Blob(this.recordedChunks, { type: mime });
+        if (!blob.size) throw new Error("The voice recording is empty. Please try again.");
+        const file = new File([blob], "voice-note-" + Date.now() + "." + extension, { type: mime });
         this.cleanupRecording();
-        return;
+        await this.sendFile(file);
+      } catch (error) {
+        console.error("Unable to send voice note:", error);
+        alert(error?.message || "Unable to send this voice note. Please try again.");
+        this.cleanupRecording();
+      } finally {
+        if (sendButton) { sendButton.disabled = false; sendButton.textContent = "Send"; }
+        if (cancelButton) cancelButton.disabled = false;
       }
-
-      const mime =
-        recorder.mimeType ||
-        "audio/webm";
-
-      const extension =
-        mime.includes("ogg")
-          ? "ogg"
-          : mime.includes("mp4")
-            ? "m4a"
-            : "webm";
-
-      const blob =
-        new Blob(
-          this.recordedChunks,
-          {
-            type: mime
-          }
-        );
-
-      const file =
-        new File(
-          [blob],
-          `voice-note-${Date.now()}.${extension}`,
-          {
-            type: mime
-          }
-        );
-
-      this.cleanupRecording();
-
-      await this.sendFile(
-        file
-      );
     },
-
     cleanupRecording() {
       if (
         this.localRecordingStream
