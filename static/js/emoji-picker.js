@@ -99,12 +99,38 @@
     ]
   };
 
-  const picker = document.getElementById("emoji-picker");
   const button = document.getElementById("emoji-button");
-  const grid = document.getElementById("emoji-grid");
   const input = document.querySelector(".message-composer input");
 
-  if (!picker || !button || !grid || !input) return;
+  if (!button || !input) return;
+
+  // The chat page historically omitted the picker markup, causing the
+  // visible emoji button to have no handler. Build the accessible picker
+  // when a page does not provide one.
+  let picker = document.getElementById("emoji-picker");
+  if (!picker) {
+    picker = document.createElement("section");
+    picker.id = "emoji-picker";
+    picker.className = "emoji-picker";
+    picker.hidden = true;
+    picker.setAttribute("aria-label", "Emoji picker");
+    picker.innerHTML = `
+      <div class="emoji-tabs" role="tablist" aria-label="Emoji categories">
+        <button type="button" class="emoji-tab active" data-category="smileys" role="tab">😊</button>
+        <button type="button" class="emoji-tab" data-category="people" role="tab">👋</button>
+        <button type="button" class="emoji-tab" data-category="animals" role="tab">🐻</button>
+        <button type="button" class="emoji-tab" data-category="food" role="tab">🍎</button>
+        <button type="button" class="emoji-tab" data-category="activities" role="tab">⚽</button>
+        <button type="button" class="emoji-tab" data-category="travel" role="tab">🚗</button>
+        <button type="button" class="emoji-tab" data-category="objects" role="tab">💡</button>
+        <button type="button" class="emoji-tab" data-category="symbols" role="tab">❤️</button>
+      </div>
+      <div id="emoji-grid" class="emoji-grid" role="grid"></div>
+    `;
+    document.querySelector(".chat-shell")?.insertBefore(picker, document.getElementById("message-composer"));
+  }
+  const grid = document.getElementById("emoji-grid");
+  if (!grid) return;
 
   let activeCategory = "smileys";
 
