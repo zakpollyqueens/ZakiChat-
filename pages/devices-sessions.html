@@ -57,7 +57,7 @@
 
       <div id="otherSessions" class="sessions-list">
         <div class="empty-sessions">
-          No other active sessions are currently available.
+          Sign in activity is protected. You can revoke other signed-in sessions below.
         </div>
       </div>
     </section>
@@ -76,14 +76,18 @@
         Sign out of other sessions
       </button>
 
-      <p class="security-note">
-        This action will be connected to server-side session management when
-        multi-device session tracking is enabled for ZakiChat.
+      <p id="sessionStatus" class="security-note" role="status" aria-live="polite">
+        Revoke other sessions using ZakiChat's authenticated session service.
       </p>
     </section>
 
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../static/js/config.js"></script>
+  <script src="../static/js/account-manager.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/devices-sessions.js"></script>
 </body>
 </html>
