@@ -4335,3 +4335,10 @@ body.zaki-keyboard-open .message-composer#message-composer {
     transition: none;
   }
 }
+
+/* WhatsApp-inspired voice-message control */
+.message-composer .composer-voice-button{display:grid;place-items:center;border-radius:50%;background:#25d366;color:#062817;border:0;box-shadow:0 3px 10px rgba(37,211,102,.2);transition:transform .15s ease,background .15s ease,box-shadow .15s ease}
+.message-composer .composer-voice-button svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none}
+.message-composer .composer-voice-button:active{transform:scale(.92)}
+.message-composer .composer-voice-button.is-recording{background:#ef4444;color:#fff;box-shadow:0 0 0 5px rgba(239,68,68,.16);animation:voiceRecordPulse 1.15s ease-in-out infinite}
+@keyframes voiceRecordPulse{0%,100%{box-shadow:0 0 0 3px rgba(239,68,68,.12)}50%{box-shadow:0 0 0 7px rgba(239,68,68,.22)}}
