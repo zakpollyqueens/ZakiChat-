@@ -539,7 +539,17 @@
     keyboard?.classList.remove("visible");
   }
 
-  function init() {
+  async function init() {
+    try {
+      await window.ZakiChatAppearance?.loadPlan?.();
+    } catch (error) {
+      console.warn("Unable to verify keyboard theme access.", error);
+    }
+    const premium = Boolean(window.ZakiChatAppearance?.isPremium?.());
+    if (!premium && !["dark", "light", "cyan"].includes(settings.theme)) {
+      settings.theme = "dark";
+      saveSettings();
+    }
     createKeyboard();
     attachInputs();
 
