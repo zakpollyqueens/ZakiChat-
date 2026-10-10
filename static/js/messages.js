@@ -1243,12 +1243,15 @@
 
       if (messageType === "audio") {
         bubble.classList.add("voice-note-bubble");
-        if (mine && message.sender_avatar_url) {
+        const senderAvatarUrl =
+          message.sender_avatar_url ||
+          (mine ? window.ZakiCommunication?.currentUserAvatarUrl : "");
+        if (mine && senderAvatarUrl) {
           const avatar = document.createElement("span");
           avatar.className = "voice-note-avatar";
           avatar.setAttribute("aria-label", "Your profile picture");
           avatar.title = message.sender_display_name || "You";
-          avatar.style.backgroundImage = "url(" + JSON.stringify(message.sender_avatar_url) + ")";
+          avatar.style.backgroundImage = "url(" + JSON.stringify(senderAvatarUrl) + ")";
           bubble.appendChild(avatar);
         }
       }
