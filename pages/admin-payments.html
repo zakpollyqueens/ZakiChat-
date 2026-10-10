@@ -102,7 +102,23 @@
               <span class="secure-chip">🔒 Admin Only</span>
             </div>
 
-            <form id="manualUpgradeForm">
+            <section class="panel pending-upgrade-requests">
+  <div class="section-heading">
+    <div>
+      <h2>Pending Customer Upgrade Requests</h2>
+      <p>These are requests only. No payment has been collected or subscription activated.</p>
+    </div>
+    <button type="button" id="refreshUpgradeRequests" class="button">Refresh</button>
+  </div>
+  <p id="upgradeRequestsCount" role="status">Loading pending requests…</p>
+  <div id="upgradeRequestsList"></div>
+  <div id="upgradeRequestsEmpty" hidden>
+    <h3>No pending upgrade requests</h3>
+    <p>New customer requests will appear here.</p>
+  </div>
+</section>
+
+<form id="manualUpgradeForm">
 
               <div class="field">
                 <label for="customerIdentifier">Customer Email or Phone</label>
