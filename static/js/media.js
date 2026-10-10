@@ -44,12 +44,13 @@
         };
       }
 
-      const maxSize = 50 * 1024 * 1024;
+      const premium = Boolean(window.ZakiChatAppearance?.isPremium?.());
+      const maxSize = (premium ? 500 : 50) * 1024 * 1024;
 
       if (file.size > maxSize) {
         return {
           ok: false,
-          error: "Files must be 50 MB or smaller."
+          error: premium ? "Files must be 500 MB or smaller for your current plan." : "Files must be 50 MB or smaller on a local account. Upgrade to Customized Personal for larger attachments."
         };
       }
 
