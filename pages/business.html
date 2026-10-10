@@ -34,6 +34,7 @@
         <label>Business title / industry<input id="businessTitle" maxlength="120" placeholder="e.g. Technology and Communications"></label>
         <label>Business email<input id="businessEmail" type="email" required maxlength="254" placeholder="business@example.com"></label>
         <label>About the business<textarea id="businessDescription" rows="3" maxlength="1200" placeholder="What does your business do?"></textarea></label>
+        <label class="business-check-row"><input id="createBusinessIdentity" type="checkbox" checked><span><strong>Use this as my public ZakiChat identity</strong><small>Chats will show the business name and logo instead of your personal display name.</small></span></label>
         <label>Business logo<input id="businessLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small>PNG, JPG, WEBP or SVG · maximum 5 MB</small></label>
         <button class="business-primary" type="submit">Create Business Workspace</button>
       </form>
@@ -51,6 +52,7 @@
           <label>Business title / industry<input id="editBusinessTitle" maxlength="120"></label>
           <label>Business email<input id="editBusinessEmail" type="email" required maxlength="254"></label>
           <label>About the business<textarea id="editBusinessDescription" rows="3" maxlength="1200"></textarea></label>
+          <label class="business-check-row"><input id="editBusinessIdentity" type="checkbox"><span><strong>Use this as my public ZakiChat identity</strong><small>When enabled, your public profile shows the business name/logo. Turning it off restores your saved personal profile.</small></span></label>
           <label>Replace logo<input id="editBusinessLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small>Optional · maximum 5 MB</small></label>
           <button class="business-primary" type="submit">Save Business Profile</button>
         </form>
