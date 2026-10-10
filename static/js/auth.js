@@ -703,6 +703,7 @@
 
       const pendingUpgrade = localStorage.getItem(PENDING_UPGRADE_KEY);
       if (pendingUpgrade === "personal_monthly" || pendingUpgrade === "business_monthly") {
+        localStorage.removeItem(PENDING_UPGRADE_KEY);
         showMessage(message, "Phone verified. Your account is ready. Opening your selected upgrade plan...", "success");
         setTimeout(() => {
           window.location.href = "about.html?upgrade=" + encodeURIComponent(pendingUpgrade) + "#paid-upgrades";
