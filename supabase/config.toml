@@ -9,3 +9,6 @@ verify_jwt = false
 
 [functions.admin-content]
 verify_jwt = false
+
+[functions.admin-upgrades]
+verify_jwt = false
