@@ -103,6 +103,29 @@ Deno.serve(async (req) => {
     const feeUsd = calculateRegistrationFee(countryCode);
     const isAfrican = AFRICAN_COUNTRIES.has(countryCode);
 
+    const action = String(body?.action || "preflight");
+
+    if (action !== "preflight" && action !== "claim-paid-registration") {
+      return jsonResponse({ success: false, error: "Unsupported registration payment action." }, 400);
+    }
+
+    /*
+     * Uganda, Kenya and Tanzania are free-registration countries.
+     * This public preflight path only calculates the fee; it must not
+     * require an administrative secret key or create a payment record.
+     */
+    if (action === "preflight" && feeUsd === 0) {
+      return jsonResponse({
+        success: true,
+        paymentRequired: false,
+        feeUsd: 0,
+        currency: "USD",
+        phone: phoneE164,
+        countryCode,
+        isAfrican
+      });
+    }
+
     const supabaseUrl =
       Deno.env.get("SUPABASE_URL");
 
@@ -132,8 +155,6 @@ Deno.serve(async (req) => {
         supabaseUrl,
         secretKey
       );
-
-    const action = String(body?.action || "preflight");
 
     if (action === "claim-paid-registration") {
       const userId = String(body?.userId || "").trim();
@@ -176,26 +197,6 @@ Deno.serve(async (req) => {
       if (existingClaimError) throw existingClaimError;
       if (alreadyClaimed) return jsonResponse({ success: true, claimed: true, paymentId: alreadyClaimed.id });
       return jsonResponse({ success: false, error: "This paid registration request has already been claimed or is no longer available." }, 409);
-    }
-
-    if (action !== "preflight") {
-      return jsonResponse({ success: false, error: "Unsupported registration payment action." }, 400);
-    }
-
-    /*
-     * Free countries do not need a payment record.
-     * The signup flow can proceed directly to Supabase Auth.
-     */
-    if (feeUsd === 0) {
-      return jsonResponse({
-        success: true,
-        paymentRequired: false,
-        feeUsd: 0,
-        currency: "USD",
-        phone: phoneE164,
-        countryCode,
-        isAfrican
-      });
     }
 
     const { data: paidPayment, error: paidPaymentError } = await supabaseAdmin
