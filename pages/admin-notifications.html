@@ -116,15 +116,22 @@
               </select>
             </label>
 
+            <label id="selectedRecipientsField" hidden>
+              Selected Recipient User IDs
+              <textarea id="selectedUserIds" maxlength="12000"
+                placeholder="Paste user UUIDs separated by commas or new lines"></textarea>
+              <small>Use exact user IDs from the protected User Management page. Invalid IDs will be rejected.</small>
+            </label>
+
             <label>
               Title
-              <input id="notificationTitle" type="text" maxlength="120"
+              <input id="notificationTitle" type="text" maxlength="160"
                 placeholder="Notification title">
             </label>
 
             <label>
               Message
-              <textarea id="notificationMessage" maxlength="1000"
+              <textarea id="notificationMessage" maxlength="5000"
                 placeholder="Write the notification message…"></textarea>
             </label>
 
