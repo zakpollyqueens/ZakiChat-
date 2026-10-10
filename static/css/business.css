@@ -39,3 +39,7 @@
 @media(max-width:640px){.business-header{display:grid;grid-template-columns:1fr auto;gap:12px}.business-header>div{grid-row:2;grid-column:1/-1}.business-inline-form,.business-form-grid{grid-template-columns:1fr}.business-metrics{gap:6px}.business-metrics div{padding:10px}.business-metrics strong{font-size:1.25rem}.business-metrics span{font-size:.68rem}}
 
 .business-form[hidden],.business-panel[hidden],#businessWorkspace[hidden],#businessInvitations[hidden],#businessSetup[hidden],#businessLocked[hidden]{display:none!important}
+
+.business-check-row{display:flex!important;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.business-check-row input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;margin:2px 0 0;accent-color:var(--primary)}
+.business-check-row span{display:grid;gap:5px}.business-check-row strong{font-size:.84rem}.business-check-row small{line-height:1.5}
