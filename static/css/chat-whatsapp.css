@@ -4358,3 +4358,21 @@ body.zaki-keyboard-open .message-composer#message-composer {
 :root[data-zakichat-theme="cyan"] .chat-header,:root[data-zakichat-theme="cyan"] .message-composer{background:rgba(6,24,38,.96);border-color:rgba(103,232,249,.16)}
 :root[data-zakichat-theme="cyan"] .message-bubble.received-bubble{background:#10394f!important;color:#e9fbff}
 :root[data-zakichat-theme="cyan"] .message-bubble.sent-bubble{background:linear-gradient(135deg,#0e7490,#2563eb)!important;color:#fff}
+
+
+/* Per-conversation themes selected from Wallpaper & Theme */
+.chat-shell.chat-theme-dark{background-color:#07111f}
+.chat-shell.chat-theme-light{background:#f4f7fb!important;color:#152235}
+.chat-shell.chat-theme-cyan{background:linear-gradient(135deg,#061826,#0a2638 55%,#061826)!important;color:#e9fbff}
+.chat-shell.chat-theme-aurora{background:linear-gradient(135deg,#07151a,#10272b 50%,#07111f)!important}
+.chat-shell.chat-theme-midnight{background:linear-gradient(135deg,#030712,#111827 55%,#020617)!important}
+.chat-shell.chat-theme-ocean{background:linear-gradient(135deg,#082f49,#0e7490 55%,#082f49)!important}
+.chat-shell.chat-theme-emerald{background:linear-gradient(135deg,#022c22,#065f46 55%,#022c22)!important}
+.chat-shell.chat-theme-light .chat-header,.chat-shell.chat-theme-light .message-composer{background:rgba(255,255,255,.96)!important;color:#152235;border-color:rgba(15,35,60,.13)}
+.chat-shell.chat-theme-light .chat-back,.chat-shell.chat-theme-light .chat-header-actions button{color:#152235}
+.chat-shell.chat-theme-light .chat-user-details span{color:#5e6d80}
+.chat-shell.chat-theme-light .message-bubble.received-bubble{background:#fff!important;color:#152235;border:1px solid rgba(15,35,60,.09)}
+.chat-shell.chat-theme-light .message-composer input[type="text"]{background:#fff;color:#152235;border-color:rgba(15,35,60,.18)}
+.chat-shell.chat-theme-cyan .chat-header,.chat-shell.chat-theme-cyan .message-composer{background:rgba(6,24,38,.96)!important;border-color:rgba(103,232,249,.16)}
+.chat-shell.chat-theme-cyan .message-bubble.received-bubble{background:#10394f!important;color:#e9fbff}
+.chat-shell.chat-theme-cyan .message-bubble.sent-bubble{background:linear-gradient(135deg,#0e7490,#2563eb)!important;color:#fff}
