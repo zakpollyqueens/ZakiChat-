@@ -123,6 +123,96 @@
       input.click();
     },
 
+    async uploadResumable(bucket, path, file) {
+      const config = window.ZakiChatConfig || {};
+      const apiKey = config.supabaseKey || "";
+      const baseUrl = String(config.supabaseUrl || "").replace(".supabase.co", ".storage.supabase.co").replace(/\/$/, "");
+      const { data: sessionData, error: sessionError } = await this.db.auth.getSession();
+      const token = sessionData?.session?.access_token;
+      if (sessionError || !token || !apiKey || !baseUrl) {
+        throw new Error("Secure large-file upload could not start. Please sign in again and retry.");
+      }
+      const encode = value => btoa(unescape(encodeURIComponent(String(value))));
+      const metadata = [
+        "bucketName " + encode(bucket),
+        "objectName " + encode(path),
+        "contentType " + encode(file.type || "application/octet-stream"),
+        "cacheControl " + encode("3600")
+      ].join(",");
+      const headers = {
+        "Authorization": "Bearer " + token,
+        "apikey": apiKey,
+        "Tus-Resumable": "1.0.0"
+      };
+      const start = await fetch(baseUrl + "/storage/v1/upload/resumable", {
+        method: "POST",
+        headers: {
+          ...headers,
+          "Upload-Length": String(file.size),
+          "Upload-Metadata": metadata,
+          "x-upsert": "false"
+        }
+      });
+      if (start.status !== 201) {
+        const detail = await start.text().catch(() => "");
+        throw new Error(detail || "Unable to start a resumable file upload (" + start.status + ").");
+      }
+      const location = start.headers.get("Location");
+      if (!location) throw new Error("The storage service did not return an upload location.");
+      const uploadUrl = new URL(location, baseUrl).toString();
+      const chunkSize = 8 * 1024 * 1024;
+      let offset = Number(start.headers.get("Upload-Offset") || 0);
+      while (offset < file.size) {
+        const chunk = file.slice(offset, Math.min(offset + chunkSize, file.size));
+        let completed = false;
+        let lastError = null;
+        for (let attempt = 0; attempt < 3 && !completed; attempt++) {
+          try {
+            const response = await fetch(uploadUrl, {
+              method: "PATCH",
+              headers: {
+                ...headers,
+                "Upload-Offset": String(offset),
+                "Content-Type": "application/offset+octet-stream"
+              },
+              body: chunk
+            });
+            if (response.status === 204) {
+              const nextOffset = Number(response.headers.get("Upload-Offset"));
+              offset = Number.isFinite(nextOffset) && nextOffset > offset ? nextOffset : offset + chunk.size;
+              completed = true;
+            } else {
+              const detail = await response.text().catch(() => "");
+              lastError = new Error(detail || "Large-file upload failed (" + response.status + ").");
+              if (response.status >= 400 && response.status < 500 && response.status !== 409) break;
+            }
+          } catch (error) {
+            lastError = error;
+          }
+          if (!completed) {
+            try {
+              const head = await fetch(uploadUrl, {
+                method: "HEAD",
+                headers: { ...headers }
+              });
+              if (head.ok) {
+                const serverOffset = Number(head.headers.get("Upload-Offset"));
+                if (Number.isFinite(serverOffset) && serverOffset >= 0) {
+                  offset = serverOffset;
+                  if (offset >= file.size) completed = true;
+                }
+              }
+            } catch (_) {}
+          }
+        }
+        if (!completed && offset < file.size) throw lastError || new Error("Large-file upload could not continue.");
+        window.dispatchEvent(new CustomEvent("zakichat:upload-progress", {
+          detail: { uploaded: offset, total: file.size, percent: Math.min(100, Math.round(offset / file.size * 100)) }
+        }));
+      }
+      return true;
+    },
+
     async upload(file, conversationId, userId) {
       if (!this.db) {
         throw new Error(
@@ -175,19 +265,17 @@
       const premium = Boolean(window.ZakiChatAppearance?.isPremium?.());
       const targetBucket = premium ? this.premiumBucket : this.bucket;
 
-      const { error } =
-        await this.db.storage
+      if (file.size > 6 * 1024 * 1024) {
+        await this.uploadResumable(targetBucket, storagePath, file);
+      } else {
+        const { error } = await this.db.storage
           .from(targetBucket)
           .upload(storagePath, file, {
             cacheControl: "3600",
             upsert: false,
-            contentType:
-              file.type ||
-              "application/octet-stream"
+            contentType: file.type || "application/octet-stream"
           });
-
-      if (error) {
-        throw error;
+        if (error) throw error;
       }
 
       return {
