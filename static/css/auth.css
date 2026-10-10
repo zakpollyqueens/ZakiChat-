@@ -1233,3 +1233,28 @@ textarea:focus-visible{
     min-height: 46px;
   }
 }
+
+
+/* Account plan chooser and onboarding slideshow */
+.account-plan-showcase{margin:0 0 24px;padding:20px;border:1px solid rgba(39,211,162,.22);border-radius:22px;background:linear-gradient(145deg,rgba(39,211,162,.075),rgba(24,174,240,.045))}
+.account-plan-showcase-head h2{font-size:1.25rem;line-height:1.25;margin:8px 0}
+.account-plan-showcase-head p,.account-plan-note{font-size:.82rem;color:var(--muted,#9cafc4);line-height:1.55}
+.account-plan-slides{margin-top:16px}
+.account-plan-slide{padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(4,12,23,.55);animation:accountPlanSlideIn .22s ease}
+.account-plan-slide[hidden]{display:none}
+.account-plan-icon{font-size:1.8rem;margin-bottom:7px}
+.account-plan-badge{display:inline-block;font-size:.65rem;letter-spacing:.12em;font-weight:800;color:#55e5c0}
+.account-plan-slide h3{font-size:1.18rem;margin:5px 0}
+.account-plan-slide p{font-size:.84rem;color:var(--muted,#9cafc4)}
+.account-plan-slide ul{padding-left:19px;margin:12px 0 17px;font-size:.8rem;line-height:1.75}
+.account-plan-cta{width:100%;min-height:44px;padding:10px 14px;border:0;border-radius:12px;background:#27d3a2;color:#041710;font-weight:800;cursor:pointer}
+.account-plan-cta.premium{background:linear-gradient(110deg,#27d3a2,#18aef0)}
+.account-plan-cta.business{background:linear-gradient(110deg,#a78bfa,#38bdf8);color:#07111f}
+.account-plan-controls{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.account-plan-controls>button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:inherit;font-size:1.4rem;cursor:pointer}
+.account-plan-dots{display:flex;gap:8px}
+.account-plan-dots button{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}
+.account-plan-dots button.is-active{width:22px;border-radius:8px;background:#27d3a2}
+.account-plan-note{margin-top:12px;font-size:.72rem}
+@keyframes accountPlanSlideIn{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.account-plan-showcase{padding:15px}.account-plan-slide{padding:15px}}
