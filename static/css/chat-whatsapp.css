@@ -4342,3 +4342,19 @@ body.zaki-keyboard-open .message-composer#message-composer {
 .message-composer .composer-voice-button:active{transform:scale(.92)}
 .message-composer .composer-voice-button.is-recording{background:#ef4444;color:#fff;box-shadow:0 0 0 5px rgba(239,68,68,.16);animation:voiceRecordPulse 1.15s ease-in-out infinite}
 @keyframes voiceRecordPulse{0%,100%{box-shadow:0 0 0 3px rgba(239,68,68,.12)}50%{box-shadow:0 0 0 7px rgba(239,68,68,.22)}}
+
+
+/* Global account themes applied to the WhatsApp-style conversation */
+:root[data-zakichat-theme="light"] body.chat-page{background:#f4f7fb;color:#152235}
+:root[data-zakichat-theme="light"] .chat-shell{background:#f4f7fb}
+:root[data-zakichat-theme="light"] .chat-header,:root[data-zakichat-theme="light"] .message-composer{background:rgba(255,255,255,.96);border-color:rgba(15,35,60,.13)}
+:root[data-zakichat-theme="light"] .chat-back,:root[data-zakichat-theme="light"] .chat-header-actions button{color:#152235}
+:root[data-zakichat-theme="light"] .chat-user-details span,:root[data-zakichat-theme="light"] .chat-user span{color:#5e6d80}
+:root[data-zakichat-theme="light"] .chat-more-menu,:root[data-zakichat-theme="light"] .chat-search-bar,:root[data-zakichat-theme="light"] .chat-search-field{background:#fff;color:#152235;border-color:rgba(15,35,60,.13)}
+:root[data-zakichat-theme="light"] .message-bubble.received-bubble{background:#fff!important;color:#152235;border:1px solid rgba(15,35,60,.09)}
+:root[data-zakichat-theme="light"] .message-composer input[type="text"]{background:#fff;color:#152235;border-color:rgba(15,35,60,.18)}
+:root[data-zakichat-theme="cyan"] body.chat-page{background:#061826;color:#e9fbff}
+:root[data-zakichat-theme="cyan"] .chat-shell{background:radial-gradient(circle at 20% 10%,rgba(34,211,238,.16),transparent 35%),linear-gradient(135deg,#061826,#0a2638 55%,#061826)}
+:root[data-zakichat-theme="cyan"] .chat-header,:root[data-zakichat-theme="cyan"] .message-composer{background:rgba(6,24,38,.96);border-color:rgba(103,232,249,.16)}
+:root[data-zakichat-theme="cyan"] .message-bubble.received-bubble{background:#10394f!important;color:#e9fbff}
+:root[data-zakichat-theme="cyan"] .message-bubble.sent-bubble{background:linear-gradient(135deg,#0e7490,#2563eb)!important;color:#fff}
