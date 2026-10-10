@@ -6,6 +6,7 @@
 
   const defaults = {
     theme: "dark",
+    keyboardMode: "zaki",
     keySize: "medium",
     numberRow: false,
     emojiRow: true,
@@ -493,11 +494,22 @@
       .replaceAll("'", "&#039;");
   }
 
+  function isSystemKeyboardMode() {
+    return loadSettings().keyboardMode === "system";
+  }
+
   function attachInput(input) {
-    if (!input || input.dataset.zakiKeyboardAttached) return;
+    if (!input) return;
 
+    if (isSystemKeyboardMode()) {
+      input.removeAttribute("readonly");
+      input.readOnly = false;
+      input.dataset.zakiKeyboardAttached = "system";
+      return;
+    }
+
+    if (input.dataset.zakiKeyboardAttached === "true") return;
     input.dataset.zakiKeyboardAttached = "true";
-
     input.setAttribute("readonly", "readonly");
 
     input.addEventListener("focus", () => {
@@ -552,8 +564,34 @@
     }
     createKeyboard();
     attachInputs();
+    const keyboardElement = document.getElementById(KEYBOARD_ID);
+    if (isSystemKeyboardMode()) {
+      keyboardElement?.classList.remove("visible");
+    }
+
+    window.addEventListener("zaki:keyboard-settings-changed", () => {
+      settings = loadSettings();
+      const keyboard = document.getElementById(KEYBOARD_ID);
+      if (isSystemKeyboardMode()) {
+        keyboard?.classList.remove("visible");
+        document.querySelectorAll("[data-zaki-keyboard-attached]").forEach(input => {
+          input.readOnly = false;
+          input.removeAttribute("readonly");
+          input.dataset.zakiKeyboardAttached = "system";
+        });
+      } else {
+        document.querySelectorAll("[data-zaki-keyboard-attached]").forEach(input => {
+          delete input.dataset.zakiKeyboardAttached;
+        });
+        attachInputs();
+        if (document.activeElement?.matches?.(".message-composer input, .message-composer textarea, #chat-search-input")) {
+          document.activeElement.blur();
+        }
+      }
+    });
 
     document.addEventListener("focusin", event => {
+      if (isSystemKeyboardMode()) return;
       if (
         event.target.matches?.(
 ".message-composer input[type='text'], " +
@@ -571,6 +609,7 @@
     });
 
     document.addEventListener("click", event => {
+      if (isSystemKeyboardMode()) return;
       const keyboard = document.getElementById(KEYBOARD_ID);
 
       if (!keyboard) return;
@@ -602,6 +641,11 @@
       render();
     },
     focus(input) {
+      if (isSystemKeyboardMode()) {
+        input?.removeAttribute("readonly");
+        input?.focus();
+        return;
+      }
       activeInput = input;
       createKeyboard();
       input?.focus();
