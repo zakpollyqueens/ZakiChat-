@@ -699,3 +699,9 @@
     margin: -10px -14px 0;
   }
 }
+
+
+.upgrade-checkout-status{grid-column:1/-1;padding:14px 16px;border:1px solid rgba(100,180,255,.35);border-radius:12px;background:rgba(80,150,255,.08);line-height:1.55;overflow-wrap:anywhere}
+.upgrade-checkout-status.error{border-color:rgba(255,100,100,.45);background:rgba(255,80,80,.08)}
+.upgrade-checkout-status a{font-weight:800;text-decoration:underline;margin-inline:4px}
+.upgrade-plan-button:disabled{opacity:.65;cursor:wait}
