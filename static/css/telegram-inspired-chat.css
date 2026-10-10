@@ -1,0 +1,74 @@
+/* Telegram-inspired ZakiChat chat surfaces — additive visual layer.
+   Existing messaging scripts and component markup remain the source of behavior. */
+:root{--zt-bg:#17120f;--zt-panel:#211914;--zt-peach:#ffd0a7;--zt-muted:#a68a76;--zt-accent:#6f76bd;--zt-line:rgba(255,208,167,.12)}
+body.chat-page{background:var(--zt-bg)!important;color:var(--zt-peach)!important}
+body.chat-page .app-shell{background:var(--zt-bg)!important}
+body.chat-page .sidebar{background:var(--zt-bg)!important;color:var(--zt-peach)!important;border-color:var(--zt-line)!important}
+body.chat-page .sidebar-top{background:var(--zt-bg)!important;border-color:var(--zt-line)!important}
+body.chat-page .app-brand,body.chat-page .app-brand strong{color:var(--zt-peach)!important}
+body.chat-page .app-brand img{border-radius:50%}
+body.chat-page .icon-button,body.chat-page .top-actions button,body.chat-page .top-actions a{color:var(--zt-peach)!important;transition:background .18s,transform .18s}
+body.chat-page button,body.chat-page a{-webkit-tap-highlight-color:transparent}
+body.chat-page button:focus-visible,body.chat-page a:focus-visible,body.chat-page input:focus-visible{outline:2px solid var(--zt-peach);outline-offset:3px}
+body.chat-page .search-box{background:#241b16!important;border:1px solid var(--zt-line)!important;border-radius:18px!important}
+body.chat-page .search-box input{color:var(--zt-peach)!important}
+body.chat-page .chat-tabs button{border-radius:999px!important;transition:background .2s,color .2s}
+body.chat-page .chat-tabs button.active{background:#51465f!important;color:#ffe0bd!important}
+body.chat-page .conversation-list{scrollbar-width:thin;scrollbar-color:#514137 transparent}
+body.chat-page .conversation-item,body.chat-page .conversation-row,body.chat-page .chat-list-item{border-radius:16px!important;transition:background .18s,transform .18s}
+body.chat-page .conversation-item:hover,body.chat-page .conversation-row:hover,body.chat-page .chat-list-item:hover{background:#261d18!important}
+body.chat-page .conversation-item:active,body.chat-page .conversation-row:active,body.chat-page .chat-list-item:active{transform:scale(.99)}
+body.chat-page .bottom-nav{background:rgba(35,27,22,.97)!important;border:1px solid var(--zt-line)!important;border-radius:32px!important;box-shadow:0 8px 32px #0005!important;backdrop-filter:blur(18px)}
+body.chat-page .bottom-nav a{color:var(--zt-peach)!important;border-radius:24px!important;transition:background .2s}
+body.chat-page .bottom-nav a.selected,body.chat-page .bottom-nav a[aria-current=page]{background:#332820!important;color:#aeb8ff!important}
+body.chat-page .quick-create-button{background:var(--zt-accent)!important;color:#fff!important;box-shadow:0 8px 24px #0005;transition:transform .2s}
+body.chat-page .quick-create-button:active,body.chat-page .icon-button:active,body.chat-page .chat-icon-button:active,body.chat-page .composer-icon-button:active{transform:scale(.94)}
+body.chat-page .top-more-menu,body.chat-page .quick-create-menu,body.chat-page #chat-more-menu{background:#281f19!important;color:var(--zt-peach)!important;border:1px solid var(--zt-line)!important;border-radius:18px!important;box-shadow:0 16px 42px #0009!important}
+body.chat-page .top-more-menu a,body.chat-page .top-more-menu button,body.chat-page .quick-create-menu a,body.chat-page #chat-more-menu button{color:var(--zt-peach)!important}
+body.chat-page .top-more-menu a:hover,body.chat-page .top-more-menu button:hover,body.chat-page .quick-create-menu a:hover,body.chat-page #chat-more-menu button:hover{background:#3a2b22!important}
+body.chat-page .chat-shell{height:100dvh;min-height:0;background:#0c0908!important;color:var(--zt-peach)!important}
+body.chat-page .chat-header{flex-shrink:0;background:rgba(35,27,22,.96)!important;border:0!important;padding:8px 12px;height:auto;min-height:68px}
+body.chat-page .chat-back,body.chat-page .chat-header-actions button{color:var(--zt-peach)!important}
+body.chat-page .chat-header-actions{display:flex;align-items:center;gap:3px}
+body.chat-page .chat-user-details strong{color:var(--zt-peach)!important;font-size:1.04rem}
+body.chat-page .chat-user-details span{color:var(--zt-muted)!important}
+body.chat-page .messages-panel{position:relative;isolation:isolate;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px clamp(12px,3vw,32px)!important;gap:12px;background-color:#0c0908!important;background-image:radial-gradient(circle at 20% 20%,#39251c55 1px,transparent 2px),radial-gradient(circle at 70% 60%,#45302755 1px,transparent 2px),linear-gradient(135deg,#0b0908,#15100e)!important;background-size:35px 35px,47px 47px,auto}
+body.chat-page .chat-background-overlay{pointer-events:none}
+body.chat-page .date-divider{position:relative;z-index:1;color:#ffe0c3!important;font-size:.86rem!important;font-weight:700!important;margin:10px auto 16px!important;width:auto!important;max-width:fit-content;background:#2a211bcf!important;border:1px solid #ffd0a71c;border-radius:14px;padding:5px 13px}
+body.chat-page .date-divider:before,body.chat-page .date-divider:after{display:none!important}
+body.chat-page .date-divider span{border:0!important;padding:0!important}
+body.chat-page .message-bubble{max-width:min(82%,620px)!important;padding:12px 14px 22px!important;border-radius:20px!important;font-size:clamp(1rem,2.5vw,1.15rem)!important;line-height:1.45;box-shadow:0 3px 10px #0002;overflow-wrap:anywhere}
+body.chat-page .message-bubble.received-bubble{background:#241c17!important;color:#ffdbbc!important;border-bottom-left-radius:6px!important}
+body.chat-page .message-bubble.sent-bubble{background:linear-gradient(135deg,#df5747,#d84378 55%,#714d89)!important;color:#ffe1bf!important;border-bottom-right-radius:6px!important}
+body.chat-page .message-meta{color:#e6bda0!important;font-size:.68rem!important}
+body.chat-page .message-read-mark{color:#aeb8ff!important}
+body.chat-page .message-action-bar{flex-shrink:0;background:#2b211b!important;color:var(--zt-peach)!important}
+body.chat-page .message-composer{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:9px 10px max(9px,env(safe-area-inset-bottom));margin:0!important;background:#241b16!important;border:1px solid var(--zt-line)!important;border-radius:28px!important;box-shadow:0 4px 24px #0004}
+body.chat-page .message-composer input{min-width:0;flex:1;background:transparent!important;color:#ffe0c3!important;border:0!important;outline:none!important;font-size:1rem;padding:10px 5px}
+body.chat-page .message-composer input::placeholder{color:#a68a76!important}
+body.chat-page .composer-icon-button{width:43px;height:43px;min-width:39px;border:0!important;border-radius:50%!important;background:transparent!important;color:var(--zt-peach)!important;display:grid;place-items:center;cursor:pointer;transition:transform .16s,background .16s}
+body.chat-page .composer-icon-button svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.chat-page .send-message-button{background:var(--zt-accent)!important;color:#ffe0bd!important}
+body.chat-page .chat-search-bar{flex-shrink:0;background:#251c17!important}
+body.chat-page .chat-search-field{background:#34271f!important;border-radius:18px}
+body.chat-page .chat-search-field input{color:var(--zt-peach)!important;background:transparent!important}
+body.chat-page .chat-confirm-card,body.chat-page .chat-export-card{background:#2a211b!important;color:var(--zt-peach)!important;border:1px solid var(--zt-line)!important}
+body.chat-page [hidden]{display:none!important}
+@media(max-width:700px){
+ body.chat-page .chat-shell{height:100dvh;min-height:0}
+ body.chat-page .chat-header{gap:6px;padding:7px 8px;min-height:64px}
+ body.chat-page .chat-back{width:38px;height:42px;flex:0 0 38px}
+ body.chat-page .chat-user{gap:8px}
+ body.chat-page .conversation-avatar{width:43px;height:43px;min-width:43px}
+ body.chat-page .chat-header-actions button{width:38px;height:42px;font-size:21px}
+ body.chat-page .chat-video-button{display:none}
+ body.chat-page .messages-panel{padding:12px 10px!important;gap:10px}
+ body.chat-page .message-bubble{max-width:88%!important;padding:10px 12px 21px!important}
+ body.chat-page .message-composer{gap:2px;padding:6px 7px max(6px,env(safe-area-inset-bottom))}
+ body.chat-page .composer-icon-button{width:38px;height:40px;min-width:34px}
+ body.chat-page .composer-icon-button svg{width:23px;height:23px}
+ body.chat-page .message-composer input{font-size:16px;padding:9px 3px}
+ body.chat-page .bottom-nav{position:sticky;bottom:max(8px,env(safe-area-inset-bottom));z-index:30;margin:8px 10px!important}
+ body.chat-page .quick-create{z-index:35}
+}
+@media(prefers-reduced-motion:reduce){body.chat-page *,body.chat-page *:before,body.chat-page *:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
