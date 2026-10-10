@@ -3,6 +3,9 @@
 
   const FUNCTION_URL =
     "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/two-step";
+  const CONTENT_URL =
+    "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/admin-content";
+  let userRows = [];
 
   const TOKEN_KEY = "zakichat-admin-session";
   const ROLE_KEY = "zakichat-admin-role";
@@ -43,7 +46,7 @@
           },
           body: JSON.stringify({
             action: "admin-session-verify",
-            token
+            adminSessionToken: token
           })
         });
 
@@ -51,14 +54,14 @@
 
         const data = await response.json();
 
-        if (!data.valid) return false;
+        if (!(data.success === true || data.valid === true || data.active === true)) return false;
 
         if (data.role) {
           localStorage.setItem(ROLE_KEY, data.role);
         }
 
-        if (data.expires_at) {
-          localStorage.setItem(EXPIRY_KEY, data.expires_at);
+        if (data.expiresAt || data.expires_at) {
+          localStorage.setItem(EXPIRY_KEY, data.expiresAt || data.expires_at);
         }
 
         return true;
@@ -81,7 +84,7 @@
             },
             body: JSON.stringify({
               action: "admin-session-revoke",
-              token
+              adminSessionToken: token
             })
           });
         }
@@ -154,15 +157,78 @@
     }
   }
 
-  function prepareDirectory() {
-    /*
-     * User records are intentionally not fabricated.
-     * The privileged Admin User backend will supply real records.
-     *
-     * Never place a Supabase service-role key in this browser file.
-     */
-    $("result-count").textContent =
-      "Secure user-data connection pending";
+  async function adminRequest(body) {
+    const cfg = window.ZakiChatConfig;
+    if (!cfg?.supabaseKey) throw new Error("Supabase configuration is unavailable.");
+    const response = await fetch(CONTENT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": cfg.supabaseKey,
+        "Authorization": `Bearer ${cfg.supabaseKey}`
+      },
+      body: JSON.stringify(body)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.success === false) {
+      throw new Error(data.error || `User directory request failed (${response.status}).`);
+    }
+    return data;
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+  }
+
+  function renderUsers(metrics = {}) {
+    const list = $("users-list");
+    const empty = $("empty");
+    const query = ($("search").value || "").trim().toLowerCase();
+    const status = $("status-filter").value || "all";
+    const rows = userRows.filter(user => {
+      const matchesStatus = status === "all" ||
+        (status === "online" && user.is_online === true) ||
+        (status === "offline" && user.is_online !== true);
+      const searchable = [user.username, user.full_name, user.phone, user.id].join(" ").toLowerCase();
+      return matchesStatus && (!query || searchable.includes(query));
+    });
+
+    $("total-users").textContent = String(metrics.total ?? userRows.length);
+    $("active-users").textContent = String(metrics.online ?? userRows.filter(user => user.is_online).length);
+    $("restricted-users").textContent = metrics.restricted == null ? "—" : String(metrics.restricted);
+    $("new-users").textContent = String(metrics.newUsers ?? "—");
+    $("result-count").textContent = `${rows.length} user(s) shown`;
+
+    list.innerHTML = rows.map(user => `
+      <article class="user-row">
+        <div class="user-avatar">${escapeHtml((user.full_name || user.username || "U").slice(0, 1).toUpperCase())}</div>
+        <div class="user-details">
+          <strong>${escapeHtml(user.full_name || user.username || "ZakiChat user")}</strong>
+          <span>@${escapeHtml(user.username || "no-username")}</span>
+          <small>${escapeHtml(user.phone || "Phone not available")} · Joined ${escapeHtml(user.created_at ? new Date(user.created_at).toLocaleDateString() : "date unavailable")}</small>
+          <small>ID: ${escapeHtml(user.id)}</small>
+        </div>
+        <span class="user-status ${user.is_online ? "online" : "offline"}">${user.is_online ? "Online" : "Offline"}</span>
+      </article>
+    `).join("");
+
+    empty?.classList.toggle("hidden", rows.length > 0);
+    if (!rows.length) {
+      empty.innerHTML = "<div>👤</div><h3>No matching users</h3><p>Try another search or account activity filter.</p>";
+    }
+  }
+
+  async function loadUsers() {
+    const data = await adminRequest({
+      action: "admin-users-list",
+      adminSessionToken: Admin.token(),
+      search: $("search").value,
+      status: $("status-filter").value
+    });
+    userRows = Array.isArray(data.users) ? data.users : [];
+    renderUsers(data.metrics || {});
+    if (data.truncated) $("result-count").textContent += " (latest 1,000; refine search)";
   }
 
   function handleTool(action) {
@@ -189,15 +255,20 @@
 
   async function initialize() {
     const valid = await Admin.verify();
-
     if (!valid) {
       Admin.clear();
       showDenied();
       return;
     }
-
-    prepareDirectory();
     showApp();
+    try {
+      await loadUsers();
+    } catch (error) {
+      console.error("Unable to load users:", error);
+      $("result-count").textContent = "User backend unavailable";
+      $("empty").classList.remove("hidden");
+      $("empty").innerHTML = "<div>!</div><h3>Could not load users</h3><p>" + escapeHtml(error.message) + "</p>";
+    }
   }
 
   $("login")?.addEventListener("click", () => {
@@ -215,22 +286,11 @@
   $("clear-search")?.addEventListener("click", () => {
     $("search").value = "";
     $("status-filter").value = "all";
-    $("result-count").textContent =
-      "Secure user-data connection pending";
+    renderUsers();
   });
 
-  $("search")?.addEventListener("input", () => {
-    /*
-     * Filtering will be applied to the real privileged user
-     * directory once the backend endpoint is connected.
-     */
-  });
-
-  $("status-filter")?.addEventListener("change", () => {
-    /*
-     * Account status filtering will use real backend records.
-     */
-  });
+  $("search")?.addEventListener("input", () => renderUsers());
+  $("status-filter")?.addEventListener("change", () => renderUsers());
 
   document.querySelectorAll("[data-action]").forEach(button => {
     button.addEventListener("click", () => {
