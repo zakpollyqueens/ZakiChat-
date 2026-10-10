@@ -313,6 +313,77 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, result: data });
     }
 
+    if (action === "admin-communication-overview") {
+      const { data, error } = await db.rpc("admin_communication_overview", {
+        p_token: clean(body.adminSessionToken, 500)
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-communication-conversations") {
+      const { data, error } = await db.rpc("admin_list_conversations", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_search: clean(body.search, 120),
+        p_type: clean(body.type, 30) || "all"
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-communication-conversation-details") {
+      const conversationId = clean(body.conversationId, 80);
+      const { data, error } = await db.rpc("admin_conversation_details", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_conversation_id: conversationId
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-communication-messages") {
+      const conversationId = clean(body.conversationId, 80);
+      const limit = Math.min(100, Math.max(1, Number(body.limit) || 50));
+      const { data, error } = await db.rpc("admin_list_messages", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_conversation_id: conversationId,
+        p_limit: limit
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-community-overview") {
+      const { data, error } = await db.rpc("admin_community_overview", {
+        p_token: clean(body.adminSessionToken, 500)
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-list-groups" || action === "admin-list-channels") {
+      const isGroups = action === "admin-list-groups";
+      const { data, error } = await db.rpc(isGroups ? "admin_list_groups" : "admin_list_channels", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_search: clean(body.search, 120),
+        p_status: clean(body.status, 30) || "all"
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
+    if (action === "admin-community-details") {
+      const communityType = clean(body.communityType, 20);
+      const communityId = clean(body.communityId, 80);
+      const { data, error } = await db.rpc("admin_community_details", {
+        p_token: clean(body.adminSessionToken, 500),
+        p_community_type: communityType,
+        p_community_id: communityId
+      });
+      if (error) throw error;
+      return json({ success: true, result: data });
+    }
+
     if (action === "admin-upgrade-overview") {
       const { data, error } = await db.rpc("admin_upgrade_overview", {
         p_token: clean(body.adminSessionToken, 500)
