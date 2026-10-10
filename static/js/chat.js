@@ -3,17 +3,20 @@ document.addEventListener(
   async () => {
     "use strict";
 
+    // Only the message engine, config and authenticated Supabase client
+    // are hard requirements. Reactions, realtime and media are optional
+    // enhancements and must never prevent the composer from binding.
     if (
       !window.supabase ||
       !window.ZakiChatConfig ||
-      !window.ZakiMessages ||
-      !window.ZakiRealtime ||
-      !window.ZakiReactions ||
-      !window.ZakiMedia
+      !window.ZakiMessages
     ) {
-      console.error(
-        "ZakiChat: required modules are unavailable."
-      );
+      console.error("ZakiChat: core chat modules are unavailable.");
+      const status = document.querySelector(".chat-user-details span, .chat-user span");
+      if (status) {
+        status.textContent = "Chat could not start. Refresh and try again.";
+        status.style.color = "#ff8f9c";
+      }
       return;
     }
 
@@ -31,13 +34,13 @@ document.addEventListener(
       window.ZakiChatConfig
     );
 
-    window.ZakiRealtime.init(
-      window.ZakiChatConfig
-    );
+    if (window.ZakiRealtime?.init) {
+      window.ZakiRealtime.init(window.ZakiChatConfig);
+    }
 
-    window.ZakiMedia.init(
-      window.ZakiChatConfig
-    );
+    if (window.ZakiMedia?.init) {
+      window.ZakiMedia.init(window.ZakiChatConfig);
+    }
 
     const messagesPanel =
       document.querySelector(
@@ -49,15 +52,8 @@ document.addEventListener(
         ".message-composer"
       );
 
-    if (
-      window.ZakiReactions &&
-      messagesPanel
-    ) {
-      window.ZakiReactions.init(
-        db,
-        null,
-        messagesPanel
-      );
+    if (window.ZakiReactions?.init && messagesPanel) {
+      window.ZakiReactions.init(db, null, messagesPanel);
     }
 
     const messageInput =
@@ -2021,6 +2017,11 @@ document.addEventListener(
         return;
       }
 
+      if (!window.ZakiRealtime?.subscribeToMessages) {
+        console.warn("ZakiChat: realtime is unavailable; messages can still be sent, but live updates are paused.");
+        return;
+      }
+
       window.ZakiRealtime.subscribeToMessages(
         conversationId,
         async (
@@ -2142,16 +2143,8 @@ document.addEventListener(
       currentUser =
         user || null;
 
-      if (
-        currentUser &&
-        window.ZakiReactions &&
-        messagesPanel
-      ) {
-        window.ZakiReactions.init(
-          db,
-          currentUser.id,
-          messagesPanel
-        );
+      if (currentUser && window.ZakiReactions?.init && messagesPanel) {
+        window.ZakiReactions.init(db, currentUser.id, messagesPanel);
       }
 
       if (!currentUser) {
