@@ -35,7 +35,7 @@
     <div class="tg-chat-intro">
       <div class="tg-chat-intro-avatar">✉</div>
       <strong>Your private conversation</strong>
-      <p>Telegram-inspired layout, rebuilt for ZakiChat. Messages you type here are local previews until the new chat database is connected.</p>
+      <p>Messages are private to this conversation. Keep it friendly and secure.</p>
     </div>
     <div class="tg-messages" id="tg-messages" aria-live="polite"></div>
     <div class="tg-typing-indicator" id="typing-indicator" hidden><span></span><span></span><span></span><small>typing…</small></div>
@@ -61,7 +61,7 @@
       <span class="tg-record-dot"></span><span class="tg-record-label">Recording voice message</span><strong id="record-timer">00:00</strong>
       <button type="button" class="tg-record-send" id="record-send">Send audio</button>
     </div>
-    <div class="tg-composer-hint" id="composer-hint" aria-live="polite">Chat preview mode · messages are not saved to a server yet</div>
+    <div class="tg-composer-hint" id="composer-hint" aria-live="polite">Enter sends · Shift+Enter adds a line</div>
   </form>
 
   <input id="file-input" type="file" hidden multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
@@ -73,7 +73,7 @@
   <div class="tg-emoji-panel" id="emoji-panel" hidden aria-label="Emoji picker"></div>
   <aside class="tg-info-panel" id="chat-info-panel" hidden>
     <div class="tg-info-head"><strong>Chat information</strong><button id="close-chat-info" type="button" aria-label="Close information">×</button></div>
-    <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Telegram-inspired chat preview</p><div class="tg-info-note">Profile and conversation details will connect when the new chat service is built.</div>
+    <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Telegram-inspired chat preview</p><div class="tg-info-note">Conversation details and notification preferences.</div>
   </aside>
 </main>
 <div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
