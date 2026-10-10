@@ -304,3 +304,13 @@
     font-size: 11px;
   }
 }
+
+.theme-preview.emerald-preview,.keyboard-preview[data-theme="emerald"]{background:linear-gradient(135deg,#061b17,#34d399,#6ee7b7)!important;color:#fff}
+.theme-preview.lavender-preview,.keyboard-preview[data-theme="lavender"]{background:linear-gradient(135deg,#171329,#a78bfa,#e879f9)!important;color:#fff}
+.theme-preview.ocean-preview,.keyboard-preview[data-theme="ocean"]{background:linear-gradient(135deg,#061a2a,#38bdf8,#2dd4bf)!important;color:#fff}
+.theme-preview.midnight-preview,.keyboard-preview[data-theme="midnight"]{background:linear-gradient(135deg,#090d1d,#818cf8,#60a5fa)!important;color:#fff}
+.theme-preview.graphite-preview,.keyboard-preview[data-theme="graphite"]{background:linear-gradient(135deg,#17191d,#64748b,#cbd5e1)!important;color:#fff}
+.theme-preview.cherry-preview,.keyboard-preview[data-theme="cherry"]{background:linear-gradient(135deg,#220b18,#f472b6,#fb7185)!important;color:#fff}
+.theme-preview.gold-preview,.keyboard-preview[data-theme="gold"]{background:linear-gradient(135deg,#211a08,#facc15,#f59e0b)!important;color:#071c19}
+.theme-preview.mint-preview,.keyboard-preview[data-theme="mint"]{background:linear-gradient(135deg,#071c19,#6ee7b7,#2dd4bf)!important;color:#071c19}
+.theme-preview.violet-preview,.keyboard-preview[data-theme="violet"]{background:linear-gradient(135deg,#170c2c,#c084fc,#818cf8)!important;color:#fff}
