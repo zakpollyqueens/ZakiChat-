@@ -313,6 +313,65 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, result: data });
     }
 
+    if (action === "admin-upgrade-requests") {
+      const { data: payments, error } = await db.from("upgrade_payments")
+        .select("id, user_id, plan, amount, currency, status, created_at, metadata")
+        .eq("status", "pending")
+        .contains("metadata", { request_source: "public_upgrade_button" })
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      const userIds = [...new Set((payments || []).map(row => row.user_id).filter(Boolean))];
+      let profileMap = new Map<string, Record<string, unknown>>();
+      if (userIds.length) {
+        const { data: profiles, error: profileError } = await db.from("profiles")
+          .select("id, username, full_name, phone")
+          .in("id", userIds);
+        if (profileError) throw profileError;
+        profileMap = new Map((profiles || []).map(profile => [profile.id, profile]));
+      }
+      return json({
+        success: true,
+        requests: (payments || []).map(row => ({
+          ...row,
+          user: profileMap.get(row.user_id) || null
+        }))
+      });
+    }
+
+    if (action === "admin-upgrade-request-close") {
+      const id = clean(body.id, 80);
+      const reason = clean(body.reason, 1000);
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+        return json({ success: false, error: "A valid upgrade request ID is required." }, 400);
+      }
+      if (reason.length < 3) return json({ success: false, error: "Enter a reason for closing this request." }, 400);
+      const { data: existing, error: findError } = await db.from("upgrade_payments")
+        .select("id, user_id, plan, status, metadata")
+        .eq("id", id)
+        .eq("status", "pending")
+        .contains("metadata", { request_source: "public_upgrade_button" })
+        .maybeSingle();
+      if (findError) throw findError;
+      if (!existing) return json({ success: false, error: "Pending upgrade request not found." }, 404);
+      const metadata = {
+        ...(existing.metadata || {}),
+        closed_by_admin: admin.userId,
+        close_reason: reason,
+        closed_at: new Date().toISOString()
+      };
+      const { data: updated, error: updateError } = await db.from("upgrade_payments")
+        .update({ status: "cancelled", metadata, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select("id, status, updated_at")
+        .single();
+      if (updateError) throw updateError;
+      await audit(admin.userId, "upgrade_request_closed", "upgrade_payment", id, {
+        user_id: existing.user_id, plan: existing.plan, reason
+      });
+      return json({ success: true, request: updated });
+    }
+
     if (action === "admin-notices-list") {
       const { data, error } = await db.from("admin_system_notices")
         .select("*")
