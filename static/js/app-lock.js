@@ -110,9 +110,8 @@
     showLocked();
   }
   function init() {
-    if (!iconButton()) return;
     ensureOverlay();
-    iconButton().addEventListener("click", toggleLock);
+    iconButton()?.addEventListener("click", toggleLock);
     syncButton();
     if (isLocked()) showLocked();
     document.addEventListener("visibilitychange", () => {
