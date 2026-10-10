@@ -1,0 +1,19 @@
+.zaki-app-lock-button{display:inline-grid;place-items:center;width:38px;height:38px;min-width:38px;border:1px solid rgba(255,205,166,.18);border-radius:50%;background:rgba(255,255,255,.045);color:inherit;font-size:19px;line-height:1;cursor:pointer;touch-action:manipulation;transition:background .18s,transform .18s}
+.zaki-app-lock-button:hover,.zaki-app-lock-button:focus-visible{background:rgba(255,190,140,.16);outline:2px solid rgba(255,190,140,.4);outline-offset:2px}
+.zaki-app-lock-button:active{transform:scale(.94)}
+.zaki-lock-screen[hidden]{display:none!important}
+.zaki-lock-screen{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;box-sizing:border-box;padding:20px;background:radial-gradient(circle at 50% 10%,#54301e 0,#1b130f 44%,#090807 100%);color:#ffdfc5;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:auto}
+.zaki-lock-card{width:min(100%,370px);box-sizing:border-box;padding:30px 24px 24px;border:1px solid rgba(255,207,169,.2);border-radius:26px;background:rgba(35,25,19,.94);box-shadow:0 24px 80px #0008;text-align:center}
+.zaki-lock-mark{display:grid;place-items:center;width:76px;height:76px;margin:0 auto 16px;border-radius:24px;background:linear-gradient(145deg,#e95b4b,#b92c69);font-size:34px;box-shadow:0 12px 35px #c33b5140}
+.zaki-lock-card h1{margin:0 0 8px;font-size:1.55rem;color:#fff0e2}
+.zaki-lock-card p{color:#c8ad99;line-height:1.5}
+.zaki-lock-card label{display:block;text-align:left;margin:20px 0 8px;font-size:.9rem;color:#f1cdb2}
+.zaki-lock-card input{box-sizing:border-box;width:100%;min-height:50px;padding:12px 14px;border:1px solid #684735;border-radius:14px;background:#160f0c;color:#fff0e2;font-size:1.2rem;letter-spacing:.22em;outline:none}
+.zaki-lock-card input:focus{border-color:#f28c70;box-shadow:0 0 0 3px #f28c702e}
+.zaki-lock-card button{width:100%;min-height:48px;margin-top:14px;border:0;border-radius:14px;background:linear-gradient(120deg,#ed6b4e,#c13d75);color:white;font-weight:750;font-size:1rem;cursor:pointer}
+.zaki-lock-card button:disabled{opacity:.6}
+.zaki-lock-card .zaki-lock-secondary{background:transparent;border:1px solid #5a4032;color:#e6bda3}
+.zaki-lock-card #zaki-lock-error{min-height:1.25em;margin:10px 0 0;color:#ff9b9b;font-size:.9rem}
+body.zaki-app-is-locked{overflow:hidden!important}
+@media(max-width:480px){.zaki-lock-card{padding:26px 19px;border-radius:22px}.zaki-app-lock-button{width:36px;height:36px;min-width:36px}}
+@media(prefers-reduced-motion:reduce){.zaki-app-lock-button{transition:none}}
