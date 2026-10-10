@@ -47,7 +47,6 @@
           <label for="zaki-lock-passcode">Passcode</label>
           <input id="zaki-lock-passcode" name="passcode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="current-password" required>
           <button type="submit" id="zaki-lock-submit">Unlock</button>
-          <button type="button" id="zaki-lock-forgot" class="zaki-lock-secondary">Forgot passcode?</button>
           <p id="zaki-lock-error" role="alert" aria-live="polite"></p>
         </form>
       </div>`;
@@ -79,16 +78,7 @@
         error.textContent = e.message || "Could not verify passcode.";
       } finally { submit.disabled = false; }
     });
-    overlay.querySelector("#zaki-lock-forgot").addEventListener("click", () => {
-      const ok = confirm("For your security, resetting a forgotten app passcode removes this device's saved passcode and unlocks ZakiChat. Continue?");
-      if (!ok) return;
-      localStorage.removeItem(PASS_KEY);
-      setLocked(false);
-      overlay.hidden = true;
-      document.body.classList.remove("zaki-app-is-locked");
-      showSetup();
-      syncButton();
-    });
+
     return overlay;
   }
   function showLocked() {
