@@ -4660,10 +4660,10 @@ body.zaki-keyboard-open .message-composer#message-composer {
   width: min(100%, 520px);
 }
 .zaki-avatar-viewer-image {
-  width: min(78vw, 420px);
-  height: min(78vw, 420px);
-  border-radius: 50%;
-  background: #17212b center / contain no-repeat;
+  width: min(90vw, 560px);
+  height: min(72vh, 680px);
+  border-radius: 14px;
+  background: #0e1621 center / contain no-repeat;
   box-shadow: 0 14px 50px rgba(0,0,0,.3);
 }
 .zaki-avatar-viewer-name { font-size: 18px; }
