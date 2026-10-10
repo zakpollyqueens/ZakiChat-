@@ -15,6 +15,7 @@ const ROLE_KEY = "zakichat-admin-role";
 const EXPIRY_KEY = "zakichat-admin-expiry";
 const ADMIN_CONTENT_URL = `${SUPABASE_URL}/functions/v1/admin-content`;
 let upgradeRequests = [];
+let registrationPaymentRequests = [];
 let selectedUpgradeRequestId = null;
 
 const $ = id => document.getElementById(id);
@@ -649,6 +650,81 @@ function setupFilters() {
   );
 }
 
+async function loadRegistrationPaymentRequests() {
+  const data = await adminContentRequest({
+    action: "admin-registration-payment-requests",
+    adminSessionToken: getToken()
+  });
+  registrationPaymentRequests = Array.isArray(data.requests) ? data.requests : [];
+  const list = $("registrationPaymentsList");
+  const empty = $("registrationPaymentsEmpty");
+  $("registrationPaymentsCount").textContent = registrationPaymentRequests.length + " pending registration fee(s)";
+  if (!registrationPaymentRequests.length) {
+    list.innerHTML = "";
+    empty?.removeAttribute("hidden");
+    return;
+  }
+  empty?.setAttribute("hidden", "");
+  list.innerHTML = registrationPaymentRequests.map(request => `
+    <article class="upgrade-request-card registration-payment-request">
+      <div>
+        <strong>${escapeHtml(request.phone)}</strong>
+        <span>${escapeHtml(request.country_name || request.country_code)} · USD ${escapeHtml(Number(request.fee_usd).toFixed(2))}</span>
+        <small>Request: ${escapeHtml(request.id)} · ${escapeHtml(formatDate(request.created_at))}</small>
+        <small>Provider: ${escapeHtml(request.provider || "Not configured")}</small>
+      </div>
+      <div class="upgrade-request-actions">
+        <button type="button" data-mark-registration-paid="${escapeHtml(request.id)}">Mark Paid</button>
+        <button type="button" data-cancel-registration-payment="${escapeHtml(request.id)}">Cancel</button>
+      </div>
+    </article>
+  `).join("");
+
+  list.querySelectorAll("[data-mark-registration-paid]").forEach(button => {
+    button.addEventListener("click", () => markRegistrationPaymentPaid(button.dataset.markRegistrationPaid));
+  });
+  list.querySelectorAll("[data-cancel-registration-payment]").forEach(button => {
+    button.addEventListener("click", () => cancelRegistrationPayment(button.dataset.cancelRegistrationPayment));
+  });
+}
+
+async function markRegistrationPaymentPaid(id) {
+  const reference = window.prompt("Enter the verified transaction reference:");
+  if (!reference || reference.trim().length < 3) return;
+  if (!window.confirm("Confirm you have verified this payment externally and want to mark it paid?")) return;
+  try {
+    await adminContentRequest({
+      action: "admin-registration-payment-update",
+      adminSessionToken: getToken(),
+      id,
+      status: "paid",
+      paymentReference: reference.trim()
+    });
+    await loadRegistrationPaymentRequests();
+    showManualResult("Registration fee marked paid. The user can retry signup with the same phone number.");
+  } catch (error) {
+    window.alert(error.message || "Unable to mark registration fee paid.");
+  }
+}
+
+async function cancelRegistrationPayment(id) {
+  const reason = window.prompt("Reason for cancelling this registration fee request:");
+  if (!reason || reason.trim().length < 3) return;
+  if (!window.confirm("Cancel this registration fee request?")) return;
+  try {
+    await adminContentRequest({
+      action: "admin-registration-payment-update",
+      adminSessionToken: getToken(),
+      id,
+      status: "cancelled",
+      reason: reason.trim()
+    });
+    await loadRegistrationPaymentRequests();
+  } catch (error) {
+    window.alert(error.message || "Unable to cancel registration fee request.");
+  }
+}
+
 async function loadUpgradeRequests() {
   const data = await adminContentRequest({
     action: "admin-upgrade-requests",
@@ -716,6 +792,7 @@ async function closeUpgradeRequest(id) {
     });
     if (selectedUpgradeRequestId === id) selectedUpgradeRequestId = null;
     await loadUpgradeRequests();
+    await loadRegistrationPaymentRequests();
   } catch (error) {
     window.alert(error.message || "Unable to close the request.");
   }
@@ -745,6 +822,13 @@ function setupEvents() {
     "click",
     () => loadUpgradeRequests().catch(error => {
       $("upgradeRequestsCount").textContent = error.message || "Unable to load requests";
+    })
+  );
+
+  $("refreshRegistrationPayments")?.addEventListener(
+    "click",
+    () => loadRegistrationPaymentRequests().catch(error => {
+      $("registrationPaymentsCount").textContent = error.message || "Unable to load requests";
     })
   );
 
