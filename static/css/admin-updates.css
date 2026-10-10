@@ -30,3 +30,9 @@ label{display:block;color:#b8c8d9;font-size:11px;margin:15px 0}input,select,text
 @keyframes spin{to{transform:rotate(360deg)}}@keyframes float{to{transform:translate(30px,25px) scale(1.08)}}@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
 @media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.quick-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.admin-topbar{align-items:flex-start}.top-actions{max-width:55%}.top-btn{padding:8px 9px;font-size:10px}.page{width:94%;padding-top:20px}.hero{align-items:flex-start;flex-direction:column}.metrics{grid-template-columns:1fr 1fr;gap:9px}.metric-card{padding:15px}.metric-card strong{font-size:23px}.publish-row,.surface-links{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.form-actions{flex-direction:column}.form-actions button{width:100%}}
+
+
+.update-history-item{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:16px;border:1px solid rgba(255,255,255,.1);border-radius:14px;margin:10px 0;background:rgba(255,255,255,.025)}
+.update-history-item>div{min-width:0;flex:1}
+.update-history-item strong,.update-history-item p,.update-history-item small{display:block;overflow-wrap:anywhere;margin:8px 0}
+.update-history-item small{opacity:.72}
