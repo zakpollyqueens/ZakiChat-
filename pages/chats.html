@@ -44,6 +44,14 @@
     <div id="chat-list-results" class="tg-chat-list" hidden></div>
   </section>
 
+  <dialog class="tg-new-chat-dialog" id="new-chat-dialog" aria-labelledby="new-chat-title">
+    <div class="tg-dialog-head"><div><span class="tg-kicker">ZAKICHAT</span><h2 id="new-chat-title">New conversation</h2></div><button type="button" class="tg-icon-btn" id="new-chat-close" aria-label="Close">×</button></div>
+    <p class="tg-dialog-help">Find a person by their name, username, or phone number.</p>
+    <label class="tg-search tg-dialog-search"><span aria-hidden="true">⌕</span><input id="new-chat-search" type="search" placeholder="Search people" autocomplete="off"></label>
+    <div class="tg-new-chat-results" id="new-chat-results">Type at least 2 characters to find people.</div>
+    <div class="tg-dialog-footer"><button class="tg-primary-btn" id="new-group-create" type="button">＋ Create a group</button></div>
+  </dialog>
+
   <nav class="tg-bottom-nav" aria-label="Main navigation">
     <a class="is-current" href="chats.html" aria-current="page"><span aria-hidden="true">▤</span><span>Chats</span></a>
     <a href="settings.html"><span aria-hidden="true">⚙</span><span>Settings</span></a>
