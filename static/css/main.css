@@ -638,3 +638,103 @@ body::before {
 
 :root[data-zakichat-chat-style="rounded"] .message-bubble{border-radius:22px!important}
 :root[data-zakichat-chat-style="glass"] .message-bubble{backdrop-filter:blur(14px);background:rgba(255,255,255,.09)!important;border:1px solid rgba(255,255,255,.12)}
+
+
+/* =========================================================
+   ZakiChat Button Motion System — Telegram / WhatsApp-inspired
+   ========================================================= */
+:root {
+  --zc-button-motion: cubic-bezier(.2,.75,.25,1);
+  --zc-button-ring: rgba(39,211,162,.3);
+}
+
+/* One consistent motion language, while each page keeps its own button design. */
+html body :is(
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  .button,
+  .btn
+) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    transform .18s var(--zc-button-motion),
+    box-shadow .2s var(--zc-button-motion),
+    filter .18s ease,
+    background-color .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    opacity .18s ease !important;
+}
+
+html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):not(:disabled):not([disabled]):not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):not(:disabled):not([disabled]):not([aria-disabled="true"]):hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):not(:disabled):not([disabled]):not([aria-disabled="true"]):active {
+    filter: brightness(.97);
+    transform: translateY(0) scale(.975);
+  }
+}
+
+html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):focus-visible {
+  outline: 2px solid var(--primary, #27d3a2) !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px var(--zc-button-ring) !important;
+}
+
+html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):is(:disabled, [disabled], [aria-disabled="true"]) {
+  cursor: not-allowed;
+  opacity: .56;
+  filter: saturate(.72);
+  transform: none !important;
+  box-shadow: none;
+}
+
+/* Primary actions feel confident; secondary and icon buttons retain their own colors. */
+html body :is(button, input[type="submit"], .button, .btn):is(.primary, .btn-primary, .button-primary, .primary-button, .send-button, #send-message, #send-button) {
+  box-shadow: 0 5px 16px rgba(39,211,162,.12);
+}
+
+html body :is(button, .icon-button, .chat-icon-button, .message-action, .nav-button, .bottom-nav-item, .tab-button, [data-action]) {
+  background-clip: padding-box;
+}
+
+html body :is(button, .icon-button, .chat-icon-button, .message-action, .nav-button, .bottom-nav-item, .tab-button, [data-action]):not(:disabled):not([disabled]):active {
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
+}
+
+html body :is(button, [role="button"], .nav-button, .bottom-nav-item, .tab-button)[aria-pressed="true"],
+html body :is(button, [role="button"], .nav-button, .bottom-nav-item, .tab-button)[aria-current="page"],
+html body :is(button, [role="button"], .nav-button, .bottom-nav-item, .tab-button).active,
+html body :is(button, [role="button"], .nav-button, .bottom-nav-item, .tab-button).is-active {
+  border-color: var(--primary, #27d3a2);
+}
+
+/* Show an unmistakable in-progress state for controls already marked busy. */
+html body :is(button, [role="button"], .button, .btn)[aria-busy="true"] {
+  cursor: progress;
+  pointer-events: none;
+  opacity: .78;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn) {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+  html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):hover,
+  html body :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"], .button, .btn):active {
+    transform: none !important;
+  }
+}
