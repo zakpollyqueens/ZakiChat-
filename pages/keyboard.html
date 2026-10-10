@@ -75,6 +75,31 @@
       </div>
     </section>
 
+    <section class="keyboard-card keyboard-mode-card">
+      <div class="keyboard-heading">
+        <span aria-hidden="true">⌨️</span>
+        <div>
+          <h2>Choose your typing keyboard</h2>
+          <p>Switch between ZakiChat's built-in keyboard and your phone's system keyboard.</p>
+        </div>
+      </div>
+      <label class="keyboard-row keyboard-mode-option">
+        <span>
+          <strong>ZakiChat Keyboard</strong>
+          <small>Use the keyboard built into ZakiChat, with its themes and quick tools.</small>
+        </span>
+        <input type="radio" name="keyboardMode" value="zaki" id="keyboardModeZaki">
+      </label>
+      <label class="keyboard-row keyboard-mode-option">
+        <span>
+          <strong>Google Gboard / Device keyboard</strong>
+          <small>Use the keyboard selected in Android, such as Gboard, if installed and enabled.</small>
+        </span>
+        <input type="radio" name="keyboardMode" value="system" id="keyboardModeSystem">
+      </label>
+      <p class="keyboard-mode-help">ZakiChat cannot install or switch Android keyboards for you. If Gboard is not available, enable it in your phone's Android keyboard settings first.</p>
+    </section>
+
     <section class="keyboard-card">
       <div class="keyboard-heading">
         <span>⌨️</span>
@@ -292,11 +317,11 @@
     </section>
 
     <div class="keyboard-notice">
-      <strong>ℹ️ ZakiChat keyboard</strong>
+      <strong>ℹ️ Keyboard choice</strong>
       <p>
-        These settings control the ZakiChat keyboard used inside chat
-        composition and chat search. They do not replace Android's system
-        keyboard such as Gboard.
+        Your keyboard choice is saved on this device and applies to chat
+        typing and chat search. The device keyboard option opens your selected
+        Android keyboard (for example, Gboard) when you focus a text field.
       </p>
     </div>
 
