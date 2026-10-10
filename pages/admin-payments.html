@@ -102,7 +102,23 @@
               <span class="secure-chip">🔒 Admin Only</span>
             </div>
 
-            <section class="panel pending-upgrade-requests">
+            <section class="panel pending-registration-payments">
+  <div class="section-heading">
+    <div>
+      <h2>Pending Registration Fees</h2>
+      <p>Verify the real mobile-money or provider transaction before marking a fee paid. Paid requests let the matching phone number finish signup.</p>
+    </div>
+    <button type="button" id="refreshRegistrationPayments" class="button">Refresh</button>
+  </div>
+  <p id="registrationPaymentsCount" role="status">Loading registration requests…</p>
+  <div id="registrationPaymentsList"></div>
+  <div id="registrationPaymentsEmpty" hidden>
+    <h3>No pending registration fees</h3>
+    <p>New fee requests from non-free registration countries will appear here.</p>
+  </div>
+</section>
+
+<section class="panel pending-upgrade-requests">
   <div class="section-heading">
     <div>
       <h2>Pending Customer Upgrade Requests</h2>
