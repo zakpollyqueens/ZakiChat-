@@ -216,7 +216,7 @@
     list.innerHTML = filtered.map(report => {
       const statusRow = communityStatuses.find(item => item.community_type === report.community_type && item.community_id === report.community_id);
       const actions = [
-        report.status !== "under_review" ? ["mark_under_review", "Mark Review"] : null,
+        report.status !== "reviewing" ? ["mark_under_review", "Mark Review"] : null,
         report.status !== "action_required" ? ["require_changes", "Request Changes"] : null,
         ["restrict", "Restrict"],
         ["suspend", "Suspend"],
