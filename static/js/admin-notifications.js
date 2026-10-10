@@ -31,7 +31,7 @@
 
     const expiryMs = Date.parse(s.expiry) || Number(s.expiry);
 
-    if (!s.token || s.role !== "admin" || !expiryMs || Date.now() >= expiryMs) {
+    if (!s.token || !["admin", "super_admin"].includes(s.role) || !expiryMs || Date.now() >= expiryMs) {
       return false;
     }
 
