@@ -18,3 +18,6 @@ verify_jwt = true
 
 [functions.upgrade-checkout]
 verify_jwt = true
+
+[functions.security-auth]
+verify_jwt = true
