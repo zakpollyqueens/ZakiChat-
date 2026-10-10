@@ -24,8 +24,21 @@ async function verifyAdminSession(){
   if(!token)return false;
   const expiry=(Date.parse(localStorage.getItem(EXPIRY_KEY)||"")||Number(localStorage.getItem(EXPIRY_KEY)||0));
   if(expiry&&Date.now()>=expiry){clearAdminSession();return false;}
-  try{return !!(await rpc("admin_session_user",{p_token:token}));}
-  catch(error){console.error("Admin session verification failed:",error);return false;}
+  try {
+    const cfg = window.ZakiChatConfig;
+    if (!cfg?.supabaseKey) return false;
+    const response = await fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": cfg.supabaseKey,
+        "Authorization": "Bearer " + cfg.supabaseKey
+      },
+      body: JSON.stringify({ action: "admin-session-verify", adminSessionToken: token })
+    });
+    const data = await response.json().catch(() => ({}));
+    return response.ok && (data.success === true || data.valid === true || data.active === true);
+  } catch(error){console.error("Admin session verification failed:",error);return false;}
 }
 
 async function secureSignOut(){
