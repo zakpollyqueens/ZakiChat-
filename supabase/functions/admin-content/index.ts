@@ -284,6 +284,7 @@ Deno.serve(async (req: Request) => {
       return json({
         success: true,
         reports,
+        communityStatuses: statuses,
         metrics: {
           openReports: reports.filter((report: any) => report.status === "open").length,
           groupReports: reports.filter((report: any) => report.community_type === "group").length,
