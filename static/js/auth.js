@@ -459,7 +459,7 @@
           "apikey": cfg.supabaseKey,
           "Authorization": "Bearer " + cfg.supabaseKey
         },
-        body: JSON.stringify({ phone: signupState.phone })
+        body: JSON.stringify({ action: "preflight", phone: signupState.phone })
       });
       const feeData = await feeResponse.json().catch(() => ({}));
       if (!feeResponse.ok || feeData.success !== true) {
