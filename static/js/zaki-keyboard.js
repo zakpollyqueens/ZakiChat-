@@ -569,7 +569,7 @@
       keyboardElement?.classList.remove("visible");
     }
 
-    document.addEventListener("zaki:keyboard-settings-changed", () => {
+    window.addEventListener("zaki:keyboard-settings-changed", () => {
       settings = loadSettings();
       const keyboard = document.getElementById(KEYBOARD_ID);
       if (isSystemKeyboardMode()) {
