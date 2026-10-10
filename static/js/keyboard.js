@@ -47,6 +47,15 @@
   }
 
   let settings = load();
+  let hasPremium = false;
+  const BASIC_THEMES = ["dark", "light", "cyan"];
+  async function verifyPlan() {
+    try {
+      await window.ZakiChatAppearance?.loadPlan?.();
+      hasPremium = Boolean(window.ZakiChatAppearance?.isPremium?.());
+    } catch (error) { console.warn("Unable to verify keyboard theme entitlement", error); }
+    if (!hasPremium && !BASIC_THEMES.includes(settings.theme)) { settings.theme = "dark"; save(settings); }
+  }
 
   function apply() {
     const themeButtons =
@@ -126,6 +135,12 @@
       .querySelectorAll(".keyboard-theme")
       .forEach(button => {
         button.addEventListener("click", () => {
+          if (!BASIC_THEMES.includes(button.dataset.theme) && !hasPremium) {
+            if (confirm("This keyboard theme is included with Customized Personal. Open upgrade plans?")) {
+              window.location.href = "about.html?upgrade=personal_monthly#paid-upgrades";
+            }
+            return;
+          }
           settings.theme = button.dataset.theme;
           save(settings);
           apply();
@@ -199,7 +214,8 @@
       });
   }
 
-  function init() {
+  async function init() {
+    await verifyPlan();
     apply();
     bind();
   }
