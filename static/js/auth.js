@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  const REGISTRATION_PAYMENT_URL =
+    "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
+
   if (!window.supabase || !window.ZakiChatConfig) {
     console.error("ZakiChat authentication could not start.");
     return;
@@ -442,6 +445,36 @@
     setLoading(button, true, "Create Account");
 
     try {
+      const cfg = window.ZakiChatConfig;
+      if (!cfg?.supabaseKey) {
+        throw new Error("Registration payment configuration is unavailable. Please try again later.");
+      }
+
+      const feeResponse = await fetch(REGISTRATION_PAYMENT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": cfg.supabaseKey,
+          "Authorization": "Bearer " + cfg.supabaseKey
+        },
+        body: JSON.stringify({ phone: signupState.phone })
+      });
+      const feeData = await feeResponse.json().catch(() => ({}));
+      if (!feeResponse.ok || feeData.success !== true) {
+        throw new Error(feeData.error || "Unable to verify the registration fee. Your account has not been created.");
+      }
+
+      if (feeData.paymentRequired) {
+        showMessage(
+          message,
+          "A one-time registration fee of $" + Number(feeData.feeUsd).toFixed(2) +
+            " USD is required for your country. The payment checkout is not configured yet, so your account has not been created. Please try again once registration payments are enabled.",
+          "error"
+        );
+        setLoading(button, false, "Create Account");
+        return;
+      }
+
       const { data, error } =
         await supabaseClient.auth.signUp({
           phone: signupState.phone,
