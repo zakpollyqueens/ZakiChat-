@@ -34,7 +34,7 @@
       // legacy phone-confirmed sessions working during the migration so existing users
       // are not unexpectedly locked out of their chats.
       const verifiedEmail = Boolean(user?.email && user.email_confirmed_at);
-      const legacyVerifiedPhone = Boolean(user?.phone && user.phone_confirmed_at);
+      const legacyVerifiedPhone = Boolean(user?.phone && user.phone_confirmed_at && !user?.email);
       // For email accounts, require an email OTP/magic-link authentication method in the
       // access token as well as a confirmed address. This prevents a password-only session
       // from entering the web app without completing the email-link step.
