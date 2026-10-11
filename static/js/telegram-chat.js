@@ -46,7 +46,33 @@ function stopStream(){if(recordStream){recordStream.getTracks().forEach(t=>t.sto
 function endRecordingUI(){clearInterval(recordTimer);$("#recording-bar").hidden=true;$("#composer-hint").hidden=false;$("#message-input").disabled=false;$("#attach-button").disabled=false}
 function startRecording(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){toast("Voice recording is not supported in this browser.");return}navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{recordStream=stream;recordChunks=[];recordedBlob=null;mediaRecorder=new MediaRecorder(stream);mediaRecorder.ondataavailable=e=>{if(e.data?.size)recordChunks.push(e.data)};mediaRecorder.onstop=()=>{recordedBlob=recordChunks.length?new Blob(recordChunks,{type:mediaRecorder.mimeType||"audio/webm"}):null;stopStream()};mediaRecorder.start();recordStarted=Date.now();$("#recording-bar").hidden=false;$("#composer-hint").hidden=true;$("#message-input").disabled=true;$("#attach-button").disabled=true;$("#record-timer").textContent="00:00";recordTimer=setInterval(()=>{const sec=Math.floor((Date.now()-recordStarted)/1000);$("#record-timer").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")},250)}).catch(err=>{console.error("Microphone permission/recording error:",err);toast(err?.name==="NotAllowedError"?"Allow microphone access to record a voice message.":"Could not start voice recording.")})}
 function cancelRecording(){if(mediaRecorder&&mediaRecorder.state!=="inactive")mediaRecorder.stop();recordChunks=[];recordedBlob=null;endRecordingUI();toast("Voice recording cancelled.")}
-async function initSupabaseConnection(){try{const {client,user}=await getCurrentBackend();setStatus("Supabase connected · signed in");if(document.body.classList.contains("tg-list-page"))await loadConversationList();if(document.body.classList.contains("tg-conversation-page"))await loadConversationPage();subscribeToIncomingCalls();$("#tg-call-accept")?.addEventListener("click",()=>acceptIncomingCall().catch(friendlyError));$("#tg-call-reject")?.addEventListener("click",()=>rejectIncomingCall());$("#tg-call-end")?.addEventListener("click",()=>endActiveCall());}catch(error){setStatus("Unable to connect · check sign-in");const peer=$("#peer-status");if(peer)peer.textContent="Sign in to use ZakiChat";console.error("ZakiChat chat bootstrap failed:",error)}}
+async function updateUnreadStatusBadge(){
+  const link=$("#chat-updates-indicator"),badge=$("#chat-updates-badge");
+  if(!link||!badge||!activeClient||!activeUser)return;
+  try{
+    const {data:statuses,error}=await activeClient.from("status_updates")
+      .select("id,user_id").gt("expires_at",new Date().toISOString())
+      .neq("user_id",activeUser.id).order("created_at",{ascending:false}).limit(100);
+    if(error)throw error;
+    const rows=statuses||[],ids=rows.map(row=>row.id);
+    let viewed=new Set();
+    if(ids.length){
+      const {data,error:viewError}=await activeClient.from("status_views")
+        .select("status_id").eq("viewer_id",activeUser.id).in("status_id",ids);
+      if(viewError)throw viewError;
+      viewed=new Set((data||[]).map(row=>row.status_id));
+    }
+    const unread=rows.filter(row=>!viewed.has(row.id)).length;
+    badge.hidden=unread===0;
+    badge.textContent=unread>9?"9+":String(unread);
+    link.classList.toggle("has-unread",unread>0);
+    link.setAttribute("aria-label",unread?("Updates, "+unread+" unviewed status updates"):"Updates");
+  }catch(error){
+    // RLS still decides which statuses are visible; a badge failure must not block chats.
+    console.warn("Could not refresh unread Updates indicator:",error);
+  }
+}
+async function initSupabaseConnection(){try{const {client,user}=await getCurrentBackend();setStatus("Supabase connected · signed in");if(document.body.classList.contains("tg-list-page"))await loadConversationList();if(document.body.classList.contains("tg-conversation-page"))await loadConversationPage();await updateUnreadStatusBadge();window.setInterval(updateUnreadStatusBadge,60000);subscribeToIncomingCalls();$("#tg-call-accept")?.addEventListener("click",()=>acceptIncomingCall().catch(friendlyError));$("#tg-call-reject")?.addEventListener("click",()=>rejectIncomingCall());$("#tg-call-end")?.addEventListener("click",()=>endActiveCall());}catch(error){setStatus("Unable to connect · check sign-in");const peer=$("#peer-status");if(peer)peer.textContent="Sign in to use ZakiChat";console.error("ZakiChat chat bootstrap failed:",error)}}
 async function fetchProfiles(ids){if(!ids?.length)return[];const {data,error}=await activeClient.from("profiles").select("id,username,full_name,phone,avatar_url,is_online,last_seen").in("id",ids);if(error)throw error;return data||[]}
 function makeChatRow(row,profile,lastMessage,archived){const a=document.createElement("a");a.className="tg-chat-row";a.href="chat.html?id="+encodeURIComponent(row.id);a.dataset.conversationId=row.id;a.dataset.kind=row.kind;a.dataset.archived=String(!!archived);const avatar=document.createElement("span");avatar.className="tg-avatar";if(profile?.avatar_url){const img=document.createElement("img");img.src=profile.avatar_url;img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";avatar.textContent="";avatar.append(img)}else avatar.textContent=initials(row.kind==="group"?row.title:profileName(profile));const copy=document.createElement("span");copy.className="tg-chat-row-copy";const title=document.createElement("strong");title.textContent=(row.kind==="group"||row.kind==="channel"||row.kind==="channels")?(row.title||"Channel"):profileName(profile);const preview=document.createElement("p");preview.textContent=(lastMessage?.sender_id===activeUser.id?"You: ":"")+messagePreview(lastMessage);copy.append(title,preview);const meta=document.createElement("span");meta.className="tg-chat-row-meta";const time=document.createElement("small");time.textContent=niceTime(lastMessage?.created_at||row.last_message_at);meta.append(time);if(lastMessage?.sender_id!==activeUser.id&&lastMessage&&(!row.last_read_at||new Date(lastMessage.created_at)>new Date(row.last_read_at))){const dot=document.createElement("i");dot.className="tg-unread-dot";dot.setAttribute("aria-label","Unread messages");meta.append(dot)}if(row.is_pinned){const pin=document.createElement("small");pin.textContent="📌";pin.title="Pinned chat";meta.append(pin)}a.append(avatar,copy,meta);
 let startX=0,startY=0;a.addEventListener("touchstart",e=>{startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY},{passive:true});a.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;if(dx>65&&dx>Math.abs(dy)){e.preventDefault();toggleArchive(row.id,!archived).catch(friendlyError)}},{passive:false});a.addEventListener("contextmenu",e=>{e.preventDefault();toggleArchive(row.id,!archived).catch(friendlyError)});return a}
