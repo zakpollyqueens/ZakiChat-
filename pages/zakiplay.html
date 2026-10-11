@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071426">
+<meta name="description" content="ZakiPlay — your personal music and video corner inside ZakiChat.">
+<title>ZakiPlay · ZakiChat</title>
+<link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/telegram-chat.css">
+<link rel="stylesheet" href="../static/css/signature-theme.css">
+<link rel="stylesheet" href="../static/css/zakiplay.css">
+</head>
+<body class="zplay-page">
+<main class="zplay-shell">
+  <header class="zplay-header">
+    <a class="zplay-back" href="chats.html" aria-label="Back to chats">‹</a>
+    <img src="../static/images/icon.jpg" alt="" class="zplay-brand-icon">
+    <div class="zplay-brand"><span>ZAKICHAT EXCLUSIVE</span><h1>ZakiPlay</h1><p>Your personal entertainment corner</p></div>
+    <span class="zplay-crown" aria-label="Customized Personal feature">✦</span>
+  </header>
+
+  <section class="zplay-gate" id="zplayGate" aria-live="polite">
+    <div class="zplay-loader"></div><strong>Checking your Customized Personal access…</strong>
+  </section>
+
+  <section class="zplay-content" id="zplayContent" hidden>
+    <div class="zplay-hero">
+      <div class="zplay-hero-orb orb-one"></div><div class="zplay-hero-orb orb-two"></div>
+      <span class="zplay-eyebrow">YOUR MOOD. YOUR MOMENT.</span>
+      <h2>A little music.<br><em>A little escape.</em></h2>
+      <p>Play music and videos you own, or jump into trusted media services without leaving your ZakiChat space.</p>
+      <div class="zplay-hero-tags"><span>♫ Music</span><span>▶ Video</span><span>♡ Your time</span></div>
+    </div>
+
+    <section class="zplay-player-card" aria-labelledby="zplayPlayerHeading">
+      <div class="zplay-section-heading"><div><span class="zplay-eyebrow">YOUR PLAYER</span><h2 id="zplayPlayerHeading">Play something</h2></div><span class="zplay-live-dot">READY</span></div>
+      <div class="zplay-player">
+        <div class="zplay-disc" id="zplayDisc" aria-hidden="true"><span>♫</span></div>
+        <div class="zplay-player-copy"><strong id="zplayMediaTitle">Nothing playing yet</strong><small id="zplayMediaHint">Choose an audio or video file from your device.</small></div>
+      </div>
+      <div class="zplay-file-actions">
+        <label class="zplay-button zplay-button-primary">♫ Choose music<input id="zplayAudioFile" type="file" accept="audio/*" hidden></label>
+        <label class="zplay-button">▶ Choose video<input id="zplayVideoFile" type="file" accept="video/*" hidden></label>
+      </div>
+      <div class="zplay-media-stage" id="zplayMediaStage"><div class="zplay-stage-empty"><span>♫</span><strong>Your next favourite moment starts here.</strong><small>Files you choose play on this device; they are not uploaded.</small></div></div>
+      <div class="zplay-url-row"><label for="zplayMediaUrl">Play a direct media link</label><div><input id="zplayMediaUrl" type="url" inputmode="url" placeholder="https://…/track.mp3 or video.mp4"><button id="zplayLoadUrl" type="button">Play</button></div><small>Use a direct audio/video file URL you have permission to access. Many social and streaming links cannot be played directly here.</small></div>
+      <div class="zplay-download-row"><button id="zplayDownloadUrl" class="zplay-download" type="button">↓ Download direct file</button><span id="zplayDownloadNote" role="status">Only downloads from sources that permit direct access will work.</span></div>
+    </section>
+
+    <section class="zplay-discover">
+      <div class="zplay-section-heading"><div><span class="zplay-eyebrow">DISCOVER</span><h2>Find your next vibe</h2></div></div>
+      <label class="zplay-search"><span aria-hidden="true">⌕</span><input id="zplaySearch" type="search" placeholder="Search music, videos, movies…"><button id="zplaySearchButton" type="button">Search</button></label>
+      <p class="zplay-search-note">Search opens the selected official service. ZakiPlay does not bypass subscriptions, ads, access controls or creator download restrictions.</p>
+      <div class="zplay-service-grid">
+        <a class="zplay-service service-youtube" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer"><span class="service-icon">▶</span><span><strong>YouTube</strong><small>Music, clips and videos</small></span><b>↗</b></a>
+        <a class="zplay-service service-spotify" href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer"><span class="service-icon">♫</span><span><strong>Spotify</strong><small>Discover music and podcasts</small></span><b>↗</b></a>
+        <a class="zplay-service service-tiktok" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer"><span class="service-icon">♪</span><span><strong>TikTok</strong><small>Short videos and creators</small></span><b>↗</b></a>
+        <a class="zplay-service service-archive" href="https://archive.org/details/movies" target="_blank" rel="noopener noreferrer"><span class="service-icon">▣</span><span><strong>Internet Archive</strong><small>Explore films with rights information</small></span><b>↗</b></a>
+      </div>
+    </section>
+
+    <aside class="zplay-rights-note"><span>ⓘ</span><p><strong>Respect creators.</strong> ZakiPlay plays your local files and direct media links where supported. External services keep their own playback, download, and account rules. We won't fetch or download protected media without permission.</p></aside>
+  </section>
+
+  <section class="zplay-locked" id="zplayLocked" hidden>
+    <div class="zplay-lock-art"><span>♫</span><i>🔒</i></div>
+    <span class="zplay-eyebrow">A PERSONAL EXCLUSIVE</span>
+    <h2>Your own little entertainment world.</h2>
+    <p>ZakiPlay is reserved for active <strong>Customized Personal</strong> accounts. Upgrade to unlock your personal media hub.</p>
+    <a class="zplay-button zplay-button-primary" href="appearance.html">Explore Customized Personal</a>
+    <a class="zplay-back-link" href="chats.html">Back to chats</a>
+  </section>
+
+  <nav class="zplay-bottom-nav" aria-label="Main navigation">
+    <a href="chats.html"><span>▤</span><small>Chats</small></a>
+    <a href="settings.html"><span>⚙</span><small>Settings</small></a>
+    <a href="status.html"><span>◉</span><small>Updates</small></a>
+  </nav>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/account-manager.js"></script>
+<script src="../static/js/supabase-client.js"></script>
+<script src="../static/js/auth-guard.js"></script>
+<script src="../static/js/zakiplay.js"></script>
+</body>
+</html>
