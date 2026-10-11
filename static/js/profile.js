@@ -337,6 +337,7 @@
       fullNameInput,
       phoneInput,
       locationInput,
+      birthdayInput,
       bioInput
     ].forEach(function (input) {
       if (!input) return;
