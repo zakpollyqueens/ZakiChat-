@@ -98,6 +98,10 @@
         );
         if (error) throw error;
         currentMode = nextMode;
+        window.ZakiChatMode = Object.freeze({ current: currentMode, plans, ready: true });
+        document.documentElement.dataset.zakichatAccountMode = currentMode;
+        document.body?.setAttribute("data-zakichat-account-mode", currentMode);
+        window.dispatchEvent(new CustomEvent("zakichat:modechange", { detail: { mode: currentMode } }));
         render();
         setMessage("You're now using " + MODE_LABELS[currentMode] + ". Your login and conversations have not changed.", "success");
         const footer = $(".account-mode-footer");
