@@ -3,6 +3,59 @@
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 let toastTimer=0,recordTimer=0,recordStarted=0,mediaRecorder=null,recordChunks=[],recordStream=null,recordedBlob=null,recordMode="audio",keyboardNumbers=false,activePeerReadAt=null,composerFocused=false,baselineViewportHeight=0;
+let activeClient=null,activeUser=null,activeConversation=null,activeMembership=null,activePeer=null,chatRows=[],replyToMessage=null,realtimeChannel=null;
+async function getCurrentBackend(){
+  const client=window.ZakiChatAuth?.client;
+  if(!client) throw new Error("Secure chat connection is unavailable. Reload the app and sign in again.");
+  const {data,error}=await client.auth.getUser();
+  if(error) throw error;
+  if(!data?.user) throw new Error("Your session has expired. Please sign in again.");
+  activeClient=client;
+  activeUser=data.user;
+  return {client,user:data.user};
+}
+function setStatus(message){
+  const el=$("#supabase-connection-status");
+  if(el){el.textContent=message;el.dataset.state=/unable|could not|error|failed/i.test(message)?"error":"success"}
+  const peer=$("#peer-status");
+  if(peer&&!activeConversation)peer.textContent=message;
+}
+function friendlyError(error,fallback="Something went wrong. Please try again."){
+  console.error("ZakiChat:",error);
+  const message=typeof error==="string"?error:(error?.message||fallback);
+  toast(message.length>180?fallback:message);
+}
+function profileName(profile){
+  if(!profile)return "Unknown contact";
+  return profile.full_name?.trim()||profile.username?.trim()||profile.phone?.trim()||"ZakiChat user";
+}
+function initials(value){
+  const text=typeof value==="string"?value:profileName(value);
+  const parts=text.trim().split(/\\s+/).filter(Boolean);
+  return (parts.length>1?parts[0][0]+parts[parts.length-1][0]:(parts[0]||"Z").slice(0,2)).toUpperCase();
+}
+function niceTime(value){
+  if(!value)return "";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return "";
+  const now=new Date();
+  if(date.toDateString()===now.toDateString())return date.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+  const yesterday=new Date(now);yesterday.setDate(now.getDate()-1);
+  if(date.toDateString()===yesterday.toDateString())return "Yesterday";
+  return date.toLocaleDateString([], {month:"short",day:"numeric"});
+}
+function messagePreview(message){
+  if(!message)return "No messages yet";
+  if(message.deleted_at)return "Message deleted";
+  if(message.body?.trim())return message.body.trim().replace(/\\s+/g," ").slice(0,90);
+  const type=message.message_type;
+  if(type==="voice"||type==="audio")return "🎤 Voice message";
+  if(type==="image")return "📷 Photo";
+  if(type==="video")return "🎬 Video";
+  if(message.attachments?.length)return "📎 Attachment";
+  return "Message";
+}
+
 function toast(message){const el=$("#tg-toast");if(!el)return;el.textContent=message;el.classList.add("is-visible");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("is-visible"),2600)}
 function autoGrow(){const input=$("#message-input");if(!input)return;input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px";const has=input.value.trim().length>0;$("#send-button").hidden=!has;$("#mic-button").hidden=has}
 function updateViewport(){const vv=window.visualViewport;const inner=Math.max(240,Math.round(window.innerHeight||document.documentElement.clientHeight));if(!composerFocused&&!baselineViewportHeight)baselineViewportHeight=inner;const visual=Math.max(240,Math.round(vv?.height||inner));let visibleHeight=Math.min(inner,visual);let keyboardHeight=Math.max(0,baselineViewportHeight-visibleHeight);if(composerFocused&&keyboardHeight<100){keyboardHeight=Math.max(0,baselineViewportHeight-inner);if(keyboardHeight<100)keyboardHeight=280;visibleHeight=Math.max(240,(baselineViewportHeight||inner)-keyboardHeight)}else if(keyboardHeight>=100){visibleHeight=Math.max(240,(baselineViewportHeight||inner)-keyboardHeight)}if(!composerFocused&&keyboardHeight<100){visibleHeight=inner;baselineViewportHeight=inner;keyboardHeight=0}const offset=Math.max(0,Math.round(vv?.offsetTop||0));document.documentElement.style.setProperty("--tg-viewport-height",visibleHeight+"px");document.documentElement.style.setProperty("--tg-viewport-offset-top","0px");document.documentElement.style.setProperty("--tg-keyboard-height",keyboardHeight+"px");document.documentElement.style.setProperty("--tg-keyboard-overlap",keyboardHeight+"px");document.body.classList.toggle("tg-keyboard-open",keyboardHeight>100);if(keyboardHeight>100)requestAnimationFrame(()=>{const area=$("#message-area");if(area)area.scrollTop=area.scrollHeight})}
