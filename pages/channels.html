@@ -177,6 +177,54 @@
     </section>
 
 
+    <section class="channels-section external-channels-section" aria-labelledby="external-channels-title">
+      <div class="channels-section-heading">
+        <div>
+          <h2 id="external-channels-title">Explore channels beyond ZakiChat</h2>
+          <p>Find public channel links from Telegram, WhatsApp and imo, then save them here for quick access.</p>
+        </div>
+      </div>
+
+      <div class="external-channel-search-card">
+        <label class="external-channel-search-label" for="external-channel-query">Search public channels across the web</label>
+        <div class="external-channel-search-row">
+          <input id="external-channel-query" type="search" placeholder="e.g. technology news, football updates" autocomplete="off">
+          <button type="button" class="channels-primary-button" id="external-channel-search-button">Search</button>
+        </div>
+        <div class="external-platform-filters" role="group" aria-label="Choose a platform to search">
+          <button type="button" class="external-platform-chip is-selected" data-external-platform="all" aria-pressed="true">All platforms</button>
+          <button type="button" class="external-platform-chip" data-external-platform="telegram" aria-pressed="false">Telegram</button>
+          <button type="button" class="external-platform-chip" data-external-platform="whatsapp" aria-pressed="false">WhatsApp</button>
+          <button type="button" class="external-platform-chip" data-external-platform="imo" aria-pressed="false">imo</button>
+        </div>
+        <p class="external-channel-note">Search opens public web results. When you find a channel, save its official link below. ZakiChat can keep the shortcut here, but following, joining, and viewing private content still happens on that platform.</p>
+      </div>
+
+      <div class="external-channel-add-card">
+        <h3>Save an external channel</h3>
+        <p>Paste a public channel link to keep it in your ZakiChat list.</p>
+        <form id="external-channel-save-form" class="external-channel-save-form">
+          <input id="external-channel-name" type="text" maxlength="100" placeholder="Channel name (optional)" aria-label="Channel name">
+          <input id="external-channel-url" type="url" required placeholder="https://t.me/... or public channel link" aria-label="Public channel link">
+          <button type="submit" class="channels-secondary-button">＋ Save link</button>
+        </form>
+        <div id="external-channel-message" class="channel-form-message" role="status" hidden></div>
+      </div>
+
+      <div class="channels-section-heading external-saved-heading">
+        <div>
+          <h2>My external channels</h2>
+          <p>Saved shortcuts on this device.</p>
+        </div>
+      </div>
+      <div id="external-saved-channels" class="channel-list"></div>
+      <div id="external-saved-empty" class="channels-empty">
+        <div class="channels-empty-icon" aria-hidden="true">🔗</div>
+        <strong>No external channels saved</strong>
+        <span>Search for a public channel and save its link here.</span>
+      </div>
+    </section>
+
     <section
       id="channel-view"
       class="channel-view"
@@ -508,6 +556,7 @@
 <script src="../static/js/realtime.js"></script>
 
 <script src="../static/js/channels.js"></script>
+<script src="../static/js/external-channels.js"></script>
 
 </body>
 </html>
