@@ -24,3 +24,6 @@ verify_jwt = true
 
 [functions.business-workspace]
 verify_jwt = true
+
+[functions.email-login]
+verify_jwt = false
