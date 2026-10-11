@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071426">
+<title>Keyboard | ZakiChat</title>
+<link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/responsive.css">
+<link rel="stylesheet" href="../static/css/signature-theme.css">
+<link rel="stylesheet" href="../static/css/keyboard.css">
+</head>
+<body class="keyboard-settings-page">
+<main class="keyboard-shell">
+  <header class="keyboard-header">
+    <a class="keyboard-back" href="settings.html" aria-label="Back to Settings">‹ <span>Settings</span></a>
+    <div class="keyboard-title">
+      <span class="keyboard-eyebrow">PERSONALIZATION</span>
+      <h1>Keyboard & typing</h1>
+      <p>Make the ZakiChat message composer feel like yours.</p>
+    </div>
+  </header>
+
+  <section class="keyboard-preview-panel" aria-labelledby="keyboardPreviewTitle">
+    <div class="keyboard-section-heading"><div><span class="keyboard-eyebrow">LIVE PREVIEW</span><h2 id="keyboardPreviewTitle">Your chat composer</h2></div><span class="keyboard-preview-live">LIVE</span></div>
+    <div class="keyboard-preview-chat">
+      <div class="keyboard-preview-bubble">Hey! This is how your message composer will look. <span>20:46</span></div>
+      <div class="keyboard-preview-composer" id="keyboardPreviewComposer">
+        <button type="button" aria-label="Emoji preview">☺</button>
+        <span>Message</span>
+        <button type="button" aria-label="Attachment preview">＋</button>
+        <button type="button" class="keyboard-preview-send" aria-label="Send preview">➤</button>
+      </div>
+      <div class="keyboard-preview-keys" aria-hidden="true"><span>😊</span><span>😂</span><span>❤️</span><span>👍</span><span>✨</span><span>🎉</span><span>⌫</span><span class="keyboard-space">English (US)</span><span>↵</span></div>
+    </div>
+    <p class="keyboard-note">This changes the ZakiChat composer and typing behaviour inside the app. It does not change your phone's system keyboard (such as Gboard).</p>
+  </section>
+
+  <section class="keyboard-settings-card">
+    <div class="keyboard-section-heading"><div><span class="keyboard-eyebrow">COMPOSER STYLE</span><h2>Choose a keyboard theme</h2><p>Customized Personal unlocks the premium finishes.</p></div></div>
+    <div class="keyboard-theme-grid" id="keyboardThemeGrid">
+      <button type="button" class="keyboard-theme-choice" data-keyboard-theme="standard" aria-pressed="false"><span class="keyboard-theme-art theme-standard"><i></i><i></i><i></i><b></b></span><strong>Standard</strong><small>Clean and simple</small></button>
+      <button type="button" class="keyboard-theme-choice" data-keyboard-theme="midnight" aria-pressed="false"><span class="keyboard-theme-art theme-midnight"><i></i><i></i><i></i><b></b></span><strong>Midnight</strong><small>Deep navy · Premium</small></button>
+      <button type="button" class="keyboard-theme-choice" data-keyboard-theme="cyan" aria-pressed="false"><span class="keyboard-theme-art theme-cyan"><i></i><i></i><i></i><b></b></span><strong>Cyan glass</strong><small>Bright cyan · Premium</small></button>
+      <button type="button" class="keyboard-theme-choice" data-keyboard-theme="rose" aria-pressed="false"><span class="keyboard-theme-art theme-rose"><i></i><i></i><i></i><b></b></span><strong>Rose</strong><small>Soft rose · Premium</small></button>
+    </div>
+    <p id="keyboardAccessMessage" class="keyboard-access-message" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="keyboard-settings-card">
+    <div class="keyboard-section-heading"><div><span class="keyboard-eyebrow">TYPING BEHAVIOUR</span><h2>Typing preferences</h2><p>These options are saved on this device.</p></div></div>
+    <label class="keyboard-toggle-row"><span class="keyboard-toggle-icon">↵</span><span class="keyboard-toggle-copy"><strong>Enter to send</strong><small>Press Enter to send; use Shift + Enter for a new line.</small></span><input id="keyboardEnterToSend" type="checkbox" checked><span class="keyboard-switch" aria-hidden="true"></span></label>
+    <label class="keyboard-toggle-row"><span class="keyboard-toggle-icon">☺</span><span class="keyboard-toggle-copy"><strong>Show emoji shortcut</strong><small>Keep the emoji button beside the message field.</small></span><input id="keyboardShowEmoji" type="checkbox" checked><span class="keyboard-switch" aria-hidden="true"></span></label>
+    <label class="keyboard-toggle-row"><span class="keyboard-toggle-icon">▤</span><span class="keyboard-toggle-copy"><strong>Compact composer</strong><small>Use a smaller message field and tighter controls.</small></span><input id="keyboardCompact" type="checkbox"><span class="keyboard-switch" aria-hidden="true"></span></label>
+    <label class="keyboard-toggle-row"><span class="keyboard-toggle-icon">〰</span><span class="keyboard-toggle-copy"><strong>Tap vibration</strong><small>Use a short vibration where the browser and device support it.</small></span><input id="keyboardVibration" type="checkbox"><span class="keyboard-switch" aria-hidden="true"></span></label>
+    <div class="keyboard-actions"><button type="button" class="keyboard-reset" id="keyboardReset">Reset preferences</button><span id="keyboardSaved" role="status" aria-live="polite">Changes save automatically.</span></div>
+  </section>
+</main>
+
+<nav class="zc-bottom-nav" aria-label="Main navigation">
+<a href="chats.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/></svg><span>Chats</span></a>
+<a href="settings.html" class="is-current" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M19 13.5 21 15l-2 3-2.5-.7-2 1.2-.5 2.5h-4L9.5 18.5l-2-1.2L5 18l-2-3 2-1.5v-3L3 9l2-3 2.5.7 2-1.2L10 3h4l.5 2.5 2 1.2L19 6l2 3-2 1.5z"/></svg><span>Settings</span></a>
+<a href="status.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span></a>
+</nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/account-manager.js"></script>
+<script src="../static/js/supabase-client.js"></script>
+<script src="../static/js/appearance.js"></script>
+<script src="../static/js/keyboard.js"></script>
+<script src="../static/js/auth-guard.js"></script>
+</body>
+</html>
