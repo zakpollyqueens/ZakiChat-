@@ -575,3 +575,9 @@
     display: none;
   }
 }
+
+
+/* Disabled Settings items stay visible without sending users to missing pages. */
+.settings-item-disabled{cursor:default;opacity:.78}
+.settings-item-disabled:hover{transform:none!important;border-color:var(--border-color,rgba(255,255,255,.1))!important;background:var(--card-bg,rgba(255,255,255,.035))!important}
+.settings-coming-soon{flex:0 0 auto;padding:5px 8px;border:1px solid rgba(87,210,255,.16);border-radius:9px;background:rgba(56,220,255,.055);color:#88b8d0;font-size:.65rem;font-weight:800;white-space:nowrap}
