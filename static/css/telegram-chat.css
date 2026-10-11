@@ -237,3 +237,57 @@ a{color:inherit;text-decoration:none}
   .tg-emoji-button,.tg-attach-inline{width:28px;min-width:28px}
   .tg-send-button{width:39px;height:39px;min-width:39px}
 }
+
+
+/* ZakiChat screenshot-matched chat list skin */
+:root{--tg-bg:#17110f;--tg-panel:#1d1714;--tg-panel-2:#29201c;--tg-line:rgba(255,211,177,.08);--tg-text:#f4c7a7;--tg-muted:#9a879b;--tg-blue:#7777b5;--tg-bottom-gap:0px}
+html,body{background:#17110f;color:#f4c7a7}
+.tg-shell{max-width:760px;background:#17110f;border:0}
+.tg-list-header{background:#17110f;padding:calc(15px + env(safe-area-inset-top)) 22px 10px;box-shadow:none;position:relative}
+.tg-brand-row{gap:0;margin:0 0 8px;min-height:48px}
+.tg-brand-row .tg-wordmark{font-size:30px;font-weight:750;letter-spacing:-.04em;color:#f4c7a7;margin:0;line-height:1.2}
+.tg-brand-row .tg-header-actions{margin-left:auto;display:flex;align-items:center;gap:15px}
+.tg-brand-row .tg-header-actions .tg-icon-btn{font-size:29px;min-width:34px;width:34px;min-height:42px;height:42px;color:#f4c7a7;background:transparent;border-radius:50%;font-weight:400}
+#app-lock-button{font-size:27px!important}
+#top-menu-toggle{font-size:30px!important}
+#top-search-box{display:none;background:transparent;border:1px solid rgba(244,199,167,.22);border-radius:22px;margin:8px 0 2px;height:40px}
+#top-search-box.is-open{display:flex}
+#top-search-box input{color:#f4c7a7}
+#top-search-box input::placeholder{color:#9a879b}
+.tg-filter-row,.tg-backend-status,.tg-archive-row,.tg-archive-panel{display:none!important}
+.tg-list-content{padding:0 0 110px;background:#17110f;scrollbar-width:none}
+.tg-list-content::-webkit-scrollbar{display:none}
+.tg-chat-list{padding:0}
+.tg-chat-row{gap:14px;min-height:100px;padding:13px 22px;border:0;background:transparent}
+.tg-chat-row:active{background:#ffffff08}
+.tg-chat-row .tg-avatar{width:72px;height:72px;min-width:72px;font-size:23px;background:#4c3a80;color:#f4c7a7}
+.tg-chat-row-copy strong{font-size:18px;font-weight:650;color:#f4c7a7;margin:0 0 8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tg-chat-row-copy p{font-family:"Comic Sans MS","Segoe Print",cursive;font-size:15px;color:#a18ba5;line-height:1.35}
+.tg-chat-row-meta{justify-content:flex-start;align-items:flex-end;gap:10px;padding:4px 0;color:#a18ba5;font-size:13px;min-width:42px}
+.tg-chat-row-meta small:first-child{font-size:13px;white-space:nowrap}
+.tg-unread-dot{width:auto;height:auto;min-width:28px;min-height:28px;border-radius:20px;background:#7777b5;color:#ffe0bd;padding:4px 8px;position:relative}
+.tg-unread-dot::after{content:"";display:block;width:100%;height:100%}
+.tg-bottom-nav{position:absolute;left:22px;right:22px;bottom:calc(12px + env(safe-area-inset-bottom));min-height:86px;padding:7px 9px;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:rgba(35,28,25,.97);border:1px solid rgba(255,211,177,.045);border-radius:48px;box-shadow:0 6px 22px #0005;backdrop-filter:blur(12px)}
+.tg-bottom-nav a{gap:4px;color:#f4c7a7;font-size:14px;font-weight:550;border-radius:36px}
+.tg-bottom-nav a>span:first-child{font-size:29px;line-height:1.1}
+.tg-bottom-nav a.is-current{background:#302925;color:#7777b5}
+.tg-bottom-nav a.is-current>span:first-child{filter:none}
+.tg-top-menu{position:absolute;right:16px;top:calc(62px + env(safe-area-inset-top));z-index:20;width:205px;padding:7px;border:1px solid rgba(244,199,167,.12);border-radius:13px;background:#29201c;box-shadow:0 12px 32px #0009}
+.tg-top-menu a,.tg-top-menu button{display:block;width:100%;padding:12px;border:0;border-radius:8px;background:transparent;color:#f4c7a7;text-align:left;font-size:14px}
+.tg-top-menu a:active,.tg-top-menu button:active{background:#ffffff12}
+.tg-empty-state{min-height:250px;color:#f4c7a7}
+.tg-empty-state p{color:#a18ba5}
+.tg-empty-art{background:radial-gradient(circle at 30% 20%,#d9a786,#705c8f 70%,#332342)}
+.tg-primary-btn{background:#7777b5;color:#fff0dc}
+@media(max-width:420px){
+ .tg-list-header{padding-left:22px;padding-right:22px}
+ .tg-brand-row .tg-wordmark{font-size:29px}
+ .tg-brand-row .tg-header-actions{gap:11px}
+ .tg-chat-row{min-height:100px;padding:13px 22px;gap:13px}
+ .tg-chat-row .tg-avatar{width:72px;height:72px;min-width:72px}
+ .tg-chat-row-copy strong{font-size:17px}
+ .tg-chat-row-copy p{font-size:14px}
+ .tg-bottom-nav{left:22px;right:22px;min-height:84px}
+ .tg-bottom-nav a{font-size:13px}
+}
+@media(min-width:760px){.tg-list-header{padding-inline:22px}.tg-bottom-nav{max-width:650px;left:50%;right:auto;width:calc(100% - 44px);transform:translateX(-50%)}}
