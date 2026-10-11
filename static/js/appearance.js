@@ -72,26 +72,98 @@
   function save(changes){settings=Object.assign({},settings,changes);localStorage.setItem(KEY,JSON.stringify(settings));apply(settings);sync();}
   function upgrade(){const msg="This customization is included with Customized Personal. Open the upgrade plans?";if(confirm(msg))location.href="about.html?upgrade=personal_monthly#paid-upgrades";}
   async function loadPlan(){
-    try{
-      const client=window.ZakiChatAuth&&window.ZakiChatAuth.client;if(!client)return;
-      const sessionResult=await client.auth.getSession(), user=sessionResult.data&&sessionResult.data.session&&sessionResult.data.session.user;if(!user)return;
-      const result=await client.from("user_upgrades").select("plan,status,expires_at").eq("user_id",user.id).eq("status","active").gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1).maybeSingle();
-      if(result.error)throw result.error;
-      plan=result.data&&result.data.plan||"local";premium=["personal_monthly","business_monthly"].includes(plan);
-      if(!premium){
-        const {data:memberships,error:membershipError}=await client.from("business_members").select("business_id").eq("user_id",user.id).eq("status","active");
-        if(membershipError)throw membershipError;
-        for(const membership of memberships||[]){
-          const {data:workspace}=await client.from("business_workspaces").select("owner_user_id").eq("id",membership.business_id).maybeSingle();
-          if(!workspace?.owner_user_id)continue;
-          const {data:businessUpgrade}=await client.from("user_upgrades").select("plan").eq("user_id",workspace.owner_user_id).eq("plan","business_monthly").eq("status","active").gt("expires_at",new Date().toISOString()).limit(1).maybeSingle();
-          if(businessUpgrade){plan="business_monthly";premium=true;break;}
+    // Fail closed if subscription verification is unavailable; stale cached plans
+    // must never unlock premium customization.
+    plan = "local";
+    premium = false;
+    try {
+      const client = window.ZakiChatAuth && window.ZakiChatAuth.client;
+      if (!client) return;
+      const sessionResult = await client.auth.getSession();
+      if (sessionResult.error) throw sessionResult.error;
+      const user = sessionResult.data && sessionResult.data.session && sessionResult.data.session.user;
+      if (!user) return;
+
+      const now = new Date().toISOString();
+      const upgradesResult = await client.from("user_upgrades")
+        .select("plan,status,expires_at")
+        .eq("user_id", user.id)
+        .eq("status", "active")
+        .gt("expires_at", now)
+        .lte("starts_at", now);
+      if (upgradesResult.error) throw upgradesResult.error;
+      const activePlans = new Set((upgradesResult.data || []).map(row => row.plan));
+
+      const modeResult = await client.from("user_account_preferences")
+        .select("account_mode")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (modeResult.error) throw modeResult.error;
+
+      let selectedMode = modeResult.data && modeResult.data.account_mode;
+      if (!selectedMode) {
+        selectedMode = activePlans.has("business_monthly") ? "business_customized" :
+          activePlans.has("personal_monthly") ? "personal_customized" : "local";
+      }
+
+      if (selectedMode === "personal_customized" && activePlans.has("personal_monthly")) {
+        plan = "personal_monthly";
+        premium = true;
+      } else if (selectedMode === "business_customized") {
+        let businessAllowed = activePlans.has("business_monthly");
+        if (!businessAllowed) {
+          const membershipsResult = await client.from("business_members")
+            .select("business_id")
+            .eq("user_id", user.id)
+            .eq("status", "active");
+          if (membershipsResult.error) throw membershipsResult.error;
+          for (const membership of membershipsResult.data || []) {
+            const workspaceResult = await client.from("business_workspaces")
+              .select("owner_user_id")
+              .eq("id", membership.business_id)
+              .maybeSingle();
+            if (workspaceResult.error) throw workspaceResult.error;
+            const ownerId = workspaceResult.data && workspaceResult.data.owner_user_id;
+            if (!ownerId) continue;
+            const ownerPlanResult = await client.from("user_upgrades")
+              .select("plan")
+              .eq("user_id", ownerId)
+              .eq("plan", "business_monthly")
+              .eq("status", "active")
+              .gt("expires_at", now)
+              .lte("starts_at", now)
+              .limit(1)
+              .maybeSingle();
+            if (ownerPlanResult.error) throw ownerPlanResult.error;
+            if (ownerPlanResult.data) { businessAllowed = true; break; }
+          }
+        }
+        if (businessAllowed) {
+          plan = "business_monthly";
+          premium = true;
         }
       }
-      localStorage.setItem(PLAN_KEY,JSON.stringify({plan:plan,checkedAt:Date.now()}));
-    }catch(error){
-      console.warn("Could not verify ZakiChat plan",error);
-      try{const c=JSON.parse(localStorage.getItem(PLAN_KEY)||"{}");if(Date.now()-Number(c.checkedAt||0)<300000){plan=c.plan||"local";premium=["personal_monthly","business_monthly"].includes(plan);}}catch{}
+
+      localStorage.setItem(PLAN_KEY, JSON.stringify({
+        plan, premium, mode: selectedMode, checkedAt: Date.now()
+      }));
+    } catch (error) {
+      console.warn("Could not verify ZakiChat plan; premium customization remains locked.", error);
+      plan = "local";
+      premium = false;
+    }
+  }
+  function enforcePlanLocks(){
+    if(premium)return;
+    let changed=false;
+    if(!BASIC.includes(settings.theme)){settings.theme="dark";changed=true;}
+    const selectedFont=FONTS.find(font=>font[0]===settings.fontFamily);
+    if(selectedFont&&selectedFont[3]){settings.fontFamily="system";changed=true;}
+    const chatStyle=localStorage.getItem(STYLE_KEY)||"classic";
+    if(chatStyle!=="classic"){localStorage.setItem(STYLE_KEY,"classic");changed=true;}
+    if(changed){
+      localStorage.setItem(KEY,JSON.stringify(settings));
+      apply(settings);
     }
   }
   function sync(){
@@ -118,5 +190,11 @@
   }
   window.ZakiChatAppearance={get:load,save:function(s){settings=Object.assign({},s);localStorage.setItem(KEY,JSON.stringify(settings));apply(settings);sync();},update:save,apply:apply,isPremium:function(){return premium;},getPlan:function(){return plan;},loadPlan:loadPlan};
   apply(settings);
-  document.addEventListener("DOMContentLoaded",async()=>{apply(settings);initControls();await loadPlan();sync();});
+  window.addEventListener("zakichat:modechange",async()=>{
+    await loadPlan();
+    enforcePlanLocks();
+    apply(settings);
+    sync();
+  });
+  document.addEventListener("DOMContentLoaded",async()=>{apply(settings);initControls();await loadPlan();enforcePlanLocks();apply(settings);sync();});
 })();
