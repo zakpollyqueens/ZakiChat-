@@ -35,7 +35,19 @@
       // are not unexpectedly locked out of their chats.
       const verifiedEmail = Boolean(user?.email && user.email_confirmed_at);
       const legacyVerifiedPhone = Boolean(user?.phone && user.phone_confirmed_at);
-      if (error || !user || (!verifiedEmail && !legacyVerifiedPhone)) {
+      // For email accounts, require an email OTP/magic-link authentication method in the
+      // access token as well as a confirmed address. This prevents a password-only session
+      // from entering the web app without completing the email-link step.
+      let emailLinkVerifiedSession = false;
+      if (verifiedEmail && sessionData.session.access_token) {
+        try {
+          const payloadPart = sessionData.session.access_token.split(".")[1];
+          const payload = JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")));
+          emailLinkVerifiedSession = Array.isArray(payload.amr) &&
+            payload.amr.some(item => ["otp", "magiclink"].includes(String(item?.method || "").toLowerCase()));
+        } catch (_) { emailLinkVerifiedSession = false; }
+      }
+      if (error || !user || (!legacyVerifiedPhone && (!verifiedEmail || !emailLinkVerifiedSession))) {
         await client.auth.signOut({ scope: "local" });
         sendToLogin();
         return;
