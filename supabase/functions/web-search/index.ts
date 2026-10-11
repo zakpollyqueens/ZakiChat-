@@ -19,7 +19,7 @@ function cleanResult(title:string,snippet:string,url:string,extra:Record<string,
   title=decodeHtml(title).slice(0,240);snippet=decodeHtml(snippet).slice(0,600);url=safeUrl(url);
   const thumbnail=extra.thumbnail?safeUrl(extra.thumbnail):"";
   if(!title||!url||blocked.test(title)||blocked.test(snippet))return null;
-  return {title,snippet,url,...(thumbnail?{thumbnail}:{}),...(extra.kind?{kind:extra.kind}:{})};
+  return {title,snippet,url,...(thumbnail?{thumbnail}:{}),...(extra.mediaUrl?{mediaUrl:safeUrl(extra.mediaUrl)}:{}),...(extra.kind?{kind:extra.kind}:{})};
 }
 async function bingRss(query:string) {
   const response=await fetch("https://www.bing.com/search?format=rss&adlt=strict&q="+encodeURIComponent(query),{headers:{"Accept":"application/rss+xml, application/xml, text/xml","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"}});
@@ -65,7 +65,7 @@ async function bingImages(query:string) {
    const meta=JSON.parse(decodeHtml(raw));
    const url=safeUrl(meta.purl||meta.murl||"");
    const thumb=safeUrl(meta.turl||meta.murl||"");
-   const item=cleanResult(meta.t||meta.desc||"Image result",meta.desc||"",url,{thumbnail:thumb,kind:"image"});
+   const item=cleanResult(meta.t||meta.desc||"Image result",meta.desc||"",url,{thumbnail:thumb,mediaUrl:meta.murl||meta.turl||"",kind:"image"});
    if(item&&!results.some(x=>x.url===item.url))results.push(item);
    if(results.length>=24)break;
   }catch{}
