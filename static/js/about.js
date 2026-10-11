@@ -554,6 +554,12 @@
         return;
       }
 
+      if (result.checkoutReady === true && typeof result.checkoutUrl === 'string' && /^https:\/\//i.test(result.checkoutUrl)) {
+        showUpgradeStatus('Secure Pesapal checkout is ready. Opening Pesapal…');
+        window.location.assign(result.checkoutUrl);
+        return;
+      }
+
       showUpgradeStatus(
         (result.message || 'Your upgrade request has been recorded.') +
         ' Request reference: ' + result.requestId +
