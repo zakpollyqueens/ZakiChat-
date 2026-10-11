@@ -52,27 +52,21 @@
   </dialog>
 
   <nav class="zc-bottom-nav zc-chats-bottom-nav" aria-label="Main navigation">
-  <a href="chats.html" class="is-current" aria-current="page">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span>
-  </a>
-  <a href="settings.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5h-3.2l-.3-1.5a7.7 7.7 0 0 1-1.7-1l-1.4.5-1.6-2.8 1.1-.9a7.2 7.2 0 0 1 0-2l-1.1-.9 1.6-2.8 1.4.5a7.7 7.7 0 0 1 1.7-1l.3-1.5h3.2l.3 1.5a7.7 7.7 0 0 1 1.7 1l1.4-.5 1.6 2.8-1.1.9a7.2 7.2 0 0 1 0 2Z"/></svg><span>Settings</span>
-  </a>
-  <a href="status.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span>
-  </a>
-  <a href="call-settings.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 3.8 10 7.5 8.2 9.4a14.4 14.4 0 0 0 6.4 6.4l1.9-1.8 3.7 2.9-.8 3a2 2 0 0 1-2.2 1.4A17.8 17.8 0 0 1 3.1 7a2 2 0 0 1 1.4-2.2Z"/></svg><span>Calls</span>
-  </a>
-  <a href="profile.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span>Profile</span>
-  </a>
+  <a href="chats.html" class="is-current" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span></a>
+  <a href="contacts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M18 8h4M20 6v4"/></svg><span>Contacts</span></a>
+  <a href="settings.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5h-3.2l-.3-1.5a7.7 7.7 0 0 1-1.7-1l-1.4.5-1.6-2.8 1.1-.9a7.2 7.2 0 0 1 0-2l-1.1-.9 1.6-2.8 1.4.5a7.7 7.7 0 0 1 1.7-1l.3-1.5h3.2l.3 1.5a7.7 7.7 0 0 1 1.7 1l1.4-.5 1.6 2.8-1.1.9a7.2 7.2 0 0 1 0 2Z"/></svg><span>Settings</span></a>
+  <a href="profile.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg><span>Profile</span></a>
 </nav>
 </main>
-<a class="chats-floating-updates" href="status.html" aria-label="Open Updates">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg>
-  <span>Updates</span>
-</a>
+<div class="chats-compose-wrap">
+  <button class="chats-compose-fab" id="chats-compose-toggle" type="button" aria-label="Create new" aria-expanded="false" aria-controls="chats-compose-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+  <div class="chats-compose-menu" id="chats-compose-menu" hidden>
+    <button type="button" data-compose-action="chat"><span>✉</span>New chat</button>
+    <button type="button" data-compose-action="group"><span>♧</span>New group</button>
+    <button type="button" data-compose-action="community"><span>◎</span>New community</button>
+    <button type="button" data-compose-action="channel"><span>◉</span>New channel</button>
+  </div>
+</div>
 <section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section><div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../static/js/config.js"></script>
