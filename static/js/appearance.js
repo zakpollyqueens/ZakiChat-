@@ -89,7 +89,8 @@
         .select("plan,status,expires_at")
         .eq("user_id", user.id)
         .eq("status", "active")
-        .gt("expires_at", now);
+        .gt("expires_at", now)
+        .lte("starts_at", now);
       if (upgradesResult.error) throw upgradesResult.error;
       const activePlans = new Set((upgradesResult.data || []).map(row => row.plan));
 
@@ -130,6 +131,7 @@
               .eq("plan", "business_monthly")
               .eq("status", "active")
               .gt("expires_at", now)
+              .lte("starts_at", now)
               .limit(1)
               .maybeSingle();
             if (ownerPlanResult.error) throw ownerPlanResult.error;
