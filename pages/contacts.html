@@ -54,7 +54,7 @@ body.zc-contacts-page,body.zc-contacts-page .tg-shell{background:radial-gradient
 body.zc-contacts-page .tg-shell{isolation:isolate}
 .zc-contacts-head{position:relative;padding:calc(18px + env(safe-area-inset-top)) 17px 12px;background:linear-gradient(145deg,rgba(13,42,66,.93),rgba(7,20,38,.84));border-bottom:1px solid rgba(118,226,255,.14);box-shadow:0 16px 36px rgba(0,0,0,.18);backdrop-filter:blur(22px)}
 .zc-contacts-top{align-items:center;min-height:60px}
-.zc-contact-heading{min-width:0}
+.zc-contact-heading{min-width:0}.zc-contact-brandline{display:flex;align-items:center;gap:9px;margin-bottom:5px}.zc-brand-icon-small{width:34px;height:34px;object-fit:cover;border-radius:11px;border:1px solid #72eaff50;box-shadow:0 5px 15px #00b9ef22}.zc-contact-heading .zc-contacts-eyebrow{margin:0}
 .zc-contacts-eyebrow{display:block;margin-bottom:3px;color:#5de3ff;font-size:10px;font-weight:850;letter-spacing:2px}
 .zc-contacts-top h1{font-size:28px;line-height:1.12;letter-spacing:-.8px;background:linear-gradient(100deg,#fff,#9ceaff 65%,#80aaff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .zc-contact-heading p{margin:6px 0 0;color:#8eacc2;font-size:12px;line-height:1.4}
@@ -92,7 +92,7 @@ body.zc-contacts-page .tg-shell{isolation:isolate}
 <body class="tg-app tg-list-page zc-contacts-page">
 <main class="tg-shell">
 <header class="zc-contacts-head">
- <div class="zc-contacts-top"><div class="zc-contact-heading"><span class="zc-contacts-eyebrow">YOUR CIRCLE</span><h1>Contacts</h1><p>Good conversations start with your people.</p></div><div class="zc-contact-actions">
+ <div class="zc-contacts-top"><div class="zc-contact-heading"><div class="zc-contact-brandline"><img src="../static/images/icon.jpg" alt="ZakiChat icon" class="zc-brand-icon-small"><span class="zc-contacts-eyebrow">YOUR CIRCLE</span></div><h1>Contacts</h1><p>Good conversations start with your people.</p></div><div class="zc-contact-actions">
   <button class="zc-action" id="contacts-search-toggle" type="button" aria-label="Search contacts" title="Search contacts"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
   
  </div></div>
