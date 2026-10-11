@@ -1,9 +1,9 @@
 (function(){
 "use strict";
-const link=document.querySelector(".tg-zakiplay-launch");
-if(!link)return;
-const lock=link.querySelector(".zplay-lock-badge");
-async function update(){
+const links=[...document.querySelectorAll(".tg-zakiplay-launch")];
+if(!links.length)return;
+async function update(link){
+ const lock=link.querySelector(".zplay-lock-badge");
  try{
   const client=window.ZakiChatAuth&&window.ZakiChatAuth.client;
   if(!client)return;
@@ -21,5 +21,5 @@ async function update(){
   if(lock)lock.hidden=entitled;
  }catch(error){console.warn("ZakiPlay launcher access check failed:",error)}
 }
-update();
+links.forEach(link=>update(link));
 })();
