@@ -33,7 +33,8 @@
 
     const { data: upgrades, error: upgradesError } = await client.from("user_upgrades")
       .select("plan,status,expires_at").eq("user_id", user.id).eq("status", "active")
-      .gt("expires_at", new Date().toISOString()).in("plan", ["personal_monthly", "business_monthly"]);
+      .gt("expires_at", new Date().toISOString())
+      .lte("starts_at", new Date().toISOString()).in("plan", ["personal_monthly", "business_monthly"]);
     if (upgradesError) {
       console.error("ZakiChat account mode subscription check failed:", upgradesError);
       setCard("local", true, true, "Available");
