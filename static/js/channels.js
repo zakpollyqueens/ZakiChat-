@@ -51,6 +51,9 @@
 
       await this.loadChannels();
       this.subscribeRealtime();
+      if (new URLSearchParams(location.search).get("create") === "1") {
+        setTimeout(() => this.openCreateChannel(), 0);
+      }
     },
 
     cacheElements() {
