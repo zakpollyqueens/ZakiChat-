@@ -153,6 +153,19 @@
       premium = false;
     }
   }
+  function enforcePlanLocks(){
+    if(premium)return;
+    let changed=false;
+    if(!BASIC.includes(settings.theme)){settings.theme="dark";changed=true;}
+    const selectedFont=FONTS.find(font=>font[0]===settings.fontFamily);
+    if(selectedFont&&selectedFont[3]){settings.fontFamily="system";changed=true;}
+    const chatStyle=localStorage.getItem(STYLE_KEY)||"classic";
+    if(chatStyle!=="classic"){localStorage.setItem(STYLE_KEY,"classic");changed=true;}
+    if(changed){
+      localStorage.setItem(KEY,JSON.stringify(settings));
+      apply(settings);
+    }
+  }
   function sync(){
     document.querySelectorAll("[data-theme-choice]").forEach(b=>{
       const v=b.dataset.themeChoice,locked=!BASIC.includes(v)&&!premium;
@@ -177,5 +190,11 @@
   }
   window.ZakiChatAppearance={get:load,save:function(s){settings=Object.assign({},s);localStorage.setItem(KEY,JSON.stringify(settings));apply(settings);sync();},update:save,apply:apply,isPremium:function(){return premium;},getPlan:function(){return plan;},loadPlan:loadPlan};
   apply(settings);
-  document.addEventListener("DOMContentLoaded",async()=>{apply(settings);initControls();await loadPlan();sync();});
+  window.addEventListener("zakichat:modechange",async()=>{
+    await loadPlan();
+    enforcePlanLocks();
+    apply(settings);
+    sync();
+  });
+  document.addEventListener("DOMContentLoaded",async()=>{apply(settings);initControls();await loadPlan();enforcePlanLocks();apply(settings);sync();});
 })();
