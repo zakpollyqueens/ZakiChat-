@@ -109,3 +109,164 @@ body.zc-contacts-page .tg-bottom-nav{
 body.zc-contacts-page .tg-bottom-nav a{color:#71849a!important}
 body.zc-contacts-page .tg-bottom-nav a.is-current{color:#079fc9!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* ZAKICHAT SIGNATURE — immersive deep-navy + glossy cyan finish.
+   Keep the selected premium dark direction consistent across every screen. */
+:root{
+  color-scheme:dark;
+  --zk-cyan:#35d8ff;
+  --zk-cyan-strong:#00b8ee;
+  --zk-navy:#050d1b;
+  --zk-navy-2:#08172a;
+  --zk-surface:#0d2036;
+  --zk-surface-soft:#112941;
+  --zk-ink:#edf8ff;
+  --zk-muted:#9ab2c8;
+  --zk-line:rgba(109,203,242,.18);
+  --zk-shadow:0 18px 48px rgba(0,0,0,.28);
+}
+html{background:#050d1b!important}
+body:not(.auth-page){
+  --primary:#35d8ff!important;
+  --primary-2:#00b8ee!important;
+  background:
+    radial-gradient(ellipse at 90% 0%,rgba(0,184,238,.12),transparent 32%),
+    linear-gradient(155deg,#050d1b 0%,#08172a 54%,#0a2035 100%)!important;
+  color:#edf8ff!important;
+}
+body:not(.auth-page) :where(main,.tg-shell,.tg-conversation-shell,.settings-shell,.profile-shell,.account-shell){
+  background-color:transparent!important;
+  color:#edf8ff!important;
+}
+body:not(.auth-page) :where(.settings-card,.profile-card,.account-card,.card,.panel,.content-card,.setting-item,.settings-section,.profile-section,.account-section,.modal-content,.dialog-content){
+  background:linear-gradient(145deg,rgba(17,41,65,.96),rgba(8,23,42,.98))!important;
+  color:#edf8ff!important;
+  border:1px solid rgba(109,203,242,.17)!important;
+  border-radius:20px!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.025)!important;
+}
+body:not(.auth-page) :where(h1,h2,h3,h4,strong,label,.setting-title,.setting-name){color:#f1faff}
+body:not(.auth-page) :where(p,small,.muted,.description,.setting-description,.subtitle){color:#9ab2c8}
+body:not(.auth-page) :where(input,textarea,select){
+  background:#091a2d!important;color:#f1faff!important;
+  border:1px solid rgba(109,203,242,.24)!important;border-radius:13px!important;
+}
+body:not(.auth-page) :where(input,textarea,select)::placeholder{color:#7795ae!important}
+body:not(.auth-page) :where(button,.button,.btn,.primary-button,.save-button,.tg-primary-btn){
+  border-radius:14px;
+}
+body:not(.auth-page) :where(.primary-button,.save-button,.tg-primary-btn,.btn-primary){
+  background:linear-gradient(135deg,#35d8ff,#00aee5)!important;color:#031321!important;
+  border:1px solid rgba(190,245,255,.3)!important;
+  box-shadow:0 7px 22px rgba(0,184,238,.2)!important;font-weight:750!important;
+}
+body.tg-app{
+  --tg-bg:#050d1b!important;
+  --tg-panel:#0b1d31!important;
+  --tg-panel-2:#102740!important;
+  --tg-line:rgba(109,203,242,.15)!important;
+  --tg-text:#edf8ff!important;
+  --tg-muted:#9ab2c8!important;
+  --tg-blue:#35d8ff!important;
+  --tg-green:#4ee0b2!important;
+  --tg-bubble-in:#102740!important;
+  --tg-bubble-out:#063c55!important;
+  background:#050d1b!important;color:#edf8ff!important;
+}
+body.tg-app .tg-shell,body.tg-app .tg-conversation-shell,
+body.tg-list-page .tg-list-content,body.zc-contacts-page .tg-shell{
+  background:linear-gradient(155deg,#050d1b 0%,#08172a 55%,#0a2035 100%)!important;
+  color:#edf8ff!important;
+}
+body.tg-list-page .tg-list-header,
+body.zc-contacts-page .zc-contacts-head,
+body.tg-app.tg-conversation-page .tg-conversation-header,
+body.tg-app.tg-conversation-page .tg-chat-header{
+  background:linear-gradient(120deg,#071426 0%,#0a2540 55%,#06334a 100%)!important;
+  color:#f4fbff!important;border-bottom:1px solid rgba(53,216,255,.22)!important;
+  box-shadow:0 10px 32px rgba(0,0,0,.28)!important;
+}
+body.tg-list-page .tg-brand-row .tg-wordmark{color:#f5fbff!important}
+body.tg-list-page .tg-brand-row .tg-wordmark::first-letter{color:#35d8ff!important}
+body.tg-list-page .tg-list-actions .tg-icon-btn,
+body.zc-contacts-page .zc-action{color:#b8efff!important}
+body.tg-list-page #top-search-box,
+body.zc-contacts-page .tg-search,
+body.zc-contacts-page input[type=search],
+body.zc-contacts-page .zc-contact-search,
+body.zc-contacts-page .zc-contacts-search{
+  background:rgba(3,13,27,.72)!important;
+  border:1px solid rgba(109,203,242,.24)!important;color:#edf8ff!important;
+  border-radius:15px!important;box-shadow:inset 0 1px rgba(255,255,255,.025)!important;
+}
+body.tg-list-page #top-search-box input,
+body.zc-contacts-page .zc-contacts-search input{background:transparent!important;color:#f4fbff!important}
+body.tg-list-page #top-search-box input::placeholder,
+body.zc-contacts-page .zc-contacts-search input::placeholder{color:#8ca9c0!important}
+body.tg-list-page .tg-filter-row .tg-filter{
+  border:1px solid rgba(109,203,242,.15)!important;background:#0c2035!important;color:#a9c1d5!important;
+}
+body.tg-list-page .tg-filter-row .tg-filter.is-active{
+  background:linear-gradient(135deg,#35d8ff,#00aee5)!important;color:#041321!important;
+  border-color:transparent!important;box-shadow:0 4px 18px rgba(0,184,238,.2)!important;
+}
+body.tg-list-page .tg-chat-row{
+  background:transparent!important;color:#edf8ff!important;
+  border-bottom:1px solid rgba(109,203,242,.09)!important;
+}
+body.tg-list-page .tg-chat-row:active{background:rgba(53,216,255,.08)!important}
+body.tg-list-page .tg-chat-row :where(.tg-chat-name,.tg-chat-title,strong),
+body.zc-contacts-page .zc-person-copy strong{color:#f0f9ff!important}
+body.tg-list-page .tg-chat-row :where(.tg-chat-preview,.tg-chat-message,.tg-chat-time,small),
+body.zc-contacts-page .zc-person-copy small{color:#91abc1!important}
+body.tg-list-page .tg-bottom-nav,
+body.zc-contacts-page .tg-bottom-nav{
+  background:rgba(5,15,29,.96)!important;
+  border-top:1px solid rgba(109,203,242,.18)!important;
+  box-shadow:0 -10px 30px rgba(0,0,0,.24)!important;backdrop-filter:blur(20px);
+}
+body.tg-list-page .tg-bottom-nav a,
+body.zc-contacts-page .tg-bottom-nav a{color:#809bb3!important}
+body.tg-list-page .tg-bottom-nav a.is-current,
+body.tg-list-page .tg-bottom-nav a[aria-current=page],
+body.zc-contacts-page .tg-bottom-nav a.is-current,
+body.zc-contacts-page .tg-bottom-nav a[aria-current=page]{color:#35d8ff!important}
+body.tg-app.tg-conversation-page .tg-message-area{background:transparent!important}
+body.tg-app.tg-conversation-page .tg-message-composer,
+body.tg-app.tg-conversation-page .tg-composer,
+body.tg-app.tg-conversation-page .tg-input-area{
+  background:#07172a!important;border-top:1px solid rgba(109,203,242,.16)!important;
+}
+body.tg-app.tg-conversation-page .tg-input-wrap,
+body.tg-app.tg-conversation-page :where(input,textarea){
+  background:#0b2035!important;color:#f1faff!important;border:1px solid rgba(109,203,242,.18)!important;
+}
+body.tg-app.tg-conversation-page .tg-message-bubble,
+body.tg-app.tg-conversation-page .message-bubble{border-radius:18px!important;box-shadow:0 4px 14px rgba(0,0,0,.16)!important}
+body.tg-app.tg-conversation-page :where(.outgoing,.sent,.message-out,.tg-message-out){
+  background:linear-gradient(135deg,#07506b,#06364e)!important;color:#effbff!important;
+  border:1px solid rgba(53,216,255,.12)!important;
+}
+body.tg-app.tg-conversation-page :where(.incoming,.received,.message-in,.tg-message-in){
+  background:#102740!important;color:#eff8ff!important;border:1px solid rgba(109,203,242,.1)!important;
+}
+body.zc-contacts-page{background:#050d1b!important;color:#edf8ff!important}
+body.zc-contacts-page .zc-contact-shortcuts{border-bottom-color:rgba(109,203,242,.16)!important}
+body.zc-contacts-page .zc-shortcut{color:#cdeeff!important}
+body.zc-contacts-page .zc-shortcut-icon{background:linear-gradient(145deg,#12476a,#09253f)!important;color:#35d8ff!important;border:1px solid rgba(53,216,255,.18)!important}
+body.zc-contacts-page .zc-section-label{color:#8ca9c0!important}
+body.zc-contacts-page .zc-person{background:transparent!important;color:#edf8ff!important}
+body.zc-contacts-page .zc-person:active{background:rgba(53,216,255,.08)!important}
+body.zc-contacts-page .zc-person-avatar{background:linear-gradient(145deg,#0b7194,#10315a)!important;color:#effbff!important}
+body.zc-contacts-page .zc-person-copy{border-bottom-color:rgba(109,203,242,.1)!important}
+body.zc-contacts-page .zc-contact-empty{color:#9ab2c8!important}
+body.tg-app :where(.tg-empty-state,.tg-archive-row,.tg-archive-panel,.tg-new-chat-dialog,.tg-chat-menu,.tg-attach-menu,.tg-emoji-panel,.tg-info-panel,.tg-dialog-head,.tg-call-card){
+  background:linear-gradient(145deg,#102740,#091a2d)!important;color:#edf8ff!important;
+  border-color:rgba(109,203,242,.18)!important;
+}
+body.tg-app :where(.tg-empty-state p,.tg-archive-row small,.tg-dialog-help,.tg-composer-hint){color:#9ab2c8!important}
+body.tg-app .tg-empty-art,body.tg-app .tg-archive-icon{color:#35d8ff!important}
+body.tg-app .tg-day-pill{background:#102740!important;color:#b7d0e4!important;border:1px solid rgba(109,203,242,.13)!important}
+body.tg-app .tg-icon-btn{color:#bdefff!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
