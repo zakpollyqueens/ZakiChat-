@@ -365,3 +365,6 @@ body.profile-page .profile-updates-link:focus-visible{outline:2px solid var(--zk
   body.profile-page .profile-quick-actions{margin-bottom:10px}
   body.profile-page .profile-updates-link{min-height:34px;padding:6px 10px;font-size:.75rem}
 }
+
+/* Keep content clear of the shared navigation on remaining themed subpages. */
+body.appearance-page,body.notifications-page,body.channels-page{padding-bottom:calc(var(--zc-nav-height) + 30px + env(safe-area-inset-bottom))!important}
