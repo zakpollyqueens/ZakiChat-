@@ -1,60 +1,52 @@
 (function () {
   "use strict";
-
-  if (!window.supabase || !window.ZakiChatConfig) {
+  if (!window.ZakiChatAuth?.client) {
     console.error("ZakiChat auth guard could not start.");
     return;
   }
-
-  const supabaseClient =
-    window.ZakiChatAuth?.client;
-
-  if (!supabaseClient) {
-    console.error(
-      "ZakiChat auth guard: centralized Supabase client unavailable."
-    );
-    return;
-  }
-
-  // Load the shared app-lock layer on every page protected by this guard.
-  // The lock overlay persists across navigation and refreshes.
+  const client = window.ZakiChatAuth.client;
   (function loadAppLock() {
     if (!document.querySelector('link[data-zaki-lock-styles]')) {
       const style = document.createElement("link");
-      style.rel = "stylesheet";
-      style.href = "../static/css/app-lock.css";
-      style.dataset.zakiLockStyles = "true";
-      document.head.appendChild(style);
+      style.rel = "stylesheet"; style.href = "../static/css/app-lock.css";
+      style.dataset.zakiLockStyles = "true"; document.head.appendChild(style);
     }
     if (!document.querySelector('script[data-zaki-lock-script]')) {
       const script = document.createElement("script");
-      script.src = "../static/js/app-lock.js";
-      script.dataset.zakiLockScript = "true";
-      script.defer = true;
-      document.head.appendChild(script);
+      script.src = "../static/js/app-lock.js"; script.dataset.zakiLockScript = "true";
+      script.defer = true; document.head.appendChild(script);
     }
   })();
-
+  let redirecting = false;
+  function sendToLogin() {
+    if (redirecting) return;
+    redirecting = true;
+    location.replace("login.html");
+  }
   async function protectPage() {
-    const { data, error } =
-      await supabaseClient.auth.getSession();
-
-    if (error) {
-      console.error("Auth guard session check failed:", error);
-      window.location.replace("login.html");
-      return;
-    }
-
-    if (!data.session) {
-      window.location.replace("login.html");
+    try {
+      const { data: sessionData, error: sessionError } = await client.auth.getSession();
+      if (sessionError || !sessionData.session) { sendToLogin(); return; }
+      // Validate the user with Supabase Auth, not only the locally stored session.
+      const { data, error } = await client.auth.getUser();
+      const user = data?.user;
+      if (error || !user || !user.email || !user.email_confirmed_at) {
+        await client.auth.signOut({ scope: "local" });
+        sendToLogin();
+        return;
+      }
+      await window.ZakiChatAccounts?.registerCurrentSession(client, {
+        email: user.email,
+        phone: user.user_metadata?.phone || user.phone || "",
+        displayName: user.user_metadata?.display_name || user.user_metadata?.full_name || user.email
+      });
+    } catch (error) {
+      console.error("ZakiChat protected-page validation failed:", error);
+      sendToLogin();
     }
   }
-
-  supabaseClient.auth.onAuthStateChange(function (event, session) {
-    if (event === "SIGNED_OUT" || !session) {
-      window.location.replace("login.html");
-    }
+  client.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT" || !session) sendToLogin();
   });
-
   protectPage();
 })();
