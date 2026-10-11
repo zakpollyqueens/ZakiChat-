@@ -1313,3 +1313,25 @@ account-back {
   }
 
 }
+
+
+/* Three-mode account selector */
+.account-mode-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.account-mode-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;min-height:178px;padding:17px;border:1px solid rgba(148,170,196,.2);border-radius:18px;background:linear-gradient(150deg,rgba(21,43,67,.9),rgba(8,19,34,.96));color:#edf6ff;text-align:left;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;min-width:0}
+.account-mode-card:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(39,211,162,.6)}
+.account-mode-card:focus-visible{outline:3px solid #27d3a2;outline-offset:3px}
+.account-mode-card[aria-pressed="true"]{border-color:#27d3a2;box-shadow:0 0 0 1px #27d3a2 inset,0 10px 30px rgba(39,211,162,.09);background:linear-gradient(150deg,rgba(16,67,68,.8),rgba(8,24,39,.98))}
+.account-mode-card:disabled{opacity:.56;cursor:not-allowed}
+.account-mode-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:rgba(39,211,162,.12);font-size:21px}
+.account-mode-card strong{font-size:14px;line-height:1.35}
+.account-mode-card small{color:#aabbd0;font-size:12px;line-height:1.45}
+.account-mode-state{margin-top:auto;color:#6ce8bf;font-size:11px;font-weight:800;letter-spacing:.02em}
+.account-mode-card:disabled .account-mode-state{color:#9bacc0}
+.account-mode-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding:13px 15px;border-radius:13px;background:rgba(255,255,255,.035)}
+.account-mode-footer p{margin:0;color:#b8c9db;font-size:13px;line-height:1.5}
+.account-mode-footer a{flex-shrink:0;color:#53e0ba;font-size:13px;font-weight:800;text-decoration:none}
+.account-mode-footer a:hover{text-decoration:underline}
+.account-mode-footer [data-state="error"]{color:#ffb4b4}
+.account-mode-footer [data-state="success"]{color:#6ce8bf}
+@media(max-width:680px){.account-mode-grid{grid-template-columns:1fr;gap:9px}.account-mode-card{min-height:0;display:grid;grid-template-columns:42px minmax(0,1fr);column-gap:12px;align-items:center;padding:13px}.account-mode-icon{grid-row:span 3}.account-mode-card strong,.account-mode-card small,.account-mode-state{grid-column:2}.account-mode-footer{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.account-mode-card{transition:none}}
