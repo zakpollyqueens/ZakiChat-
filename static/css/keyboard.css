@@ -51,7 +51,7 @@ body.zckb-theme-midnight{--zckb-bg:rgba(7,17,31,.98);--zckb-accent:#27d3a2;--zck
 body.zckb-theme-cyan{--zckb-bg:rgba(6,24,38,.98);--zckb-accent:#22d3ee;--zckb-text:#e9fbff;--zckb-border:rgba(34,211,238,.28)}
 body.zckb-theme-rose{--zckb-bg:rgba(29,17,28,.98);--zckb-accent:#fb7185;--zckb-text:#fff1f6;--zckb-border:rgba(251,113,133,.25)}
 body.tg-conversation-page.zckb-theme-standard #tg-composer,body.tg-conversation-page.zckb-theme-midnight #tg-composer,body.tg-conversation-page.zckb-theme-cyan #tg-composer,body.tg-conversation-page.zckb-theme-rose #tg-composer{border-color:var(--zckb-border)!important;background:var(--zckb-bg)!important}
-body.tg-conversation-page #message-input{font-size:var(--zckb-font-size,16px)}
+body.tg-conversation-page #message-input{font-size:var(--zakichat-font-size,16px)}
 body.tg-conversation-page.zckb-compact #tg-composer{padding:5px!important;gap:5px!important}
 body.tg-conversation-page.zckb-compact #message-input{min-height:34px!important}
 body.tg-conversation-page.zckb-theme-midnight #tg-composer,body.tg-conversation-page.zckb-theme-cyan #tg-composer,body.tg-conversation-page.zckb-theme-rose #tg-composer{box-shadow:0 0 0 1px var(--zckb-border),0 8px 25px rgba(0,0,0,.18)!important}
