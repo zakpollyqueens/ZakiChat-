@@ -68,7 +68,10 @@
       );
     });
 
+  let modeRefreshInFlight = false;
   async function applyAccountMode() {
+    if (modeRefreshInFlight) return;
+    modeRefreshInFlight = true;
     try {
       const { data: sessionResult, error: sessionError } = await client.auth.getSession();
       if (sessionError) throw sessionError;
@@ -127,8 +130,19 @@
       console.warn("ZakiChat account mode could not be resolved:", error);
       window.ZakiChatMode = Object.freeze({ current: "local", plans: new Set(), ready: false });
       document.documentElement.dataset.zakichatAccountMode = "local";
+    } finally {
+      modeRefreshInFlight = false;
     }
   }
+
+  // Re-check on return to the app and periodically so an expired paid plan
+  // falls back to Local without interrupting the user's signed-in session.
+  window.ZakiChatRefreshMode = applyAccountMode;
+  window.addEventListener("focus", applyAccountMode);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") applyAccountMode();
+  });
+  window.setInterval(applyAccountMode, 60000);
 
   client.auth.getSession().then(() => applyAccountMode()).catch(error => console.warn("ZakiChat mode bootstrap failed:", error));
 
