@@ -88,6 +88,21 @@
           if(businessUpgrade){plan="business_monthly";premium=true;break;}
         }
       }
+      const { data: modePreference, error: modeError } = await client.from("user_account_preferences")
+        .select("account_mode").eq("user_id", user.id).maybeSingle();
+      if (!modeError && modePreference?.account_mode) {
+        const selectedMode = modePreference.account_mode;
+        if (selectedMode === "local") {
+          plan = "local";
+          premium = false;
+        } else if (selectedMode === "personal_customized" && plan !== "personal_monthly") {
+          plan = "local";
+          premium = false;
+        } else if (selectedMode === "business_customized" && plan !== "business_monthly") {
+          plan = "local";
+          premium = false;
+        }
+      }
       localStorage.setItem(PLAN_KEY,JSON.stringify({plan:plan,checkedAt:Date.now()}));
     }catch(error){
       console.warn("Could not verify ZakiChat plan",error);
