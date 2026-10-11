@@ -7,6 +7,7 @@
 <title>Chats · ZakiChat</title>
 <link rel="stylesheet" href="../static/css/main.css">
 <link rel="stylesheet" href="../static/css/telegram-chat.css">
+<link rel="stylesheet" href="../static/css/telegram-chat-list.css">
 </head>
 <body class="tg-app tg-list-page">
 <main class="tg-shell">
@@ -53,7 +54,7 @@
     <a class="is-current" href="chats.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span></a>
     <a href="contacts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/><circle cx="12" cy="12" r="10"/></svg><span>Contacts</span></a>
     <a href="settings.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.7 3.5 10.5 2h3l.8 1.5 2 .9 1.7-.3 1.5 2.6-.9 1.5v2l.9 1.5-1.5 2.6-1.7-.3-2 .9-.8 1.5h-3l-.8-1.5-2-.9-1.7.3-1.5-2.6.9-1.5v-2l-.9-1.5L6 4.1l1.7.3z" transform="translate(0 2)"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></a>
-    <a href="profile.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><circle cx="12" cy="12" r="10"/></svg><span>Profile</span></a>
+    <a href="profile.html"><svg id="bottom-profile-fallback" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><circle cx="12" cy="12" r="10"/></svg><img id="bottom-profile-avatar" class="tg-bottom-profile-image" alt="" hidden><span>Profile</span></a>
   </nav>
 </main>
 <section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section><div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
