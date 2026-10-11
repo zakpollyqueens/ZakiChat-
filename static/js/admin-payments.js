@@ -84,9 +84,18 @@ async function adminContentRequest(body) {
     },
     body: JSON.stringify(body)
   });
-  const data = await response.json().catch(() => ({}));
+  const raw = await response.text();
+  let data = {};
+  try { data = raw ? JSON.parse(raw) : {}; } catch (_) {}
   if (!response.ok || data.success === false) {
-    throw new Error(data.error || "Admin content request failed.");
+    const message = data.error || data.message || data.msg ||
+      ("Admin content request failed (HTTP " + response.status + ").");
+    console.error("Admin content request diagnostic:", {
+      status: response.status,
+      action: body.action,
+      response: data
+    });
+    throw new Error(message);
   }
   return data;
 }
