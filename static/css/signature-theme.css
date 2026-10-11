@@ -457,3 +457,14 @@ body.status-page .channels-updates-card-content span{color:#9db6cc!important}
 .profile-zakiplay-open{display:inline-flex;align-items:center;gap:6px;flex:none;padding:10px 13px;border:1px solid rgba(91,222,255,.27);border-radius:12px;background:rgba(56,220,255,.08);color:#79e8ff;font-size:.82rem;font-weight:850;text-decoration:none}
 .profile-zakiplay-open:hover{background:rgba(56,220,255,.15)}
 @media(max-width:430px){.profile-zakiplay-card{gap:10px;padding:13px}.profile-zakiplay-icon{flex-basis:40px;width:40px;height:40px}.profile-zakiplay-open{padding:9px 10px}}
+
+
+/* Respect the user's saved appearance while keeping the cyan accent language. */
+body.channels-page .channels-header,body.channels-page .channels-section,body.channels-page .channel-view{background:linear-gradient(145deg,var(--zk-surface,rgba(11,34,56,.97)),var(--zk-bg-2,rgba(8,22,40,.96)))!important;color:var(--zk-text,#f2faff)!important;border-color:var(--zk-line,rgba(87,210,255,.18))!important}
+body.channels-page .channels-header h1,body.channels-page .channels-section-heading h2,body.channels-page .channel-card-name strong,body.channels-page .channel-view h2{color:var(--zk-text,#f2faff)!important}
+body.channels-page .channels-header p,body.channels-page .channels-section-heading p,body.channels-page .channel-card-description,body.channels-page .channel-card-handle,body.channels-page .channel-card-followers{color:var(--zk-muted,#9db6cc)!important}
+body.channels-page .channel-card{background:linear-gradient(125deg,var(--zk-surface,rgba(16,44,68,.97)),var(--zk-bg-2,rgba(7,23,41,.99)))!important;border-color:var(--zk-line,rgba(100,205,241,.17))!important;color:var(--zk-text,#f2faff)!important}
+body.status-page .channels-updates-section{background:linear-gradient(145deg,var(--zk-surface,rgba(10,30,50,.9)),var(--zk-bg-2,rgba(5,17,31,.94)))!important;border-color:var(--zk-line,rgba(87,210,255,.2))!important;color:var(--zk-text,#f2faff)!important}
+body.status-page .channels-updates-card{background:linear-gradient(125deg,var(--zk-surface,rgba(16,44,68,.97)),var(--zk-bg-2,rgba(7,23,41,.99)))!important;border-color:var(--zk-line,rgba(100,205,241,.17))!important}
+body.status-page .channels-updates-heading h2,body.status-page .channels-updates-card-content strong{color:var(--zk-text,#f1f9ff)!important}
+body.status-page .channels-updates-heading p,body.status-page .channels-updates-card-content span{color:var(--zk-muted,#9db6cc)!important}
