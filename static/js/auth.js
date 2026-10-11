@@ -9,6 +9,7 @@
   const isLogin = page.endsWith("/login.html");
   const isSignup = page.endsWith("/signup.html");
   const PAYMENT_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
+  const EMAIL_LOGIN_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/email-login";
   const PENDING_UPGRADE_KEY = "zakichat_pending_upgrade";
   const PENDING_REGISTRATION_KEY = "zakichat_pending_email_registration";
 
@@ -63,18 +64,20 @@
     if (!password) { message(status, "Enter your password.", "error"); return; }
     loading(button, true, "Sign In");
     try {
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (!data.session || !data.user?.email_confirmed_at) {
-        await client.auth.signOut({ scope: "local" });
-        throw new Error("Please verify your email using the link we sent before signing in.");
-      }
-      await window.ZakiChatAccounts?.registerCurrentSession(client, {
-        email: data.user.email,
-        displayName: data.user.user_metadata?.display_name || data.user.user_metadata?.full_name || data.user.email
+      const cfg = window.ZakiChatConfig;
+      const response = await fetch(EMAIL_LOGIN_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: cfg.supabaseKey },
+        body: JSON.stringify({ action: "start", email, password })
       });
-      message(status, "Signed in successfully. Opening your chats…", "success");
-      setTimeout(chats, 250);
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true || result.verificationRequired !== true) {
+        throw new Error(result.error || "Unable to start secure sign-in. Please try again.");
+      }
+      message(status, result.message || "A sign-in verification link has been sent to your recovery email. Open it to finish signing in.", "success");
+      // Do not create a browser session here. A session is established only after email confirmation.
+      button.textContent = "Verification Email Sent";
+      button.disabled = true;
     } catch (e) {
       message(status, e.message || "Unable to sign in. Check your email and password.", "error");
       loading(button, false, "Sign In");
