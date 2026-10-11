@@ -12,17 +12,12 @@ async function checkAccess(){
   const {data:sessionData,error:sessionError}=await client.auth.getSession();
   if(sessionError)throw sessionError;
   const user=sessionData&&sessionData.session&&sessionData.session.user;
-  if(!user){window.location.replace("login.html");return}
-  const {data,error}=await client.from("user_upgrades").select("plan,status,expires_at")
-   .eq("user_id",user.id).eq("plan","personal_monthly").eq("status","active")
-   .gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1).maybeSingle();
-  if(error)throw error;
-  if(!data){showLocked();return}
+  if(!user){window.location.replace("signup.html?next=zakiplay.html");return}
   showContent();
  }catch(error){
-  console.error("ZakiPlay entitlement check failed:",error);
-  gate.innerHTML="<strong>We couldn't verify your Customized Personal access. Please check your connection and try again.</strong><button class='zplay-button' id='zplayRetry' type='button'>Try again</button>";
-  $("zplayRetry")?.addEventListener("click",()=>{gate.innerHTML="<div class='zplay-loader'></div><strong>Checking your Customized Personal access…</strong>";checkAccess()});
+  console.error("ZakiPlay account check failed:",error);
+  gate.innerHTML="<strong>We couldn't connect to ZakiChat. Check your connection and try again.</strong><button class='zplay-button' id='zplayRetry' type='button'>Try again</button>";
+  $("zplayRetry")?.addEventListener("click",()=>{gate.innerHTML="<div class='zplay-loader'></div><strong>Opening ZakiPlay…</strong>";checkAccess()});
  }
 }
 function setMediaTitle(title,hint){$("zplayMediaTitle").textContent=title;$("zplayMediaHint").textContent=hint}
