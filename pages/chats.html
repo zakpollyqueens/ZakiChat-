@@ -10,26 +10,45 @@
 <link rel="stylesheet" href="../static/css/telegram-chat-list.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
 <style>.zaki-app-icon img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}.zaki-app-icon{overflow:hidden;border-radius:14px}</style>
+
 <style>
-/* Endless daily inspiration ticker in the free space beside the app icon */
-body.tg-list-page .tg-brand-row{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important}
-body.tg-list-page .daily-inspiration{display:flex;align-items:center;gap:7px;flex:1;min-width:0;height:39px;padding:0 10px;border:1px solid rgba(78,215,255,.16);border-radius:13px;background:linear-gradient(110deg,rgba(16,49,74,.75),rgba(9,27,48,.6));overflow:hidden;box-shadow:inset 0 1px rgba(255,255,255,.04)}
-body.tg-list-page .inspiration-sparkle{flex:none;color:#6de5ff;font-size:13px;text-shadow:0 0 12px #22c5ee77}
-body.tg-list-page .inspiration-window{flex:1;min-width:0;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)}
-body.tg-list-page .inspiration-track{display:flex;align-items:center;width:max-content;animation:dailyInspirationScroll 24s linear infinite}
-body.tg-list-page .inspiration-track span{flex:none;padding-right:42px;color:#c5eafa;font-size:11px;font-weight:600;letter-spacing:.05px}
-body.tg-list-page .daily-inspiration.is-offline{opacity:.55}
-body.tg-list-page .daily-inspiration.is-offline .inspiration-track{animation-play-state:paused}
-@keyframes dailyInspirationScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(max-width:360px){body.tg-list-page .tg-brand-row{gap:7px!important}body.tg-list-page .zaki-glass-brand{flex-basis:42px!important;width:42px!important;height:42px!important}body.tg-list-page .zaki-app-icon{width:38px!important;height:38px!important}body.tg-list-page .daily-inspiration{height:36px;padding:0 7px;gap:5px}body.tg-list-page .inspiration-track span{font-size:10px;padding-right:30px}}
-@media(prefers-reduced-motion:reduce){body.tg-list-page .inspiration-track{animation:none;transform:none}body.tg-list-page .inspiration-track span[aria-hidden=true]{display:none}}
+/* Rotating quote card: each quote has its own richly textured color mood. */
+body.tg-list-page .tg-brand-row{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:9px!important;min-height:54px!important}
+body.tg-list-page .zaki-glass-brand{flex:none}
+body.tg-list-page .daily-inspiration{position:relative;isolation:isolate;display:flex;align-items:center;gap:9px;flex:1;min-width:0;height:54px;padding:7px 10px;border:1px solid rgba(177,239,255,.28);border-radius:16px;overflow:hidden;background:linear-gradient(120deg,#123d5c,#162f5b);box-shadow:inset 0 1px rgba(255,255,255,.13),0 7px 22px #0002;transition:background .7s,border-color .7s}
+body.tg-list-page .daily-inspiration:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.46;background:radial-gradient(circle at 90% 8%,#ffffff32 0 1px,transparent 2px),radial-gradient(circle at 83% 73%,#ffffff20 0 1px,transparent 2px),radial-gradient(circle at 18% 110%,#ffffff22 0 28px,transparent 29px),repeating-linear-gradient(135deg,#ffffff08 0 1px,transparent 1px 8px);background-size:19px 19px,27px 27px,auto,auto}
+body.tg-list-page .daily-inspiration:after{content:"";position:absolute;z-index:-1;inset:-80% -25%;background:linear-gradient(105deg,transparent 40%,#ffffff0d 50%,transparent 60%);transform:translateX(-45%);animation:inspirationSheen 9s ease-in-out infinite}
+body.tg-list-page .inspiration-sparkle{display:grid;place-items:center;flex:none;width:29px;height:29px;border:1px solid #ffffff30;border-radius:10px;background:#ffffff15;color:#f7f9ff;font-size:16px;text-shadow:0 0 14px #fff8}
+body.tg-list-page .inspiration-copy{display:flex;flex:1;min-width:0;flex-direction:column;justify-content:center;gap:3px}
+body.tg-list-page .inspiration-kicker{color:#ffffffad;font-size:8px;font-weight:850;letter-spacing:.15em;white-space:nowrap}
+body.tg-list-page .inspiration-quote{display:block;overflow:hidden;color:#fff;font-size:12px;font-weight:720;line-height:1.22;letter-spacing:-.08px;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 8px #0019}
+body.tg-list-page .daily-inspiration.is-changing .inspiration-quote{animation:quoteCardEnter .72s cubic-bezier(.2,.8,.2,1) both}
+body.tg-list-page .inspiration-index{flex:none;align-self:flex-end;padding-bottom:2px;color:#ffffffb8;font-size:8px;font-weight:750;font-variant-numeric:tabular-nums}
+body.tg-list-page .daily-inspiration.theme-0{background:linear-gradient(120deg,#123d5c,#162f5b 60%,#43326d)}
+body.tg-list-page .daily-inspiration.theme-1{background:linear-gradient(120deg,#123e35,#11615c 60%,#214d71)}
+body.tg-list-page .daily-inspiration.theme-2{background:linear-gradient(120deg,#56264d,#85385b 55%,#4e326e)}
+body.tg-list-page .daily-inspiration.theme-3{background:linear-gradient(120deg,#61391b,#a65337 55%,#69334e)}
+body.tg-list-page .daily-inspiration.theme-4{background:linear-gradient(120deg,#26265e,#3b4c9a 55%,#246a86)}
+body.tg-list-page .daily-inspiration.theme-5{background:linear-gradient(120deg,#173f60,#176b83 55%,#24566a)}
+body.tg-list-page .daily-inspiration.theme-6{background:linear-gradient(120deg,#3c285c,#68428c 55%,#3e537c)}
+body.tg-list-page .daily-inspiration.theme-7{background:linear-gradient(120deg,#3b3a1a,#73632a 55%,#285b55)}
+body.tg-list-page .daily-inspiration.is-offline{opacity:.68;filter:saturate(.65)}
+body.tg-list-page .tg-list-actions .tg-zakiplay-launch{position:relative;display:grid;place-items:center;width:29px;height:34px;min-width:29px;margin:0;padding:0;border:0;border-radius:50%;background:transparent;color:#d7f6ff;text-decoration:none}
+body.tg-list-page .tg-zakiplay-launch svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.tg-list-page .tg-zakiplay-launch .zplay-lock-badge{position:absolute;right:-2px;bottom:0;display:grid;place-items:center;width:13px;height:13px;border:1px solid var(--zcl-bg);border-radius:50%;background:#f2c65d;color:#352400;font-size:8px;line-height:1}
+body.tg-list-page .tg-zakiplay-launch.is-unlocked{color:#70efcf}
+body.tg-list-page .tg-zakiplay-launch .zplay-lock-badge[hidden]{display:none}
+@keyframes quoteCardEnter{0%{opacity:0;transform:translateY(7px);filter:blur(2px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes inspirationSheen{0%,75%,100%{transform:translateX(-45%)}88%{transform:translateX(45%)}}
+@media(max-width:390px){body.tg-list-page .tg-brand-row{gap:6px!important}body.tg-list-page .zaki-glass-brand{flex-basis:40px!important;width:40px!important;height:40px!important}body.tg-list-page .zaki-app-icon{width:36px!important;height:36px!important}body.tg-list-page .daily-inspiration{height:50px;padding:6px 7px;gap:6px;border-radius:13px}body.tg-list-page .inspiration-sparkle{width:24px;height:24px;font-size:13px}body.tg-list-page .inspiration-kicker{font-size:7px}body.tg-list-page .inspiration-quote{font-size:11px}body.tg-list-page .inspiration-index{display:none}body.tg-list-page .tg-list-actions .tg-zakiplay-launch{width:24px;min-width:24px}body.tg-list-page .tg-list-actions .tg-icon-btn{width:23px;min-width:23px}}
+@media(prefers-reduced-motion:reduce){body.tg-list-page .daily-inspiration:after{animation:none}body.tg-list-page .inspiration-quote{animation:none!important}}
 </style>
 </head>
 <body class="tg-app tg-list-page">
 <main class="tg-shell">
   <header class="tg-list-header">
-    <div class="tg-brand-row"><a class="zaki-glass-brand" href="chats.html" aria-label="ZakiChat home"><span class="zaki-app-icon" aria-hidden="true"><img src="../static/images/icon.jpg" alt=""></span></a><div class="daily-inspiration" id="daily-inspiration" aria-label="Daily inspiration" aria-live="polite"><span class="inspiration-sparkle" aria-hidden="true">✦</span><div class="inspiration-window"><div class="inspiration-track" id="inspiration-track"><span id="inspiration-quote">“Be the reason someone smiles today.”</span><span aria-hidden="true" id="inspiration-quote-copy">“Be the reason someone smiles today.”</span></div></div></div><div class="tg-header-actions tg-list-actions">
-      <button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search the web and ZakiChat" title="Search web and chats" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
+    <div class="tg-brand-row"><a class="zaki-glass-brand" href="chats.html" aria-label="ZakiChat home"><span class="zaki-app-icon" aria-hidden="true"><img src="../static/images/icon.jpg" alt=""></span></a><div class="daily-inspiration theme-0" id="daily-inspiration" aria-label="Daily inspiration" aria-live="polite"><span class="inspiration-sparkle" aria-hidden="true">✦</span><div class="inspiration-copy"><span class="inspiration-kicker">A LITTLE INSPIRATION</span><span class="inspiration-quote" id="inspiration-quote">“Be the reason someone smiles today.”</span></div><span class="inspiration-index" id="inspiration-index">01 / 15</span></div><div class="tg-header-actions tg-list-actions">
+      <a href="zakiplay.html" class="tg-zakiplay-launch" aria-label="ZakiPlay is locked. Customized Personal access required" title="ZakiPlay · Customized Personal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span class="zplay-lock-badge" aria-hidden="true">🔒</span></a><button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search the web and ZakiChat" title="Search web and chats" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
     </div></div>
     <label class="tg-search" id="top-search-box"><span aria-hidden="true">⌕</span><input id="chat-search" type="search" placeholder="Search the web, chats, groups and channels" autocomplete="off" enterkeyhint="search"><button id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label>
     <div class="tg-filter-row" role="group" aria-label="Chat filters"><button class="tg-filter is-active" data-filter="all" type="button">All chats</button><button class="tg-filter" data-filter="personal" type="button">Personal</button><button class="tg-filter" data-filter="groups" type="button">Groups</button><button class="tg-filter" data-filter="channels" type="button">Channels</button></div>
@@ -82,31 +101,39 @@ body.tg-list-page .daily-inspiration.is-offline .inspiration-track{animation-pla
 <section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section><div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
- const bar=document.getElementById("daily-inspiration"),track=document.getElementById("inspiration-track"),first=document.getElementById("inspiration-quote"),copy=document.getElementById("inspiration-quote-copy");
- if(!bar||!track||!first||!copy)return;
+ const bar=document.getElementById("daily-inspiration"),quote=document.getElementById("inspiration-quote"),counter=document.getElementById("inspiration-index");
+ if(!bar||!quote)return;
  const quotes=[
-  "“Be the reason someone smiles today.”",
-  "“You are capable of more than you imagine.”",
-  "“Love grows when kindness becomes a habit.”",
-  "“Every sunrise is another chance to begin.”",
-  "“A gentle word can brighten someone’s whole day.”",
-  "“Choose love, even in the little things.”",
-  "“Your progress matters, even when it feels small.”",
-  "“Someone is grateful that you are in their world.”",
-  "“Let your heart be brave and your intentions kind.”",
-  "“The best messages are the ones that make people feel remembered.”",
-  "“Keep going. Your story is still unfolding.”",
-  "“May today bring you peace, courage, and a reason to laugh.”",
-  "“Celebrate how far you’ve come, not only how far you have to go.”",
-  "“A little love sent today can last all week.”",
-  "“You don’t have to be perfect to make a difference.”"
+  ["“Be the reason someone smiles today.”",0],
+  ["“You are capable of more than you imagine.”",4],
+  ["“Love grows when kindness becomes a habit.”",2],
+  ["“Every sunrise is another chance to begin.”",3],
+  ["“A gentle word can brighten someone’s whole day.”",1],
+  ["“Choose love, even in the little things.”",6],
+  ["“Your progress matters, even when it feels small.”",5],
+  ["“Someone is grateful that you are in their world.”",2],
+  ["“Let your heart be brave and your intentions kind.”",7],
+  ["“The best messages make people feel remembered.”",0],
+  ["“Keep going. Your story is still unfolding.”",4],
+  ["“May today bring you peace, courage, and a reason to laugh.”",1],
+  ["“Celebrate how far you’ve come.”",5],
+  ["“A little love sent today can last all week.”",6],
+  ["“You don’t have to be perfect to make a difference.”",3]
  ];
  let index=0,timer=0;
- function showQuote(text){first.textContent=text;copy.textContent=text;track.style.animation="none";void track.offsetWidth;track.style.animation="";bar.classList.toggle("is-offline",!navigator.onLine)}
- function nextQuote(){if(!navigator.onLine){bar.classList.add("is-offline");return}index=(index+1)%quotes.length;showQuote(quotes[index])}
- function start(){clearInterval(timer);bar.classList.toggle("is-offline",!navigator.onLine);if(navigator.onLine){showQuote(quotes[index]);timer=setInterval(nextQuote,180000)}}
- window.addEventListener("online",start);window.addEventListener("offline",()=>{clearInterval(timer);bar.classList.add("is-offline")});start();
+ function render(animate){
+  quote.textContent=quotes[index][0];
+  bar.className="daily-inspiration theme-"+quotes[index][1]+(navigator.onLine?"":" is-offline");
+  if(counter)counter.textContent=String(index+1).padStart(2,"0")+" / "+String(quotes.length).padStart(2,"0");
+  if(animate){bar.classList.remove("is-changing");void bar.offsetWidth;bar.classList.add("is-changing");}
+ }
+ function next(){if(!navigator.onLine){bar.classList.add("is-offline");return}index=(index+1)%quotes.length;render(true)}
+ function start(){clearInterval(timer);render(false);if(navigator.onLine)timer=setInterval(next,180000)}
+ window.addEventListener("online",start);
+ window.addEventListener("offline",()=>{clearInterval(timer);bar.classList.add("is-offline")});
+ render(true);start();
 })();
+
 (function(){
  const toggle=document.getElementById("chats-compose-toggle"),menu=document.getElementById("chats-compose-menu");
  if(!toggle||!menu)return;
@@ -138,6 +165,7 @@ body.tg-list-page .daily-inspiration.is-offline .inspiration-track{animation-pla
 <script src="../static/js/config.js"></script>
 <script src="../static/js/account-manager.js"></script>
 <script src="../static/js/supabase-client.js"></script>
+<script src="../static/js/zakiplay-launcher.js"></script>
 <script src="../static/js/auth-guard.js"></script>
 <script src="../static/js/telegram-chat.js"></script>
 <script src="../static/js/app-lock.js"></script>
