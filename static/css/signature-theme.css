@@ -339,7 +339,7 @@ body .zc-bottom-nav span{pointer-events:none}
 body.appearance-page,body.notifications-page,body.channels-page{padding-bottom:calc(var(--zc-nav-height) + 30px + env(safe-area-inset-bottom))!important}
 
 
-/* Chats has its own four-item navigation and a floating create menu. */
+/* Chats uses the shared five-item navigation and a floating create menu. */
 body.tg-list-page .zc-chats-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}
 body.tg-list-page .zc-chats-bottom-nav>a{padding:5px 2px!important;font-size:10px!important;gap:3px!important}
 body.tg-list-page .zc-chats-bottom-nav>a svg{width:21px!important;height:21px!important;flex-basis:21px!important}
