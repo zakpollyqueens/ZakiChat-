@@ -98,7 +98,14 @@
         return;
       }
 
-      let mode = preference?.account_mode || "local";
+      let mode = preference?.account_mode || (plans.has("business_monthly") ? "business_customized" : plans.has("personal_monthly") ? "personal_customized" : "local");
+      if (!preference && mode !== "local") {
+        const { error } = await client.from("user_account_preferences").upsert(
+          { user_id: user.id, account_mode: mode, updated_at: new Date().toISOString() },
+          { onConflict: "user_id" }
+        );
+        if (error) { console.warn("Could not save initial customized mode:", error); mode = "local"; }
+      }
       const permitted = mode === "local" ||
         (mode === "personal_customized" && plans.has("personal_monthly")) ||
         (mode === "business_customized" && plans.has("business_monthly"));
