@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071426"><title>Explore the web · ZakiChat</title>
+<link rel="stylesheet" href="../static/css/main.css"><link rel="stylesheet" href="../static/css/telegram-chat.css"><link rel="stylesheet" href="../static/css/signature-theme.css">
+<style>
+body.zc-web-search{--s-bg:#071426;--s-panel:#0d2037;--s-line:rgba(111,203,232,.15);--s-text:#e8f8ff;--s-muted:#91aabe;background:var(--s-bg)!important;color:var(--s-text)!important}
+.zws-shell{display:flex;flex-direction:column;min-height:100dvh;max-width:760px;margin:auto;padding-bottom:calc(78px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 50% 0%,rgba(0,185,239,.13),transparent 40%),var(--s-bg)}
+.zws-header{padding:calc(12px + env(safe-area-inset-top)) 16px 14px;border-bottom:1px solid var(--s-line);background:linear-gradient(150deg,#0b2038,#071426)}
+.zws-top{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.zws-back{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--s-line);border-radius:13px;background:#102b45;color:#c8f4ff;font-size:23px}
+.zws-brand{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:800;letter-spacing:-.3px}
+.zws-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid #9cecff;border-radius:11px;background:linear-gradient(145deg,#9bf3ff,#159ed3 48%,#071d49);box-shadow:inset 0 1px 2px #fff9,0 4px 13px #00b9ef33;color:#f6fdff;font-size:10px;font-weight:900}
+.zws-label{margin-left:auto;color:var(--s-muted);font-size:11px}
+.zws-form{display:flex;gap:8px;padding:5px;border:1px solid rgba(69,221,255,.28);border-radius:16px;background:#071a2c}
+.zws-form input{flex:1;min-width:0;padding:0 10px;border:0!important;outline:0;background:transparent!important;color:var(--s-text)!important;font-size:14px}
+.zws-form button{min-width:74px;padding:0 13px;border:0;border-radius:11px;background:linear-gradient(120deg,#45ddff,#148fd6);color:#031728;font-weight:800}
+.zws-filters{display:flex;gap:8px;overflow:auto;padding-top:12px;scrollbar-width:none}
+.zws-filters button{flex:none;padding:8px 13px;border:1px solid var(--s-line);border-radius:20px;background:#0c2239;color:#aac5d9;font-size:12px;font-weight:650}
+.zws-filters button.is-active{border-color:#45ddff55;background:#123b55;color:#aaf2ff}
+.zws-content{flex:1;padding:13px 14px 22px}
+.zws-status{padding:20px 10px;text-align:center;color:var(--s-muted);font-size:13px;line-height:1.6}
+.zws-results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 2px 12px;color:var(--s-muted);font-size:12px}
+.zws-safe{display:inline-flex;align-items:center;gap:5px;color:#7ce8bf;font-size:11px}
+.zws-result{display:block;margin-bottom:10px;padding:15px;border:1px solid var(--s-line);border-radius:17px;background:linear-gradient(145deg,rgba(15,39,61,.97),rgba(7,23,40,.98));text-decoration:none;overflow-wrap:anywhere}
+.zws-result:active{border-color:#45ddff66;background:#102c45}
+.zws-domain{display:block;margin-bottom:7px;color:#78a6c2;font-size:11px}
+.zws-result strong{display:block;margin-bottom:7px;color:#a9eaff;font-size:15px;line-height:1.4}
+.zws-result p{margin:0;color:#b1c5d5;font-size:13px;line-height:1.55}
+.zws-empty-icon{display:grid;place-items:center;width:62px;height:62px;margin:28px auto 14px;border:1px solid #45ddff30;border-radius:20px;background:linear-gradient(145deg,#123c58,#101c3a);color:#7ceaff;font-size:28px}
+.zws-empty-title{margin:0;text-align:center;color:var(--s-text);font-size:18px}
+.zws-empty-copy{max-width:300px;margin:8px auto;text-align:center;color:var(--s-muted);font-size:13px;line-height:1.6}
+.zws-bottom{position:fixed;z-index:10;left:12px;right:12px;bottom:calc(6px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:5px;border:1px solid rgba(111,203,232,.13);border-radius:28px;background:rgba(8,26,44,.95);box-shadow:0 7px 25px #0006;backdrop-filter:blur(18px)}
+.zws-bottom a{display:flex;min-height:48px;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:22px;color:#9bb7cc;font-size:11px;text-decoration:none}
+.zws-bottom svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.zws-bottom a.is-current{background:#123b55;color:#69e7ff}
+@media(min-width:600px){.zws-bottom{left:calc(50% - 218px);right:auto;width:436px}}
+</style>
+</head>
+<body class="tg-app zc-web-search">
+<main class="zws-shell">
+<header class="zws-header">
+ <div class="zws-top"><a class="zws-back" href="chats.html" aria-label="Back to chats">‹</a><div class="zws-brand"><span class="zws-mark">ZAK</span><span>Explore the web</span></div><span class="zws-label">ZakiChat</span></div>
+ <form class="zws-form" id="web-search-form"><input id="web-search-input" type="search" placeholder="Search anything on the web…" autocomplete="off" enterkeyhint="search" maxlength="160"><button type="submit">Search</button></form>
+ <div class="zws-filters" role="group" aria-label="Search type"><button type="button" class="is-active" data-scope="web">All web</button><button type="button" data-scope="telegram">Telegram channels</button><button type="button" data-scope="whatsapp">WhatsApp groups</button></div>
+</header>
+<section class="zws-content" id="web-search-results" aria-live="polite"><div class="zws-empty-icon" aria-hidden="true">⌕</div><h1 class="zws-empty-title">Search beyond ZakiChat</h1><p class="zws-empty-copy">Search websites, public Telegram channels, publicly indexed WhatsApp group pages, news, learning resources and more. Strict safe-search filtering is enabled.</p></section>
+<nav class="zws-bottom" aria-label="Main navigation">
+<a href="chats.html"><svg viewBox="0 0 24 24"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/></svg><span>Chats</span></a>
+<a href="settings.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M19 13.8 20 15l-2 3-1.5-.5-1.5.8-.4 1.7h-3.4l-.4-1.7-1.5-.8-1.5.5-2-3 1-1.2v-1.6l-1-1.2 2-3 1.5.5 1.5-.8.4-1.7h3.4l.4 1.7 1.5.8 1.5-.5 2 3-1 1.2z"/></svg><span>Settings</span></a>
+<a href="status.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span></a>
+</nav>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../static/js/config.js"></script><script src="../static/js/supabase-client.js"></script><script src="../static/js/auth-guard.js"></script><script src="../static/js/global-search.js"></script>
+</body></html>
