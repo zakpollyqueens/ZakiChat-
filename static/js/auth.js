@@ -186,8 +186,21 @@
         button.disabled = true;
         button.textContent = "Verification Email Sent";
       } catch (e) {
-        localStorage.removeItem(PENDING_REGISTRATION_KEY);
-        message(status, e.message || "Unable to create your account. Please try again.", "error");
+        // A 504/network timeout can happen after Supabase has already created the
+        // user. Keep the pending profile so auth-callback can finish registration
+        // if the confirmation link arrives; deleting it here loses the profile.
+        const rawMessage = String(e?.message || "");
+        const timedOut = /timeout|timed out|deadline exceeded|fetch failed|networkerror|failed to fetch|504|502|503/i.test(rawMessage);
+        if (timedOut) {
+          message(
+            status,
+            "ZakiChat did not receive a complete response from the authentication service. Your account may already have been created, so we kept your registration details. Check your email for a verification link before trying again. If no email arrives, try signing in or use Reset password; do not repeatedly create accounts.",
+            "error"
+          );
+        } else {
+          localStorage.removeItem(PENDING_REGISTRATION_KEY);
+          message(status, rawMessage || "Unable to create your account. Please try again.", "error");
+        }
       } finally {
         if (!verificationSent) loading(button, false, "Create Account");
       }
