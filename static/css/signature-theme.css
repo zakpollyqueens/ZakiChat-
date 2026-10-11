@@ -1,272 +1,265 @@
-/* ZakiChat Signature Design System — cyan, deep navy, clean surfaces */
-:root{
-  --zk-cyan:#22c7f2;--zk-cyan-strong:#08aee0;--zk-navy:#071426;--zk-navy-2:#0b1b30;
-  --zk-surface:#10243a;--zk-surface-soft:#f3f8fc;--zk-ink:#10243a;--zk-muted:#71849a;
-  --zk-line:rgba(116,153,184,.22);--zk-radius:20px;--zk-shadow:0 16px 42px rgba(4,22,42,.12);
-}
-:where(button,a,input,textarea,select){-webkit-tap-highlight-color:transparent}
-:where(button,.button,[role=button]){transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease}
-:where(button,.button,[role=button]):active{transform:scale(.985)}
-:where(input,textarea,select){accent-color:var(--zk-cyan-strong)}
-:where(input,textarea,select):focus-visible{outline:2px solid var(--zk-cyan-strong);outline-offset:2px}
-body:not(.tg-app):not(.auth-page){
-  --primary:var(--zk-cyan);--primary-2:var(--zk-cyan-strong);
-  background:linear-gradient(180deg,#f6faff 0%,#edf4fa 100%);
-  color:var(--zk-ink);
-}
-body:not(.tg-app):not(.auth-page) :where(.settings-shell,.profile-shell,.account-shell,.settings-card,.profile-card,.account-card,.card,.panel,.content-card){
-  border:1px solid rgba(126,158,187,.2);border-radius:var(--zk-radius);
-  box-shadow:var(--zk-shadow);
-}
-body:not(.tg-app):not(.auth-page) :where(h1,h2,h3){letter-spacing:-.035em}
-body:not(.tg-app):not(.auth-page) :where(button,.button,.btn,.primary-button,.save-button){
-  border-radius:14px;
-}
-body.auth-page{
-  --primary:var(--zk-cyan);--primary-2:var(--zk-cyan-strong);
-  background:radial-gradient(ellipse at 85% 8%,rgba(34,199,242,.2),transparent 34%),linear-gradient(145deg,#061225,#0b1d34 62%,#0c2943);
-  color:#f4f9ff;
-}
-body.auth-page :where(.auth-card,.auth-container,.login-card,.signup-card,.auth-panel){
-  border:1px solid rgba(160,216,245,.18);border-radius:26px;
-  box-shadow:0 28px 80px rgba(0,0,0,.3);
-}
-body.auth-page :where(input,select,textarea){
-  border-radius:13px;border-color:rgba(145,185,215,.28);
-}
-body.auth-page :where(button,.button,.btn,.auth-button,.submit-button){
-  border-radius:14px;
-}
-body.tg-app{
-  --tg-bg:#f5f9fd;--tg-panel:#ffffff;--tg-panel-2:#edf5fb;--tg-line:rgba(24,62,92,.1);
-  --tg-text:#10243a;--tg-muted:#74869a;--tg-blue:#13b9e8;--tg-green:#1aa879;
-  --tg-bubble-in:#ffffff;--tg-bubble-out:#d9f4ff;
-  background:var(--tg-bg)!important;color:var(--tg-text)!important;
-  font-family:Inter,Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
-}
-body.tg-app .tg-shell,body.tg-app .tg-conversation-shell{
-  background:var(--tg-bg)!important;color:var(--tg-text)!important;
-}
-body.tg-list-page .tg-list-header,
-body.zc-contacts-page .zc-contacts-head{
-  background:linear-gradient(135deg,#071426 0%,#0b2540 100%)!important;
-  color:#f4faff!important;box-shadow:0 8px 24px rgba(4,22,42,.12)!important;
-}
-body.tg-list-page .tg-brand-row .tg-wordmark{color:#f4faff!important;font-weight:800!important;letter-spacing:-.7px!important}
-body.tg-list-page .tg-brand-row .tg-wordmark::first-letter{color:var(--zk-cyan)}
-body.tg-list-page .tg-list-actions .tg-icon-btn{color:#c8e8f8!important}
-body.tg-list-page #top-search-box,
-body.zc-contacts-page .tg-search,
-body.zc-contacts-page input[type=search],
-body.zc-contacts-page .zc-contact-search{
-  background:rgba(255,255,255,.09)!important;border:1px solid rgba(190,229,249,.2)!important;
-  color:#f4faff!important;border-radius:14px!important;
-}
-body.tg-list-page #top-search-box input{color:#f4faff!important}
-body.tg-list-page #top-search-box input::placeholder{color:#b4c8d8!important}
-body.tg-list-page .tg-list-content{background:#f5f9fd!important}
-body.tg-list-page .tg-chat-row{
-  color:#10243a!important;border-bottom:1px solid rgba(24,62,92,.075)!important;
-  min-height:78px!important;padding:10px 15px!important;column-gap:13px!important;
-}
-body.tg-list-page .tg-chat-row:active{background:#eaf7fd!important}
-body.tg-list-page .tg-chat-row :where(.tg-chat-name,.tg-chat-title,strong){color:#10243a!important}
-body.tg-list-page .tg-chat-row :where(.tg-chat-preview,.tg-chat-message,.tg-chat-time,small){color:#71849a!important}
-body.tg-list-page :where(.tg-unread-badge,.unread-badge,.tg-chat-unread){background:var(--zk-cyan-strong)!important;color:#fff!important}
-body.tg-list-page .tg-bottom-nav{
-  background:rgba(255,255,255,.97)!important;border-top:1px solid rgba(24,62,92,.12)!important;
-  box-shadow:0 -8px 24px rgba(4,22,42,.06)!important;backdrop-filter:blur(18px);
-}
-body.tg-list-page .tg-bottom-nav a{color:#71849a!important}
-body.tg-list-page .tg-bottom-nav a.is-current,
-body.tg-list-page .tg-bottom-nav a[aria-current=page]{color:#079fc9!important}
-body.tg-app.tg-conversation-page .tg-conversation-header,
-body.tg-app.tg-conversation-page .tg-chat-header{
-  background:linear-gradient(135deg,#071426,#0b2540)!important;color:#f4faff!important;
-}
-body.tg-app.tg-conversation-page .tg-conversation-header :where(h1,h2,strong,a,button),
-body.tg-app.tg-conversation-page .tg-chat-header :where(h1,h2,strong,a,button){color:#f4faff}
-body.tg-app.tg-conversation-page .tg-message-composer,
-body.tg-app.tg-conversation-page .tg-composer,
-body.tg-app.tg-conversation-page .tg-input-area{
-  background:#fff!important;border-top:1px solid var(--tg-line)!important;
-}
-body.tg-app.tg-conversation-page :where(input,textarea){background:#f3f8fc!important;color:#10243a!important;border-radius:22px!important}
-body.tg-app.tg-conversation-page .tg-message-bubble,
-body.tg-app.tg-conversation-page .message-bubble{border-radius:18px!important;box-shadow:0 2px 5px rgba(6,35,58,.05)}
-body.tg-app.tg-conversation-page :where(.outgoing,.sent,.message-out,.tg-message-out){background:#d9f4ff!important;color:#10243a!important}
-body.tg-app.tg-conversation-page :where(.incoming,.received,.message-in,.tg-message-in){background:#fff!important;color:#10243a!important}
-body.zc-contacts-page{background:#f5f9fd!important;color:#10243a!important}
-body.zc-contacts-page .tg-shell{background:#f5f9fd!important}
-body.zc-contacts-page .zc-contact-row,
-body.zc-contacts-page .contact-row,
-body.zc-contacts-page #contacts-results>*{
-  color:#10243a!important;border-color:rgba(24,62,92,.09)!important;
-}
-body.zc-contacts-page .tg-bottom-nav{
-  background:rgba(255,255,255,.97)!important;border-top:1px solid rgba(24,62,92,.12)!important;
-}
-body.zc-contacts-page .tg-bottom-nav a{color:#71849a!important}
-body.zc-contacts-page .tg-bottom-nav a.is-current{color:#079fc9!important}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-
-
-/* ZAKICHAT SIGNATURE — immersive deep-navy + glossy cyan finish.
-   Keep the selected premium dark direction consistent across every screen. */
+/* ZakiChat Option B — Aurora Signature Design System
+   One source of truth for color, typography, surfaces, controls and navigation.
+   Theme: midnight navy, cyan glow, subtle aurora gradients. No light-mode cards. */
 :root{
   color-scheme:dark;
-  --zk-cyan:#35d8ff;
-  --zk-cyan-strong:#00b8ee;
-  --zk-navy:#050d1b;
-  --zk-navy-2:#08172a;
-  --zk-surface:#0d2036;
-  --zk-surface-soft:#112941;
-  --zk-ink:#edf8ff;
-  --zk-muted:#9ab2c8;
-  --zk-line:rgba(109,203,242,.18);
-  --zk-shadow:0 18px 48px rgba(0,0,0,.28);
+  --zk-bg:#050b17;
+  --zk-bg-2:#071528;
+  --zk-bg-3:#0a1c31;
+  --zk-surface:#0b1b2e;
+  --zk-surface-2:#10263d;
+  --zk-surface-3:#14314b;
+  --zk-cyan:#38dcff;
+  --zk-cyan-2:#00b9ef;
+  --zk-cyan-soft:rgba(56,220,255,.12);
+  --zk-violet:#8876ff;
+  --zk-text:#f1f8ff;
+  --zk-muted:#9bb2c8;
+  --zk-dim:#6f8ba5;
+  --zk-line:rgba(125,202,237,.16);
+  --zk-line-strong:rgba(56,220,255,.32);
+  --zk-radius:20px;
+  --zk-shadow:0 18px 46px rgba(0,0,0,.28);
+  --zk-glow:0 0 28px rgba(0,185,239,.14);
+  --zk-font:Inter,Roboto,"SF Pro Display",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
-html{background:#050d1b!important}
-body:not(.auth-page){
-  --primary:#35d8ff!important;
-  --primary-2:#00b8ee!important;
+html{min-height:100%;background:var(--zk-bg)!important;color-scheme:dark;scroll-behavior:smooth}
+body{
+  font-family:var(--zk-font)!important;
+  color:var(--zk-text);
   background:
-    radial-gradient(ellipse at 90% 0%,rgba(0,184,238,.12),transparent 32%),
-    linear-gradient(155deg,#050d1b 0%,#08172a 54%,#0a2035 100%)!important;
-  color:#edf8ff!important;
+    radial-gradient(ellipse at 95% 0%,rgba(0,185,239,.12),transparent 31%),
+    radial-gradient(ellipse at 0% 38%,rgba(136,118,255,.065),transparent 30%),
+    linear-gradient(155deg,var(--zk-bg) 0%,var(--zk-bg-2) 55%,#081d30 100%)!important;
 }
-body:not(.auth-page) :where(main,.tg-shell,.tg-conversation-shell,.settings-shell,.profile-shell,.account-shell){
-  background-color:transparent!important;
-  color:#edf8ff!important;
+:where(button,a,input,textarea,select){-webkit-tap-highlight-color:transparent;font-family:inherit}
+:where(button,a,[role=button]){transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+:where(button,a,[role=button]):active{transform:scale(.985)}
+:where(input,textarea,select){accent-color:var(--zk-cyan-2);color:var(--zk-text)}
+:where(input,textarea,select):focus-visible{outline:2px solid var(--zk-cyan);outline-offset:2px}
+:where(h1,h2,h3,h4){letter-spacing:-.025em}
+:where(p,small,.muted,.description){color:var(--zk-muted)}
+:where(input,textarea,select){
+  background:rgba(5,17,31,.88)!important;color:var(--zk-text)!important;
+  border:1px solid var(--zk-line)!important;border-radius:13px;
 }
-body:not(.auth-page) :where(.settings-card,.profile-card,.account-card,.card,.panel,.content-card,.setting-item,.settings-section,.profile-section,.account-section,.modal-content,.dialog-content){
-  background:linear-gradient(145deg,rgba(17,41,65,.96),rgba(8,23,42,.98))!important;
-  color:#edf8ff!important;
-  border:1px solid rgba(109,203,242,.17)!important;
-  border-radius:20px!important;
-  box-shadow:0 16px 42px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.025)!important;
-}
-body:not(.auth-page) :where(h1,h2,h3,h4,strong,label,.setting-title,.setting-name){color:#f1faff}
-body:not(.auth-page) :where(p,small,.muted,.description,.setting-description,.subtitle){color:#9ab2c8}
-body:not(.auth-page) :where(input,textarea,select){
-  background:#091a2d!important;color:#f1faff!important;
-  border:1px solid rgba(109,203,242,.24)!important;border-radius:13px!important;
-}
-body:not(.auth-page) :where(input,textarea,select)::placeholder{color:#7795ae!important}
-body:not(.auth-page) :where(button,.button,.btn,.primary-button,.save-button,.tg-primary-btn){
+:where(input,textarea,select)::placeholder{color:#7895ae!important}
+:where(input,textarea,select):focus{border-color:var(--zk-line-strong)!important;box-shadow:0 0 0 3px rgba(56,220,255,.08)}
+:where(button,.button,.btn,.primary-button,.save-button,.tg-primary-btn,.status-primary-button,.business-primary,.verify-button,.privacy-save-button){
   border-radius:14px;
 }
-body:not(.auth-page) :where(.primary-button,.save-button,.tg-primary-btn,.btn-primary){
-  background:linear-gradient(135deg,#35d8ff,#00aee5)!important;color:#031321!important;
-  border:1px solid rgba(190,245,255,.3)!important;
-  box-shadow:0 7px 22px rgba(0,184,238,.2)!important;font-weight:750!important;
+:where(.button-primary,.primary-button,.save-button,.tg-primary-btn,.btn-primary,.status-primary-button,.business-primary,.verify-button,.privacy-save-button,.auth-submit){
+  color:#031321!important;
+  background:linear-gradient(125deg,#5ce5ff 0%,#19c9f4 48%,#00a9e4 100%)!important;
+  border:1px solid rgba(194,246,255,.32)!important;
+  box-shadow:0 8px 24px rgba(0,185,239,.2),inset 0 1px rgba(255,255,255,.22)!important;
+  font-weight:750!important;
 }
-body.tg-app{
-  --tg-bg:#050d1b!important;
-  --tg-panel:#0b1d31!important;
-  --tg-panel-2:#102740!important;
-  --tg-line:rgba(109,203,242,.15)!important;
-  --tg-text:#edf8ff!important;
-  --tg-muted:#9ab2c8!important;
-  --tg-blue:#35d8ff!important;
-  --tg-green:#4ee0b2!important;
-  --tg-bubble-in:#102740!important;
-  --tg-bubble-out:#063c55!important;
-  background:#050d1b!important;color:#edf8ff!important;
+:where(.button-primary,.primary-button,.save-button,.tg-primary-btn,.btn-primary,.status-primary-button,.business-primary,.verify-button,.privacy-save-button,.auth-submit):hover{
+  box-shadow:0 10px 30px rgba(0,185,239,.3),inset 0 1px rgba(255,255,255,.28)!important;filter:brightness(1.04)
 }
-body.tg-app .tg-shell,body.tg-app .tg-conversation-shell,
-body.tg-list-page .tg-list-content,body.zc-contacts-page .tg-shell{
-  background:linear-gradient(155deg,#050d1b 0%,#08172a 55%,#0a2035 100%)!important;
-  color:#edf8ff!important;
+:where(.button-secondary,.secondary-button,.auth-secondary,.cancel-danger-button){
+  background:linear-gradient(145deg,rgba(19,43,66,.96),rgba(8,24,42,.98))!important;
+  color:#d9efff!important;border:1px solid var(--zk-line)!important;
 }
-body.tg-list-page .tg-list-header,
-body.zc-contacts-page .zc-contacts-head,
-body.tg-app.tg-conversation-page .tg-conversation-header,
-body.tg-app.tg-conversation-page .tg-chat-header{
-  background:linear-gradient(120deg,#071426 0%,#0a2540 55%,#06334a 100%)!important;
-  color:#f4fbff!important;border-bottom:1px solid rgba(53,216,255,.22)!important;
-  box-shadow:0 10px 32px rgba(0,0,0,.28)!important;
+:where(.settings-shell,.profile-shell,.account-shell,.about-shell,.business-shell,.status-shell,.devices-page,.storage-management-page,.data-storage-page,.two-step-page,.auth-shell){
+  color:var(--zk-text)!important;
 }
-body.tg-list-page .tg-brand-row .tg-wordmark{color:#f5fbff!important}
-body.tg-list-page .tg-brand-row .tg-wordmark::first-letter{color:#35d8ff!important}
-body.tg-list-page .tg-list-actions .tg-icon-btn,
-body.zc-contacts-page .zc-action{color:#b8efff!important}
-body.tg-list-page #top-search-box,
-body.zc-contacts-page .tg-search,
-body.zc-contacts-page input[type=search],
-body.zc-contacts-page .zc-contact-search,
-body.zc-contacts-page .zc-contacts-search{
-  background:rgba(3,13,27,.72)!important;
-  border:1px solid rgba(109,203,242,.24)!important;color:#edf8ff!important;
-  border-radius:15px!important;box-shadow:inset 0 1px rgba(255,255,255,.025)!important;
+:where(.settings-header,.profile-topbar,.account-header,.devices-header,.storage-header,.data-storage-header,.two-step-header,.about-header,.business-header,.status-header){
+  color:var(--zk-text)!important;
+  background:linear-gradient(120deg,rgba(7,20,38,.98),rgba(9,35,57,.96))!important;
+  border-bottom:1px solid var(--zk-line)!important;
 }
-body.tg-list-page #top-search-box input,
-body.zc-contacts-page .zc-contacts-search input{background:transparent!important;color:#f4fbff!important}
-body.tg-list-page #top-search-box input::placeholder,
-body.zc-contacts-page .zc-contacts-search input::placeholder{color:#8ca9c0!important}
-body.tg-list-page .tg-filter-row .tg-filter{
-  border:1px solid rgba(109,203,242,.15)!important;background:#0c2035!important;color:#a9c1d5!important;
+:where(.settings-card,.profile-card,.profile-info-card,.account-card,.account-security-card,.danger-card,.devices-card,.storage-card,.settings-group,.settings-section,.profile-section,.account-section,.card,.panel,.content-card,.settings-item,.settings-profile-link,.status-item,.my-status-card,.calls-summary-card,.call-item,.status-dialog-card,.status-viewer-card,.business-panel,.business-list-card,.about-card,.brand-card,.upgrade-plan-card,.upgrade-information-card,.security-card,.hero-card,.dialog-card,.account-modal-dialog,.modal-content,.dialog-content,.privacy-hero,.privacy-item,.verification-link-card){
+  color:var(--zk-text)!important;
+  background:linear-gradient(145deg,rgba(15,37,59,.97),rgba(7,22,39,.99))!important;
+  border:1px solid var(--zk-line)!important;border-radius:var(--zk-radius)!important;
+  box-shadow:var(--zk-shadow),inset 0 1px rgba(255,255,255,.025)!important;
 }
-body.tg-list-page .tg-filter-row .tg-filter.is-active{
-  background:linear-gradient(135deg,#35d8ff,#00aee5)!important;color:#041321!important;
-  border-color:transparent!important;box-shadow:0 4px 18px rgba(0,184,238,.2)!important;
+:where(.settings-item,.account-action,.status-item,.call-item,.session-item,.storage-row,.setting-row,.usage-row,.privacy-item,.info-row,.version-item,.public-update){
+  border-color:var(--zk-line)!important;
 }
-body.tg-list-page .tg-chat-row{
-  background:transparent!important;color:#edf8ff!important;
-  border-bottom:1px solid rgba(109,203,242,.09)!important;
+:where(.settings-item:hover,.account-action:hover,.status-item:hover,.call-item:hover,.session-item:hover,.storage-row:hover,.business-list-card:hover,.upgrade-plan-card:hover){
+  background:linear-gradient(145deg,rgba(18,51,77,.98),rgba(8,26,45,.99))!important;border-color:var(--zk-line-strong)!important;
 }
-body.tg-list-page .tg-chat-row:active{background:rgba(53,216,255,.08)!important}
-body.tg-list-page .tg-chat-row :where(.tg-chat-name,.tg-chat-title,strong),
-body.zc-contacts-page .zc-person-copy strong{color:#f0f9ff!important}
-body.tg-list-page .tg-chat-row :where(.tg-chat-preview,.tg-chat-message,.tg-chat-time,small),
-body.zc-contacts-page .zc-person-copy small{color:#91abc1!important}
-body.tg-list-page .tg-bottom-nav,
-body.zc-contacts-page .tg-bottom-nav{
-  background:rgba(5,15,29,.96)!important;
-  border-top:1px solid rgba(109,203,242,.18)!important;
+:where(.settings-item-icon,.account-action-icon,.section-icon,.storage-icon,.info-icon,.business-lock-icon,.business-metrics div,.feature-icon,.status-empty-icon,.calls-empty-icon,.channels-updates-icon,.release-update-icon,.modal-icon,.security-icon,.privacy-hero-icon){
+  color:var(--zk-cyan)!important;background:linear-gradient(145deg,rgba(20,73,103,.72),rgba(8,35,60,.92))!important;border:1px solid rgba(56,220,255,.15)!important;border-radius:15px;
+}
+:where(.settings-title h1,.profile-topbar h1,.account-title h1,.devices-header h1,.storage-header h1,.data-storage-header h1,.two-step-header h1,.about-header h1,.business-header h1,.status-header h1){color:#f4fbff!important}
+:where(.settings-title p,.account-title p,.devices-header p,.storage-header p,.data-storage-header p,.two-step-header p,.about-header p,.business-header p,.status-header p){color:var(--zk-muted)!important}
+:where(.settings-eyebrow,.account-eyebrow,.status-eyebrow,.status-section-eyebrow,.business-eyebrow,.about-page .section-kicker,.modal-eyebrow,.section-label,.eyebrow){color:var(--zk-cyan)!important}
+:where(.settings-item-copy strong,.account-action-copy strong,.session-info strong,.storage-row strong,.setting-copy strong,.status-item-info strong,.my-status-info strong,.call-name,.business-list-card h3,.about-card h2,.version-details h3,.release-content h3,.upgrade-plan-card h3){color:#eff9ff!important}
+:where(.settings-item-copy small,.account-action-copy small,.session-info span,.session-info small,.setting-copy small,.status-item-info span,.my-status-info span,.call-meta,.storage-row small,.business-list-card p,.business-list-card small,.about-description,.version-details p,.release-content p,.upgrade-plan-description){color:var(--zk-muted)!important}
+:where(.settings-back,.profile-back,.account-back,.back-button,.devices-header .back-button,.storage-header .back-button,.data-storage-header .back-button,.two-step-header .back-button,.about-header .back-button,.business-back){color:#c8efff!important;background:rgba(56,220,255,.07)!important;border:1px solid var(--zk-line)!important;border-radius:13px}
+:where(.settings-toggle,.privacy-switch,.toggle-slider){background:#17324b!important;border-color:var(--zk-line)!important}
+:where(.settings-toggle.enabled,.privacy-switch.enabled,.toggle input:checked + .toggle-slider){background:linear-gradient(120deg,#35d8ff,#00aee5)!important}
+:where(.settings-toggle.enabled::after,.privacy-switch.enabled span,.toggle-slider::after){background:#f4fcff!important}
+:where(.settings-message,.account-message,.profile-message,.storage-message,.business-notice,.privacy-message,.modal-message,.upgrade-checkout-status){
+  background:rgba(56,220,255,.08)!important;color:#dff8ff!important;border:1px solid var(--zk-line)!important;border-radius:12px;
+}
+:where(.danger-zone,.danger-heading,.danger-card,.danger-dialog){border-color:rgba(255,105,125,.25)!important}
+:where(.danger-label,.danger-heading h2,.danger-action-copy strong,.danger-modal-icon,.danger-eyebrow){color:#ff8c9e!important}
+:where(.danger-button,.confirm-danger-button){background:linear-gradient(120deg,#9f3048,#692337)!important;color:#fff2f5!important;border:1px solid rgba(255,132,151,.25)!important;border-radius:12px}
+:where(.account-modal-backdrop,.dialog-backdrop){background:rgba(0,5,14,.76)!important;backdrop-filter:blur(10px)}
+:where(.account-modal-dialog,.dialog-card){background:linear-gradient(145deg,#102740,#071629)!important;color:var(--zk-text)!important;border:1px solid var(--zk-line-strong)!important}
+:where(.modal-close,.status-close-button){background:rgba(56,220,255,.08)!important;color:#e7f8ff!important;border:1px solid var(--zk-line)!important;border-radius:50%}
+:where(.bottom-nav){
+  background:rgba(4,13,26,.96)!important;border-top:1px solid var(--zk-line)!important;
   box-shadow:0 -10px 30px rgba(0,0,0,.24)!important;backdrop-filter:blur(20px);
 }
-body.tg-list-page .tg-bottom-nav a,
-body.zc-contacts-page .tg-bottom-nav a{color:#809bb3!important}
-body.tg-list-page .tg-bottom-nav a.is-current,
-body.tg-list-page .tg-bottom-nav a[aria-current=page],
-body.zc-contacts-page .tg-bottom-nav a.is-current,
-body.zc-contacts-page .tg-bottom-nav a[aria-current=page]{color:#35d8ff!important}
-body.tg-app.tg-conversation-page .tg-message-area{background:transparent!important}
-body.tg-app.tg-conversation-page .tg-message-composer,
-body.tg-app.tg-conversation-page .tg-composer,
-body.tg-app.tg-conversation-page .tg-input-area{
-  background:#07172a!important;border-top:1px solid rgba(109,203,242,.16)!important;
+:where(.bottom-nav a){color:#829eb6!important}
+:where(.bottom-nav a.selected,.bottom-nav a.is-current,.bottom-nav a[aria-current=page]){color:var(--zk-cyan)!important}
+:where(.bottom-nav-icon){filter:none!important}
+:where(.site-header,.site-footer){background:rgba(5,13,25,.94)!important;color:var(--zk-text)!important;border-color:var(--zk-line)!important;backdrop-filter:blur(18px)}
+:where(.feature-card,.chat-card,.upgrade-placeholder,.upgrade-plan-card,.note-item,.public-update,.info-row,.version-item,.release-update-card,.channels-updates-card){
+  background:linear-gradient(145deg,rgba(15,37,59,.92),rgba(7,22,39,.96))!important;color:var(--zk-text)!important;border-color:var(--zk-line)!important;
 }
-body.tg-app.tg-conversation-page .tg-input-wrap,
-body.tg-app.tg-conversation-page :where(input,textarea){
-  background:#0b2035!important;color:#f1faff!important;border:1px solid rgba(109,203,242,.18)!important;
+:where(.feature-card h3,.section-heading h2,.about-section h2,.cta-section h2,.hero h1,.brand,.footer-brand strong){color:#f2f9ff}
+:where(.hero h1 span,.brand span span){background:linear-gradient(100deg,#56e5ff,#00b8ee 55%,#9c91ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+:where(.hero::before){background:rgba(0,185,239,.14)!important}
+:where(.hero::after){background:rgba(136,118,255,.11)!important}
+:where(.button-secondary,.nav-button){border-color:var(--zk-line-strong)!important;background:rgba(56,220,255,.07)!important;color:#e8f8ff!important}
+:where(.feature-icon,.avatar,.send-icon){box-shadow:0 0 22px rgba(0,185,239,.12)}
+/* Authentication — keep the same visual language instead of a separate theme. */
+body.auth-page{
+  background:radial-gradient(ellipse at 90% 5%,rgba(0,185,239,.2),transparent 34%),radial-gradient(ellipse at 5% 70%,rgba(136,118,255,.12),transparent 32%),linear-gradient(155deg,#040a16,#07172a 60%,#09233a)!important;
+  color:var(--zk-text)!important;
 }
-body.tg-app.tg-conversation-page .tg-message-bubble,
-body.tg-app.tg-conversation-page .message-bubble{border-radius:18px!important;box-shadow:0 4px 14px rgba(0,0,0,.16)!important}
-body.tg-app.tg-conversation-page :where(.outgoing,.sent,.message-out,.tg-message-out){
-  background:linear-gradient(135deg,#07506b,#06364e)!important;color:#effbff!important;
-  border:1px solid rgba(53,216,255,.12)!important;
+.auth-shell{color:var(--zk-text)!important}
+.auth-card,.signup-card{
+  background:linear-gradient(145deg,rgba(14,36,58,.98),rgba(6,19,35,.99))!important;
+  border:1px solid rgba(89,207,242,.22)!important;border-radius:26px!important;
+  box-shadow:0 28px 80px rgba(0,0,0,.38),0 0 42px rgba(0,185,239,.07)!important;
 }
-body.tg-app.tg-conversation-page :where(.incoming,.received,.message-in,.tg-message-in){
-  background:#102740!important;color:#eff8ff!important;border:1px solid rgba(109,203,242,.1)!important;
+:where(.auth-heading h1,.signup-step-heading h2,.account-plan-showcase-head h2,.account-plan-slide h3){color:#f3faff!important}
+:where(.auth-heading p,.signup-step-heading p,.auth-help,.auth-footer,.account-plan-note,.account-plan-slide p,.account-plan-slide li){color:var(--zk-muted)!important}
+:where(.auth-form>label,.form-label,.profile-field>span,.business-form label,.dialog-card label){color:#dceeff!important}
+:where(.auth-form input:not([type=checkbox]),.auth-form textarea,.group-input,.password-field input,.phone-input-wrap .iti__tel-input){
+  background:#07172a!important;color:#f3faff!important;border:1px solid var(--zk-line)!important;border-radius:13px!important;
 }
-body.zc-contacts-page{background:#050d1b!important;color:#edf8ff!important}
-body.zc-contacts-page .zc-contact-shortcuts{border-bottom-color:rgba(109,203,242,.16)!important}
+:where(.auth-divider::before,.auth-divider::after){background:var(--zk-line)!important}
+:where(.signup-tip,.signup-info-box,.verification-link-card,.signup-progress-track,.account-plan-slide){
+  background:rgba(5,17,31,.78)!important;border:1px solid var(--zk-line)!important;border-radius:16px!important;color:var(--zk-text)!important;
+}
+:where(.signup-progress-bar){background:linear-gradient(90deg,#5ce5ff,#00aee5)!important}
+:where(.signup-step-number,.account-plan-badge){background:rgba(56,220,255,.12)!important;color:var(--zk-cyan)!important;border:1px solid var(--zk-line)!important}
+:where(.account-plan-cta){background:linear-gradient(120deg,#38dcff,#00aee5)!important;color:#031321!important;border-radius:13px!important}
+/* Telegram-inspired Chats and Contacts — fix selectors to match actual markup. */
+body.tg-app{
+  --tg-bg:#050b17;--tg-panel:#08172a;--tg-panel-2:#10263d;--tg-line:rgba(125,202,237,.16);
+  --tg-text:#f1f8ff;--tg-muted:#9bb2c8;--tg-blue:#38dcff;--tg-green:#4ee0b2;
+  --tg-bubble-in:#10263d;--tg-bubble-out:#073b53;
+  background:var(--zk-bg)!important;color:var(--zk-text)!important;font-family:var(--zk-font)!important;
+}
+body.tg-app .tg-shell,body.tg-app .tg-conversation-shell{
+  background:linear-gradient(155deg,#050b17,#071528 58%,#081d30)!important;color:var(--zk-text)!important;
+}
+body.tg-list-page .tg-list-header,body.zc-contacts-page .zc-contacts-head,body.tg-conversation-page .tg-chat-header{
+  background:linear-gradient(120deg,#061326 0%,#09243c 58%,#06334a 100%)!important;
+  color:#f4fbff!important;border-bottom:1px solid rgba(56,220,255,.22)!important;
+  box-shadow:0 10px 32px rgba(0,0,0,.28)!important;
+}
+body.tg-list-page .tg-brand-row .tg-wordmark{color:#f4fbff!important;font-weight:800!important;letter-spacing:-.045em!important}
+body.tg-list-page .tg-brand-row .tg-wordmark::first-letter{color:var(--zk-cyan)!important}
+body.tg-list-page .tg-list-actions .tg-icon-btn,body.zc-contacts-page .zc-action{color:#c7f2ff!important}
+body.tg-list-page #top-search-box,body.tg-list-page .tg-search,body.zc-contacts-page .tg-search,body.zc-contacts-page input[type=search],body.zc-contacts-page .zc-contact-search,body.zc-contacts-page .zc-contacts-search{
+  background:rgba(3,13,27,.78)!important;border:1px solid rgba(109,203,242,.24)!important;color:#edf8ff!important;border-radius:15px!important;
+}
+body.tg-list-page #top-search-box input,body.zc-contacts-page .zc-contacts-search input{background:transparent!important;color:#f4fbff!important}
+body.tg-list-page #top-search-box input::placeholder,body.zc-contacts-page .zc-contacts-search input::placeholder{color:#8ca9c0!important}
+body.tg-list-page .tg-filter-row .tg-filter{border:1px solid var(--zk-line)!important;background:#0c2035!important;color:#a9c1d5!important}
+body.tg-list-page .tg-filter-row .tg-filter.is-active{background:linear-gradient(125deg,#5ce5ff,#00aee5)!important;color:#031321!important;border-color:transparent!important;box-shadow:0 4px 18px rgba(0,185,239,.2)!important}
+body.tg-list-page .tg-list-content{background:linear-gradient(155deg,#050b17,#071528 58%,#081d30)!important;color:var(--zk-text)!important}
+body.tg-list-page .tg-archive-row,body.tg-list-page .tg-chat-row{background:transparent!important;color:var(--zk-text)!important;border-bottom:1px solid rgba(109,203,242,.1)!important}
+body.tg-list-page .tg-archive-row:active,body.tg-list-page .tg-chat-row:active{background:rgba(56,220,255,.075)!important}
+body.tg-list-page .tg-archive-copy strong,body.tg-list-page .tg-chat-row-copy strong,body.tg-list-page .tg-chat-row strong{color:#f2f9ff!important}
+body.tg-list-page .tg-archive-copy small,body.tg-list-page .tg-chat-row-copy p,body.tg-list-page .tg-chat-row-meta small{color:#91abc1!important}
+body.tg-list-page .tg-chat-row .tg-avatar{background:linear-gradient(145deg,#0c789a,#12305a)!important;color:#f4fbff!important;box-shadow:0 0 22px rgba(0,185,239,.12)}
+body.tg-list-page .tg-empty-state h2{color:#f3faff!important}
+body.tg-list-page .tg-empty-state p{color:var(--zk-muted)!important}
+body.tg-list-page .tg-empty-art{background:radial-gradient(circle at 28% 20%,#39ddff,#116b98 58%,#101f4a)!important;box-shadow:0 14px 42px rgba(0,0,0,.38),0 0 34px rgba(0,185,239,.18)!important}
+body.tg-list-page .tg-bottom-nav,body.zc-contacts-page .tg-bottom-nav{
+  background:rgba(4,13,26,.97)!important;border-top:1px solid var(--zk-line)!important;box-shadow:0 -10px 30px rgba(0,0,0,.24)!important;backdrop-filter:blur(20px);
+}
+body.tg-list-page .tg-bottom-nav a,body.zc-contacts-page .tg-bottom-nav a{color:#829eb6!important}
+body.tg-list-page .tg-bottom-nav a.is-current,body.tg-list-page .tg-bottom-nav a[aria-current=page],body.zc-contacts-page .tg-bottom-nav a.is-current,body.zc-contacts-page .tg-bottom-nav a[aria-current=page]{color:var(--zk-cyan)!important}
+body.tg-list-page .tg-top-menu{background:linear-gradient(145deg,#102740,#071629)!important;color:var(--zk-text)!important;border:1px solid var(--zk-line)!important;box-shadow:var(--zk-shadow)!important}
+body.tg-list-page .tg-top-menu a,body.tg-list-page .tg-top-menu button{color:#eaf8ff!important}
+body.tg-conversation-page .tg-message-area{background-color:#050b17!important;background-image:radial-gradient(circle at 15% 25%,rgba(56,220,255,.035) 0 2px,transparent 3px),radial-gradient(circle at 75% 65%,rgba(136,118,255,.035) 0 2px,transparent 3px)!important}
+body.tg-conversation-page .tg-chat-intro{background:linear-gradient(145deg,#102740,#08182b)!important;border:1px solid var(--zk-line)!important;color:var(--zk-text)!important}
+body.tg-conversation-page .tg-chat-intro p{color:var(--zk-muted)!important}
+body.tg-conversation-page .tg-chat-intro-avatar{background:linear-gradient(145deg,#0c789a,#12305a)!important;color:#e9f9ff!important}
+body.tg-conversation-page .tg-day-pill{background:#102740!important;color:#b7d0e4!important;border:1px solid var(--zk-line)!important}
+body.tg-conversation-page .tg-message.incoming{background:linear-gradient(145deg,#122b43,#0c2035)!important;color:#f0f8ff!important;border:1px solid rgba(109,203,242,.12)!important}
+body.tg-conversation-page .tg-message.outgoing{background:linear-gradient(135deg,#07506b,#06364e)!important;color:#effbff!important;border:1px solid rgba(56,220,255,.16)!important}
+body.tg-conversation-page .tg-message-meta{color:#a8c8db!important}
+body.tg-conversation-page .tg-composer{background:rgba(5,16,30,.98)!important;border-top:1px solid var(--zk-line)!important}
+body.tg-conversation-page .tg-composer textarea,body.tg-conversation-page .tg-composer input{background:#0b2035!important;color:#f1faff!important;border:1px solid var(--zk-line)!important}
+body.tg-conversation-page .tg-composer-icon{color:#bdefff!important}
+/* Contacts page has a separate component vocabulary from the chat list. */
+body.zc-contacts-page{background:var(--zk-bg)!important;color:var(--zk-text)!important}
+body.zc-contacts-page .tg-shell{background:linear-gradient(155deg,#050b17,#071528 58%,#081d30)!important}
+body.zc-contacts-page .zc-contact-shortcuts{border-bottom-color:var(--zk-line)!important}
 body.zc-contacts-page .zc-shortcut{color:#cdeeff!important}
-body.zc-contacts-page .zc-shortcut-icon{background:linear-gradient(145deg,#12476a,#09253f)!important;color:#35d8ff!important;border:1px solid rgba(53,216,255,.18)!important}
+body.zc-contacts-page .zc-shortcut-icon{background:linear-gradient(145deg,#12476a,#09253f)!important;color:var(--zk-cyan)!important;border:1px solid rgba(56,220,255,.18)!important}
 body.zc-contacts-page .zc-section-label{color:#8ca9c0!important}
-body.zc-contacts-page .zc-person{background:transparent!important;color:#edf8ff!important}
-body.zc-contacts-page .zc-person:active{background:rgba(53,216,255,.08)!important}
+body.zc-contacts-page .zc-person,body.zc-contacts-page .zc-contact-row,body.zc-contacts-page .contact-row,body.zc-contacts-page #contacts-results>*{background:transparent!important;color:var(--zk-text)!important;border-color:rgba(109,203,242,.1)!important}
+body.zc-contacts-page .zc-person:active{background:rgba(56,220,255,.08)!important}
 body.zc-contacts-page .zc-person-avatar{background:linear-gradient(145deg,#0b7194,#10315a)!important;color:#effbff!important}
+body.zc-contacts-page .zc-person-copy strong{color:#f0f9ff!important}
+body.zc-contacts-page .zc-person-copy small{color:#91abc1!important}
 body.zc-contacts-page .zc-person-copy{border-bottom-color:rgba(109,203,242,.1)!important}
-body.zc-contacts-page .zc-contact-empty{color:#9ab2c8!important}
-body.tg-app :where(.tg-empty-state,.tg-archive-row,.tg-archive-panel,.tg-new-chat-dialog,.tg-chat-menu,.tg-attach-menu,.tg-emoji-panel,.tg-info-panel,.tg-dialog-head,.tg-call-card){
-  background:linear-gradient(145deg,#102740,#091a2d)!important;color:#edf8ff!important;
-  border-color:rgba(109,203,242,.18)!important;
+body.zc-contacts-page .zc-contact-empty{color:var(--zk-muted)!important}
+/* Status, calls, Channels and release/update cards. */
+body.status-page{color:var(--zk-text)!important}
+body.status-page .status-shell{background:transparent!important}
+body.status-page :where(.status-section,.calls-section,.channels-updates-section,.releases-updates-section){color:var(--zk-text)!important}
+body.status-page :where(.status-item,.my-status-card,.call-item,.calls-summary-card,.channels-updates-card,.release-update-card,.status-tool-panel,.status-composer-options,.status-dialog-card,.status-viewer-card){
+  background:linear-gradient(145deg,rgba(15,37,59,.97),rgba(7,22,39,.99))!important;color:var(--zk-text)!important;border:1px solid var(--zk-line)!important;border-radius:18px!important;
 }
-body.tg-app :where(.tg-empty-state p,.tg-archive-row small,.tg-dialog-help,.tg-composer-hint){color:#9ab2c8!important}
-body.tg-app .tg-empty-art,body.tg-app .tg-archive-icon{color:#35d8ff!important}
-body.tg-app .tg-day-pill{background:#102740!important;color:#b7d0e4!important;border:1px solid rgba(109,203,242,.13)!important}
-body.tg-app .tg-icon-btn{color:#bdefff!important}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+body.status-page :where(.status-item-info strong,.my-status-info strong,.call-name,.calls-summary-number,.channels-updates-card-content strong,.release-update-content h3){color:#f1f9ff!important}
+body.status-page :where(.status-item-info span,.my-status-info span,.call-meta,.calls-summary-label,.channels-updates-card-content span,.release-update-content p,.status-empty p,.calls-empty p){color:var(--zk-muted)!important}
+body.status-page :where(.status-avatar,.my-status-avatar,.call-avatar){background:linear-gradient(145deg,#0c789a,#12305a)!important;color:#f1faff!important;border-color:var(--zk-line)!important}
+body.status-page :where(.status-primary-button,.status-add-button,.channels-open-button){background:linear-gradient(125deg,#5ce5ff,#00aee5)!important;color:#031321!important;border:1px solid rgba(194,246,255,.25)!important;box-shadow:0 8px 24px rgba(0,185,239,.18)!important}
+body.status-page :where(.status-tool-button,.status-option,.status-choice-tray,.status-caption-input,.status-media-picker){background:#091b2e!important;color:var(--zk-text)!important;border-color:var(--zk-line)!important}
+body.status-page :where(.status-choice-tray button,.status-tool-button){color:#c9efff!important;border:1px solid var(--zk-line)!important;border-radius:12px}
+body.status-page :where(.status-dialog,.status-viewer-card){color:var(--zk-text)!important}
+body.status-page .bottom-nav{background:rgba(4,13,26,.97)!important}
+/* Generic subpages: devices, storage, privacy, verification, business, about, profile. */
+body :where(.devices-page,.storage-management-page,.data-storage-page,.two-step-page,.business-shell,.about-shell,.profile-shell,.settings-shell,.account-shell){background:transparent!important}
+body :where(.devices-card,.storage-card,.security-card,.hero-card,.about-card,.brand-card,.business-panel,.account-security-card,.profile-info-card,.settings-profile-link,.danger-card,.upgrade-plan-card,.upgrade-information-card,.session-item,.storage-row,.setting-row,.usage-row,.privacy-item,.note-item,.public-update,.info-row,.version-item){
+  color:var(--zk-text)!important;background:linear-gradient(145deg,rgba(15,37,59,.97),rgba(7,22,39,.99))!important;border-color:var(--zk-line)!important;
+}
+body :where(.devices-header h1,.storage-header h1,.data-storage-header h1,.two-step-header h1,.business-header h1,.about-header h1,.profile-topbar h1){color:#f2f9ff!important}
+body :where(.devices-header p,.storage-header p,.data-storage-header p,.two-step-header p,.business-header p,.about-header p,.profile-identity p,.profile-field small,.profile-info-card p,.security-note,.card-description,.storage-note){color:var(--zk-muted)!important}
+body :where(.profile-identity h2,.profile-card h3,.profile-info-card h3,.account-identity strong,.about-card h2,.brand-info h2,.business-panel h2,.section-heading h2,.danger-heading h2){color:#f1f9ff!important}
+body :where(.profile-divider){background:var(--zk-line)!important}
+body :where(.profile-avatar,.account-avatar,.avatar-url-input){background:linear-gradient(145deg,#0c789a,#12305a)!important;color:#f4fbff!important;border-color:var(--zk-line)!important;box-shadow:0 0 28px rgba(0,185,239,.14)}
+body :where(.presence-badge,.account-status,.status-badge,.version-state){background:rgba(56,220,255,.08)!important;color:#a9f1ff!important;border:1px solid var(--zk-line)!important}
+body :where(.profile-field input,.profile-field textarea,.field-wrap input,.password-field input,.confirm-field input,.business-form input,.business-form textarea,.business-form select,.privacy-select,.dialog-card input,.secret-row input){
+  background:#07172a!important;color:#f3faff!important;border:1px solid var(--zk-line)!important;
+}
+body :where(.field-prefix){background:#102740!important;color:#bcefff!important;border-color:var(--zk-line)!important}
+body :where(.profile-info-card .info-icon,.account-security-icon){background:linear-gradient(145deg,#12476a,#09253f)!important;color:var(--zk-cyan)!important}
+body :where(.logout-button,.secondary-danger-button){background:linear-gradient(145deg,#182b40,#0b1c30)!important;color:#ffc0ca!important;border:1px solid rgba(255,132,151,.24)!important}
+body :where(.business-metrics div,.business-list-card,.business-tag,.business-notice,.business-check-row,.upgrade-plan-meta,.upgrade-plan-badge,.upgrade-plan-status,.release-meta span,.release-version,.version-badge){border-color:var(--zk-line)!important;color:var(--zk-text)!important}
+body :where(.business-metrics span,.business-list-card p,.business-list-card small,.business-footer,.business-form small,.upgrade-plan-description,.upgrade-plan-meta span,.upgrade-information-card p,.release-meta span,.release-content p){color:var(--zk-muted)!important}
+body :where(.business-tag,.upgrade-plan-badge,.upgrade-plan-status,.release-version,.version-badge){background:rgba(56,220,255,.08)!important;color:var(--zk-cyan)!important}
+body :where(.legal-links a,.release-action,.free-action,.upgrade-plan-button){color:#bdefff!important;border-color:var(--zk-line)!important}
+body :where(.legal-links a:hover,.release-action:hover,.free-action:hover,.upgrade-plan-button:hover){background:rgba(56,220,255,.08)!important}
+body :where(.toggle-slider){background:#17324b!important}
+body :where(.toggle input:checked + .toggle-slider){background:linear-gradient(120deg,#35d8ff,#00aee5)!important}
+body :where(.toggle-slider::after){background:#f4fcff!important}
+body :where(.toast){background:#102740!important;color:#f1f9ff!important;border:1px solid var(--zk-line)!important;box-shadow:var(--zk-shadow)!important}
+/* Phone country-picker popup must stay dark too. */
+.phone-input-wrap .iti__dropdown-content,.phone-input-wrap .iti__country-list{background:#0b1b2e!important;color:#f1f8ff!important;border-color:var(--zk-line)!important}
+.phone-input-wrap .iti__country:hover,.phone-input-wrap .iti__country.iti__highlight{background:#14314b!important}
+.phone-input-wrap .iti__search-input{background:#07172a!important;color:#f1f8ff!important}
+/* Motion stays subtle and respects accessibility preferences. */
+@keyframes zk-aurora-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.035)}}
+@media(prefers-reduced-motion:no-preference){
+  body.auth-page .auth-card,body.auth-page .auth-brand{animation:zk-aurora-pulse 9s ease-in-out infinite}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
