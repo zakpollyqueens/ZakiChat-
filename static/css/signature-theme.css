@@ -333,3 +333,35 @@ body .zc-bottom-nav span{pointer-events:none}
  body .zc-bottom-nav>a svg{width:22px!important;height:22px!important;flex-basis:22px!important}
 }
 @media(prefers-reduced-motion:reduce){body .zc-bottom-nav,body .zc-bottom-nav>a{transition:none!important}}
+
+
+/* Compact Updates shortcut above the profile card.
+   It stays in document flow so it never obscures the avatar or profile fields. */
+body.profile-page .profile-quick-actions{
+  display:flex;justify-content:flex-end;align-items:center;
+  margin:0 2px 12px;
+}
+body.profile-page .profile-updates-link{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:36px;box-sizing:border-box;padding:7px 12px;
+  border:1px solid rgba(56,220,255,.25);border-radius:999px;
+  color:#c9f5ff;text-decoration:none;font-size:.78rem;font-weight:750;
+  letter-spacing:.015em;
+  background:linear-gradient(135deg,rgba(12,54,78,.9),rgba(8,27,48,.96));
+  box-shadow:0 6px 18px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+body.profile-page .profile-updates-link svg{
+  width:16px;height:16px;flex:0 0 16px;fill:none;stroke:var(--zk-cyan);
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+body.profile-page .profile-updates-arrow{font-size:.88rem;color:var(--zk-cyan);line-height:1}
+body.profile-page .profile-updates-link:hover{
+  border-color:rgba(56,220,255,.48);background:linear-gradient(135deg,rgba(15,76,105,.96),rgba(8,36,60,.98));
+  box-shadow:0 8px 22px rgba(0,185,239,.13),inset 0 1px rgba(255,255,255,.08);
+}
+body.profile-page .profile-updates-link:focus-visible{outline:2px solid var(--zk-cyan);outline-offset:3px}
+@media(max-width:390px){
+  body.profile-page .profile-quick-actions{margin-bottom:10px}
+  body.profile-page .profile-updates-link{min-height:34px;padding:6px 10px;font-size:.75rem}
+}
