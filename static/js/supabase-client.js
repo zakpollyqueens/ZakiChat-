@@ -123,7 +123,7 @@
     }
   }
 
-  accounts.initialize().then(() => applyAccountMode());
+  client.auth.getSession().then(() => applyAccountMode()).catch(error => console.warn("ZakiChat mode bootstrap failed:", error));
 
   console.log(
     "ZakiChat Supabase client initialized:",
