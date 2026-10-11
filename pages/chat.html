@@ -3,46 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#17212b">
-<title>Chat · ZakiChat</title>
+<meta name="theme-color" content="#071525">
+<title>Conversation · ZakiChat</title>
+<link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
 <link rel="stylesheet" href="../static/css/main.css">
 <link rel="stylesheet" href="../static/css/telegram-chat.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
 <link rel="stylesheet" href="../static/css/keyboard.css">
+<link rel="stylesheet" href="../static/css/telegram-chat-redesign.css">
 </head>
 <body class="tg-app tg-conversation-page">
 <main class="tg-conversation-shell" id="tg-conversation-shell">
   <header class="tg-chat-header">
-    <a class="tg-icon-btn tg-back-btn" href="chats.html" aria-label="Back to chats" title="Back">‹</a>
-    <button class="tg-person-button" id="open-chat-info" type="button">
+    <a class="tg-icon-btn tg-back-btn" href="chats.html" aria-label="Back to chats" title="Back to chats">‹</a>
+    <button class="tg-person-button" id="open-chat-info" type="button" aria-label="Open conversation details">
       <span class="tg-avatar tg-avatar-large" id="peer-avatar">Z</span>
-      <span class="tg-person-copy"><strong id="peer-name">New conversation</strong><small id="peer-status">ZakiChat · new chat</small></span>
+      <span class="tg-person-copy"><strong id="peer-name">New conversation</strong><small id="peer-status">ZakiChat · ready to connect</small></span>
     </button>
     <div class="tg-header-actions">
       <button class="tg-icon-btn" type="button" data-action="call" aria-label="Voice call" title="Voice call">☎</button>
       <button class="tg-icon-btn" type="button" data-action="video" aria-label="Video call" title="Video call">▣</button>
-      <button class="tg-icon-btn" type="button" id="chat-menu-button" aria-label="More options" title="More options">⋮</button>
+      <button class="tg-icon-btn" type="button" id="chat-menu-button" aria-label="More conversation options" title="More options">⋮</button>
     </div>
   </header>
 
   <div class="tg-chat-menu" id="chat-menu" hidden>
     <button type="button" data-action="search">⌕ <span>Search in chat</span></button>
     <button type="button" data-action="mute">♩ <span>Mute notifications</span></button>
-    <button type="button" data-action="pin">📌 <span>Pin chat</span></button>
+    <button type="button" data-action="pin">⌖ <span>Pin chat</span></button>
     <button type="button" data-action="archive">▣ <span>Archive chat</span></button>
     <button type="button" data-action="edit-group" data-group-only hidden>✎ <span>Edit group info</span></button>
     <button type="button" data-action="manage-members" data-group-only hidden>♙ <span>Manage group members</span></button>
     <button type="button" data-action="leave-group" data-group-only hidden>↩ <span>Leave group</span></button>
     <button type="button" data-action="clear">⌫ <span>Clear preview messages</span></button>
-    <button type="button" data-action="info">ⓘ <span>Chat information</span></button>
+    <button type="button" data-action="info">ⓘ <span>Conversation details</span></button>
   </div>
 
-  <section class="tg-message-area" id="message-area" aria-label="Messages">
+  <section class="tg-message-area" id="message-area" aria-label="Conversation messages">
     <div class="tg-day-pill">Today</div>
     <div class="tg-chat-intro" id="tg-chat-intro">
       <div class="tg-chat-intro-avatar">✉</div>
-      <strong>Your private conversation</strong>
-      <p>Messages are private to this conversation. Keep it friendly and secure.</p>
+      <strong>Your conversation starts here</strong>
+      <p>Send a message, share a photo, or start a voice call. Keep it kind and secure.</p>
     </div>
     <div class="tg-messages" id="tg-messages" aria-live="polite"></div>
     <div class="tg-typing-indicator" id="typing-indicator" hidden><span></span><span></span><span></span><small>typing…</small></div>
@@ -57,18 +59,18 @@
     <div class="tg-composer-tools">
       <div class="tg-input-wrap">
         <button class="tg-composer-icon tg-emoji-button" id="emoji-button" type="button" aria-label="Emoji" title="Emoji">☺</button>
-        <textarea id="message-input" rows="1" maxlength="10000" placeholder="Message" aria-label="Message" enterkeyhint="send"></textarea>
-        <button class="tg-composer-icon tg-attach-inline" id="attach-button" type="button" aria-label="Attach file" title="Attach file">＋</button>
+        <textarea id="message-input" rows="1" maxlength="10000" placeholder="Message" aria-label="Write a message" enterkeyhint="send"></textarea>
+        <button class="tg-composer-icon tg-attach-inline" id="attach-button" type="button" aria-label="Attach a file" title="Attach">＋</button>
       </div>
       <button class="tg-send-button" id="send-button" type="submit" aria-label="Send message" title="Send">➤</button>
-      <button class="tg-send-button tg-mic-button" id="mic-button" type="button" aria-label="Record voice message" title="Record voice message">🎙</button>
+      <button class="tg-send-button tg-mic-button" id="mic-button" type="button" aria-label="Record voice message" title="Voice message">🎙</button>
     </div>
     <div class="tg-recording-bar" id="recording-bar" hidden>
       <button type="button" class="tg-record-cancel" id="record-cancel" aria-label="Cancel recording">×</button>
       <span class="tg-record-dot"></span><span class="tg-record-label">Recording voice message</span><strong id="record-timer">00:00</strong>
       <button type="button" class="tg-record-send" id="record-send">Send audio</button>
     </div>
-    <div class="tg-composer-hint" id="composer-hint" aria-live="polite">Enter sends · Shift+Enter adds a line</div>
+    <div class="tg-composer-hint" id="composer-hint" aria-live="polite">Enter sends · Shift + Enter adds a line</div>
   </form>
 
   <input id="file-input" type="file" hidden multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
@@ -79,11 +81,12 @@
   </div>
   <div class="tg-emoji-panel" id="emoji-panel" hidden aria-label="Emoji picker"></div>
   <aside class="tg-info-panel" id="chat-info-panel" hidden>
-    <div class="tg-info-head"><strong>Chat information</strong><button id="close-chat-info" type="button" aria-label="Close information">×</button></div>
-    <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Your conversation details and notification preferences.</p><div class="tg-info-note">Conversation details and notification preferences.</div>
+    <div class="tg-info-head"><strong>Conversation details</strong><button id="close-chat-info" type="button" aria-label="Close details">×</button></div>
+    <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Profile, shared information, and notification preferences.</p><div class="tg-info-note">Conversation details and notification preferences.</div>
   </aside>
 </main>
-<section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section><div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
+<section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section>
+<div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../static/js/config.js"></script>
 <script src="../static/js/account-manager.js"></script>
