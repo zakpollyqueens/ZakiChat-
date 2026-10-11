@@ -14,7 +14,7 @@
 <main class="tg-shell">
   <header class="tg-list-header">
     <div class="tg-brand-row"><a class="zaki-glass-brand" href="chats.html" aria-label="ZakiChat home"><span class="zaki-app-icon" aria-hidden="true"><span>ZAK</span></span></a><div class="tg-header-actions tg-list-actions">
-      <button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search chats" title="Search" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
+      <button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search the web and ZakiChat" title="Search web and chats" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
     </div></div>
     <label class="tg-search" id="top-search-box"><span aria-hidden="true">⌕</span><input id="chat-search" type="search" placeholder="Search the web, chats, groups and channels" autocomplete="off" enterkeyhint="search"><button id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label>
     <div class="tg-filter-row" role="group" aria-label="Chat filters"><button class="tg-filter is-active" data-filter="all" type="button">All chats</button><button class="tg-filter" data-filter="personal" type="button">Personal</button><button class="tg-filter" data-filter="groups" type="button">Groups</button><button class="tg-filter" data-filter="channels" type="button">Channels</button></div>
@@ -76,7 +76,7 @@
   const b=e.target.closest("[data-compose-action]");if(!b)return;const action=b.dataset.composeAction;close();
   if(action==="chat"){const d=document.getElementById("new-chat-dialog");if(d?.showModal)d.showModal();else document.getElementById("empty-new-chat")?.click()}
   else if(action==="group"){const d=document.getElementById("new-chat-dialog");if(d?.showModal){d.showModal();setTimeout(()=>document.getElementById("new-group-create")?.click(),0)}}
-  else if(action==="channel"){location.href="channels.html"}
+  else if(action==="channel"){location.href="channels.html?create=1"}
   else if(action==="community"){const t=document.getElementById("tg-toast");if(t){t.textContent="Community creation is not available yet. You can create a group now.";t.classList.add("is-visible");setTimeout(()=>t.classList.remove("is-visible"),2800)}}
  });
 })();
