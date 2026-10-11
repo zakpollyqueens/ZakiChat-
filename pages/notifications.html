@@ -10,9 +10,10 @@
   <title>Notification Center | ZakiChat</title>
 
   <link rel="stylesheet" href="../static/css/main.css">
-  <link rel="stylesheet" href="../static/css/chat.css">
+
   <link rel="stylesheet" href="../static/css/responsive.css">
   <link rel="stylesheet" href="../static/css/notifications.css">
+  <link rel="stylesheet" href="../static/css/signature-theme.css">
 </head>
 
 <body class="notifications-page">
@@ -98,5 +99,16 @@
   <script src="../static/js/notification-badge.js"></script>
   <script src="../static/js/notifications.js"></script>
 
+<nav class="zc-bottom-nav" aria-label="Main navigation">
+  <a href="chats.html">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span>
+  </a>
+  <a href="settings.html">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5h-3.2l-.3-1.5a7.7 7.7 0 0 1-1.7-1l-1.4.5-1.6-2.8 1.1-.9a7.2 7.2 0 0 1 0-2l-1.1-.9 1.6-2.8 1.4.5a7.7 7.7 0 0 1 1.7-1l.3-1.5h3.2l.3 1.5a7.7 7.7 0 0 1 1.7 1l1.4-.5 1.6 2.8-1.1.9a7.2 7.2 0 0 1 0 2Z"/></svg><span>Settings</span>
+  </a>
+  <a href="status.html" class="is-current" aria-current="page">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span>
+  </a>
+</nav>
 </body>
 </html>
