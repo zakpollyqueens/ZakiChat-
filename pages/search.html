@@ -53,6 +53,22 @@ body.zc-web-search{--s-bg:#071426;--s-panel:#0d2037;--s-line:rgba(111,203,232,.1
 .zws-filters{gap:8px;padding-top:14px}
 .zws-filters button{padding:9px 14px;border-color:rgba(111,203,232,.14);background:#0b1e33;color:#a3bed0;font-size:12px;transition:background .18s,border-color .18s}
 .zws-filters button.is-active{border-color:#45ddff66;background:linear-gradient(135deg,#16425d,#10304a);color:#a9f1ff;box-shadow:inset 0 1px 0 #ffffff0a}
+.zws-type-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding-top:15px}
+.zws-type-tabs button{padding:10px 7px;border-radius:14px;text-align:center}
+.zws-special-filters{display:flex;gap:8px;overflow:auto;padding-top:9px;scrollbar-width:none}
+.zws-special-filters button{flex:none;padding:7px 11px;border:1px solid rgba(111,203,232,.11);border-radius:18px;background:#081a2d;color:#8eacbf;font-size:11px}
+.zws-special-filters button.is-active{border-color:#45ddff55;background:#123b55;color:#aaf2ff}
+.zws-media-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.zws-media-card{min-width:0;overflow:hidden;border:1px solid rgba(111,203,232,.14);border-radius:16px;background:#0b2035;color:#e8f8ff;text-decoration:none}
+.zws-media-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#102b45}
+.zws-media-copy{padding:10px}
+.zws-media-copy strong{display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:13px;line-height:1.4;color:#a9eaff}
+.zws-media-copy small{display:block;margin-top:6px;color:#8eacbf;font-size:10px;overflow-wrap:anywhere}
+.zws-document-icon{display:grid;place-items:center;height:96px;background:linear-gradient(145deg,#123c58,#101c3a);font-size:34px;color:#8ceaff}
+.zws-result-actions{display:flex;gap:8px;margin-top:12px}
+.zws-result-actions a{padding:7px 10px;border:1px solid #45ddff33;border-radius:10px;color:#9feaff;font-size:11px;text-decoration:none}
+.zws-result-actions a:first-child{background:#123b55}
+@media(max-width:350px){.zws-type-tabs{gap:4px}.zws-type-tabs button{font-size:11px;padding:9px 3px}}
 .zws-content{padding:17px 14px 28px}
 .zws-results-head{margin:2px 3px 14px;font-size:12px}
 .zws-result{margin-bottom:11px;padding:16px;border-color:rgba(111,203,232,.13);border-radius:18px;background:linear-gradient(145deg,rgba(15,39,61,.98),rgba(8,24,42,.99));box-shadow:0 5px 16px rgba(0,0,0,.08);transition:transform .16s,border-color .16s}
@@ -75,9 +91,9 @@ body.zc-web-search{--s-bg:#071426;--s-panel:#0d2037;--s-line:rgba(111,203,232,.1
 <header class="zws-header">
  <div class="zws-top"><a class="zws-back" href="chats.html" aria-label="Back to chats">‹</a><div class="zws-brand"><span class="zws-mark">ZAK</span><span>Explore the web</span></div><span class="zws-label">ZakiChat</span></div>
  <form class="zws-form" id="web-search-form"><input id="web-search-input" type="search" placeholder="Search anything on the web…" autocomplete="off" enterkeyhint="search" maxlength="160"><button type="submit">Search</button></form>
- <div class="zws-filters" role="group" aria-label="Search type"><button type="button" class="is-active" data-scope="web">All web</button><button type="button" data-scope="telegram">Telegram channels</button><button type="button" data-scope="whatsapp">WhatsApp groups</button></div>
+ <div class="zws-filters zws-type-tabs" role="tablist" aria-label="Search category"><button type="button" class="is-active" data-scope="web" role="tab" aria-selected="true">All</button><button type="button" data-scope="images" role="tab" aria-selected="false">Images</button><button type="button" data-scope="videos" role="tab" aria-selected="false">Videos</button><button type="button" data-scope="documents" role="tab" aria-selected="false">Documents</button></div><div class="zws-special-filters" aria-label="Community search"><button type="button" data-scope="telegram">Telegram channels</button><button type="button" data-scope="whatsapp">WhatsApp groups</button></div>
 </header>
-<section class="zws-content" id="web-search-results" aria-live="polite"><div class="zws-empty-icon" aria-hidden="true">⌕</div><h1 class="zws-empty-title">Search beyond ZakiChat</h1><p class="zws-empty-copy">Search websites, public Telegram channels, publicly indexed WhatsApp group pages, news, learning resources and more. Strict safe-search filtering is enabled.</p></section>
+<section class="zws-content" id="web-search-results" aria-live="polite"><div class="zws-empty-icon" aria-hidden="true">⌕</div><h1 class="zws-empty-title">Search beyond ZakiChat</h1><p class="zws-empty-copy">Search the web, browse image previews, find videos and locate documents such as public PDFs and study materials. Strict safe-search filtering is enabled.</p></section>
 <nav class="zws-bottom" aria-label="Main navigation">
 <a href="chats.html"><svg viewBox="0 0 24 24"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/></svg><span>Chats</span></a>
 <a href="settings.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M19 13.8 20 15l-2 3-1.5-.5-1.5.8-.4 1.7h-3.4l-.4-1.7-1.5-.8-1.5.5-2-3 1-1.2v-1.6l-1-1.2 2-3 1.5.5 1.5-.8.4-1.7h3.4l.4 1.7 1.5.8 1.5-.5 2 3-1 1.2z"/></svg><span>Settings</span></a>
