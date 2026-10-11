@@ -54,7 +54,14 @@
       return;
     }
 
-    let currentMode = preference?.account_mode || "local";
+    let currentMode = preference?.account_mode || (plans.has("business_monthly") ? "business_customized" : plans.has("personal_monthly") ? "personal_customized" : "local");
+    if (!preference && currentMode !== "local") {
+      const { error } = await client.from("user_account_preferences").upsert(
+        { user_id: user.id, account_mode: currentMode, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" }
+      );
+      if (error) { console.warn("Could not save the initial paid mode preference:", error); currentMode = "local"; }
+    }
     let expiredFallback = false;
     if (!available(currentMode, plans)) {
       currentMode = "local";
