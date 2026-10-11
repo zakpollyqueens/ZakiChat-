@@ -1,0 +1,59 @@
+.keyboard-settings-page{min-height:100vh;padding:24px 16px 100px;background:radial-gradient(ellipse at 88% 0%,rgba(0,185,239,.13),transparent 35%),linear-gradient(155deg,#050b17,#071528 60%,#081d30)!important;color:#eef8ff}
+.keyboard-shell{width:min(820px,100%);margin:0 auto}
+.keyboard-header{margin-bottom:18px}
+.keyboard-back{display:inline-flex;align-items:center;gap:7px;margin-bottom:18px;padding:8px 12px;border:1px solid rgba(100,205,241,.18);border-radius:12px;background:rgba(9,28,48,.75);color:#d7f5ff;text-decoration:none}
+.keyboard-title{padding:23px;border:1px solid rgba(87,210,255,.18);border-radius:23px;background:linear-gradient(125deg,rgba(11,34,56,.97),rgba(8,22,40,.96));box-shadow:0 16px 42px rgba(0,0,0,.17)}
+.keyboard-eyebrow{color:#50dcff;font-size:.68rem;font-weight:900;letter-spacing:.17em}
+.keyboard-title h1{margin:7px 0 6px;color:#f2faff;font-size:clamp(1.65rem,4vw,2.1rem);letter-spacing:-.04em}
+.keyboard-title p,.keyboard-section-heading p{margin:0;color:#9db6cc;line-height:1.5}
+.keyboard-preview-panel,.keyboard-settings-card{margin:16px 0;padding:clamp(16px,3vw,23px);border:1px solid rgba(100,205,241,.15);border-radius:22px;background:linear-gradient(145deg,rgba(10,29,49,.91),rgba(5,17,31,.96));box-shadow:0 16px 38px rgba(0,0,0,.15)}
+.keyboard-section-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+.keyboard-section-heading h2{margin:5px 0 5px;color:#f1f9ff;font-size:1.13rem}
+.keyboard-preview-live{padding:5px 9px;border:1px solid rgba(39,211,162,.25);border-radius:99px;background:rgba(39,211,162,.08);color:#8af0cf;font-size:.65rem;font-weight:900;letter-spacing:.12em}
+.keyboard-preview-chat{padding:16px;border:1px solid rgba(100,205,241,.12);border-radius:18px;background:radial-gradient(ellipse at 100% 0%,rgba(0,185,239,.08),transparent 45%),#071626}
+.keyboard-preview-bubble{max-width:88%;margin:0 0 15px auto;padding:12px 13px;border:1px solid rgba(87,210,255,.12);border-radius:16px 16px 4px 16px;background:linear-gradient(135deg,#0b3b55,#104466);color:#eafaff;line-height:1.45;font-size:.9rem}
+.keyboard-preview-bubble span{display:block;margin-top:5px;text-align:right;color:#89c7dc;font-size:.65rem}
+.keyboard-preview-composer{display:flex;align-items:center;gap:10px;min-height:50px;padding:7px 9px;border:1px solid var(--zckb-border,rgba(100,205,241,.18));border-radius:16px;background:var(--zckb-bg,rgba(12,34,54,.96));color:var(--zckb-text,#dff5ff)}
+.keyboard-preview-composer>span{flex:1;color:#91abc1}
+.keyboard-preview-composer button{display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:10px;background:transparent;color:inherit;font-size:1.1rem}
+.keyboard-preview-composer .keyboard-preview-send{background:var(--zckb-accent,#11bce9);color:#031521}
+.keyboard-preview-keys{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:12px}
+.keyboard-preview-keys span{display:grid;place-items:center;min-height:34px;border:1px solid rgba(126,174,205,.12);border-radius:8px;background:rgba(24,48,69,.94);color:#d5e8f5;font-size:.8rem}
+.keyboard-preview-keys .keyboard-space{grid-column:span 5;font-size:.65rem;color:#91abc1}
+.keyboard-note{margin:13px 2px 0;color:#88a4bc;font-size:.78rem;line-height:1.55}
+.keyboard-theme-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.keyboard-theme-choice{display:flex;min-width:0;flex-direction:column;align-items:flex-start;gap:6px;padding:10px;border:1px solid rgba(100,205,241,.13);border-radius:15px;background:rgba(8,25,43,.7);color:#eff9ff;text-align:left;cursor:pointer}
+.keyboard-theme-choice[aria-pressed=true]{border-color:#38dcff;box-shadow:0 0 0 2px rgba(56,220,255,.1),0 8px 22px rgba(0,185,239,.08)}
+.keyboard-theme-choice strong{font-size:.85rem}
+.keyboard-theme-choice small{color:#90a9bf;font-size:.7rem;line-height:1.4}
+.keyboard-theme-art{display:flex;align-items:center;gap:4px;width:100%;height:66px;padding:8px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#0a1929}
+.keyboard-theme-art i{width:12px;height:12px;border-radius:4px;background:#25435a}
+.keyboard-theme-art b{width:23px;height:21px;margin-left:auto;border-radius:7px;background:#16bde9}
+.theme-standard{background:#17212b}.theme-standard b{background:#4ea4e8}.theme-midnight{background:#07111f}.theme-midnight i{background:#1b344c}.theme-midnight b{background:#27d3a2}.theme-cyan{background:#061826}.theme-cyan i{background:#164b63}.theme-cyan b{background:#22d3ee}.theme-rose{background:#1d111c}.theme-rose i{background:#4b2943}.theme-rose b{background:#fb7185}
+.keyboard-access-message{min-height:1.2em;margin:12px 0 0;color:#8ea9bf;font-size:.8rem}
+.keyboard-toggle-row{position:relative;display:flex;align-items:center;gap:12px;padding:14px 2px;border-top:1px solid rgba(100,205,241,.1);cursor:pointer}
+.keyboard-toggle-icon{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border:1px solid rgba(56,220,255,.15);border-radius:12px;background:rgba(56,220,255,.07);color:#5fe1ff;font-size:1.1rem}
+.keyboard-toggle-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.keyboard-toggle-copy strong{color:#edf8ff;font-size:.9rem}
+.keyboard-toggle-copy small{color:#91abc1;font-size:.76rem;line-height:1.45}
+.keyboard-toggle-row input{position:absolute;right:4px;width:1px;height:1px;opacity:0}
+.keyboard-switch{position:relative;flex:0 0 43px;width:43px;height:25px;border:1px solid rgba(115,155,184,.28);border-radius:99px;background:#183046;transition:background .18s,border-color .18s}
+.keyboard-switch:after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#a5bbcc;transition:transform .18s,background .18s}
+.keyboard-toggle-row input:checked+.keyboard-switch{border-color:rgba(56,220,255,.6);background:#087e9e}
+.keyboard-toggle-row input:checked+.keyboard-switch:after{transform:translateX(18px);background:#fff}
+.keyboard-toggle-row input:focus-visible+.keyboard-switch{outline:2px solid #55e1ff;outline-offset:3px}
+.keyboard-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.keyboard-reset{padding:10px 13px;border:1px solid rgba(100,205,241,.18);border-radius:12px;background:rgba(255,255,255,.035);color:#dff5ff;font:inherit;font-size:.8rem;cursor:pointer}
+#keyboardSaved{color:#8eb0c8;font-size:.75rem;text-align:right}
+body.zckb-compact .keyboard-preview-composer{min-height:42px;padding:5px 7px;border-radius:12px}
+body.zckb-theme-standard{--zckb-bg:rgba(23,33,43,.96);--zckb-accent:#4ea4e8;--zckb-text:#eef6fc;--zckb-border:rgba(170,200,220,.2)}
+body.zckb-theme-midnight{--zckb-bg:rgba(7,17,31,.98);--zckb-accent:#27d3a2;--zckb-text:#effaff;--zckb-border:rgba(39,211,162,.24)}
+body.zckb-theme-cyan{--zckb-bg:rgba(6,24,38,.98);--zckb-accent:#22d3ee;--zckb-text:#e9fbff;--zckb-border:rgba(34,211,238,.28)}
+body.zckb-theme-rose{--zckb-bg:rgba(29,17,28,.98);--zckb-accent:#fb7185;--zckb-text:#fff1f6;--zckb-border:rgba(251,113,133,.25)}
+body.tg-conversation-page.zckb-theme-standard #tg-composer,body.tg-conversation-page.zckb-theme-midnight #tg-composer,body.tg-conversation-page.zckb-theme-cyan #tg-composer,body.tg-conversation-page.zckb-theme-rose #tg-composer{border-color:var(--zckb-border)!important;background:var(--zckb-bg)!important}
+body.tg-conversation-page #message-input{font-size:var(--zckb-font-size,16px)}
+body.tg-conversation-page.zckb-compact #tg-composer{padding:5px!important;gap:5px!important}
+body.tg-conversation-page.zckb-compact #message-input{min-height:34px!important}
+body.tg-conversation-page.zckb-theme-midnight #tg-composer,body.tg-conversation-page.zckb-theme-cyan #tg-composer,body.tg-conversation-page.zckb-theme-rose #tg-composer{box-shadow:0 0 0 1px var(--zckb-border),0 8px 25px rgba(0,0,0,.18)!important}
+body.tg-conversation-page.zckb-theme-midnight #send-button,body.tg-conversation-page.zckb-theme-midnight #mic-button,body.tg-conversation-page.zckb-theme-cyan #send-button,body.tg-conversation-page.zckb-theme-cyan #mic-button,body.tg-conversation-page.zckb-theme-rose #send-button,body.tg-conversation-page.zckb-theme-rose #mic-button{background:var(--zckb-accent)!important;color:#041520!important;border-color:transparent!important}
+@media(max-width:560px){.keyboard-settings-page{padding:14px 11px 95px}.keyboard-theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.keyboard-title{padding:18px;border-radius:20px}.keyboard-preview-chat{padding:11px}.keyboard-actions{align-items:flex-start;flex-direction:column}#keyboardSaved{text-align:left}}
