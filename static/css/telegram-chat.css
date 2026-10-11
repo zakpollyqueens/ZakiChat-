@@ -33,3 +33,207 @@ a{color:inherit;text-decoration:none}
 
 .tg-call-overlay{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:#020811d9;backdrop-filter:blur(10px)}.tg-call-card{width:min(100%,420px);max-height:90dvh;overflow:auto;background:var(--tg-panel);border:1px solid var(--tg-line);border-radius:24px;padding:26px 22px;text-align:center;box-shadow:0 25px 90px #0009}.tg-call-avatar{width:90px;height:90px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;background:linear-gradient(145deg,#49a5f5,#2276c9);font-size:30px;font-weight:800}.tg-call-card h2{margin:0;font-size:21px}.tg-call-card p{margin:8px 0 20px;color:var(--tg-muted);font-size:13px}.tg-call-card video{width:100%;max-height:220px;object-fit:cover;border-radius:14px;background:#050b11;margin:5px 0}.tg-call-actions{display:flex;justify-content:center;gap:10px;margin-top:20px}.tg-call-actions button{border:0;border-radius:22px;padding:12px 17px;font-weight:700;background:#34485b;color:white}.tg-call-actions #tg-call-accept{background:#238c5a}.tg-call-actions #tg-call-reject,.tg-call-actions #tg-call-end{background:#c8444f}#tg-remote-audio{width:100%}
 .tg-reactions{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}.tg-reaction-chip{display:inline-flex;align-items:center;justify-content:center;min-width:25px;min-height:22px;padding:2px 7px;border-radius:12px;background:#0c1b29a8;border:1px solid #ffffff14;font-size:14px}
+
+
+/* ZakiChat conversation UI refresh: clearer spacing and calmer controls */
+.tg-conversation-shell{
+  max-width:900px;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(32,155,214,.075),transparent 34%),
+    var(--tg-bg);
+}
+.tg-chat-header{
+  gap:10px;
+  min-height:72px;
+  padding-inline:clamp(10px,2.4vw,22px);
+  background:linear-gradient(120deg,#172735,#17212b 70%);
+  box-shadow:0 8px 26px rgba(0,0,0,.12);
+}
+.tg-back-btn{
+  flex:0 0 42px;
+  width:42px;
+  min-width:42px;
+  min-height:42px;
+  border:1px solid rgba(157,198,229,.13);
+  background:rgba(255,255,255,.035);
+  font-size:29px;
+}
+.tg-person-button{
+  gap:12px;
+  padding-inline:2px 8px;
+}
+.tg-avatar-large{
+  width:46px;
+  height:46px;
+  border:2px solid rgba(111,199,255,.23);
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.tg-person-copy{gap:5px}
+.tg-person-copy strong{font-size:15px;letter-spacing:-.01em}
+.tg-person-copy small{font-size:12px}
+.tg-header-actions{gap:5px;flex:0 0 auto}
+.tg-header-actions .tg-icon-btn{
+  width:42px;
+  min-width:42px;
+  min-height:42px;
+  border:1px solid rgba(157,198,229,.12);
+  background:rgba(255,255,255,.035);
+  color:#b8d7ef;
+  font-size:19px;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+}
+.tg-header-actions .tg-icon-btn:hover,
+.tg-header-actions .tg-icon-btn:focus-visible{
+  background:rgba(51,144,236,.16);
+  border-color:rgba(83,171,244,.42);
+}
+.tg-header-actions .tg-icon-btn:active{transform:scale(.94)}
+.tg-message-area{
+  padding:clamp(16px,3vw,28px) clamp(12px,3.5vw,34px) 22px;
+  gap:16px;
+  background-color:#0e1621;
+  background-image:
+    radial-gradient(circle at 12% 22%,rgba(64,139,190,.055) 0 1.5px,transparent 2px),
+    radial-gradient(circle at 77% 68%,rgba(64,139,190,.045) 0 1.5px,transparent 2px);
+  background-size:44px 44px;
+}
+.tg-day-pill{
+  padding:6px 13px;
+  border:1px solid rgba(198,222,241,.08);
+  background:rgba(38,55,70,.9);
+  font-size:11px;
+}
+.tg-chat-intro{
+  max-width:340px;
+  padding:22px 22px 24px;
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(26,43,57,.96),rgba(20,33,45,.95));
+  border-color:rgba(169,207,237,.09);
+  box-shadow:0 14px 40px rgba(0,0,0,.12);
+}
+.tg-chat-intro-avatar{
+  width:52px;height:52px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#238cc9,#2454a1);
+  box-shadow:0 8px 24px rgba(22,113,180,.22);
+}
+.tg-chat-intro strong{font-size:15px}
+.tg-chat-intro p{font-size:13px}
+.tg-messages{gap:10px}
+.tg-message{
+  max-width:min(78%,560px);
+  padding:11px 13px 8px;
+  border-radius:16px;
+  box-shadow:0 3px 9px rgba(0,0,0,.11);
+}
+.tg-message.incoming{
+  background:linear-gradient(145deg,#1c2b38,#192633);
+  border:1px solid rgba(201,224,242,.035);
+  border-bottom-left-radius:5px;
+}
+.tg-message.outgoing{
+  background:linear-gradient(135deg,#285b83,#244d72);
+  border:1px solid rgba(139,206,255,.09);
+  border-bottom-right-radius:5px;
+}
+.tg-message-text{font-size:14.5px;line-height:1.52}
+.tg-message-meta{font-size:10.5px;margin-top:6px}
+.tg-composer{
+  padding:12px clamp(10px,2.4vw,20px) calc(9px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,#17212b,#15212c);
+  border-top:1px solid rgba(210,230,245,.11);
+  box-shadow:0 -8px 28px rgba(0,0,0,.12);
+}
+.tg-composer-tools{align-items:center;gap:9px}
+.tg-input-wrap{
+  min-height:48px;
+  align-items:center;
+  gap:4px;
+  padding:4px 7px 4px 8px;
+  border-radius:25px;
+  border:1px solid rgba(170,205,232,.13);
+  background:linear-gradient(145deg,#0e1a26,#111e2a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:border-color .18s ease,box-shadow .18s ease;
+}
+.tg-input-wrap:focus-within{
+  border-color:rgba(73,166,235,.55);
+  box-shadow:0 0 0 3px rgba(51,144,236,.08);
+}
+.tg-input-wrap textarea{
+  min-height:36px;
+  padding:8px 3px;
+  font-size:15px;
+  line-height:21px;
+}
+.tg-composer-icon{
+  width:38px;height:38px;min-width:38px;
+  border-radius:50%;
+  color:#a9c7dd;
+  font-size:23px;
+  transition:background .18s ease,color .18s ease,transform .18s ease;
+}
+.tg-composer-icon:hover,.tg-composer-icon:focus-visible{
+  background:rgba(51,144,236,.14);
+  color:#e2f3ff;
+}
+.tg-emoji-button{width:36px;min-width:36px;height:38px;font-size:22px}
+.tg-attach-inline{width:36px;min-width:36px;height:38px;font-size:27px;color:#81bde8}
+.tg-send-button{
+  width:48px;height:48px;min-width:48px;
+  font-size:20px;
+  background:linear-gradient(145deg,#43a9f4,#247ed0);
+  box-shadow:0 6px 17px rgba(31,128,209,.25),inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .16s ease,filter .16s ease;
+}
+.tg-send-button:hover{filter:brightness(1.08)}
+.tg-send-button:active{transform:scale(.94)}
+.tg-mic-button{background:linear-gradient(145deg,#2b9fcb,#2778b8);font-size:19px}
+.tg-composer-hint{font-size:10px;padding-top:7px;color:#8096a9}
+.tg-reply-preview{
+  padding:10px 16px;
+  background:linear-gradient(90deg,#1b2c3b,#1a2835);
+  border-top:1px solid rgba(210,230,245,.05);
+}
+.tg-reply-preview strong{font-size:12px}
+.tg-reply-preview small{font-size:13px}
+.tg-attach-menu,.tg-emoji-panel,.tg-chat-menu{
+  background:rgba(29,44,58,.98);
+  border-color:rgba(193,221,242,.14);
+  backdrop-filter:blur(18px);
+  box-shadow:0 18px 48px rgba(0,0,0,.42);
+}
+.tg-chat-menu{top:calc(62px + env(safe-area-inset-top));right:12px}
+.tg-toast{font-size:13px;padding:12px 17px;border-radius:15px}
+@media(min-width:760px){
+  .tg-conversation-shell{max-width:900px;border-radius:18px;border:1px solid rgba(255,255,255,.06);height:min(100dvh,1100px);margin:0 auto;box-shadow:0 16px 70px rgba(0,0,0,.24)}
+  .tg-chat-header{border-radius:18px 18px 0 0}
+  .tg-composer{border-radius:0 0 18px 18px}
+}
+@media(max-width:430px){
+  .tg-chat-header{gap:6px;padding-inline:7px;min-height:66px}
+  .tg-back-btn{flex:0 0 36px;width:36px;min-width:36px;min-height:40px}
+  .tg-person-button{gap:8px;padding-inline:0}
+  .tg-avatar-large{width:39px;height:39px;font-size:15px}
+  .tg-person-copy strong{font-size:13px;max-width:110px}
+  .tg-person-copy small{font-size:10px;max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tg-header-actions{gap:2px}
+  .tg-header-actions .tg-icon-btn{width:35px;min-width:35px;min-height:38px;font-size:17px}
+  .tg-composer{padding:9px 8px calc(7px + env(safe-area-inset-bottom))}
+  .tg-composer-tools{gap:6px}
+  .tg-input-wrap{gap:2px;padding-inline:5px}
+  .tg-emoji-button,.tg-attach-inline{width:31px;min-width:31px;height:36px;font-size:21px}
+  .tg-attach-inline{font-size:25px}
+  .tg-send-button{width:42px;height:42px;min-width:42px}
+  .tg-input-wrap textarea{font-size:14px}
+  .tg-composer-hint{font-size:9px}
+  .tg-message{max-width:88%}
+}
+@media(max-width:350px){
+  .tg-header-actions .tg-icon-btn{width:31px;min-width:31px}
+  .tg-person-copy strong{max-width:82px}
+  .tg-person-copy small{max-width:82px}
+  .tg-composer-tools{gap:4px}
+  .tg-emoji-button,.tg-attach-inline{width:28px;min-width:28px}
+  .tg-send-button{width:39px;height:39px;min-width:39px}
+}
