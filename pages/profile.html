@@ -3,244 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="theme-color" content="#0b1020">
+  <meta name="theme-color" content="#10141b">
   <title>My Profile | ZakiChat</title>
-
   <link rel="stylesheet" href="../static/css/main.css">
   <link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="../static/css/profile.css">
   <link rel="stylesheet" href="../static/css/responsive.css">
-<link rel="stylesheet" href="../static/css/signature-theme.css">
+  <link rel="stylesheet" href="../static/css/signature-theme.css">
 </head>
-
 <body class="profile-page">
-
   <main class="profile-shell">
-
     <header class="profile-topbar">
-      <a class="profile-back" href="chats.html" aria-label="Back to chats">
-        <span>←</span>
-      </a>
-
-      <div class="profile-title-lockup"><img class="zc-brand-icon" src="../static/images/icon.jpg" alt="ZakiChat icon"><div><span class="eyebrow">ZAKICHAT</span><h1>My Profile</h1></div></div>
-
-      <div class="profile-top-actions"><button type="button" class="profile-icon-action" id="profileQrButton" aria-label="Show my QR code" title="My QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3zM18 14h3"/></svg></button><button type="button" class="profile-icon-action" id="profileMenuButton" aria-label="More profile options" aria-expanded="false" title="More options"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button><button type="button" class="topbar-save" id="saveTopButton" hidden>Save</button><div class="profile-menu" id="profileMenu" hidden><button type="button" data-profile-action="color">🎨 <span>Change Profile Color</span></button><button type="button" data-profile-action="username">＠ <span>Change Username</span></button><button type="button" data-profile-action="copy">↗ <span>Copy Link to Profile</span></button></div></div>
+      <a class="profile-back" href="chats.html" aria-label="Back to chats">‹</a>
+      <div class="profile-title-lockup">
+        <img class="zc-brand-icon" src="../static/images/icon.jpg" alt="ZakiChat">
+        <div><span class="eyebrow">ZAKICHAT</span><h1>My Profile</h1></div>
+      </div>
+      <div class="profile-top-actions">
+        <button type="button" class="profile-icon-action" id="profileQrButton" aria-label="My QR code" title="My QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3zM18 14h3"/></svg></button>
+        <button type="button" class="profile-icon-action" id="profileMenuButton" aria-label="More options" aria-expanded="false" title="More options"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></button>
+        <button type="button" class="topbar-save" id="saveTopButton" hidden>Save</button>
+        <div class="profile-menu" id="profileMenu" hidden>
+          <button type="button" data-profile-action="color"><span class="menu-symbol">◉</span><span>Change Profile Color</span></button>
+          <button type="button" data-profile-action="username"><span class="menu-symbol">@</span><span>Change Username</span></button>
+          <button type="button" data-profile-action="copy"><span class="menu-symbol">↗</span><span>Copy Link to Profile</span></button>
+          <button type="button" id="menuSettingsLink" onclick="location.href='settings.html'"><span class="menu-symbol">⚙</span><span>Settings</span></button>
+          <button type="button" id="menuLogoutButton"><span class="menu-symbol">⇥</span><span>Log Out</span></button>
+        </div>
+      </div>
     </header>
 
-<section class="profile-card">
-      <div class="profile-cover" id="profileCover"><span class="profile-cover-label">YOUR SPACE, YOUR STYLE</span><button type="button" id="coverPhotoButton" class="cover-photo-button">＋ Set cover photo</button><input type="file" id="coverPhotoInput" accept="image/*" hidden></div>
-      <div class="profile-hero">
-
+    <section class="telegram-profile-card" aria-label="Profile overview">
+      <div class="profile-identity-panel">
         <div class="avatar-wrap">
-          <div
-            class="profile-avatar"
-            id="profileAvatar"
-            aria-label="Profile avatar"
-          >
-            <span id="avatarInitials">?</span>
-          </div>
-
-          <button
-            type="button"
-            class="avatar-edit"
-            id="avatarEditButton"
-            aria-label="Change profile photo"
-            title="Change profile photo"
-          >
-            ✎
-          </button>
-
-          <input
-            type="file"
-            id="avatarFileInput"
-            accept="image/*"
-            hidden
-          >
+          <div class="profile-avatar" id="profileAvatar" aria-label="Profile photo"><span id="avatarInitials">?</span></div>
+          <button type="button" class="avatar-edit" id="avatarEditButton" aria-label="Change profile photo" title="Change profile photo">＋</button>
+          <input type="file" id="avatarFileInput" accept="image/*" hidden>
         </div>
-
-        <div class="profile-identity">
-          <h2 id="profileDisplayName">Loading...</h2>
-          <p id="profileUsername">@username</p>
-
-          <span class="presence-badge" id="profilePresence">
-            <i></i>
-            <span>Offline</span>
-          </span>
+        <h2 id="profileDisplayName">Loading profile…</h2>
+        <p id="profileUsername">@username</p>
+        <span class="presence-badge" id="profilePresence"><i></i><span>Offline</span></span>
+        <p class="profile-about-preview" id="profileBioPreview">Add a little about yourself.</p>
+        <div class="profile-main-actions">
+          <button type="button" id="editInfoButton" class="profile-action-primary"><span class="action-icon">✎</span><span>Edit profile</span></button>
+          <button type="button" id="profileQrInlineButton" class="profile-action-secondary"><span class="action-icon">▦</span><span>My QR</span></button>
+          <a href="settings.html" id="profileSettingsLink" class="profile-action-secondary"><span class="action-icon">⚙</span><span>Settings</span></a>
         </div>
-
       </div>
-      <div class="profile-quick-actions"><button type="button" id="editInfoButton">✎ <span>Edit Info</span></button><button type="button" id="profileQrInlineButton">▦ <span>Share QR</span></button><a href="settings.html" id="profileSettingsLink">⚙ <span>Settings</span></a><button type="button" id="addPostJumpButton">＋ <span>Add a post</span></button></div>
 
-      <div class="profile-divider"></div>
+      <div class="profile-details-list" aria-label="Profile details">
+        <div class="profile-detail-row"><span class="detail-icon">☎</span><div><span class="detail-label">Phone number</span><strong id="profilePhoneDisplay">Not added</strong><small>Phone number</small></div></div>
+        <div class="profile-detail-row"><span class="detail-icon">@</span><div><span class="detail-label">Username</span><strong id="profileUsernameDisplay">@username</strong><small>Public profile username</small></div></div>
+        <div class="profile-detail-row"><span class="detail-icon">▤</span><div><span class="detail-label">About</span><strong id="profileAboutDisplay">Add a little about yourself.</strong><small>Bio</small></div></div>
+        <div class="profile-detail-row"><span class="detail-icon">▦</span><div><span class="detail-label">Birthday</span><strong id="profileBirthdayDisplay">Not added</strong><small>Birthday</small></div></div>
+        <div class="profile-detail-row"><span class="detail-icon">⌖</span><div><span class="detail-label">Location</span><strong id="profileLocationDisplay">Not added</strong><small>General location</small></div></div>
+      </div>
 
-      <form id="profileForm" novalidate>
-
-        <div class="section-heading">
-          <span class="section-label">ACCOUNT</span>
-          <h3>Your information</h3>
-          <p>
-            Keep your ZakiChat profile information up to date.
-          </p>
-        </div>
-
+      <form id="profileForm" class="profile-edit-panel" novalidate hidden>
+        <div class="edit-panel-heading"><div><span class="section-label">PROFILE DETAILS</span><h3>Edit information</h3><p>These details help people recognise you on ZakiChat.</p></div><button type="button" class="close-edit-button" id="closeEditButton" aria-label="Close edit form">×</button></div>
         <div class="profile-fields">
-
-          <label class="profile-field">
-            <span>Username</span>
-            <div class="field-wrap">
-              <span class="field-prefix">@</span>
-              <input
-                type="text"
-                id="username"
-                maxlength="30"
-                autocomplete="username"
-                placeholder="username"
-                required
-              >
-            </div>
-            <small>3–30 letters, numbers, underscores or dots.</small>
-          </label>
-
-          <label class="profile-field">
-            <span>Full name</span>
-            <input
-              type="text"
-              id="fullName"
-              maxlength="80"
-              autocomplete="name"
-              placeholder="Your full name"
-            >
-          </label>
-
-          <label class="profile-field">
-            <span>Phone number</span>
-            <input
-              type="tel"
-              id="phone"
-              maxlength="30"
-              autocomplete="tel"
-              placeholder="+256..."
-            >
-          </label>
-
-          <label class="profile-field">
-            <span>Birthday</span><input type="date" id="birthday" autocomplete="bday"><small>Your birthday is part of your profile information.</small>
-          </label>
-
-          <label class="profile-field">
-            <span>General location</span>
-            <input
-              type="text"
-              id="location"
-              maxlength="100"
-              autocomplete="address-level2"
-              placeholder="City or general area"
-            >
-            <small>Use a general area rather than a precise address.</small>
-          </label>
-
-          <label class="profile-field profile-field-full">
-            <span>About you</span>
-            <textarea
-              id="bio"
-              maxlength="160"
-              rows="4"
-              placeholder="Tell people a little about yourself..."
-            ></textarea>
-
-            <div class="character-count">
-              <span id="bioCount">0</span>/160
-            </div>
-          </label>
-
-
-
+          <label class="profile-field"><span>Full name</span><input type="text" id="fullName" maxlength="80" autocomplete="name" placeholder="Your full name"></label>
+          <label class="profile-field"><span>Username</span><div class="field-wrap"><span class="field-prefix">@</span><input type="text" id="username" maxlength="30" autocomplete="username" placeholder="username" required></div><small>3–30 letters, numbers, underscores or dots.</small></label>
+          <label class="profile-field"><span>Phone number</span><input type="tel" id="phone" maxlength="30" autocomplete="tel" placeholder="+256…"></label>
+          <label class="profile-field"><span>Birthday</span><input type="date" id="birthday" autocomplete="bday"></label>
+          <label class="profile-field"><span>General location</span><input type="text" id="location" maxlength="100" autocomplete="address-level2" placeholder="City or general area"></label>
+          <label class="profile-field profile-field-full"><span>About you</span><textarea id="bio" maxlength="160" rows="3" placeholder="Tell people a little about yourself…"></textarea><div class="character-count"><span id="bioCount">0</span>/160</div></label>
         </div>
-
-        <div
-          class="profile-message"
-          id="profileMessage"
-          role="status"
-          aria-live="polite"
-          hidden
-        ></div>
-
-        <div class="profile-actions">
-          <button
-            type="submit"
-            class="primary-button"
-            id="saveButton"
-          >
-            <span>Save Changes</span>
-          </button>
-
-          <button
-            type="button"
-            class="secondary-button"
-            id="cancelButton"
-          >
-            Cancel
-          </button>
-        </div>
-
+        <div class="profile-message" id="profileMessage" role="status" aria-live="polite" hidden></div>
+        <div class="profile-actions"><button type="submit" class="primary-button" id="saveButton"><span>Save changes</span></button><button type="button" class="secondary-button" id="cancelButton">Cancel</button></div>
       </form>
-
     </section>
 
-    <section class="profile-posts-card" id="profilePostsSection"><div class="profile-posts-heading"><div><span class="section-label">YOUR MOMENTS</span><h2>Posts</h2><p>Share a thought with your ZakiChat circle.</p></div><button type="button" id="archivedPostsToggle" class="archive-toggle">Archived posts</button></div><form id="profilePostForm" class="profile-post-form"><label for="profilePostBody">What would you like to share?</label><textarea id="profilePostBody" maxlength="1000" rows="3" placeholder="Write a post…"></textarea><div class="post-form-footer"><small><span id="postCharCount">0</span>/1000</small><button type="submit" id="publishPostButton">＋ Publish post</button></div></form><div id="profilePostsList" class="profile-posts-list"><p class="profile-posts-empty">Loading your posts…</p></div></section>
-
-    <section class="profile-info-card">
-      <div class="info-icon">🔐</div>
-
-      <div>
-        <h3>Your account data</h3>
-        <p>
-          Your profile is connected to your ZakiChat account.
-          Changes are saved securely to your Supabase profile.
-        </p>
-      </div>
+    <section class="profile-posts-card" id="profilePostsSection">
+      <div class="profile-posts-heading"><div><span class="section-label">YOUR SPACE</span><h2>Posts</h2><p>Thoughts and moments shared with your circle.</p></div><button type="button" id="archivedPostsToggle" class="archive-toggle">Archived posts</button></div>
+      <form id="profilePostForm" class="profile-post-form"><label for="profilePostBody">Share an update</label><textarea id="profilePostBody" maxlength="1000" rows="3" placeholder="What’s on your mind?"></textarea><div class="post-form-footer"><small><span id="postCharCount">0</span>/1000</small><button type="submit" id="publishPostButton">＋ Publish</button></div></form>
+      <div id="profilePostsList" class="profile-posts-list"><p class="profile-posts-empty">Loading posts…</p></div>
     </section>
-
-    <button
-      type="button"
-      class="logout-button"
-      id="logoutButton"
-    >
-      Log Out
-    </button>
-
+    <button type="button" class="logout-button" id="logoutButton">Log out of ZakiChat</button>
   </main>
 
   <nav class="zc-bottom-nav" aria-label="Main navigation">
-  <a href="chats.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span>
-  </a>
-  <a href="settings.html" class="is-current" aria-current="page">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5h-3.2l-.3-1.5a7.7 7.7 0 0 1-1.7-1l-1.4.5-1.6-2.8 1.1-.9a7.2 7.2 0 0 1 0-2l-1.1-.9 1.6-2.8 1.4.5a7.7 7.7 0 0 1 1.7-1l.3-1.5h3.2l.3 1.5a7.7 7.7 0 0 1 1.7 1l1.4-.5 1.6 2.8-1.1.9a7.2 7.2 0 0 1 0 2Z"/></svg><span>Settings</span>
-  </a>
-  <a href="status.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span>
-  </a>
-</nav>
+    <a href="chats.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span></a>
+    <a href="settings.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5h-3.2l-.3-1.5a7.7 7.7 0 0 1-1.7-1l-1.4.5-1.6-2.8 1.1-.9a7.2 7.2 0 0 1 0-2l-1.1-.9 1.6-2.8 1.4.5a7.7 7.7 0 0 1 1.7-1l.3-1.5h3.2l.3 1.5a7.7 7.7 0 0 1 1.7 1l1.4-.5 1.6 2.8-1.1.9a7.2 7.2 0 0 1 0 2Z"/></svg><span>Settings</span></a>
+    <a href="status.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span></a>
+  </nav>
 
-  <dialog class="profile-qr-dialog" id="profileQrDialog"><div class="profile-modal-head"><div><span class="section-label">SCAN TO CONNECT</span><h2>Your ZakiChat QR</h2><p>Let someone scan this code to open your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileQrDialog" aria-label="Close">×</button></div><div id="profileQrCode" class="profile-qr-code"></div><p id="profileQrUsername" class="profile-qr-username"></p><button type="button" class="profile-modal-primary" id="shareProfileButton">Share profile link</button></dialog><dialog class="profile-color-dialog" id="profileColorDialog"><div class="profile-modal-head"><div><span class="section-label">MAKE IT YOURS</span><h2>Profile color</h2><p>Choose the accent that represents you.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileColorDialog" aria-label="Close">×</button></div><div class="profile-color-options"><button type="button" data-color="#20c9bd" aria-label="Turquoise" style="--swatch:#20c9bd"></button><button type="button" data-color="#36b8ff" aria-label="Sky blue" style="--swatch:#36b8ff"></button><button type="button" data-color="#8c7bff" aria-label="Violet" style="--swatch:#8c7bff"></button><button type="button" data-color="#ff78b5" aria-label="Pink" style="--swatch:#ff78b5"></button><button type="button" data-color="#ffb454" aria-label="Amber" style="--swatch:#ffb454"></button><button type="button" data-color="#64d98b" aria-label="Green" style="--swatch:#64d98b"></button></div><button type="button" class="profile-modal-primary" data-close-dialog="profileColorDialog">Done</button></dialog>
-  <div
-    class="toast"
-    id="toast"
-    role="status"
-    aria-live="polite"
-    hidden
-  ></div>
-
+  <dialog class="profile-qr-dialog" id="profileQrDialog"><div class="profile-modal-head"><div><span class="section-label">SCAN TO CONNECT</span><h2>Your ZakiChat QR</h2><p>Let someone scan this code to open your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileQrDialog" aria-label="Close">×</button></div><div id="profileQrCode" class="profile-qr-code"></div><p id="profileQrUsername" class="profile-qr-username"></p><button type="button" class="profile-modal-primary" id="shareProfileButton">Share profile link</button></dialog>
+  <dialog class="profile-color-dialog" id="profileColorDialog"><div class="profile-modal-head"><div><span class="section-label">MAKE IT YOURS</span><h2>Profile color</h2><p>Choose an accent for your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileColorDialog" aria-label="Close">×</button></div><div class="profile-color-options"><button type="button" data-color="#20c9bd" aria-label="Turquoise" style="--swatch:#20c9bd"></button><button type="button" data-color="#36b8ff" aria-label="Sky blue" style="--swatch:#36b8ff"></button><button type="button" data-color="#8c7bff" aria-label="Violet" style="--swatch:#8c7bff"></button><button type="button" data-color="#ff78b5" aria-label="Pink" style="--swatch:#ff78b5"></button><button type="button" data-color="#ffb454" aria-label="Amber" style="--swatch:#ffb454"></button><button type="button" data-color="#64d98b" aria-label="Green" style="--swatch:#64d98b"></button></div><button type="button" class="profile-modal-primary" data-close-dialog="profileColorDialog">Done</button></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
-<script src="../static/js/supabase-client.js"></script>
+  <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/upgrade-celebration.js"></script>
   <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/profile.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <script src="../static/js/profile-social.js"></script>
-
 </body>
 </html>
