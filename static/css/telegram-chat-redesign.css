@@ -91,3 +91,50 @@ body.tg-conversation-page .tg-read-receipt{color:#8ba6ba}
 body.tg-conversation-page .tg-read-receipt:not(:empty){transition:color .2s}
 body.tg-conversation-page .tg-message.outgoing .tg-read-receipt{color:#82b7d5}
 body.tg-conversation-page .tg-message.outgoing .tg-read-receipt[data-read="true"]{color:#36c8f5}
+
+
+/* 2026 mobile chat polish: keyboard-aware viewport and refined native-style controls. */
+html:has(body.tg-conversation-page),body.tg-conversation-page{height:100%;min-height:0;overflow:hidden;overscroll-behavior:none}
+body.tg-conversation-page .tg-conversation-shell{position:fixed!important;top:var(--tg-viewport-offset-top,0px)!important;left:50%!important;transform:translateX(-50%);height:var(--tg-viewport-height,100dvh)!important;min-height:0!important;max-height:var(--tg-viewport-height,100dvh)!important;width:min(100%,940px);padding-bottom:0;transition:height .08s linear}
+body.tg-conversation-page .tg-message-area{flex:1 1 auto;min-height:0;overscroll-behavior:contain;scroll-padding-bottom:16px}
+body.tg-conversation-page .tg-composer{flex:0 0 auto;position:relative;z-index:12;padding-top:8px;padding-bottom:calc(7px + env(safe-area-inset-bottom));}
+body.tg-conversation-page .tg-composer-tools{gap:6px;align-items:flex-end}
+body.tg-conversation-page .tg-icon-btn{border:0;background:transparent;box-shadow:none;border-radius:50%;color:#dcecf5}
+body.tg-conversation-page .tg-icon-btn:hover{transform:none;background:rgba(120,190,220,.12)}
+body.tg-conversation-page .tg-header-actions .tg-icon-btn{flex-basis:38px;width:38px;height:38px;border:0;border-radius:50%;background:transparent;box-shadow:none}
+body.tg-conversation-page .tg-header-actions .tg-call-action{color:#58d6b0}
+body.tg-conversation-page .tg-header-actions .tg-video-action{color:#7bd7f6}
+body.tg-conversation-page .tg-input-wrap{min-height:46px;align-items:flex-end;gap:2px;padding:4px 5px;border:1px solid rgba(139,180,202,.18);border-radius:24px;background:#10283b;box-shadow:none}
+body.tg-conversation-page .tg-input-wrap:focus-within{border-color:rgba(56,200,241,.55);box-shadow:0 0 0 2px rgba(56,200,241,.08)}
+body.tg-conversation-page .tg-composer-icon{flex:0 0 32px;width:32px;height:34px;border-radius:50%;font-size:1.2rem;color:#a8c6d7}
+body.tg-conversation-page .tg-composer-icon:hover{background:rgba(130,190,215,.1)}
+body.tg-conversation-page #message-input{min-height:34px;max-height:112px;padding:8px 4px;font-size:16px;line-height:1.35}
+body.tg-conversation-page .tg-send-button{flex:0 0 44px;width:44px;height:44px;border-radius:50%;box-shadow:none;background:#16a9e0;color:#062031}
+body.tg-conversation-page .tg-mic-button{background:#12bfa6;color:#042d28}
+body.tg-conversation-page .tg-record-mode-button{flex:0 0 35px;width:35px;height:35px;border:0;background:transparent;color:#8fbdd1}
+body.tg-conversation-page .tg-record-mode-button[aria-pressed=true]{background:#d94b67;color:#fff}
+body.tg-conversation-page .tg-composer-hint{margin-top:4px;font-size:10px;line-height:1.2;color:#6f91a5}
+body.tg-conversation-page .tg-chat-menu,body.tg-conversation-page .tg-attach-menu{z-index:30;max-height:calc(var(--tg-viewport-height,100dvh) - 100px);overflow:auto}
+body.tg-conversation-page .tg-chat-menu button,body.tg-conversation-page .tg-attach-menu button{min-height:46px;border-radius:10px;transition:background .15s}
+body.tg-conversation-page .tg-chat-menu button:active,body.tg-conversation-page .tg-attach-menu button:active{background:rgba(67,190,226,.13)}
+body.tg-conversation-page .tg-attach-menu{bottom:calc(100% + 8px)}
+body.tg-conversation-page .tg-recording-bar{display:flex;align-items:center;gap:9px;min-height:46px;margin-bottom:8px;padding:6px 8px;border:1px solid rgba(255,102,129,.22);border-radius:18px;background:#1b293a;color:#f4f8fb}
+body.tg-conversation-page .tg-record-cancel,body.tg-conversation-page .tg-record-send{min-height:34px;padding:0 12px;border:0;border-radius:18px;background:#2d4255;color:#fff}
+body.tg-conversation-page .tg-record-send{margin-left:auto;background:#12a9dc;color:#062033;font-weight:750}
+@media(max-width:560px){
+ body.tg-conversation-page .tg-chat-header{gap:4px;min-height:60px;padding:6px 7px}
+ body.tg-conversation-page .tg-back-btn{flex-basis:32px;width:32px;height:36px}
+ body.tg-conversation-page .tg-avatar-large{flex-basis:39px;width:39px;height:39px}
+ body.tg-conversation-page .tg-person-copy strong{font-size:.93rem}
+ body.tg-conversation-page .tg-person-copy small{font-size:.69rem}
+ body.tg-conversation-page .tg-header-actions{gap:0}
+ body.tg-conversation-page .tg-header-actions .tg-icon-btn{flex-basis:32px;width:32px;height:34px}
+ body.tg-conversation-page .tg-header-actions svg{width:18px;height:18px}
+ body.tg-conversation-page .tg-composer{padding:6px 6px calc(5px + env(safe-area-inset-bottom))}
+ body.tg-conversation-page .tg-composer-tools{gap:4px}
+ body.tg-conversation-page .tg-input-wrap{min-height:43px;padding:3px}
+ body.tg-conversation-page .tg-composer-icon{flex-basis:28px;width:28px;height:32px}
+ body.tg-conversation-page .tg-send-button{flex-basis:40px;width:40px;height:40px}
+ body.tg-conversation-page .tg-record-mode-button{flex-basis:29px;width:29px;height:29px}
+ body.tg-conversation-page .tg-composer-hint{display:none}
+}
