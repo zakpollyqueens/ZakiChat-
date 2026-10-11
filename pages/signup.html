@@ -67,7 +67,7 @@
         </div>
         <button type="button" id="accountPlanNext" aria-label="Next account plan">›</button>
       </div>
-      <p class="account-plan-note">Paid plans require a signed-in account and verified payment before premium features are activated. Selecting a plan saves your choice and opens its upgrade page after phone verification.</p>
+      <p class="account-plan-note">Paid plans require a signed-in account and verified payment before premium features are activated. Selecting a plan saves your choice and opens its upgrade page after email verification.</p>
     </section>
 
     <div class="signup-progress" aria-label="Signup progress">
@@ -75,8 +75,8 @@
         <div id="signupProgressBar" class="signup-progress-bar"></div>
       </div>
       <div class="signup-progress-meta">
-        <span id="signupStepLabel">Step 1 of 6</span>
-        <span id="signupStepPercent">20%</span>
+        <span id="signupStepLabel">Step 1 of 4</span>
+        <span id="signupStepPercent">25%</span>
       </div>
     </div>
 
@@ -294,98 +294,6 @@
           </button>
           <button type="submit" class="button button-primary auth-submit">
             Create Account
-          </button>
-        </div>
-      </section>
-
-      <!-- STEP 5 -->
-      <section class="signup-step" data-step="5" hidden>
-        <div class="signup-step-heading">
-          <span class="signup-step-number">05</span>
-          <div>
-            <h2>Verify your phone</h2>
-            <p>We'll send a 6-digit verification code to your phone.</p>
-          </div>
-        </div>
-
-        <div class="verification-icon" aria-hidden="true">
-          ✓
-        </div>
-
-        <p id="otpDescription" class="verification-description">
-          Your phone number will receive a secure 6-digit verification code.
-        </p>
-
-        <div class="verification-link-card">
-          <strong>Phone verification</strong>
-          <span>
-            The code is generated and verified by ZakiChat's authentication
-            service. Never share your verification code with anyone.
-          </span>
-        </div>
-
-        <button
-          type="button"
-          id="sendOtpButton"
-          class="button button-primary auth-submit"
-        >
-          Enter verification code
-        </button>
-
-        <div class="signup-actions verification-back">
-          <button type="button" class="button auth-secondary previous-step">
-            Back
-          </button>
-        </div>
-      </section>
-
-      <!-- STEP 6 -->
-      <section class="signup-step" data-step="6" hidden>
-        <div class="signup-step-heading">
-          <span class="signup-step-number">06</span>
-          <div>
-            <h2>Enter your verification code</h2>
-            <p>Enter the 6-digit code sent to your phone.</p>
-          </div>
-        </div>
-
-        <label for="otpCode">Verification code</label>
-        <input
-          id="otpCode"
-          name="otpCode"
-          type="text"
-          inputmode="numeric"
-          autocomplete="one-time-code"
-          pattern="[0-9]{6}"
-          maxlength="6"
-          minlength="6"
-          required
-          aria-describedby="otpHelp"
-        >
-
-        <small class="auth-help" id="otpHelp">
-          Enter the 6-digit code you received by SMS.
-        </small>
-
-        <button
-          type="button"
-          id="verifyOtpButton"
-          class="button button-primary auth-submit"
-        >
-          Verify phone
-        </button>
-
-        <button
-          type="button"
-          id="resendOtpButton"
-          class="button auth-secondary"
-        >
-          Resend code
-        </button>
-
-        <div class="signup-actions verification-back">
-          <button type="button" class="button auth-secondary previous-step">
-            Back
           </button>
         </div>
       </section>
