@@ -335,36 +335,43 @@ body .zc-bottom-nav span{pointer-events:none}
 @media(prefers-reduced-motion:reduce){body .zc-bottom-nav,body .zc-bottom-nav>a{transition:none!important}}
 
 
-/* Compact Updates shortcut above the profile card.
-   It stays in document flow so it never obscures the avatar or profile fields. */
-body.profile-page .profile-quick-actions{
-  display:flex;justify-content:flex-end;align-items:center;
-  margin:0 2px 12px;
-}
-body.profile-page .profile-updates-link{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:36px;box-sizing:border-box;padding:7px 12px;
-  border:1px solid rgba(56,220,255,.25);border-radius:999px;
-  color:#c9f5ff;text-decoration:none;font-size:.78rem;font-weight:750;
-  letter-spacing:.015em;
-  background:linear-gradient(135deg,rgba(12,54,78,.9),rgba(8,27,48,.96));
-  box-shadow:0 6px 18px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.06);
-  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
-}
-body.profile-page .profile-updates-link svg{
-  width:16px;height:16px;flex:0 0 16px;fill:none;stroke:var(--zk-cyan);
-  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
-}
-body.profile-page .profile-updates-arrow{font-size:.88rem;color:var(--zk-cyan);line-height:1}
-body.profile-page .profile-updates-link:hover{
-  border-color:rgba(56,220,255,.48);background:linear-gradient(135deg,rgba(15,76,105,.96),rgba(8,36,60,.98));
-  box-shadow:0 8px 22px rgba(0,185,239,.13),inset 0 1px rgba(255,255,255,.08);
-}
-body.profile-page .profile-updates-link:focus-visible{outline:2px solid var(--zk-cyan);outline-offset:3px}
-@media(max-width:390px){
-  body.profile-page .profile-quick-actions{margin-bottom:10px}
-  body.profile-page .profile-updates-link{min-height:34px;padding:6px 10px;font-size:.75rem}
-}
-
 /* Keep content clear of the shared navigation on remaining themed subpages. */
 body.appearance-page,body.notifications-page,body.channels-page{padding-bottom:calc(var(--zc-nav-height) + 30px + env(safe-area-inset-bottom))!important}
+
+
+/* Chats-only five-item navigation with a small Updates shortcut above Profile. */
+body.tg-list-page .zc-chats-bottom-nav{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:3px!important;
+}
+body.tg-list-page .zc-chats-bottom-nav>a{
+  padding:5px 1px!important;font-size:10px!important;gap:3px!important;
+}
+body.tg-list-page .zc-chats-bottom-nav>a svg{
+  width:21px!important;height:21px!important;flex-basis:21px!important;
+}
+body.tg-list-page .chats-floating-updates{
+  position:fixed!important;z-index:199!important;
+  left:calc(50% + min(215px, (100vw - 24px)/2) - 52px)!important;
+  bottom:calc(9px + env(safe-area-inset-bottom) + 66px + 9px)!important;
+  transform:translateX(0)!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+  min-height:31px!important;padding:5px 9px!important;box-sizing:border-box!important;
+  border:1px solid rgba(56,220,255,.28)!important;border-radius:999px!important;
+  color:#c9f5ff!important;text-decoration:none!important;font-size:11px!important;font-weight:750!important;
+  background:linear-gradient(135deg,rgba(12,54,78,.96),rgba(8,27,48,.98))!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.3),0 0 18px rgba(0,185,239,.1)!important;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+body.tg-list-page .chats-floating-updates svg{
+  display:block!important;width:14px!important;height:14px!important;flex:0 0 14px!important;
+  fill:none!important;stroke:var(--zk-cyan)!important;stroke-width:1.8!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+body.tg-list-page .chats-floating-updates:hover{border-color:rgba(56,220,255,.5)!important;box-shadow:0 8px 22px rgba(0,185,239,.16)!important}
+body.tg-list-page .chats-floating-updates:focus-visible{outline:2px solid var(--zk-cyan)!important;outline-offset:3px}
+@media(max-width:370px){
+  body.tg-list-page .zc-chats-bottom-nav>a{font-size:9px!important}
+  body.tg-list-page .zc-chats-bottom-nav>a svg{width:19px!important;height:19px!important;flex-basis:19px!important}
+  body.tg-list-page .chats-floating-updates{left:auto!important;right:17px!important;bottom:calc(9px + env(safe-area-inset-bottom) + 66px + 9px)!important}
+}
