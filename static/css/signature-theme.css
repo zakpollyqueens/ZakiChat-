@@ -375,3 +375,12 @@ html[data-zakichat-theme] :where(.tg-filter.is-active,.tg-primary-btn,.channels-
   background:linear-gradient(125deg,var(--primary),var(--primary-2))!important;
 }
 html[data-zakichat-theme] body{color:var(--text)!important}
+
+/* Current three-item navigation and live Updates shortcut on the Chats list. */
+body.tg-list-page .zc-chats-bottom-nav{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:4px!important}
+body.tg-list-page .zc-chats-bottom-nav>a{padding:5px 2px!important;font-size:10px!important;gap:3px!important}
+body.tg-list-page .tg-updates-launch{position:relative;display:grid;place-items:center;width:29px;height:34px;min-width:29px;border:0;border-radius:50%;background:transparent;color:#d7f6ff;text-decoration:none}
+body.tg-list-page .tg-updates-launch svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.tg-list-page .tg-updates-launch.has-unseen{color:#65e8ff;filter:drop-shadow(0 0 7px rgba(56,220,255,.32))}
+body.tg-list-page .tg-updates-dot{position:absolute;top:3px;right:1px;width:7px;height:7px;border:1px solid #07111f;border-radius:50%;background:#27d3a2;box-shadow:0 0 0 2px rgba(39,211,162,.15)}
+body.tg-list-page .tg-updates-dot[hidden]{display:none}
