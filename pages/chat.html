@@ -61,7 +61,6 @@
     <div class="tg-composer-tools">
       <div class="tg-input-wrap">
         <button class="tg-composer-icon tg-emoji-button" id="emoji-button" type="button" aria-label="Emoji" title="Emoji">☺</button>
-        <button class="tg-composer-icon tg-keyboard-button" id="keyboard-toggle" type="button" aria-label="Use ZakiChat keyboard" title="ZakiChat keyboard" aria-pressed="false">⌨</button>
         <textarea id="message-input" rows="1" maxlength="10000" placeholder="Message" aria-label="Write a message" enterkeyhint="send"></textarea>
         <button class="tg-composer-icon tg-attach-inline" id="attach-button" type="button" aria-label="Attach a file" title="Attach">＋</button>
       </div>
@@ -89,12 +88,6 @@
     <button type="button" data-attach-action="wallet">▣ <span>Wallet note</span></button>
   </div>
   <div class="tg-emoji-panel" id="emoji-panel" hidden aria-label="Emoji picker"></div>
-  <section class="zaki-custom-keyboard" id="zaki-custom-keyboard" hidden aria-label="ZakiChat custom keyboard">
-    <div class="zaki-keyboard-toolbar"><span><b>ZAKI</b> keyboard</span><button type="button" id="keyboard-layout-toggle">?123</button><button type="button" id="keyboard-globe" title="Keyboard options" aria-label="Keyboard options">🌐</button><button type="button" id="keyboard-hide" aria-label="Hide keyboard">⌄</button></div>
-    <div class="zaki-keyboard-keys" id="zaki-keyboard-keys"></div>
-    <div class="zaki-keyboard-bottom"><button type="button" data-kb-key="emoji">☺</button><button type="button" data-kb-key="comma">,</button><button type="button" data-kb-key="space" class="zaki-space-key">English · US</button><button type="button" data-kb-key="period">.</button><button type="button" data-kb-key="enter" class="zaki-enter-key">↵</button></div>
-    <div class="zaki-keyboard-options" id="zaki-keyboard-options" hidden><strong>Keyboard options</strong><p>ZakiChat keyboard is an in-chat keyboard. To switch to Gboard or another Android keyboard, use your phone’s system keyboard settings.</p><button type="button" id="keyboard-native-help">How to change phone keyboard</button></div>
-  </section>
   <aside class="tg-info-panel" id="chat-info-panel" hidden>
     <div class="tg-info-head"><strong>Conversation details</strong><button id="close-chat-info" type="button" aria-label="Close details">×</button></div>
     <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Profile, shared information, and notification preferences.</p><div class="tg-info-note">Conversation details and notification preferences.</div>
