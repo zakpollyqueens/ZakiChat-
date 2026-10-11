@@ -100,6 +100,15 @@
     if (timestamp) timestamp.textContent = rateDate ? 'Exchange-rate reference: ' + rateDate : 'Live exchange rates will appear when a connection is available.';
   }
 
+  window.ZakiChatCurrency = Object.freeze({
+    formatUsd(amount, countryIso) {
+      return displayQuote(Number(amount), countryCurrency(String(countryIso || 'ug').toLowerCase()));
+    },
+    getCurrency(countryIso) {
+      return countryCurrency(String(countryIso || 'ug').toLowerCase());
+    }
+  });
+
   function bindCountry() {
     const input = document.getElementById('phone');
     if (!input) return;
