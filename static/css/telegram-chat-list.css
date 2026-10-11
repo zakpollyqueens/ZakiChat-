@@ -1,0 +1,62 @@
+/* ZakiChat chats screen — screenshot-matched mobile layout.
+   Kept separate from conversation-page styling so this page has one predictable layout. */
+:root{--zcl-bg:#17110f;--zcl-panel:#211a17;--zcl-peach:#f4c7a7;--zcl-muted:#a08ba4;--zcl-badge:#7476b6}
+html,body.tg-list-page{width:100%;height:100%;min-height:100%;margin:0;background:var(--zcl-bg)!important;color:var(--zcl-peach)!important}
+body.tg-list-page{height:100dvh;min-height:100dvh;overflow:hidden;font-family:Roboto,"Arial",sans-serif}
+body.tg-list-page .tg-shell{position:relative;display:flex;flex-direction:column;width:100%;max-width:none;height:100%;min-height:0;margin:0;padding:0;overflow:hidden;background:var(--zcl-bg)!important;border:0;border-radius:0;box-shadow:none}
+body.tg-list-page .tg-list-header{position:relative;z-index:5;flex:none;margin:0;padding:calc(10px + env(safe-area-inset-top)) 12px 4px!important;background:var(--zcl-bg)!important;box-shadow:none!important;border:0}
+body.tg-list-page .tg-brand-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:39px;margin:0!important}
+body.tg-list-page .tg-brand-row .tg-wordmark{flex:1;min-width:0;margin:0!important;padding:0;color:var(--zcl-peach)!important;font-family:Roboto,Arial,sans-serif;font-size:22px!important;font-weight:750;line-height:1.2;letter-spacing:-.35px}
+body.tg-list-page .tg-brand-row .tg-list-actions{display:flex;flex:none;align-items:center;justify-content:flex-end;gap:14px;margin-left:auto}
+body.tg-list-page .tg-list-actions .tg-icon-btn{display:grid;place-items:center;width:25px;min-width:25px;height:34px;min-height:34px;margin:0;padding:0;border:0;border-radius:50%;background:transparent!important;color:var(--zcl-peach)!important;box-shadow:none!important;font-size:0;line-height:1}
+body.tg-list-page .tg-list-actions .tg-icon-btn svg{display:block;width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2.05;stroke-linecap:round;stroke-linejoin:round}
+body.tg-list-page #app-lock-button svg{width:27px;height:27px;stroke-width:1.8}
+body.tg-list-page #top-menu-toggle svg{width:21px;height:27px}
+body.tg-list-page .tg-list-actions .tg-icon-btn:active{opacity:.65}
+body.tg-list-page #top-search-box{display:none;box-sizing:border-box;height:40px;margin:7px 0 1px;padding:0 12px;border:1px solid #49372e;border-radius:22px;background:var(--zcl-panel)}
+body.tg-list-page #top-search-box.is-open{display:flex}
+body.tg-list-page #top-search-box input{min-width:0;color:var(--zcl-peach)}
+body.tg-list-page #top-search-box input::placeholder{color:var(--zcl-muted)}
+body.tg-list-page .tg-filter-row,body.tg-list-page .tg-backend-status,body.tg-list-page .tg-archive-row,body.tg-list-page .tg-archive-panel{display:none!important}
+body.tg-list-page .tg-list-content{position:relative;display:block;flex:1;min-height:0;margin:0;padding:0 0 calc(69px + env(safe-area-inset-bottom));overflow-x:hidden;overflow-y:auto;background:var(--zcl-bg)!important;scrollbar-width:none}
+body.tg-list-page .tg-list-content::-webkit-scrollbar{display:none}
+body.tg-list-page #chat-list-results{display:block;width:100%;margin:0;padding:0}
+body.tg-list-page .tg-chat-row{box-sizing:border-box;display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;column-gap:14px;width:100%;min-height:71px;margin:0;padding:8px 12px!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--zcl-peach)!important;text-decoration:none}
+body.tg-list-page .tg-chat-row:active{background:#ffffff08!important}
+body.tg-list-page .tg-chat-row .tg-avatar{position:relative;display:grid;place-items:center;box-sizing:border-box;grid-column:1;grid-row:1;width:52px;height:52px;min-width:52px;min-height:52px;margin:0;overflow:hidden;border-radius:50%;background:#39256f;color:var(--zcl-peach);font-size:19px;font-weight:600}
+body.tg-list-page .tg-chat-row .tg-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+body.tg-list-page .tg-chat-row-copy{display:flex;grid-column:2;grid-row:1;flex-direction:column;justify-content:center;align-self:stretch;gap:0;min-width:0;margin:0;padding:1px 0 0}
+body.tg-list-page .tg-chat-row-copy strong{display:block;max-width:100%;margin:0 0 5px!important;overflow:hidden;color:var(--zcl-peach)!important;font-family:Roboto,Arial,sans-serif;font-size:16.5px!important;font-weight:650!important;line-height:1.24;letter-spacing:0;white-space:nowrap;text-overflow:ellipsis}
+body.tg-list-page .tg-chat-row-copy p{display:-webkit-box;max-width:100%;margin:0!important;overflow:hidden;color:var(--zcl-muted)!important;font-family:"Comic Sans MS","Segoe Print","Bradley Hand",cursive!important;font-size:13.5px!important;font-weight:400;line-height:1.42;letter-spacing:.05px;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+body.tg-list-page .tg-chat-row-meta{display:flex;grid-column:3;grid-row:1;align-self:stretch;align-items:flex-end;justify-content:flex-start;gap:7px;min-width:0;margin:0;padding:3px 0 5px;color:var(--zcl-muted)!important;font-size:11px!important;white-space:nowrap}
+body.tg-list-page .tg-chat-row-meta small:first-child{color:var(--zcl-muted)!important;font-family:Roboto,Arial,sans-serif;font-size:11px!important;font-weight:400;line-height:1.35}
+body.tg-list-page .tg-chat-row-meta small:not(:first-child){font-size:11px}
+body.tg-list-page .tg-unread-dot{display:grid;place-items:center;box-sizing:border-box;width:auto;height:22px;min-width:22px;min-height:22px;margin:0;padding:0 6px;border:0;border-radius:16px;background:var(--zcl-badge)!important;color:#ffe0bd!important;font-family:Roboto,Arial,sans-serif;font-size:12px;font-weight:650;line-height:1}
+body.tg-list-page .tg-empty-state{box-sizing:border-box;display:flex;min-height:100%;margin:0;padding:24px;flex-direction:column;align-items:center;justify-content:center;background:var(--zcl-bg)!important;color:var(--zcl-peach)}
+body.tg-list-page .tg-empty-art{display:grid;place-items:center;width:82px;height:82px;border-radius:50%;background:linear-gradient(145deg,#4c3a80,#d88967);color:#fff;font-size:34px}
+body.tg-list-page .tg-empty-state h2{color:var(--zcl-peach);font-size:19px}
+body.tg-list-page .tg-empty-state p{max-width:280px;color:var(--zcl-muted);font-size:13px;text-align:center}
+body.tg-list-page .tg-primary-btn{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:0 16px;border:0;border-radius:22px;background:var(--zcl-badge);color:#fff0dd;font-weight:650}
+body.tg-list-page .tg-bottom-nav{position:absolute!important;z-index:10;left:12px!important;right:12px!important;bottom:calc(6px + env(safe-area-inset-bottom))!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:2px;box-sizing:border-box;width:auto!important;max-width:none!important;min-height:57px;height:57px;margin:0;padding:4px 5px;border:1px solid rgba(255,222,201,.025);border-radius:34px;background:rgba(35,28,25,.98)!important;box-shadow:0 4px 18px #0005;backdrop-filter:blur(14px);transform:none!important}
+body.tg-list-page .tg-bottom-nav a{display:flex;box-sizing:border-box;min-width:0;min-height:47px;margin:0;padding:2px 0;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:0;border-radius:30px;background:transparent;color:var(--zcl-peach)!important;font-family:Roboto,Arial,sans-serif;font-size:11.5px;font-weight:550;line-height:1.15;text-decoration:none;white-space:nowrap}
+body.tg-list-page .tg-bottom-nav a svg{display:block;flex:0 0 25px;width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.tg-list-page .tg-bottom-nav a.is-current{background:#302925!important;color:#777bbd!important}
+body.tg-list-page .tg-bottom-nav a.is-current svg{stroke-width:2}
+body.tg-list-page .tg-bottom-nav a .tg-bottom-profile-image{display:block;flex:0 0 25px;width:25px;height:25px;border-radius:50%;object-fit:cover}
+body.tg-list-page .tg-top-menu{position:absolute;z-index:30;top:calc(51px + env(safe-area-inset-top));right:8px;width:205px;padding:6px;border:1px solid #49372e;border-radius:13px;background:#29201c;box-shadow:0 12px 32px #0009}
+body.tg-list-page .tg-top-menu a,body.tg-list-page .tg-top-menu button{display:block;width:100%;padding:12px;border:0;border-radius:8px;background:transparent;color:var(--zcl-peach);text-align:left;font-size:14px}
+body.tg-list-page .tg-top-menu a:active,body.tg-list-page .tg-top-menu button:active{background:#ffffff12}
+body.tg-list-page .tg-toast{background:#302622;color:var(--zcl-peach);border-color:#574034}
+@media(min-width:600px){
+ body.tg-list-page .tg-shell{max-width:430px;margin:0 auto}
+ body.tg-list-page .tg-bottom-nav{left:12px!important;right:12px!important}
+}
+@media(max-width:370px){
+ body.tg-list-page .tg-brand-row .tg-list-actions{gap:10px}
+ body.tg-list-page .tg-chat-row{column-gap:11px;padding-right:10px!important;padding-left:10px!important}
+ body.tg-list-page .tg-chat-row-copy strong{font-size:15px!important}
+ body.tg-list-page .tg-chat-row-copy p{font-size:12px!important}
+ body.tg-list-page .tg-chat-row-meta small:first-child{font-size:10px!important}
+ body.tg-list-page .tg-bottom-nav{left:10px!important;right:10px!important}
+ body.tg-list-page .tg-bottom-nav a{font-size:10.5px}
+}
