@@ -241,6 +241,8 @@
 
     locationInput.value =
       profile.location || "";
+    if (birthdayInput) birthdayInput.value = profile.birthday || "";
+    document.body.style.setProperty("--profile-accent", profile.profile_color || "#20c9bd");
 
     bioInput.value =
       profile.bio || "";
@@ -414,7 +416,7 @@
     } = await supabaseClient
       .from("profiles")
       .select(
-        "id,username,full_name,phone,avatar_url,bio,is_online,last_seen,location,created_at,updated_at"
+        "id,username,full_name,phone,avatar_url,bio,is_online,last_seen,location,birthday,profile_color,cover_url,created_at,updated_at"
       )
       .eq("id", profileId)
       .maybeSingle();
@@ -530,13 +532,14 @@
         full_name: values.full_name || null,
         phone: values.phone || null,
         location: values.location || null,
+        birthday: values.birthday || null,
         bio: values.bio || null,
         avatar_url: values.avatar_url || null,
         updated_at: new Date().toISOString()
       })
       .eq("id", currentUser.id)
       .select(
-        "id,username,full_name,phone,avatar_url,bio,is_online,last_seen,location,created_at,updated_at"
+        "id,username,full_name,phone,avatar_url,bio,is_online,last_seen,location,birthday,profile_color,cover_url,created_at,updated_at"
       )
       .single();
 
