@@ -109,7 +109,18 @@ async function loadArchiveOptions(item,container){
   const type=/\.(mp3|m4a|aac|ogg|wav|flac|opus)$/i.test(preferred.name)?"audio":"video";
   const play=document.createElement("button");play.type="button";play.className="zplay-archive-action primary";play.textContent=type==="audio"?"▶ Play in ZakiPlay":"▶ Watch in ZakiPlay";
   play.addEventListener("click",()=>{activeUrl=mediaUrl;activeFileName=preferred.name.split("/").pop();useMedia(mediaUrl,item.title||activeFileName,type);$("zplayDownloadNote").textContent="Playing open-licensed media from Internet Archive. Respect the license terms shown above.";document.getElementById("zplayMediaStage").scrollIntoView({behavior:"smooth",block:"center"})});
-  const download=document.createElement("a");download.className="zplay-archive-action";download.href=mediaUrl;download.target="_blank";download.rel="noopener noreferrer";download.textContent="↓ Download open-licensed file";
+  const download=document.createElement("button");download.type="button";download.className="zplay-archive-action";download.textContent="↓ Download open-licensed file";
+  download.addEventListener("click",async()=>{
+   download.disabled=true;download.textContent="Preparing download…";
+   try{
+    if(preferred.size&&Number(preferred.size)>300000000)throw new Error("This file is too large for a safe in-page download on a mobile device. Open the official record to choose a download option.");
+    const fileResponse=await fetch(mediaUrl);if(!fileResponse.ok)throw new Error("The source did not allow a direct download. Open the official record to check available download options.");
+    const blob=await fileResponse.blob(),objectUrl=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=objectUrl;a.download=preferred.name.split("/").pop()||"zaki-media";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),30000);
+    download.textContent="Download started";
+   }catch(error){download.textContent="Open download options ↗";download.onclick=()=>window.open("https://archive.org/details/"+encodeURIComponent(item.identifier),"_blank","noopener,noreferrer");$("zplayDownloadNote").textContent=error.message||"Download unavailable for this source."}
+   finally{download.disabled=false}
+  });
   container.append(play,download);
  }catch(error){container.textContent=(error.message||"Unable to check this media record.")+" You can review the item on Internet Archive.";const link=document.createElement("a");link.className="zplay-archive-action";link.href="https://archive.org/details/"+encodeURIComponent(item.identifier);link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open item ↗";container.appendChild(link)}
 }
