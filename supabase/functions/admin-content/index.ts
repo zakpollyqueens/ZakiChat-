@@ -159,20 +159,34 @@ Deno.serve(async (req: Request) => {
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)) {
         return json({ success: false, error: "A valid account ID is required." }, 400);
       }
-      const [{ data: profile, error: profileError }, { data: preference, error: preferenceError }, { data: upgrades, error: upgradeError }, { data: posts, error: postsError }, { data: authUser, error: authError }] = await Promise.all([
+      const [{ data: profile, error: profileError }, { data: preference, error: preferenceError }, { data: upgrades, error: upgradeError }, { data: posts, error: postsError }, { data: authUser, error: authError }, { data: workspaces, error: workspaceError }] = await Promise.all([
         db.from("profiles").select("id, username, full_name, phone, avatar_url, bio, location, birthday, profile_color, cover_url, created_at, updated_at").eq("id", userId).maybeSingle(),
         db.from("user_account_preferences").select("user_id, account_mode, updated_at").eq("user_id", userId).maybeSingle(),
         db.from("user_upgrades").select("id, plan, status, starts_at, expires_at, price_usd, currency, source, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
         db.from("profile_posts").select("id, body, archived, created_at, updated_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
-        db.auth.admin.getUserById(userId)
+        db.auth.admin.getUserById(userId),
+        db.from("business_workspaces").select("id, owner_user_id, business_name, business_title, business_email, logo_url, description, personal_profile_name, personal_profile_avatar_url, personal_profile_bio, business_identity_enabled, created_at, updated_at").eq("owner_user_id", userId).order("created_at", { ascending: false }).limit(100)
       ]);
       if (profileError) throw profileError;
       if (preferenceError) throw preferenceError;
       if (upgradeError) throw upgradeError;
       if (postsError) throw postsError;
       if (authError) throw authError;
+      if (workspaceError) throw workspaceError;
       if (!profile) return json({ success: false, error: "The selected ZakiChat profile could not be found." }, 404);
-      await audit(admin.userId, "customized_account_details_viewed", "user", userId, { account_mode: preference?.account_mode || "local" });
+      const workspaceIds = (workspaces || []).map(workspace => workspace.id);
+      let businessMembers: Record<string, unknown>[] = [];
+      if (workspaceIds.length) {
+        const { data: members, error: membersError } = await db.from("business_members")
+          .select("id, business_id, user_id, email, display_name, role, status, phone, created_at, updated_at")
+          .in("business_id", workspaceIds).order("created_at", { ascending: false }).limit(500);
+        if (membersError) throw membersError;
+        businessMembers = members || [];
+      }
+      await audit(admin.userId, "customized_account_details_viewed", "user", userId, {
+        account_mode: preference?.account_mode || "local",
+        business_workspace_count: (workspaces || []).length
+      });
       const activeUpgrades = (upgrades || []).filter(item => item.status === "active" && Date.parse(String(item.expires_at)) > Date.now());
       const accountMode = preference?.account_mode || "local";
       return json({ success: true, account: {
@@ -182,7 +196,9 @@ Deno.serve(async (req: Request) => {
         active_personal: activeUpgrades.some(item => item.plan === "personal_monthly"),
         active_business: activeUpgrades.some(item => item.plan === "business_monthly"),
         posts: posts || [],
-        business_workspace_note: "The current schema records Customized Business mode and its entitlement. A separate business profile/workspace content model is not present in the current account schema."
+        business_workspaces: workspaces || [],
+        business_members: businessMembers,
+        business_workspace_note: "Business workspace details and membership records are included when they exist for this account. This view does not expose private chats or message contents."
       } });
     }
     if (action === "admin-users-list") {
