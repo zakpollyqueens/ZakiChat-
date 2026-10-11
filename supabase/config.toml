@@ -27,3 +27,6 @@ verify_jwt = true
 
 [functions.web-search]
 verify_jwt = true
+
+[functions.pesapal-ipn]
+verify_jwt = false
