@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071426">
+<title>Customized Accounts · ZakiChat Admin</title>
+<link rel="stylesheet" href="../static/css/admin-center.css">
+<link rel="stylesheet" href="../static/css/admin-account-modes.css">
+</head>
+<body class="admin-account-modes-page">
+<header class="topbar">
+  <a class="brand" href="admin-control.html"><span class="brand-logo">Z</span><span><strong>ZakiChat</strong><small>ADMIN CONTROL CENTER</small></span></a>
+  <div class="top-actions"><a class="top-btn" href="admin-control.html">← <span>Dashboard</span></a><button class="top-btn" id="accountRefresh" type="button">↻ <span>Refresh</span></button></div>
+</header>
+<main class="account-admin-shell">
+  <section class="account-hero">
+    <div class="account-hero-icon">◈</div>
+    <div><span class="eyebrow">MY ACCOUNT · ADMIN VIEW</span><h1>Customized <em>Accounts</em></h1><p>Review Customized Personal and Customized Business profiles, account mode, paid access, and profile posts in one protected place.</p></div>
+    <div class="account-count"><strong id="accountCount">—</strong><span>customized accounts</span></div>
+  </section>
+  <div class="account-security-note"><span>🛡</span><p><strong>Protected inspection</strong><br>Only an active super-administrator session can load this information. This view does not expose private chats, messages, passwords, or authentication secrets.</p></div>
+  <section class="account-browser">
+    <div class="account-browser-head"><div><span class="eyebrow">ACCOUNT DIRECTORY</span><h2>Find an account</h2></div><span id="accountLoadStatus" role="status">Checking administrator session…</span></div>
+    <label class="account-search"><span>⌕</span><input id="accountSearch" type="search" placeholder="Search name, username, email, phone…" autocomplete="off"><button id="clearAccountSearch" type="button" hidden>×</button></label>
+    <div class="account-filters" role="group" aria-label="Filter customized accounts">
+      <button type="button" class="is-active" data-mode="all">All customized</button>
+      <button type="button" data-mode="personal">Personal</button>
+      <button type="button" data-mode="business">Business</button>
+    </div>
+    <div id="accountError" class="account-error" role="alert" hidden></div>
+    <div id="accountList" class="account-list"><div class="account-empty"><span class="account-loader"></span><p>Loading customized accounts…</p></div></div>
+  </section>
+  <section id="accountDetail" class="account-detail" hidden aria-live="polite">
+    <div class="detail-heading"><div><span class="eyebrow">ACCOUNT INSPECTOR</span><h2>Account overview</h2></div><button id="closeAccountDetail" class="detail-close" type="button">Close ×</button></div>
+    <div id="accountDetailContent"></div>
+  </section>
+  <footer class="account-admin-footer"><span>ZakiChat Admin · zc-vr15</span><span>Equipping minds with IT solutions.</span></footer>
+</main>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/admin-account-modes.js"></script>
+</body>
+</html>
