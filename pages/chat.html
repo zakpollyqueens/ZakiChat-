@@ -21,8 +21,8 @@
       <span class="tg-person-copy"><strong id="peer-name">New conversation</strong><small id="peer-status">ZakiChat · ready to connect</small></span>
     </button>
     <div class="tg-header-actions">
-      <button class="tg-icon-btn" type="button" data-action="call" aria-label="Voice call" title="Voice call">☎</button>
-      <button class="tg-icon-btn" type="button" data-action="video" aria-label="Video call" title="Video call">▣</button>
+      <button class="tg-icon-btn tg-call-action" type="button" data-action="call" aria-label="Voice call" title="Voice call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.8 9.2 3.2l2.1 5-2 1.6a15 15 0 0 0 4.9 4.9l1.6-2 5 2.1-.6 2.6a2 2 0 0 1-2 1.6A15.7 15.7 0 0 1 5 5.8a2 2 0 0 1 1.6-2Z"/></svg></button>
+      <button class="tg-icon-btn tg-video-action" type="button" data-action="video" aria-label="Video call" title="Video call"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3z"/></svg></button>
       <button class="tg-icon-btn" type="button" id="chat-menu-button" aria-label="More conversation options" title="More options">⋮</button>
     </div>
   </header>
@@ -35,7 +35,9 @@
     <button type="button" data-action="edit-group" data-group-only hidden>✎ <span>Edit group info</span></button>
     <button type="button" data-action="manage-members" data-group-only hidden>♙ <span>Manage group members</span></button>
     <button type="button" data-action="leave-group" data-group-only hidden>↩ <span>Leave group</span></button>
-    <button type="button" data-action="clear">⌫ <span>Clear preview messages</span></button>
+    <button type="button" data-action="wallpaper">▧ <span>Change chat wallpaper</span></button>
+    <button type="button" data-action="clear">⌫ <span>Clear history for me</span></button>
+    <button type="button" data-action="delete-chat" class="tg-menu-danger">× <span>Delete chat</span></button>
     <button type="button" data-action="info">ⓘ <span>Conversation details</span></button>
   </div>
 
@@ -59,11 +61,13 @@
     <div class="tg-composer-tools">
       <div class="tg-input-wrap">
         <button class="tg-composer-icon tg-emoji-button" id="emoji-button" type="button" aria-label="Emoji" title="Emoji">☺</button>
+        <button class="tg-composer-icon tg-keyboard-button" id="keyboard-toggle" type="button" aria-label="Use ZakiChat keyboard" title="ZakiChat keyboard" aria-pressed="false">⌨</button>
         <textarea id="message-input" rows="1" maxlength="10000" placeholder="Message" aria-label="Write a message" enterkeyhint="send"></textarea>
         <button class="tg-composer-icon tg-attach-inline" id="attach-button" type="button" aria-label="Attach a file" title="Attach">＋</button>
       </div>
       <button class="tg-send-button" id="send-button" type="submit" aria-label="Send message" title="Send">➤</button>
-      <button class="tg-send-button tg-mic-button" id="mic-button" type="button" aria-label="Record voice message" title="Voice message">🎙</button>
+      <button class="tg-send-button tg-mic-button" id="mic-button" type="button" aria-label="Record voice message" title="Voice message"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3m-4 0h8"/></svg></button>
+      <button class="tg-send-button tg-record-mode-button" id="record-mode-button" type="button" aria-label="Switch to video note" title="Switch voice/video note mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3z"/></svg></button>
     </div>
     <div class="tg-recording-bar" id="recording-bar" hidden>
       <button type="button" class="tg-record-cancel" id="record-cancel" aria-label="Cancel recording">×</button>
@@ -75,11 +79,22 @@
 
   <input id="file-input" type="file" hidden multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
   <div class="tg-attach-menu" id="attach-menu" hidden>
-    <button type="button" data-file-kind="media">▧ <span>Photos &amp; videos</span></button>
-    <button type="button" data-file-kind="document">▤ <span>Document</span></button>
-    <button type="button" data-file-kind="audio">♫ <span>Audio file</span></button>
+    <button type="button" data-file-kind="media">▧ <span>Gallery · photos &amp; videos</span></button>
+    <button type="button" data-file-kind="document">▤ <span>File / document</span></button>
+    <button type="button" data-file-kind="audio">♫ <span>Music / audio</span></button>
+    <button type="button" data-attach-action="location">⌖ <span>Location</span></button>
+    <button type="button" data-attach-action="contact">♙ <span>Contact</span></button>
+    <button type="button" data-attach-action="article">▤ <span>Article / link</span></button>
+    <button type="button" data-attach-action="checklist">☑ <span>Checklist</span></button>
+    <button type="button" data-attach-action="wallet">▣ <span>Wallet note</span></button>
   </div>
   <div class="tg-emoji-panel" id="emoji-panel" hidden aria-label="Emoji picker"></div>
+  <section class="zaki-custom-keyboard" id="zaki-custom-keyboard" hidden aria-label="ZakiChat custom keyboard">
+    <div class="zaki-keyboard-toolbar"><span><b>ZAKI</b> keyboard</span><button type="button" id="keyboard-layout-toggle">?123</button><button type="button" id="keyboard-globe" title="Keyboard options" aria-label="Keyboard options">🌐</button><button type="button" id="keyboard-hide" aria-label="Hide keyboard">⌄</button></div>
+    <div class="zaki-keyboard-keys" id="zaki-keyboard-keys"></div>
+    <div class="zaki-keyboard-bottom"><button type="button" data-kb-key="emoji">☺</button><button type="button" data-kb-key="comma">,</button><button type="button" data-kb-key="space" class="zaki-space-key">English · US</button><button type="button" data-kb-key="period">.</button><button type="button" data-kb-key="enter" class="zaki-enter-key">↵</button></div>
+    <div class="zaki-keyboard-options" id="zaki-keyboard-options" hidden><strong>Keyboard options</strong><p>ZakiChat keyboard is an in-chat keyboard. To switch to Gboard or another Android keyboard, use your phone’s system keyboard settings.</p><button type="button" id="keyboard-native-help">How to change phone keyboard</button></div>
+  </section>
   <aside class="tg-info-panel" id="chat-info-panel" hidden>
     <div class="tg-info-head"><strong>Conversation details</strong><button id="close-chat-info" type="button" aria-label="Close details">×</button></div>
     <span class="tg-avatar tg-info-avatar" id="info-avatar">Z</span><h2 id="info-name">New conversation</h2><p>Profile, shared information, and notification preferences.</p><div class="tg-info-note">Conversation details and notification preferences.</div>
