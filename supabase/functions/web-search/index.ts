@@ -15,7 +15,7 @@ function unwrap(raw: string) {
   try {
     const u=new URL(raw, "https://html.duckduckgo.com");
     const target=u.searchParams.get("uddg");
-    const url=target?decodeURIComponent(target):u.href;
+    const url=target||u.href;
     const parsed=new URL(url);
     if(!["http:","https:"].includes(parsed.protocol))return "";
     return parsed.href;
