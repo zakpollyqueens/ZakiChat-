@@ -339,39 +339,17 @@ body .zc-bottom-nav span{pointer-events:none}
 body.appearance-page,body.notifications-page,body.channels-page{padding-bottom:calc(var(--zc-nav-height) + 30px + env(safe-area-inset-bottom))!important}
 
 
-/* Chats-only five-item navigation with a small Updates shortcut above Profile. */
-body.tg-list-page .zc-chats-bottom-nav{
-  grid-template-columns:repeat(5,minmax(0,1fr))!important;
-  gap:3px!important;
-}
-body.tg-list-page .zc-chats-bottom-nav>a{
-  padding:5px 1px!important;font-size:10px!important;gap:3px!important;
-}
-body.tg-list-page .zc-chats-bottom-nav>a svg{
-  width:21px!important;height:21px!important;flex-basis:21px!important;
-}
-body.tg-list-page .chats-floating-updates{
-  position:fixed!important;z-index:199!important;
-  left:calc(50% + min(215px, (100vw - 24px)/2) - 52px)!important;
-  bottom:calc(9px + env(safe-area-inset-bottom) + 66px + 9px)!important;
-  transform:translateX(0)!important;
-  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
-  min-height:31px!important;padding:5px 9px!important;box-sizing:border-box!important;
-  border:1px solid rgba(56,220,255,.28)!important;border-radius:999px!important;
-  color:#c9f5ff!important;text-decoration:none!important;font-size:11px!important;font-weight:750!important;
-  background:linear-gradient(135deg,rgba(12,54,78,.96),rgba(8,27,48,.98))!important;
-  box-shadow:0 6px 18px rgba(0,0,0,.3),0 0 18px rgba(0,185,239,.1)!important;
-  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
-}
-body.tg-list-page .chats-floating-updates svg{
-  display:block!important;width:14px!important;height:14px!important;flex:0 0 14px!important;
-  fill:none!important;stroke:var(--zk-cyan)!important;stroke-width:1.8!important;
-  stroke-linecap:round!important;stroke-linejoin:round!important;
-}
-body.tg-list-page .chats-floating-updates:hover{border-color:rgba(56,220,255,.5)!important;box-shadow:0 8px 22px rgba(0,185,239,.16)!important}
-body.tg-list-page .chats-floating-updates:focus-visible{outline:2px solid var(--zk-cyan)!important;outline-offset:3px}
-@media(max-width:370px){
-  body.tg-list-page .zc-chats-bottom-nav>a{font-size:9px!important}
-  body.tg-list-page .zc-chats-bottom-nav>a svg{width:19px!important;height:19px!important;flex-basis:19px!important}
-  body.tg-list-page .chats-floating-updates{left:auto!important;right:17px!important;bottom:calc(9px + env(safe-area-inset-bottom) + 66px + 9px)!important}
-}
+/* Chats has its own four-item navigation and a floating create menu. */
+body.tg-list-page .zc-chats-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}
+body.tg-list-page .zc-chats-bottom-nav>a{padding:5px 2px!important;font-size:10px!important;gap:3px!important}
+body.tg-list-page .zc-chats-bottom-nav>a svg{width:21px!important;height:21px!important;flex-basis:21px!important}
+body.tg-list-page .chats-compose-wrap{position:fixed!important;z-index:220!important;right:18px!important;bottom:calc(78px + env(safe-area-inset-bottom))!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:10px!important}
+body.tg-list-page .chats-compose-fab{display:grid!important;place-items:center!important;width:56px!important;height:56px!important;padding:0!important;border:1px solid rgba(96,232,255,.55)!important;border-radius:50%!important;background:linear-gradient(145deg,#1bd4f5,#087eb9 62%,#123b78)!important;color:#fff!important;box-shadow:0 10px 28px rgba(0,0,0,.42),0 0 22px rgba(0,190,239,.24)!important;cursor:pointer!important}
+body.tg-list-page .chats-compose-fab svg{width:27px!important;height:27px!important;fill:none!important;stroke:currentColor!important;stroke-width:2.2!important;stroke-linecap:round!important}
+body.tg-list-page .chats-compose-fab:focus-visible{outline:2px solid var(--zk-cyan)!important;outline-offset:4px}
+body.tg-list-page .chats-compose-menu{display:flex;flex-direction:column;gap:4px;min-width:190px;padding:7px;border:1px solid rgba(70,206,245,.24);border-radius:17px;background:linear-gradient(155deg,rgba(13,35,57,.98),rgba(8,19,36,.99));box-shadow:0 14px 38px rgba(0,0,0,.48);backdrop-filter:blur(18px)}
+body.tg-list-page .chats-compose-menu[hidden]{display:none!important}
+body.tg-list-page .chats-compose-menu button{display:flex;align-items:center;gap:12px;width:100%;min-height:43px;padding:8px 12px;border:0;border-radius:11px;background:transparent;color:#eafaff;text-align:left;font-size:14px;font-weight:650;cursor:pointer}
+body.tg-list-page .chats-compose-menu button:active,body.tg-list-page .chats-compose-menu button:hover{background:rgba(30,194,237,.12)}
+body.tg-list-page .chats-compose-menu button span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:rgba(25,180,224,.13);color:#54e2ff;font-size:17px}
+@media(max-width:370px){body.tg-list-page .zc-chats-bottom-nav>a{font-size:9px!important}body.tg-list-page .zc-chats-bottom-nav>a svg{width:19px!important;height:19px!important;flex-basis:19px!important}body.tg-list-page .chats-compose-wrap{right:13px!important}}
