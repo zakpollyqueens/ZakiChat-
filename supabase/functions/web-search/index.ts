@@ -106,7 +106,7 @@ Deno.serve(async (req: Request) => {
  query=query.replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim();
  try {
   let results:any[]=[],provider="Bing";
-  if(type==="images"){results=await bingImages(query);if(!results.length){provider="Bing web fallback";results=await bingRss(query+" images")}}
+  if(type==="images"){results=await bingImages(query);provider="Bing Images";}
   else if(type==="videos"){results=await bingVideos(query)}
   else if(type==="documents"){results=await documentSearch(query)}
   else {
