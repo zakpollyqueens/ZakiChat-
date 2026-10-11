@@ -60,7 +60,6 @@ $("zplayDownloadUrl").addEventListener("click",async()=>{
  if(activeObjectUrl){$("zplayDownloadNote").textContent="This file is already on your device.";return}
  try{
   const url=new URL(activeUrl);
-  if(url.origin!==location.origin)throw new Error("For safety, browser downloads require a same-origin file or a source that explicitly supports cross-origin downloads. Open the source directly if it offers a download option.");
   const response=await fetch(url.href);if(!response.ok)throw new Error("The source did not provide a downloadable file.");
   const blob=await response.blob();const objectUrl=URL.createObjectURL(blob);const a=document.createElement("a");a.href=objectUrl;a.download=activeFileName||"media";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),30000);
   $("zplayDownloadNote").textContent="Download started.";
