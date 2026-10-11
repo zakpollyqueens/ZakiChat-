@@ -142,6 +142,7 @@
       if (!document.getElementById("terms").checked) { message(status, "Please agree to the Terms of Service and Privacy Policy.", "error"); return; }
       const button = event.currentTarget.querySelector('button[type="submit"]');
       loading(button, true, "Create Account");
+      let verificationSent = false;
       try {
         const cfg = window.ZakiChatConfig;
         const preflight = await fetch(PAYMENT_URL, {
@@ -177,12 +178,16 @@
           setTimeout(chats, 350);
           return;
         }
+        verificationSent = true;
         message(status, "Your account details have been submitted. We sent a verification link to " + state.email + ". Open that email and tap Verify My Account, then return to ZakiChat. Your account will open after verification.", "success");
-        event.currentTarget.querySelectorAll("input,button").forEach(el => { if (el.type !== "button") el.disabled = true; });
+        button.disabled = true;
+        button.textContent = "Verification Email Sent";
       } catch (e) {
         localStorage.removeItem(PENDING_REGISTRATION_KEY);
         message(status, e.message || "Unable to create your account. Please try again.", "error");
-      } finally { loading(button, false, "Create Account"); }
+      } finally {
+        if (!verificationSent) loading(button, false, "Create Account");
+      }
     });
     togglePassword("togglePassword", "password");
     togglePassword("toggleConfirmPassword", "confirmPassword");
