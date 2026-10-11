@@ -90,6 +90,7 @@
     root.style.setProperty("--zk-font",font[2]);
     root.style.setProperty("--zakichat-font-family",font[2]);
     root.style.setProperty("--zakichat-font-size",size+"px");
+    root.style.setProperty("font-size",size+"px","important");
     root.style.setProperty("color-scheme",s.theme==="light"?"light":"dark","important");
     if(document.body){
       document.body.style.setProperty("--zakichat-wallpaper",s.wallpaper?"url('"+s.wallpaper+"')":"none");
