@@ -46,3 +46,42 @@ body.tg-conversation-page .tg-call-card{border:1px solid rgba(105,204,239,.22)!i
 @keyframes tgIntroRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:560px){body.tg-conversation-page .tg-conversation-shell{width:100%;border:0}body.tg-conversation-page .tg-chat-header{min-height:66px;padding:8px 9px;gap:6px}body.tg-conversation-page .tg-icon-btn{flex-basis:35px;width:35px;height:35px;border-radius:12px}body.tg-conversation-page .tg-avatar-large{flex-basis:41px;width:41px;height:41px}body.tg-conversation-page .tg-header-actions{gap:3px}body.tg-conversation-page .tg-message-area{padding:14px 9px 18px}body.tg-conversation-page .tg-chat-intro{margin-top:5vh;padding:21px 16px}body.tg-conversation-page .tg-composer{padding:8px 8px calc(7px + env(safe-area-inset-bottom))}body.tg-conversation-page .tg-send-button{flex-basis:43px;width:43px;height:43px}body.tg-conversation-page .tg-input-wrap{border-radius:20px}}
 @media(prefers-reduced-motion:reduce){body.tg-conversation-page .tg-chat-intro{animation:none}}
+
+/* Updated conversation controls and the built-in ZakiChat in-chat keyboard. */
+body.tg-conversation-page .tg-header-actions .tg-icon-btn{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(92,203,245,.12);background:rgba(17,49,75,.72);color:#e9faff;transition:transform .16s,background .16s}
+body.tg-conversation-page .tg-header-actions .tg-icon-btn:active{transform:scale(.94)}
+body.tg-conversation-page .tg-header-actions .tg-call-action{color:#55e0c1}
+body.tg-conversation-page .tg-header-actions .tg-video-action{color:#61d7ff}
+body.tg-conversation-page .tg-header-actions svg,body.tg-conversation-page .tg-send-button svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.tg-conversation-page .tg-composer-tools{align-items:flex-end;gap:7px}
+body.tg-conversation-page .tg-input-wrap{min-width:0;gap:2px;border:1px solid rgba(129,195,224,.17);background:rgba(10,29,47,.96);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+body.tg-conversation-page .tg-composer-icon{flex:0 0 32px;width:32px;height:35px;border-radius:50%;color:#a7c6d8}
+body.tg-conversation-page .tg-composer-icon:active{background:rgba(56,190,235,.13)}
+body.tg-conversation-page #message-input{min-width:0;max-height:120px;padding:10px 3px}
+body.tg-conversation-page .tg-send-button{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border-radius:50%;border:0;background:linear-gradient(145deg,#38c9f1,#1599dc);color:#032036;box-shadow:0 5px 16px rgba(0,158,218,.2)}
+body.tg-conversation-page .tg-mic-button{background:linear-gradient(145deg,#26d9bd,#11a88f);color:#03261f}
+body.tg-conversation-page .tg-record-mode-button{flex-basis:36px;width:36px;height:36px;background:rgba(29,64,88,.9);color:#a8e9ff;border:1px solid rgba(98,213,247,.16);box-shadow:none}
+body.tg-conversation-page .tg-record-mode-button[aria-pressed=true]{background:linear-gradient(145deg,#ff7185,#e74c69);color:white}
+body.tg-conversation-page .tg-chat-menu button,body.tg-conversation-page .tg-attach-menu button{display:flex;align-items:center;gap:12px;width:100%;min-height:45px;padding:10px 14px;text-align:left}
+body.tg-conversation-page .tg-menu-danger{color:#ff899b!important}
+body.tg-conversation-page .tg-attach-menu{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-width:min(420px,calc(100vw - 22px));padding:8px}
+body.tg-conversation-page .tg-attach-menu[hidden],body.tg-conversation-page .zaki-custom-keyboard[hidden]{display:none!important}
+body.tg-conversation-page .zaki-custom-keyboard{flex:none;padding:8px 5px calc(8px + env(safe-area-inset-bottom));border-top:1px solid rgba(111,198,234,.18);background:linear-gradient(180deg,#172b3d,#0b1b2b);color:#eff9ff;box-shadow:0 -12px 32px rgba(0,0,0,.24);user-select:none}
+body.tg-conversation-page .zaki-keyboard-toolbar{display:flex;align-items:center;gap:9px;padding:0 5px 8px}
+body.tg-conversation-page .zaki-keyboard-toolbar span{flex:1;color:#b9d7e9;font-size:12px;letter-spacing:.04em}
+body.tg-conversation-page .zaki-keyboard-toolbar b{color:#46d5ff}
+body.tg-conversation-page .zaki-keyboard-toolbar button,body.tg-conversation-page .zaki-keyboard-bottom button,body.tg-conversation-page .zaki-keyboard-options button{min-height:33px;padding:5px 11px;border:1px solid rgba(162,204,228,.13);border-radius:9px;background:#20384d;color:#e8f8ff}
+body.tg-conversation-page .zaki-keyboard-keys{display:grid;gap:6px}
+body.tg-conversation-page .zaki-keyboard-row{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}
+body.tg-conversation-page .zaki-keyboard-row button{min-width:0;min-height:41px;padding:0 2px;border:0;border-radius:6px;background:linear-gradient(180deg,#36536a,#263e52);box-shadow:0 2px 0 #102335;color:#f5fbff;font-size:16px}
+body.tg-conversation-page .zaki-keyboard-row button:active,body.tg-conversation-page .zaki-keyboard-bottom button:active{background:#087fa8}
+body.tg-conversation-page .zaki-keyboard-row .zaki-wide-key{grid-column:span 2;background:#1b3448;color:#8edfff}
+body.tg-conversation-page .zaki-keyboard-bottom{display:grid;grid-template-columns:1fr 1fr 5fr 1fr 1.2fr;gap:5px;margin-top:8px}
+body.tg-conversation-page .zaki-keyboard-bottom button{min-width:0;min-height:40px;padding:0 3px;font-size:13px}
+body.tg-conversation-page .zaki-keyboard-bottom .zaki-space-key{color:#bdd6e6;font-size:11px}
+body.tg-conversation-page .zaki-keyboard-bottom .zaki-enter-key{background:#087fa8;color:white}
+body.tg-conversation-page .zaki-keyboard-options{margin:7px 3px 2px;padding:12px;border:1px solid rgba(95,205,242,.16);border-radius:12px;background:#091725}
+body.tg-conversation-page .zaki-keyboard-options p{font-size:12px;line-height:1.45;color:#a8c4d7}
+body.tg-conversation-page .tg-composer-hint{font-size:10px;opacity:.7}
+body.tg-conversation-page .tg-message-video{display:block;width:min(100%,280px);max-height:360px;border-radius:14px;object-fit:cover}
+@media(max-width:560px){body.tg-conversation-page .tg-header-actions .tg-icon-btn{flex-basis:36px;width:36px;height:36px}body.tg-conversation-page .tg-header-actions svg{width:19px;height:19px}body.tg-conversation-page .tg-composer-tools{gap:4px}body.tg-conversation-page .tg-composer-icon{flex-basis:28px;width:28px;height:30px}body.tg-conversation-page .tg-send-button{flex-basis:38px;width:38px;height:38px}body.tg-conversation-page .tg-record-mode-button{flex-basis:32px;width:32px;height:32px}body.tg-conversation-page .zaki-keyboard-row{gap:4px}body.tg-conversation-page .zaki-keyboard-row button{min-height:38px;font-size:15px}}
