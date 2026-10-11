@@ -34,6 +34,11 @@
     </header>
 
     <section class="telegram-profile-card" aria-label="Profile overview">
+      <div class="profile-cover" id="profileCover" role="img" aria-label="Profile cover photo">
+        <span class="profile-cover-label">Your cover photo</span>
+        <button type="button" class="profile-cover-button" id="coverPhotoButton">＋ Change cover</button>
+        <input type="file" id="coverPhotoInput" accept="image/*" hidden>
+      </div>
       <div class="profile-identity-panel">
         <div class="avatar-wrap">
           <div class="profile-avatar" id="profileAvatar" aria-label="Profile photo"><span id="avatarInitials">?</span></div>
@@ -84,7 +89,7 @@
   <div class="profile-zakiplay-copy"><span>YOUR ENTERTAINMENT SPACE</span><strong>ZakiPlay</strong><p>Music, videos, movie discovery and official YouTube, Spotify and TikTok destinations.</p></div>
   <a href="zakiplay.html" class="profile-zakiplay-open">Open <span aria-hidden="true">↗</span></a>
 </section>
-<button type="button" class="logout-button" id="logoutButton">Log out of ZakiChat</button>
+
   </main>
 
   <nav class="zc-bottom-nav" aria-label="Main navigation">
