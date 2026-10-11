@@ -33,7 +33,13 @@ Deno.serve(async (req) => {
     if (error || !data.user) return reply({ error: "Unable to sign in with those details. Check your email and password." }, 401);
     if (!data.user.email_confirmed_at) return reply({ error: "Verify your email address before signing in." }, 403);
 
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+    let serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+    if (!serviceKey) {
+      try {
+        const secrets = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}");
+        if (typeof secrets.default === "string") serviceKey = secrets.default;
+      } catch { /* handled below */ }
+    }
     if (!serviceKey) return reply({ error: "Secure sign-in server configuration is incomplete." }, 503);
     const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
     const { data: generated, error: linkError } = await admin.auth.admin.generateLink({
