@@ -7,6 +7,7 @@
   <title>My Profile | ZakiChat</title>
 
   <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
   <link rel="stylesheet" href="../static/css/profile.css">
   <link rel="stylesheet" href="../static/css/responsive.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
@@ -21,23 +22,13 @@
         <span>←</span>
       </a>
 
-      <div>
-        <span class="eyebrow">ZAKICHAT</span>
-        <h1>My Profile</h1>
-      </div>
+      <div class="profile-title-lockup"><img class="zc-brand-icon" src="../static/images/icon.jpg" alt="ZakiChat icon"><div><span class="eyebrow">ZAKICHAT</span><h1>My Profile</h1></div></div>
 
-      <button
-        type="button"
-        class="topbar-save"
-        id="saveTopButton"
-        hidden
-      >
-        Save
-      </button>
+      <div class="profile-top-actions"><button type="button" class="profile-icon-action" id="profileQrButton" aria-label="Show my QR code">▦</button><button type="button" class="profile-icon-action" id="profileMenuButton" aria-label="More profile options" aria-expanded="false">⋮</button><button type="button" class="topbar-save" id="saveTopButton" hidden>Save</button><div class="profile-menu" id="profileMenu" hidden><button type="button" data-profile-action="color">🎨 <span>Change Profile Color</span></button><button type="button" data-profile-action="username">＠ <span>Change Username</span></button><button type="button" data-profile-action="copy">↗ <span>Copy Link to Profile</span></button></div></div>
     </header>
 
 <section class="profile-card">
-
+      <div class="profile-cover" id="profileCover"><span class="profile-cover-label">YOUR SPACE, YOUR STYLE</span><button type="button" id="coverPhotoButton" class="cover-photo-button">＋ Set cover photo</button><input type="file" id="coverPhotoInput" accept="image/*" hidden></div>
       <div class="profile-hero">
 
         <div class="avatar-wrap">
@@ -78,6 +69,7 @@
         </div>
 
       </div>
+      <div class="profile-quick-actions"><button type="button" id="editInfoButton">✎ <span>Edit Info</span></button><button type="button" id="profileQrInlineButton">▦ <span>Share QR</span></button><button type="button" id="addPostJumpButton">＋ <span>Add a post</span></button></div>
 
       <div class="profile-divider"></div>
 
@@ -129,6 +121,10 @@
               autocomplete="tel"
               placeholder="+256..."
             >
+          </label>
+
+          <label class="profile-field">
+            <span>Birthday</span><input type="date" id="birthday" autocomplete="bday"><small>Your birthday is part of your profile information.</small>
           </label>
 
           <label class="profile-field">
@@ -191,6 +187,8 @@
 
     </section>
 
+    <section class="profile-posts-card" id="profilePostsSection"><div class="profile-posts-heading"><div><span class="section-label">YOUR MOMENTS</span><h2>Posts</h2><p>Share a thought with your ZakiChat circle.</p></div><button type="button" id="archivedPostsToggle" class="archive-toggle">Archived posts</button></div><form id="profilePostForm" class="profile-post-form"><label for="profilePostBody">What would you like to share?</label><textarea id="profilePostBody" maxlength="1000" rows="3" placeholder="Write a post…"></textarea><div class="post-form-footer"><small><span id="postCharCount">0</span>/1000</small><button type="submit" id="publishPostButton">＋ Publish post</button></div></form><div id="profilePostsList" class="profile-posts-list"><p class="profile-posts-empty">Loading your posts…</p></div></section>
+
     <section class="profile-info-card">
       <div class="info-icon">🔐</div>
 
@@ -225,6 +223,7 @@
   </a>
 </nav>
 
+  <dialog class="profile-qr-dialog" id="profileQrDialog"><div class="profile-modal-head"><div><span class="section-label">SCAN TO CONNECT</span><h2>Your ZakiChat QR</h2><p>Let someone scan this code to open your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileQrDialog" aria-label="Close">×</button></div><div id="profileQrCode" class="profile-qr-code"></div><p id="profileQrUsername" class="profile-qr-username"></p><button type="button" class="profile-modal-primary" id="shareProfileButton">Share profile link</button></dialog><dialog class="profile-color-dialog" id="profileColorDialog"><div class="profile-modal-head"><div><span class="section-label">MAKE IT YOURS</span><h2>Profile color</h2><p>Choose the accent that represents you.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileColorDialog" aria-label="Close">×</button></div><div class="profile-color-options"><button type="button" data-color="#20c9bd" aria-label="Turquoise" style="--swatch:#20c9bd"></button><button type="button" data-color="#36b8ff" aria-label="Sky blue" style="--swatch:#36b8ff"></button><button type="button" data-color="#8c7bff" aria-label="Violet" style="--swatch:#8c7bff"></button><button type="button" data-color="#ff78b5" aria-label="Pink" style="--swatch:#ff78b5"></button><button type="button" data-color="#ffb454" aria-label="Amber" style="--swatch:#ffb454"></button><button type="button" data-color="#64d98b" aria-label="Green" style="--swatch:#64d98b"></button></div><button type="button" class="profile-modal-primary" data-close-dialog="profileColorDialog">Done</button></dialog>
   <div
     class="toast"
     id="toast"
@@ -240,6 +239,8 @@
   <script src="../static/js/upgrade-celebration.js"></script>
   <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/profile.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="../static/js/profile-social.js"></script>
 
 </body>
 </html>
