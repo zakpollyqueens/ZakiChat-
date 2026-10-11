@@ -263,3 +263,73 @@ body :where(.toast){background:#102740!important;color:#f1f9ff!important;border:
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+
+/* =========================================================
+   ONE SHARED OPTION B BOTTOM NAVIGATION
+   Used by Chats, Contacts, Settings, Profile, Updates and Account.
+   Primary destinations intentionally remain Chats / Settings / Updates.
+   ========================================================= */
+:root{--zc-nav-height:72px}
+body .zc-bottom-nav{
+  position:fixed!important;z-index:200!important;
+  left:50%!important;right:auto!important;bottom:calc(9px + env(safe-area-inset-bottom))!important;
+  transform:translateX(-50%)!important;
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:5px!important;
+  box-sizing:border-box!important;
+  width:min(430px,calc(100% - 24px))!important;max-width:430px!important;
+  min-height:66px!important;height:66px!important;margin:0!important;
+  padding:6px!important;
+  border:1px solid rgba(82,210,247,.22)!important;border-radius:23px!important;
+  background:linear-gradient(125deg,rgba(7,20,37,.97),rgba(5,27,46,.97))!important;
+  box-shadow:0 14px 40px rgba(0,0,0,.42),0 0 30px rgba(0,185,239,.09),inset 0 1px rgba(255,255,255,.045)!important;
+  -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
+}
+body .zc-bottom-nav>a{
+  display:flex!important;position:relative!important;box-sizing:border-box!important;
+  min-width:0!important;min-height:52px!important;margin:0!important;padding:5px 3px!important;
+  flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;
+  border:1px solid transparent!important;border-radius:17px!important;
+  background:transparent!important;color:#91a9c0!important;
+  font-family:var(--zk-font)!important;font-size:11px!important;font-weight:650!important;
+  line-height:1.1!important;letter-spacing:.01em!important;text-decoration:none!important;
+  white-space:nowrap!important;box-shadow:none!important;
+}
+body .zc-bottom-nav>a svg{
+  display:block!important;flex:0 0 23px!important;width:23px!important;height:23px!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:1.75!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+body .zc-bottom-nav>a.is-current,body .zc-bottom-nav>a[aria-current=page]{
+  color:#56e3ff!important;
+  border-color:rgba(56,220,255,.17)!important;
+  background:linear-gradient(145deg,rgba(25,107,139,.42),rgba(7,60,87,.52))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 0 20px rgba(0,185,239,.08)!important;
+}
+body .zc-bottom-nav>a.is-current svg,body .zc-bottom-nav>a[aria-current=page] svg{
+  filter:drop-shadow(0 0 5px rgba(56,220,255,.3));stroke-width:2!important;
+}
+body .zc-bottom-nav>a:focus-visible{outline:2px solid var(--zk-cyan)!important;outline-offset:1px}
+body .zc-bottom-nav>a:active{transform:scale(.97)!important}
+body.tg-list-page .tg-shell{padding-bottom:calc(var(--zc-nav-height) + 30px + env(safe-area-inset-bottom))!important}
+body.tg-list-page .tg-list-content{padding-bottom:calc(var(--zc-nav-height) + 18px + env(safe-area-inset-bottom))!important}
+body.settings-page,body.profile-page,body.account-page,body.status-page,
+body.privacy-page,body.business-page,body.about-page,body.devices-page,
+body.storage-management-page,body.data-storage-page,body.two-step-page{
+  padding-bottom:calc(var(--zc-nav-height) + 30px + env(safe-area-inset-bottom))!important;
+}
+body.settings-page .settings-shell,body.profile-page .profile-shell,body.account-page .account-shell,
+body.status-page .status-shell,body.about-page .about-shell,body.business-page .business-shell{
+  padding-bottom:12px!important;
+}
+body .zc-bottom-nav span{pointer-events:none}
+@media(min-width:600px){
+ body .zc-bottom-nav{bottom:16px!important}
+}
+@media(max-width:370px){
+ body .zc-bottom-nav{width:calc(100% - 18px)!important;min-height:62px!important;height:62px!important;bottom:calc(6px + env(safe-area-inset-bottom))!important}
+ body .zc-bottom-nav>a{font-size:10.5px!important;gap:3px!important}
+ body .zc-bottom-nav>a svg{width:22px!important;height:22px!important;flex-basis:22px!important}
+}
+@media(prefers-reduced-motion:reduce){body .zc-bottom-nav,body .zc-bottom-nav>a{transition:none!important}}
