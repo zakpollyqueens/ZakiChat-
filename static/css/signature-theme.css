@@ -353,3 +353,25 @@ body.tg-list-page .chats-compose-menu button{display:flex;align-items:center;gap
 body.tg-list-page .chats-compose-menu button:active,body.tg-list-page .chats-compose-menu button:hover{background:rgba(30,194,237,.12)}
 body.tg-list-page .chats-compose-menu button span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:rgba(25,180,224,.13);color:#54e2ff;font-size:17px}
 @media(max-width:370px){body.tg-list-page .zc-chats-bottom-nav>a{font-size:9px!important}body.tg-list-page .zc-chats-bottom-nav>a svg{width:19px!important;height:19px!important;flex-basis:19px!important}body.tg-list-page .chats-compose-wrap{right:13px!important}}
+
+/* Account-selected themes override the fixed signature defaults while preserving layout. */
+html[data-zakichat-theme] :where(.settings-group,.settings-profile-card,.settings-item,.settings-profile-link,.settings-section,.settings-card,.profile-card,.profile-info-card,.account-card,.account-section,.devices-card,.storage-card,.business-panel,.business-list-card,.about-card,.status-item,.my-status-card,.call-item,.calls-summary-card,.channels-updates-card,.release-update-card,.channels-section,.channel-card,.channels-search,.keyboard-settings-card,.keyboard-preview-panel,.tg-chat-row,.tg-archive-row,.tg-filter:not(.is-active),.tg-search,.tg-composer,.tg-chat-header,.tg-info-panel,.tg-new-chat-dialog){
+  background:linear-gradient(145deg,var(--surface),var(--surface-2))!important;
+  color:var(--text)!important;
+  border-color:var(--line)!important;
+}
+html[data-zakichat-theme] :where(.settings-item-copy strong,.settings-profile-copy strong,.settings-title h1,.settings-group h2,.settings-group h3,.profile-card h2,.profile-card h3,.account-card h2,.account-card h3,.tg-chat-row strong,.tg-archive-copy strong,.channels-section-heading h2,.channel-card-name strong){
+  color:var(--text)!important;
+}
+html[data-zakichat-theme] :where(input,textarea,select,#message-input){
+  background:var(--surface)!important;
+  color:var(--text)!important;
+  border-color:var(--line)!important;
+}
+html[data-zakichat-theme] :where(button,.button,.settings-item,.tg-filter,.channels-icon-button){
+  border-color:var(--line);
+}
+html[data-zakichat-theme] :where(.tg-filter.is-active,.tg-primary-btn,.channels-primary-button,.channels-open-button){
+  background:linear-gradient(125deg,var(--primary),var(--primary-2))!important;
+}
+html[data-zakichat-theme] body{color:var(--text)!important}
