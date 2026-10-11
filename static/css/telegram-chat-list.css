@@ -95,3 +95,22 @@ body.tg-list-page .tg-chat-row-copy p{color:#91aabe!important;font-family:Roboto
 body.tg-list-page .tg-list-content,body.tg-list-page .tg-empty-state{background:#071426!important;color:#e8f7ff!important}
 body.tg-list-page .tg-chat-row .tg-avatar{box-shadow:0 0 0 1px rgba(92,218,255,.12)}
 body.tg-list-page .tg-chat-row:active{background:#102b43!important}
+
+/* Shared ZakiChat in-app keyboard for the chats search field. */
+body.tg-list-page .zaki-list-keyboard{position:fixed;z-index:50;right:0;bottom:0;left:0;padding:8px 5px calc(8px + env(safe-area-inset-bottom));border-top:1px solid rgba(111,198,234,.18);background:linear-gradient(180deg,#172b3d,#0b1b2b);color:#eff9ff;box-shadow:0 -12px 32px rgba(0,0,0,.24);user-select:none}
+body.tg-list-page .zaki-list-keyboard[hidden]{display:none!important}
+body.tg-list-page .zaki-keyboard-toolbar{display:flex;align-items:center;gap:9px;padding:0 5px 8px}
+body.tg-list-page .zaki-keyboard-toolbar span{flex:1;color:#b9d7e9;font-size:12px}
+body.tg-list-page .zaki-keyboard-toolbar b{color:#46d5ff}
+body.tg-list-page .zaki-keyboard-toolbar button,body.tg-list-page .zaki-keyboard-bottom button,body.tg-list-page .zaki-keyboard-options button{min-height:33px;padding:5px 11px;border:1px solid rgba(162,204,228,.13);border-radius:9px;background:#20384d;color:#e8f8ff}
+body.tg-list-page .zaki-keyboard-keys{display:grid;gap:6px}
+body.tg-list-page .zaki-keyboard-row{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}
+body.tg-list-page .zaki-keyboard-row button{min-width:0;min-height:39px;padding:0 2px;border:0;border-radius:6px;background:linear-gradient(180deg,#36536a,#263e52);box-shadow:0 2px 0 #102335;color:#f5fbff;font-size:16px}
+body.tg-list-page .zaki-keyboard-row .zaki-wide-key{grid-column:span 2}
+body.tg-list-page .zaki-keyboard-bottom{display:grid;grid-template-columns:1fr 5fr 1fr 1.6fr;gap:5px;margin-top:8px}
+body.tg-list-page .zaki-keyboard-bottom button{min-width:0;min-height:40px}
+body.tg-list-page .zaki-keyboard-bottom .zaki-space-key{font-size:11px}
+body.tg-list-page .zaki-keyboard-bottom .zaki-enter-key{background:#087fa8;color:white}
+body.tg-list-page .zaki-keyboard-options{padding:12px;background:#091725;border-radius:12px}
+body.tg-list-page .zaki-keyboard-options p{font-size:12px;line-height:1.45;color:#a8c4d7}
+body.tg-list-page #keyboard-toggle{flex:0 0 30px;width:30px;padding:0;border:0;background:transparent;color:#a8c4d7}
