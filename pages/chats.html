@@ -13,15 +13,12 @@
 <body class="tg-app tg-list-page">
 <main class="tg-shell">
   <header class="tg-list-header">
-    <div class="tg-brand-row"><h1 class="tg-wordmark">ZakiChat</h1><div class="tg-header-actions tg-list-actions">
+    <div class="tg-brand-row"><a class="zaki-glass-brand" href="chats.html" aria-label="ZakiChat home"><span class="zaki-app-icon" aria-hidden="true"><span>ZAK</span></span></a><div class="tg-header-actions tg-list-actions">
       <button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search chats" title="Search" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
-      <button class="tg-icon-btn" id="app-lock-button" data-zaki-app-lock type="button" aria-label="Lock ZakiChat" title="Lock app"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10" width="15" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg></button>
-      <button class="tg-icon-btn" id="top-menu-toggle" type="button" aria-label="More options" title="More options" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></button>
     </div></div>
-    <label class="tg-search" id="top-search-box"><span aria-hidden="true">⌕</span><input id="chat-search" type="search" placeholder="Search" autocomplete="off"><button id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label>
+    <label class="tg-search" id="top-search-box"><span aria-hidden="true">⌕</span><input id="chat-search" type="search" placeholder="Search the web, chats, groups and channels" autocomplete="off" enterkeyhint="search"><button id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label>
     <div class="tg-filter-row" role="group" aria-label="Chat filters"><button class="tg-filter is-active" data-filter="all" type="button">All chats</button><button class="tg-filter" data-filter="personal" type="button">Personal</button><button class="tg-filter" data-filter="groups" type="button">Groups</button><button class="tg-filter" data-filter="channels" type="button">Channels</button></div>
     <div class="tg-backend-status" id="supabase-connection-status" role="status" aria-live="polite">Connecting to ZakiChat services…</div>
-    <div class="tg-top-menu" id="top-menu" hidden><a href="contacts.html">Contacts</a><a href="profile.html">My Profile</a><a href="settings.html">Settings</a><a href="channels.html">Channels</a><button id="top-menu-lock" type="button">Lock app</button></div>
   </header>
 
   <section class="tg-list-content" aria-label="Conversation list">
@@ -81,6 +78,18 @@
   else if(action==="group"){const d=document.getElementById("new-chat-dialog");if(d?.showModal){d.showModal();setTimeout(()=>document.getElementById("new-group-create")?.click(),0)}}
   else if(action==="channel"){location.href="channels.html"}
   else if(action==="community"){const t=document.getElementById("tg-toast");if(t){t.textContent="Community creation is not available yet. You can create a group now.";t.classList.add("is-visible");setTimeout(()=>t.classList.remove("is-visible"),2800)}}
+ });
+})();
+
+(function(){
+ const input=document.getElementById("chat-search");
+ if(!input)return;
+ input.addEventListener("keydown",event=>{
+  if(event.key!=="Enter")return;
+  event.preventDefault();
+  const query=input.value.trim();
+  if(query.length<2){input.focus();return}
+  location.href="search.html?q="+encodeURIComponent(query);
  });
 })();
 </script>
