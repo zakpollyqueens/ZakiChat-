@@ -78,3 +78,20 @@ body.tg-list-page #top-search-box input::placeholder{color:#7996ad}
 @keyframes zakiIconFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-1.5px) rotate(-1deg)}}
 @keyframes zakiIconShine{0%,65%,100%{transform:translateX(-75%)}78%{transform:translateX(75%)}}
 @media(prefers-reduced-motion:reduce){body.tg-list-page .zaki-app-icon,body.tg-list-page .zaki-app-icon:after{animation:none}}
+
+
+/* Premium Telegram-inspired search and brand refinements */
+:root{--zcl-bg:#071426;--zcl-panel:#0d2037;--zcl-peach:#e8f7ff;--zcl-muted:#91aabe;--zcl-badge:#18bde9}
+body.tg-list-page .tg-list-header{padding:calc(12px + env(safe-area-inset-top)) 14px 10px!important;background:linear-gradient(180deg,#0b2037,#071426)!important}
+body.tg-list-page .tg-brand-row{min-height:40px;margin-bottom:9px!important}
+body.tg-list-page .tg-brand-row .tg-list-actions{display:none!important}
+body.tg-list-page #top-search-box{display:flex!important;align-items:center;gap:10px;height:48px;margin:8px 0 0;padding:0 15px;border:1px solid rgba(80,218,255,.24);border-radius:16px;background:linear-gradient(120deg,rgba(16,47,72,.98),rgba(9,28,48,.98));box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 5px 18px rgba(0,0,0,.12)}
+body.tg-list-page #top-search-box>span{display:grid;place-items:center;flex:none;width:23px;height:23px;color:#6bdfff;font-size:23px;line-height:1}
+body.tg-list-page #top-search-box input{width:100%;height:100%;padding:0!important;border:0!important;outline:0!important;background:transparent!important;color:#e8f7ff!important;font-size:14px!important;font-family:Roboto,Arial,sans-serif}
+body.tg-list-page #top-search-box input::placeholder{color:#8caec5!important;opacity:1}
+body.tg-list-page #top-search-box #clear-search{flex:none;border:0;background:transparent;color:#9dddf2;font-size:22px}
+body.tg-list-page .tg-chat-row-copy strong{color:#e8f7ff!important}
+body.tg-list-page .tg-chat-row-copy p{color:#91aabe!important;font-family:Roboto,Arial,sans-serif!important}
+body.tg-list-page .tg-list-content,body.tg-list-page .tg-empty-state{background:#071426!important;color:#e8f7ff!important}
+body.tg-list-page .tg-chat-row .tg-avatar{box-shadow:0 0 0 1px rgba(92,218,255,.12)}
+body.tg-list-page .tg-chat-row:active{background:#102b43!important}
