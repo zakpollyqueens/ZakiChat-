@@ -168,6 +168,9 @@
           }
         });
         if (error) throw error;
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+          throw new Error("An account already exists for this email. Sign in or use Reset password by email.");
+        }
         if (data.session && data.user?.email_confirmed_at) {
           await window.ZakiChatAccounts?.registerCurrentSession(client, { email: state.email, displayName: state.fullName, phone: state.phone });
           message(status, "Your account is verified. Opening ZakiChat…", "success");
