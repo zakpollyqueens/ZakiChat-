@@ -21,7 +21,7 @@ function renderResults(data,query){
    const a=document.createElement("a");a.className="zws-media-card";a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";
    if(item.thumbnail&&/^https?:\/\//i.test(item.thumbnail)){const img=document.createElement("img");img.src=item.thumbnail;img.alt=safeText(item.title);img.loading="lazy";img.referrerPolicy="no-referrer";img.onerror=()=>{img.style.display="none"};a.append(img)}
    else {const icon=document.createElement("div");icon.className="zws-document-icon";icon.textContent=scope==="videos"?"▶":"▧";a.append(icon)}
-   const copy=document.createElement("div");copy.className="zws-media-copy";const title=document.createElement("strong");title.textContent=safeText(item.title)||host(item.url);const domain=document.createElement("small");domain.textContent=host(item.url);copy.append(title,domain);a.append(copy);
+   const copy=document.createElement("div");copy.className="zws-media-copy";const title=document.createElement("strong");title.textContent=safeText(item.title)||host(item.url);const domain=document.createElement("small");domain.textContent=host(item.url);copy.append(title,domain);a.append(copy);if(scope==="images"&&item.mediaUrl&&/^https?:\\/\\//i.test(item.mediaUrl)){const actions=document.createElement("div");actions.className="zws-result-actions";actions.style.padding="0 10px 10px";const mediaLink=link(item.mediaUrl,"Open image ↗");mediaLink.addEventListener("click",e=>e.stopPropagation());const downloadLink=link(item.mediaUrl,"Download image ↧",true);downloadLink.addEventListener("click",e=>e.stopPropagation());actions.append(mediaLink,downloadLink);a.append(actions)}
    if(scope==="videos"&&item.snippet){const p=document.createElement("p");p.textContent=safeText(item.snippet);p.style.cssText="padding:0 10px 10px;margin:0;color:#91aabe;font-size:11px;line-height:1.4";a.append(p)}
    grid.append(a)
   }root.append(grid);return
@@ -44,7 +44,7 @@ async function runSearch(){
  const seq=++sequence;let sentQuery=query;
  if(scope==="telegram")sentQuery+=" site:t.me";
  else if(scope==="whatsapp")sentQuery+=" site:chat.whatsapp.com";
- else if(scope==="documents")sentQuery+=" filetype:pdf OR filetype:doc OR filetype:docx OR filetype:ppt OR filetype:pptx";
+ 
  history.replaceState(null,"","search.html?q="+encodeURIComponent(query)+(scope!=="web"?"&scope="+scope:""));
  renderMessage("Searching…",({images:"Finding image previews from public websites.",videos:"Finding public video pages.",documents:"Looking for public PDFs and study documents."}[scope]||"Looking across public web pages with strict safe-search filtering."));
  try{
