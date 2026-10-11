@@ -164,3 +164,15 @@ body.tg-conversation-page .tg-chat-menu,body.tg-conversation-page .tg-attach-men
  body.tg-conversation-page .tg-send-button{flex-basis:39px;width:39px;height:39px}
  body.tg-conversation-page .tg-composer-icon{flex-basis:27px;width:27px;height:31px}
 }
+
+
+/* Final composer interaction fixes: honor hidden state and keep the composer close to Gboard. */
+body.tg-conversation-page [hidden]{display:none!important}
+body.tg-conversation-page .tg-composer-tools{align-items:center;gap:5px}
+body.tg-conversation-page .tg-composer-icon{display:grid;place-items:center;flex:0 0 32px;width:32px;height:36px;cursor:pointer;touch-action:manipulation}
+body.tg-conversation-page .tg-composer-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+body.tg-conversation-page .tg-attach-inline{color:#9dc7da}
+body.tg-conversation-page #send-button[aria-busy=true]{opacity:.72;transform:scale(.96)}
+body.tg-conversation-page .tg-send-button,body.tg-conversation-page .tg-composer-icon{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body.tg-conversation-page .tg-composer{padding-bottom:calc(3px + env(safe-area-inset-bottom))}
+@media(max-width:560px){body.tg-conversation-page .tg-composer{padding-bottom:calc(2px + env(safe-area-inset-bottom))}body.tg-conversation-page .tg-composer-icon{flex-basis:30px;width:30px;height:34px}}
