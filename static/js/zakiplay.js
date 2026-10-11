@@ -3,8 +3,8 @@
 const $=id=>document.getElementById(id);
 const gate=$("zplayGate"),content=$("zplayContent"),locked=$("zplayLocked");
 let activeUrl="",activeFileName="",activeObjectUrl="";
-function showLocked(){gate.hidden=true;content.hidden=true;locked.hidden=false}
-function showContent(){gate.hidden=true;locked.hidden=true;content.hidden=false}
+function showLocked(){gate.hidden=true;content.hidden=true;if(locked)locked.hidden=false}
+function showContent(){gate.hidden=true;if(locked)locked.hidden=true;content.hidden=false}
 async function checkAccess(){
  try{
   const client=window.ZakiChatAuth&&window.ZakiChatAuth.client;
