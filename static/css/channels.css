@@ -904,3 +904,12 @@ body.channels-page .channel-view[hidden],body.channels-page .channel-list[hidden
  body.channels-page .channel-card .channels-secondary-button{min-height:40px;padding:0 11px;font-size:12px}
  body.channels-page .channel-card-description{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 }
+
+
+/* Channels sidebar: show only the brand and the compact Channels descriptor. */
+body.channels-page .channels-sidebar-card .channels-back-link{display:none!important}
+body.channels-page #channels-more-button,
+body.channels-page .top-actions .icon-button,
+body.channels-page .top-actions .top-more-wrapper{display:none!important}
+body.channels-page .channels-sidebar-card{padding-top:14px}
+body.channels-page .channels-sidebar-title{margin-top:0}
