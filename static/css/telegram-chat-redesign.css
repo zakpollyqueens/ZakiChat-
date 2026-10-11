@@ -85,3 +85,9 @@ body.tg-conversation-page .zaki-keyboard-options p{font-size:12px;line-height:1.
 body.tg-conversation-page .tg-composer-hint{font-size:10px;opacity:.7}
 body.tg-conversation-page .tg-message-video{display:block;width:min(100%,280px);max-height:360px;border-radius:14px;object-fit:cover}
 @media(max-width:560px){body.tg-conversation-page .tg-header-actions .tg-icon-btn{flex-basis:36px;width:36px;height:36px}body.tg-conversation-page .tg-header-actions svg{width:19px;height:19px}body.tg-conversation-page .tg-composer-tools{gap:4px}body.tg-conversation-page .tg-composer-icon{flex-basis:28px;width:28px;height:30px}body.tg-conversation-page .tg-send-button{flex-basis:38px;width:38px;height:38px}body.tg-conversation-page .tg-record-mode-button{flex-basis:32px;width:32px;height:32px}body.tg-conversation-page .zaki-keyboard-row{gap:4px}body.tg-conversation-page .zaki-keyboard-row button{min-height:38px;font-size:15px}}
+
+body.tg-conversation-page .tg-read-receipt{display:inline-block;margin-left:1px;color:#91aabd;font-size:12px;font-weight:800;letter-spacing:-2px}
+body.tg-conversation-page .tg-read-receipt{color:#8ba6ba}
+body.tg-conversation-page .tg-read-receipt:not(:empty){transition:color .2s}
+body.tg-conversation-page .tg-message.outgoing .tg-read-receipt{color:#82b7d5}
+body.tg-conversation-page .tg-message.outgoing .tg-read-receipt[data-read="true"]{color:#36c8f5}
