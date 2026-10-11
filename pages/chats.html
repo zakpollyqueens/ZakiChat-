@@ -49,6 +49,26 @@ body.tg-list-page .tg-zakiplay-launch .zplay-lock-badge[hidden]{display:none}
 @keyframes inspirationSheen{0%,75%,100%{transform:translateX(-45%)}88%{transform:translateX(45%)}}
 @media(max-width:390px){body.tg-list-page .tg-brand-row{gap:6px!important}body.tg-list-page .zaki-glass-brand{flex-basis:40px!important;width:40px!important;height:40px!important}body.tg-list-page .zaki-app-icon{width:36px!important;height:36px!important}body.tg-list-page .daily-inspiration{height:50px;padding:6px 7px;gap:6px;border-radius:13px}body.tg-list-page .inspiration-sparkle{width:24px;height:24px;font-size:13px}body.tg-list-page .inspiration-kicker{font-size:7px}body.tg-list-page .inspiration-quote{font-size:11px}body.tg-list-page .inspiration-index{display:none}body.tg-list-page .tg-list-actions .tg-zakiplay-launch{width:24px;min-width:24px}body.tg-list-page .tg-list-actions .tg-icon-btn{width:23px;min-width:23px}}
 @media(prefers-reduced-motion:reduce){body.tg-list-page .daily-inspiration:after{animation:none}body.tg-list-page .inspiration-quote{animation:none!important}}
+
+/* Visible ZakiPlay entry point: entertainment hub for music, movies and TikTok discovery. */
+body.tg-list-page .zplay-home-card{position:relative;isolation:isolate;display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:14px;margin:0 0 16px;padding:15px 16px;border:1px solid rgba(83,227,255,.25);border-radius:21px;overflow:hidden;background:radial-gradient(circle at 5% 10%,rgba(21,193,239,.2),transparent 45%),linear-gradient(115deg,rgba(11,38,63,.98),rgba(7,20,38,.98) 65%,rgba(24,38,76,.98));box-shadow:0 12px 32px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.07);animation:zplayHomeEnter .6s cubic-bezier(.2,.8,.2,1) both}
+body.tg-list-page .zplay-home-card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.035) 48%,transparent 72%);transform:translateX(-100%);animation:zplayHomeSheen 8s ease-in-out infinite}
+body.tg-list-page .zplay-home-art{position:relative;display:grid;place-items:center;width:62px;height:62px;border:1px solid rgba(128,236,255,.35);border-radius:19px;background:linear-gradient(145deg,#1bc6ec,#1775d7 62%,#565ee8);box-shadow:0 8px 24px rgba(0,164,235,.22);overflow:hidden}
+body.tg-list-page .zplay-home-play{display:grid;place-items:center;width:34px;height:34px;padding-left:3px;border:1px solid #ffffff72;border-radius:50%;background:#06182c88;color:#fff;font-size:14px;backdrop-filter:blur(8px)}
+body.tg-list-page .zplay-orbit{position:absolute;width:76px;height:24px;border:1px solid #ffffff3d;border-radius:50%;transform:rotate(-35deg)}
+body.tg-list-page .zplay-orbit-one{top:5px;left:-26px}.zplay-orbit-two{right:-29px;bottom:4px;transform:rotate(35deg)}
+body.tg-list-page .zplay-home-copy{min-width:0}
+body.tg-list-page .zplay-home-kicker{display:block;margin-bottom:4px;color:#71eaff;font-size:8px;font-weight:900;letter-spacing:.16em}
+body.tg-list-page .zplay-home-copy h2{margin:0;color:#f4fbff;font-size:18px;font-weight:850;letter-spacing:-.04em}
+body.tg-list-page .zplay-home-copy p{margin:4px 0 8px;color:#a6c1d6;font-size:11px;line-height:1.4}
+body.tg-list-page .zplay-home-tags{display:flex;flex-wrap:wrap;gap:5px}
+body.tg-list-page .zplay-home-tags span{padding:4px 7px;border:1px solid rgba(101,217,248,.18);border-radius:8px;background:#ffffff08;color:#d4f5ff;font-size:9px;font-weight:750}
+body.tg-list-page .zplay-home-open{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;padding:10px 12px;border:1px solid rgba(182,248,255,.38);border-radius:12px;background:linear-gradient(120deg,#61e8ff,#1bb7e8);color:#041725;text-decoration:none;font-size:11px;font-weight:900;box-shadow:0 6px 18px rgba(0,185,239,.15);transition:transform .2s,filter .2s}
+body.tg-list-page .zplay-home-open:hover{transform:translateY(-2px);filter:brightness(1.08)}
+@keyframes zplayHomeEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes zplayHomeSheen{0%,72%,100%{transform:translateX(-100%)}88%{transform:translateX(100%)}}
+@media(max-width:390px){body.tg-list-page .zplay-home-card{grid-template-columns:48px minmax(0,1fr);gap:10px;padding:12px;border-radius:17px}body.tg-list-page .zplay-home-art{width:47px;height:47px;border-radius:15px}body.tg-list-page .zplay-home-copy h2{font-size:16px}body.tg-list-page .zplay-home-copy p{font-size:10px}body.tg-list-page .zplay-home-open{grid-column:1/-1;justify-content:center;padding:9px}.zplay-home-tags span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){body.tg-list-page .zplay-home-card,body.tg-list-page .zplay-home-card:after{animation:none}}
 </style>
 </head>
 <body class="tg-app tg-list-page">
@@ -61,6 +81,14 @@ body.tg-list-page .tg-zakiplay-launch .zplay-lock-badge[hidden]{display:none}
     <div class="tg-filter-row" role="group" aria-label="Chat filters"><button class="tg-filter is-active" data-filter="all" type="button">All chats</button><button class="tg-filter" data-filter="personal" type="button">Personal</button><button class="tg-filter" data-filter="groups" type="button">Groups</button><button class="tg-filter" data-filter="channels" type="button">Channels</button></div>
     <div class="tg-backend-status" id="supabase-connection-status" role="status" aria-live="polite">Connecting to ZakiChat services…</div>
   </header>
+
+  <section class="zplay-home-card" aria-labelledby="zplay-home-title">
+    <div class="zplay-home-art" aria-hidden="true"><span class="zplay-orbit zplay-orbit-one"></span><span class="zplay-orbit zplay-orbit-two"></span><span class="zplay-home-play">▶</span></div>
+    <div class="zplay-home-copy"><span class="zplay-home-kicker">YOUR ENTERTAINMENT SPACE</span><h2 id="zplay-home-title">ZakiPlay</h2><p>Music, movies, videos and TikTok discovery — all in one place.</p>
+      <div class="zplay-home-tags"><span>♫ Music</span><span>▣ Movies</span><span>♪ TikTok</span></div>
+    </div>
+    <a class="zplay-home-open" href="zakiplay.html" aria-label="Open ZakiPlay entertainment hub">Explore <span aria-hidden="true">↗</span></a>
+  </section>
 
   <section class="tg-list-content" aria-label="Conversation list">
     <a class="tg-archive-row" href="#archived" id="archive-toggle">
