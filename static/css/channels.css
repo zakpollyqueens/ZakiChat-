@@ -834,3 +834,44 @@
     border-radius: 15px;
   }
 }
+
+/* Refined channel discovery surface — ZakiChat cyan/navy system */
+body.channels-page{background:radial-gradient(ellipse at 82% 0%,rgba(0,185,239,.13),transparent 34%),linear-gradient(150deg,#050b17,#071528 58%,#081d30)!important}
+.channels-main{padding:clamp(16px,3vw,34px)}
+.channels-header,.channels-search-section,.channels-section{max-width:980px}
+.channels-header{align-items:center;padding:clamp(18px,3vw,28px);margin-bottom:18px;border:1px solid rgba(87,210,255,.18);border-radius:24px;background:linear-gradient(125deg,rgba(11,34,56,.97),rgba(8,22,40,.96));box-shadow:0 20px 55px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.045)}
+.channels-eyebrow{color:#52dcff;opacity:1;letter-spacing:.18em}
+.channels-header h1{font-size:clamp(1.65rem,3vw,2.25rem);letter-spacing:-.045em;color:#f2faff}
+.channels-header p{color:#9db9d0;opacity:1}
+.channels-primary-button{min-height:44px;padding:0 17px;border:1px solid rgba(183,246,255,.35);border-radius:14px;background:linear-gradient(120deg,#5ce5ff,#10bce9 60%,#078dd2);box-shadow:0 8px 25px rgba(0,185,239,.18);color:#031521}
+.channels-icon-button{border-color:rgba(100,205,241,.2);background:rgba(255,255,255,.035);color:#d9f5ff}
+.channels-search-section{margin-bottom:26px}
+.channels-search{height:52px;padding:0 16px;border-color:rgba(100,205,241,.2);border-radius:16px;background:rgba(8,26,45,.9);box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 25px rgba(0,0,0,.12)}
+.channels-search>span{color:#58dfff;opacity:1}
+.channels-search input{color:#f3f9ff!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.channels-section{padding:clamp(15px,2.2vw,22px);margin-bottom:22px;border:1px solid rgba(100,205,241,.13);border-radius:22px;background:linear-gradient(145deg,rgba(10,29,49,.78),rgba(5,17,31,.84));box-shadow:0 16px 42px rgba(0,0,0,.13)}
+.channels-section-heading{align-items:center;margin-bottom:16px}
+.channels-section-heading h2{font-size:1.15rem;color:#eff9ff;letter-spacing:-.025em}
+.channels-section-heading p{color:#91abc1;opacity:1}
+.channel-list{gap:11px}
+.channel-card{position:relative;min-height:82px;gap:15px;padding:14px 16px;border:1px solid rgba(110,201,236,.13);border-radius:18px;background:linear-gradient(120deg,rgba(16,43,67,.84),rgba(8,25,44,.94));box-shadow:inset 0 1px rgba(255,255,255,.025);transition:transform .2s,border-color .2s,box-shadow .2s,background .2s}
+.channel-card:hover{transform:translateY(-2px);border-color:rgba(56,220,255,.4);background:linear-gradient(120deg,rgba(19,57,83,.96),rgba(8,29,49,.98));box-shadow:0 12px 26px rgba(0,0,0,.2),0 0 0 1px rgba(56,220,255,.04)}
+.channel-avatar{width:54px;height:54px;flex-basis:54px;border-radius:17px;border:1px solid rgba(190,245,255,.22);background:linear-gradient(135deg,#0aa8d5,#3979e8 62%,#7868e8);box-shadow:0 7px 20px rgba(0,145,220,.18)}
+.channel-card-name strong{color:#f1f8ff;font-size:.98rem}
+.channel-card-description,.channel-card-meta,.channel-card-stats,.channel-handle{color:#9db6cc}
+.channels-secondary-button{border-color:rgba(87,210,255,.25);border-radius:12px;color:#dff8ff;background:rgba(56,220,255,.055)}
+.channels-secondary-button.following{color:#8ef0d0;border-color:rgba(39,211,162,.38);background:rgba(39,211,162,.1)}
+.channels-empty,.channels-loading{padding:30px 18px;border:1px dashed rgba(100,205,241,.2);border-radius:18px;background:rgba(8,25,43,.48);color:#9db6cc;text-align:center}
+.channels-empty-icon{display:grid;place-items:center;width:54px;height:54px;margin:0 auto 12px;border-radius:17px;background:rgba(56,220,255,.1);color:#52dcff;font-size:1.35rem}
+.channels-empty strong{display:block;margin-bottom:6px;color:#eff9ff;font-size:1rem}
+.channels-empty span{display:block;max-width:340px;margin:0 auto;line-height:1.55}
+.channel-view{border:1px solid rgba(87,210,255,.18);border-radius:22px;background:linear-gradient(145deg,rgba(11,34,56,.98),rgba(5,18,33,.99));box-shadow:0 22px 55px rgba(0,0,0,.28)}
+@media(max-width:640px){
+ .channels-main{padding:13px 11px 94px}
+ .channels-header{align-items:stretch;flex-direction:column;gap:16px;padding:18px;border-radius:20px}
+ .channels-header-actions{justify-content:space-between}
+ .channels-primary-button{flex:1}
+ .channels-section{padding:14px 11px;border-radius:18px}
+ .channel-card{gap:11px;padding:12px 10px;border-radius:15px}
+ .channel-avatar{width:47px;height:47px;flex-basis:47px;border-radius:15px}
+}
