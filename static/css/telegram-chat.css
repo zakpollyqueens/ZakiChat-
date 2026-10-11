@@ -87,3 +87,14 @@ a{color:inherit;text-decoration:none}
   .tg-avatar{width:48px;height:48px}
   .tg-header-actions .tg-icon-btn{width:32px;min-width:32px;font-size:17px}
 }
+
+
+/* Circular Updates indicator with an unread-state ring. */
+.tg-brand-row{gap:12px}
+.tg-updates-indicator{position:relative;display:grid;place-items:center;flex:none;width:42px;height:42px;margin-left:auto;border-radius:50%;color:#8ba4b2;text-decoration:none;background:#202c33;border:2px solid #2d424b}
+.tg-updates-indicator-ring{display:grid;place-items:center;width:31px;height:31px;border:2px solid #5d7884;border-radius:50%;font-size:20px;line-height:1;color:#a9c0c9}
+.tg-updates-indicator.has-unread{border-color:#20a884;box-shadow:0 0 0 2px #20a88422}
+.tg-updates-indicator.has-unread .tg-updates-indicator-ring{border-color:#20a884;color:#52d8af}
+.tg-updates-badge{position:absolute;right:-4px;top:-5px;min-width:18px;height:18px;padding:0 4px;display:grid;place-items:center;border:2px solid #111d25;border-radius:12px;background:#20a884;color:#062c26;font-size:10px;font-weight:900}
+.tg-updates-badge[hidden]{display:none}
+@media(max-width:370px){.tg-updates-indicator{width:37px;height:37px}.tg-updates-indicator-ring{width:27px;height:27px;font-size:17px}}
