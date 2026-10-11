@@ -472,7 +472,9 @@
         showMessage(
           message,
           "A one-time registration fee of $" + Number(feeData.feeUsd).toFixed(2) +
-            " USD is required for your country. Automatic checkout is not configured yet, so your account has not been created. Your pending request has been recorded. Contact ZakiChat support for approved payment instructions, and retry signup with this phone after your payment is verified.",
+            " USD is required for your country" +
+            (window.ZakiChatCurrency ? " (approximately " + window.ZakiChatCurrency.formatUsd(Number(feeData.feeUsd), feeData.countryCode) + ")" : "") +
+            ". The USD amount is canonical; the local amount is only an estimate. Automatic checkout is not configured yet, so your account has not been created. Your pending request has been recorded. Contact ZakiChat support for approved payment instructions, and retry signup with this phone after your payment is verified.",
           "error"
         );
         setLoading(button, false, "Create Account");
