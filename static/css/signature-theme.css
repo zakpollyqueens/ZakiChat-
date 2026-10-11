@@ -67,12 +67,12 @@ body{
 }
 :where(.settings-header,.profile-topbar,.account-header,.devices-header,.storage-header,.data-storage-header,.two-step-header,.about-header,.business-header,.status-header){
   color:var(--zk-text)!important;
-  background:linear-gradient(120deg,rgba(7,20,38,.98),rgba(9,35,57,.96))!important;
+  background:linear-gradient(120deg,var(--zk-bg,rgba(7,20,38,.98)),var(--zk-surface,rgba(9,35,57,.96)))!important;
   border-bottom:1px solid var(--zk-line)!important;
 }
 :where(.settings-card,.profile-card,.profile-info-card,.account-card,.account-security-card,.danger-card,.devices-card,.storage-card,.settings-group,.settings-section,.profile-section,.account-section,.card,.panel,.content-card,.settings-item,.settings-profile-link,.status-item,.my-status-card,.calls-summary-card,.call-item,.status-dialog-card,.status-viewer-card,.business-panel,.business-list-card,.about-card,.brand-card,.upgrade-plan-card,.upgrade-information-card,.security-card,.hero-card,.dialog-card,.account-modal-dialog,.modal-content,.dialog-content,.privacy-hero,.privacy-item,.verification-link-card){
   color:var(--zk-text)!important;
-  background:linear-gradient(145deg,rgba(15,37,59,.97),rgba(7,22,39,.99))!important;
+  background:linear-gradient(145deg,var(--zk-surface,rgba(15,37,59,.97)),var(--zk-bg-2,rgba(7,22,39,.99)))!important;
   border:1px solid var(--zk-line)!important;border-radius:var(--zk-radius)!important;
   box-shadow:var(--zk-shadow),inset 0 1px rgba(255,255,255,.025)!important;
 }
@@ -215,7 +215,7 @@ body.status-page{color:var(--zk-text)!important}
 body.status-page .status-shell{background:transparent!important}
 body.status-page :where(.status-section,.calls-section,.channels-updates-section,.releases-updates-section){color:var(--zk-text)!important}
 body.status-page :where(.status-item,.my-status-card,.call-item,.calls-summary-card,.channels-updates-card,.release-update-card,.status-tool-panel,.status-composer-options,.status-dialog-card,.status-viewer-card){
-  background:linear-gradient(145deg,rgba(15,37,59,.97),rgba(7,22,39,.99))!important;color:var(--zk-text)!important;border:1px solid var(--zk-line)!important;border-radius:18px!important;
+  background:linear-gradient(145deg,var(--zk-surface,rgba(15,37,59,.97)),var(--zk-bg-2,rgba(7,22,39,.99)))!important;color:var(--zk-text)!important;border:1px solid var(--zk-line)!important;border-radius:18px!important;
 }
 body.status-page :where(.status-item-info strong,.my-status-info strong,.call-name,.calls-summary-number,.channels-updates-card-content strong,.release-update-content h3){color:#f1f9ff!important}
 body.status-page :where(.status-item-info span,.my-status-info span,.call-meta,.calls-summary-label,.channels-updates-card-content span,.release-update-content p,.status-empty p,.calls-empty p){color:var(--zk-muted)!important}
@@ -228,7 +228,7 @@ body.status-page .bottom-nav{background:rgba(4,13,26,.97)!important}
 /* Generic subpages: devices, storage, privacy, verification, business, about, profile. */
 body :where(.devices-page,.storage-management-page,.data-storage-page,.two-step-page,.business-shell,.about-shell,.profile-shell,.settings-shell,.account-shell){background:transparent!important}
 body :where(.devices-card,.storage-card,.security-card,.hero-card,.about-card,.brand-card,.business-panel,.account-security-card,.profile-info-card,.settings-profile-link,.danger-card,.upgrade-plan-card,.upgrade-information-card,.session-item,.storage-row,.setting-row,.usage-row,.privacy-item,.note-item,.public-update,.info-row,.version-item){
-  color:var(--zk-text)!important;background:linear-gradient(145deg,rgba(15,37,59,.97),rgba(7,22,39,.99))!important;border-color:var(--zk-line)!important;
+  color:var(--zk-text)!important;background:linear-gradient(145deg,var(--zk-surface,rgba(15,37,59,.97)),var(--zk-bg-2,rgba(7,22,39,.99)))!important;border-color:var(--zk-line)!important;
 }
 body :where(.devices-header h1,.storage-header h1,.data-storage-header h1,.two-step-header h1,.business-header h1,.about-header h1,.profile-topbar h1){color:#f2f9ff!important}
 body :where(.devices-header p,.storage-header p,.data-storage-header p,.two-step-header p,.business-header p,.about-header p,.profile-identity p,.profile-field small,.profile-info-card p,.security-note,.card-description,.storage-note){color:var(--zk-muted)!important}
