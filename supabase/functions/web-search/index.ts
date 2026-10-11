@@ -10,7 +10,7 @@ function json(body: unknown, status=200) {
   return new Response(JSON.stringify(body), {status, headers:{...corsHeaders,"Content-Type":"application/json","Cache-Control":"no-store"}});
 }
 function decodeHtml(value: string) {
-  return value.replace(/<[^>]*>/g," ").replace(/&amp;/gi,"&").replace(/&quot;/gi,'"').replace(/&#0*39;|&#x0*27;/gi,"'").replace(/&lt;/gi,"<").replace(/&gt;/gi,">").replace(/&nbsp;/gi," ").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16))).replace(/\s+/g," ").trim();
+  return value.replace(/<!\\[CDATA\\[|\\]\\]>/g,"").replace(/<[^>]*>/g," ").replace(/&amp;/gi,"&").replace(/&quot;/gi,'"').replace(/&#0*39;|&#x0*27;/gi,"'").replace(/&lt;/gi,"<").replace(/&gt;/gi,">").replace(/&nbsp;/gi," ").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16))).replace(/\s+/g," ").trim();
 }
 function safeUrl(raw: string) {
   try { const u=new URL(raw); return ["http:","https:"].includes(u.protocol)?u.href:""; } catch { return ""; }
