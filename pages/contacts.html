@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17110f">
+<title>Contacts · ZakiChat</title>
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/telegram-chat.css">
+<style>
+.contacts-head{padding:calc(16px + env(safe-area-inset-top)) 22px 12px;background:#17110f}
+.contacts-head h1{margin:0 0 14px;font-size:30px;color:#f4c7a7}
+.contacts-results{flex:1;overflow:auto;padding-bottom:110px}
+.contact-row{display:flex;align-items:center;gap:14px;width:100%;min-height:84px;padding:12px 22px;border:0;background:transparent;text-align:left;color:#f4c7a7}
+.contact-row:active{background:#ffffff0b}
+.contact-avatar{width:58px;height:58px;flex:none;border-radius:50%;display:grid;place-items:center;background:#4c3a80;color:#f4c7a7;font-size:20px;font-weight:700;overflow:hidden}
+.contact-avatar img{width:100%;height:100%;object-fit:cover}
+.contact-copy{display:flex;flex-direction:column;gap:6px;min-width:0}
+.contact-copy strong{font-size:16px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.contact-copy small{font-size:13px;color:#a18ba5}
+.contacts-note{padding:24px;color:#a18ba5;text-align:center;font-size:14px}
+</style>
+</head>
+<body class="tg-app tg-list-page">
+<main class="tg-shell">
+<header class="contacts-head">
+<h1>Contacts</h1>
+<label class="tg-search"><span aria-hidden="true">⌕</span><input id="contacts-search" type="search" placeholder="Search people" autocomplete="off"></label>
+</header>
+<section id="contacts-results" class="contacts-results" aria-label="Contacts"><p class="contacts-note">Loading your contacts…</p></section>
+<nav class="tg-bottom-nav" aria-label="Main navigation">
+<a href="chats.html"><span aria-hidden="true">☏</span><span>Chats</span></a>
+<a class="is-current" href="contacts.html" aria-current="page"><span aria-hidden="true">☉</span><span>Contacts</span></a>
+<a href="settings.html"><span aria-hidden="true">⚙</span><span>Settings</span></a>
+<a href="profile.html"><span aria-hidden="true">●</span><span>Profile</span></a>
+</nav>
+</main>
+<div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/account-manager.js"></script>
+<script src="../static/js/supabase-client.js"></script>
+<script src="../static/js/auth-guard.js"></script>
+<script>
+(function(){
+ const $=s=>document.querySelector(s);let client=null,currentUser=null,people=[];
+ const toast=msg=>{const t=$("#tg-toast");t.textContent=msg;t.classList.add("is-visible");setTimeout(()=>t.classList.remove("is-visible"),2400)};
+ const name=p=>p.full_name||p.username||p.phone||"ZakiChat user";
+ function render(){const root=$("#contacts-results"),q=$("#contacts-search").value.trim().toLowerCase();root.replaceChildren();const rows=people.filter(p=>[p.full_name,p.username,p.phone].some(v=>String(v||"").toLowerCase().includes(q)));if(!rows.length){const empty=document.createElement("p");empty.className="contacts-note";empty.textContent=q?"No matching people found.":"No other ZakiChat users are available yet.";root.append(empty);return}for(const p of rows){const b=document.createElement("button");b.className="contact-row";b.type="button";const av=document.createElement("span");av.className="contact-avatar";if(p.avatar_url){const img=document.createElement("img");img.src=p.avatar_url;img.alt="";img.loading="lazy";av.append(img)}else av.textContent=(name(p).trim().split(/\s+/).map(s=>s[0]).join("").slice(0,2)||"Z").toUpperCase();const copy=document.createElement("span");copy.className="contact-copy";const strong=document.createElement("strong");strong.textContent=name(p);const small=document.createElement("small");small.textContent=p.username?"@"+p.username:p.phone|| (p.is_online?"Online":"ZakiChat member");copy.append(strong,small);b.append(av,copy);b.addEventListener("click",async()=>{b.disabled=true;try{const {data,error}=await client.rpc("create_or_get_direct_conversation",{p_other_user_id:p.id});if(error)throw error;location.href="chat.html?id="+encodeURIComponent(data)}catch(e){console.error(e);toast(e.message||"Could not open this conversation.");b.disabled=false}});root.append(b)}}
+ async function init(){try{if(!window.ZakiChatAuth?.client)throw new Error("Chat services are still starting. Refresh in a moment.");client=window.ZakiChatAuth.client;const {data:{user},error:authError}=await client.auth.getUser();if(authError)throw authError;if(!user)throw new Error("Please sign in to view contacts.");currentUser=user;const {data,error}=await client.from("profiles").select("id,username,full_name,phone,avatar_url,is_online").neq("id",currentUser.id).order("full_name",{ascending:true}).limit(500);if(error)throw error;people=data||[];render()}catch(e){console.error("Contacts load failed:",e);const root=$("#contacts-results");root.replaceChildren();const p=document.createElement("p");p.className="contacts-note";p.textContent=e.message||"Could not load contacts. Please try again.";root.append(p)}}
+ $("#contacts-search").addEventListener("input",render);document.addEventListener("DOMContentLoaded",init);
+})();
+</script>
+</body>
+</html>
