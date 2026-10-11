@@ -875,3 +875,32 @@ body.channels-page{background:radial-gradient(ellipse at 82% 0%,rgba(0,185,239,.
  .channel-card{gap:11px;padding:12px 10px;border-radius:15px}
  .channel-avatar{width:47px;height:47px;flex-basis:47px;border-radius:15px}
 }
+
+
+/* Mobile-first channel layout cleanup: compact icon, comfortable controls, clear sections */
+body.channels-page .app-brand img{width:30px!important;height:30px!important;max-width:30px!important;object-fit:cover;border-radius:9px}
+body.channels-page .channels-sidebar-icon{display:inline-grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:11px;font-size:17px;background:linear-gradient(140deg,#123e5c,#087eae);border:1px solid #64dfff35}
+body.channels-page .channels-main{min-width:0}
+body.channels-page .channels-header{align-items:center;gap:14px}
+body.channels-page .channels-header-actions{gap:10px}
+body.channels-page .channels-icon-button{width:44px;height:44px;flex:0 0 44px;font-size:1.35rem}
+body.channels-page .channels-primary-button,body.channels-page .channels-secondary-button{min-height:46px}
+body.channels-page .channels-section{overflow:hidden}
+body.channels-page .channel-card{align-items:center;min-height:76px;gap:12px;padding:12px 13px}
+body.channels-page .channel-avatar{width:46px;height:46px;flex-basis:46px;border-radius:14px;font-size:1rem}
+body.channels-page .channel-card-main{min-width:0}
+body.channels-page .channel-card-actions{gap:8px}
+body.channels-page .channels-section-heading h2{font-size:1.08rem}
+body.channels-page .channels-search{min-height:50px}
+body.channels-page .channels-search input{min-height:44px;font-size:15px}
+body.channels-page .channel-view[hidden],body.channels-page .channel-list[hidden]{display:none!important}
+@media(max-width:640px){
+ body.channels-page .channels-main{padding:12px 10px 100px}
+ body.channels-page .channels-header{padding:16px;gap:14px}
+ body.channels-page .channels-header-actions{width:100%;gap:9px}
+ body.channels-page .channels-header-actions .channels-primary-button{flex:1}
+ body.channels-page .channels-header-actions .channels-icon-button{flex:0 0 44px}
+ body.channels-page .channel-card{align-items:center;padding:12px 10px;min-height:72px}
+ body.channels-page .channel-card .channels-secondary-button{min-height:40px;padding:0 11px;font-size:12px}
+ body.channels-page .channel-card-description{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+}
