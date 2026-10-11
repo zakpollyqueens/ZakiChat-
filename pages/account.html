@@ -54,6 +54,34 @@
     </section>
 
 
+    <!-- Three experience modes belong to one signed-in identity. -->
+    <section class="account-section mode-section" id="accountModeSection">
+      <div class="account-section-heading">
+        <span>YOUR ZAKICHAT EXPERIENCE</span>
+        <h2>Switch account mode</h2>
+        <p>Keep one sign-in and switch between Local, Customized Personal and Customized Business whenever your active plans allow it.</p>
+      </div>
+      <div class="account-mode-grid" id="accountModeGrid" aria-label="Available account modes">
+        <button type="button" class="account-mode-card" data-account-mode="local" aria-pressed="false">
+          <span class="account-mode-icon">💬</span><strong>Local</strong>
+          <small>Free everyday messaging</small><span class="account-mode-state">Available</span>
+        </button>
+        <button type="button" class="account-mode-card" data-account-mode="personal_customized" aria-pressed="false" disabled>
+          <span class="account-mode-icon">✨</span><strong>Customized Personal</strong>
+          <small>Personal themes, fonts and customization</small><span class="account-mode-state">Checking plan…</span>
+        </button>
+        <button type="button" class="account-mode-card" data-account-mode="business_customized" aria-pressed="false" disabled>
+          <span class="account-mode-icon">🏢</span><strong>Customized Business</strong>
+          <small>Business identity, workspace and team tools</small><span class="account-mode-state">Checking plan…</span>
+        </button>
+      </div>
+      <div class="account-mode-footer">
+        <p id="accountModeMessage" role="status" aria-live="polite">Checking your active subscriptions…</p>
+        <a href="about.html#paid-upgrades" id="accountModeUpgradeLink">Explore upgrades</a>
+      </div>
+    </section>
+
+
     <!-- Account controls -->
     <section class="account-section">
 
@@ -391,6 +419,7 @@
   <script src="../static/js/supabase-client.js"></script>
   <script src="../static/js/auth-guard.js"></script>
   <script src="../static/js/account.js"></script>
+  <script src="../static/js/account-mode.js"></script>
 
 </body>
 </html>
