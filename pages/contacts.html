@@ -1,63 +1,111 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17110f">
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07172b">
 <title>Contacts · ZakiChat</title>
-<link rel="stylesheet" href="../static/css/main.css"><link rel="stylesheet" href="../static/css/telegram-chat.css"><link rel="stylesheet" href="../static/css/telegram-chat-list.css">
+<link rel="stylesheet" href="../static/css/main.css"><link rel="stylesheet" href="../static/css/telegram-chat.css"><link rel="stylesheet" href="../static/css/telegram-chat-list.css"><link rel="stylesheet" href="../static/css/signature-theme.css">
 <style>
-body.zc-contacts-page .tg-shell{background:#17110f!important}
-.zc-contacts-head{flex:none;padding:calc(10px + env(safe-area-inset-top)) 16px 9px;background:#17110f}
-.zc-contacts-top{height:42px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.zc-contacts-top h1{font-size:22px;line-height:1.2;margin:0;color:#f4c7a7;font-weight:750;letter-spacing:-.35px}
-.zc-contact-actions{display:flex;gap:12px;align-items:center}
-.zc-action{width:34px;height:34px;padding:5px;border:0;background:transparent;color:#f4c7a7;display:grid;place-items:center}
-.zc-action svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.zc-contacts-search{height:40px;display:flex;align-items:center;gap:9px;padding:0 13px;margin:6px 0 9px;border-radius:10px;background:#25201e;color:#a08ba4}
-.zc-contacts-search svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
-.zc-contacts-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#f4c7a7;font-size:15px}
-.zc-contacts-search input::placeholder{color:#a08ba4}
-.zc-contact-shortcuts{display:flex;align-items:center;gap:0;padding:5px 0 10px;border-bottom:1px solid #2b2320}
-.zc-shortcut{display:flex;align-items:center;gap:10px;flex:1;min-width:0;border:0;background:transparent;color:#f4c7a7;text-align:left;font-size:14px;padding:6px 3px}
-.zc-shortcut-icon{display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:50%;background:#33265e;color:#f4c7a7}
+body.zc-contacts-page{--contacts-bg:#071426;--contacts-panel:#0d2037;--contacts-line:rgba(111,203,232,.13);--contacts-text:#e8f8ff;--contacts-muted:#8da9bd;--contacts-cyan:#45ddff;background:var(--contacts-bg)!important;color:var(--contacts-text)!important}
+body.zc-contacts-page .tg-shell{background:var(--contacts-bg)!important}
+.zc-contacts-head{flex:none;padding:calc(12px + env(safe-area-inset-top)) 16px 10px;background:linear-gradient(180deg,#0b1e34,#071426)}
+.zc-contacts-top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px}
+.zc-contacts-top h1{margin:0;color:var(--contacts-text);font-size:23px;font-weight:760;letter-spacing:-.45px}
+.zc-contact-actions{display:flex;gap:8px;align-items:center}
+.zc-action{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--contacts-line);border-radius:50%;background:#102a43;color:var(--contacts-cyan)}
+.zc-action svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.zc-contacts-search{display:flex;align-items:center;gap:10px;height:43px;margin:12px 0 9px;padding:0 13px;border:1px solid var(--contacts-line);border-radius:14px;background:var(--contacts-panel);color:var(--contacts-muted)}
+.zc-contacts-search svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:2}
+.zc-contacts-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--contacts-text);font-size:14px}
+.zc-contacts-search input::placeholder{color:#7894aa}
+.zc-contact-shortcuts{display:flex;gap:10px;padding:7px 0 12px;border-bottom:1px solid var(--contacts-line)}
+.zc-shortcut{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:7px 4px;border:0;background:transparent;color:var(--contacts-text);text-align:left;font-size:13px;font-weight:650}
+.zc-shortcut-icon{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:13px;background:linear-gradient(145deg,#123e61,#142957);color:var(--contacts-cyan)}
 .zc-shortcut-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.zc-contact-results{flex:1;min-height:0;overflow:auto;padding:0 0 calc(70px + env(safe-area-inset-bottom));scrollbar-width:none}
+.zc-contact-results{flex:1;min-height:0;overflow:auto;padding:0 0 calc(76px + env(safe-area-inset-bottom));scrollbar-width:none}
 .zc-contact-results::-webkit-scrollbar{display:none}
-.zc-section-label{margin:0;padding:14px 16px 7px;color:#a08ba4;font-size:13px;font-weight:600}
-.zc-person{display:flex;align-items:center;gap:12px;width:100%;min-height:67px;padding:7px 16px;border:0;background:transparent;color:#f4c7a7;text-align:left}
-.zc-person:active{background:#ffffff0a}
-.zc-person-avatar{width:49px;height:49px;flex:none;display:grid;place-items:center;overflow:hidden;border-radius:50%;background:#3b2b69;color:#f4c7a7;font-size:17px;font-weight:600}
+.zc-section-label{margin:0;padding:15px 16px 7px;color:var(--contacts-muted);font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.zc-person{display:flex;align-items:center;gap:12px;width:100%;min-height:68px;padding:8px 16px;border:0;background:transparent;color:var(--contacts-text);text-align:left}
+.zc-person:active{background:#ffffff08}
+.zc-person-avatar{display:grid;place-items:center;width:49px;height:49px;flex:none;overflow:hidden;border:1px solid #54c9f52c;border-radius:50%;background:linear-gradient(145deg,#13516a,#29275c);color:#e8fbff;font-size:16px;font-weight:750}
 .zc-person-avatar img{width:100%;height:100%;object-fit:cover}
-.zc-person-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px;align-self:stretch;justify-content:center;border-bottom:1px solid #2a2220}
-.zc-person-copy strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f4c7a7;font-size:15px;font-weight:550}
-.zc-person-copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#a08ba4;font-size:12px}
-.zc-contact-empty{padding:28px 20px;text-align:center;color:#a08ba4;font-size:14px}
-</style><link rel="stylesheet" href="../static/css/signature-theme.css">
+.zc-person-copy{display:flex;flex:1;min-width:0;align-self:stretch;flex-direction:column;justify-content:center;gap:4px;border-bottom:1px solid var(--contacts-line)}
+.zc-person-copy strong{overflow:hidden;color:var(--contacts-text);font-size:15px;font-weight:650;text-overflow:ellipsis;white-space:nowrap}
+.zc-person-copy small{overflow:hidden;color:var(--contacts-muted);font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.zc-contact-empty{padding:30px 22px;text-align:center;color:var(--contacts-muted);font-size:14px;line-height:1.55}
+.zc-contact-dialog{width:min(92vw,430px);max-height:88dvh;padding:0;overflow:auto;border:1px solid #254761;border-radius:22px;background:linear-gradient(160deg,#102741,#071426 80%);color:var(--contacts-text);box-shadow:0 22px 70px #0009}
+.zc-contact-dialog::backdrop{background:#020a14b8;backdrop-filter:blur(5px)}
+.zc-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 18px 12px}
+.zc-dialog-head h2{margin:0;color:var(--contacts-text);font-size:20px}
+.zc-dialog-head p{margin:5px 0 0;color:var(--contacts-muted);font-size:12px}
+.zc-dialog-close{width:34px;height:34px;border:1px solid var(--contacts-line);border-radius:50%;background:#122d47;color:var(--contacts-text);font-size:21px}
+.zc-contact-form{display:grid;gap:13px;padding:7px 18px 19px}
+.zc-form-field{display:grid;gap:7px;color:#b8d2e3;font-size:12px;font-weight:700}
+.zc-form-field input,.zc-form-field select{box-sizing:border-box;width:100%;min-height:45px;padding:0 12px;border:1px solid #254761;border-radius:12px;outline:none;background:#091a2d;color:var(--contacts-text);font:inherit;font-size:14px}
+.zc-form-field input:focus,.zc-form-field select:focus{border-color:var(--contacts-cyan);box-shadow:0 0 0 3px #45ddff1b}
+.zc-phone-row{display:grid;grid-template-columns:125px minmax(0,1fr);gap:9px}
+.zc-lookup-state{min-height:22px;color:var(--contacts-muted);font-size:12px;line-height:1.5}
+.zc-lookup-state.is-found{color:#75f1bf}.zc-lookup-state.is-error{color:#ffb0a6}
+.zc-save-contact{min-height:46px;border:0;border-radius:13px;background:linear-gradient(110deg,#39dfff,#1596df 60%,#3c75e8);color:#03172a;font-size:14px;font-weight:800}
+.zc-save-contact:disabled{opacity:.45}
+@media(max-width:360px){.zc-phone-row{grid-template-columns:112px minmax(0,1fr)}.zc-shortcut{font-size:12px}}
+</style>
 </head>
-<body class="tg-app tg-list-page zc-contacts-page"><main class="tg-shell">
-<header class="zc-contacts-head"><div class="zc-contacts-top"><h1>Contacts</h1><div class="zc-contact-actions">
-<button class="zc-action" id="contacts-search-toggle" type="button" aria-label="Search contacts"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
-<button class="zc-action" id="contacts-menu-toggle" type="button" aria-label="More contact options"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></button></div></div>
-<label class="zc-contacts-search" id="contacts-search-box"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg><input id="contacts-search" type="search" placeholder="Search contacts" autocomplete="off"></label>
-<div class="zc-contact-shortcuts"><button class="zc-shortcut" id="invite-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span>Invite Friends</span></button><button class="zc-shortcut" id="add-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span>Add Contact</span></button></div></header>
-<section id="contacts-results" class="zc-contact-results" aria-label="Contacts"><p class="zc-contact-empty">Loading contacts…</p></section>
+<body class="tg-app tg-list-page zc-contacts-page">
+<main class="tg-shell">
+<header class="zc-contacts-head">
+ <div class="zc-contacts-top"><h1>Contacts</h1><div class="zc-contact-actions">
+  <button class="zc-action" id="contacts-search-toggle" type="button" aria-label="Search contacts" title="Search contacts"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
+  <button class="zc-action" id="add-contact-top" type="button" aria-label="Add contact" title="Add contact"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+ </div></div>
+ <label class="zc-contacts-search" id="contacts-search-box"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg><input id="contacts-search" type="search" placeholder="Search saved contacts" autocomplete="off"></label>
+ <div class="zc-contact-shortcuts">
+  <button class="zc-shortcut" id="invite-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span>Invite friends</span></button>
+  <button class="zc-shortcut" id="add-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span>Add contact</span></button>
+ </div>
+</header>
+<section id="contacts-results" class="zc-contact-results" aria-label="Saved contacts"><p class="zc-contact-empty">Loading your contacts…</p></section>
 <nav class="zc-bottom-nav" aria-label="Main navigation">
-  <a href="chats.html" class="is-current" aria-current="page">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span>
-  </a>
-  <a href="settings.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5h-3.2l-.3-1.5a7.7 7.7 0 0 1-1.7-1l-1.4.5-1.6-2.8 1.1-.9a7.2 7.2 0 0 1 0-2l-1.1-.9 1.6-2.8 1.4.5a7.7 7.7 0 0 1 1.7-1l.3-1.5h3.2l.3 1.5a7.7 7.7 0 0 1 1.7 1l1.4-.5 1.6 2.8-1.1.9a7.2 7.2 0 0 1 0 2Z"/></svg><span>Settings</span>
-  </a>
-  <a href="status.html">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span>
-  </a>
-</nav></main>
+ <a href="chats.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span></a>
+ <a href="settings.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5a"/></svg><span>Settings</span></a>
+ <a href="status.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/></svg><span>Updates</span></a>
+</nav>
+</main>
+<dialog class="zc-contact-dialog" id="add-contact-dialog" aria-labelledby="add-contact-title">
+ <div class="zc-dialog-head"><div><h2 id="add-contact-title">Add contact</h2><p>Use their country code and phone number.</p></div><button class="zc-dialog-close" id="close-add-contact" type="button" aria-label="Close">×</button></div>
+ <form class="zc-contact-form" id="add-contact-form">
+  <label class="zc-form-field">Contact name<input id="contact-display-name" type="text" maxlength="80" placeholder="Name to save as" autocomplete="name" required></label>
+  <div class="zc-form-field"><span>Phone number</span><div class="zc-phone-row">
+   <select id="contact-country-code" aria-label="Country calling code" required>
+    <option value="+256" data-country="Uganda">🇺🇬 Uganda (+256)</option><option value="+254" data-country="Kenya">🇰🇪 Kenya (+254)</option><option value="+255" data-country="Tanzania">🇹🇿 Tanzania (+255)</option><option value="+250" data-country="Rwanda">🇷🇼 Rwanda (+250)</option><option value="+211" data-country="South Sudan">🇸🇸 South Sudan (+211)</option><option value="+234" data-country="Nigeria">🇳🇬 Nigeria (+234)</option><option value="+233" data-country="Ghana">🇬🇭 Ghana (+233)</option><option value="+27" data-country="South Africa">🇿🇦 South Africa (+27)</option><option value="+251" data-country="Ethiopia">🇪🇹 Ethiopia (+251)</option><option value="+1" data-country="United States or Canada">🇺🇸 US/Canada (+1)</option><option value="+44" data-country="United Kingdom">🇬🇧 UK (+44)</option><option value="+91" data-country="India">🇮🇳 India (+91)</option><option value="+971" data-country="United Arab Emirates">🇦🇪 UAE (+971)</option><option value="+61" data-country="Australia">🇦🇺 Australia (+61)</option><option value="+49" data-country="Germany">🇩🇪 Germany (+49)</option><option value="+33" data-country="France">🇫🇷 France (+33)</option>
+   </select>
+   <input id="contact-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="742 956 448" required>
+  </div></div>
+  <div id="contact-lookup-state" class="zc-lookup-state" role="status" aria-live="polite">Enter a number to check whether it is registered on ZakiChat.</div>
+  <button class="zc-save-contact" id="save-contact-button" type="submit" disabled>Save contact</button>
+ </form>
+</dialog>
 <div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../static/js/config.js"></script><script src="../static/js/account-manager.js"></script><script src="../static/js/supabase-client.js"></script><script src="../static/js/auth-guard.js"></script>
 <script>
-(function(){const $=s=>document.querySelector(s);let client=null,people=[];
-const toast=m=>{const t=$("#tg-toast");t.textContent=m;t.classList.add("is-visible");setTimeout(()=>t.classList.remove("is-visible"),2400)};
-const pname=p=>p.full_name||p.username||p.phone||"ZakiChat user";
-function render(){const root=$("#contacts-results"),q=$("#contacts-search").value.trim().toLowerCase();root.replaceChildren();const rows=people.filter(p=>[p.full_name,p.username,p.phone].some(v=>String(v||"").toLowerCase().includes(q)));if(!rows.length){const e=document.createElement("p");e.className="zc-contact-empty";e.textContent=q?"No contacts found for this search.":"No other ZakiChat users yet.";root.append(e);return}const label=document.createElement("h2");label.className="zc-section-label";label.textContent="ZakiChat users · "+rows.length;root.append(label);for(const p of rows){const b=document.createElement("button");b.className="zc-person";b.type="button";const av=document.createElement("span");av.className="zc-person-avatar";if(p.avatar_url){const img=document.createElement("img");img.src=p.avatar_url;img.alt="";img.loading="lazy";av.append(img)}else av.textContent=(pname(p).trim().split(/\s+/).map(s=>s[0]).join("").slice(0,2)||"Z").toUpperCase();const copy=document.createElement("span");copy.className="zc-person-copy";const n=document.createElement("strong");n.textContent=pname(p);const sub=document.createElement("small");sub.textContent=p.username?"@"+p.username:p.phone||"ZakiChat member";copy.append(n,sub);b.append(av,copy);b.addEventListener("click",async()=>{b.disabled=true;try{const {data,error}=await client.rpc("create_or_get_direct_conversation",{p_other_user_id:p.id});if(error)throw error;if(!data)throw new Error("Conversation was not returned by the server.");location.href="chat.html?id="+encodeURIComponent(data)}catch(e){console.error(e);toast(e.message||"Could not open conversation.");b.disabled=false}});root.append(b)}}
-async function init(){try{client=window.ZakiChatAuth?.client;if(!client)throw new Error("Chat services are not ready. Refresh and try again.");const {data:{user},error:a}=await client.auth.getUser();if(a)throw a;if(!user)throw new Error("Please sign in to see contacts.");const {data,error}=await client.from("profiles").select("id,username,full_name,phone,avatar_url,is_online").neq("id",user.id).order("full_name",{ascending:true}).limit(500);if(error)throw error;people=data||[];render()}catch(e){console.error("Contacts loading failed",e);$("#contacts-results").innerHTML="";const p=document.createElement("p");p.className="zc-contact-empty";p.textContent=e.message||"Could not load contacts.";$("#contacts-results").append(p)}}
-$("#contacts-search").addEventListener("input",render);$("#contacts-search-toggle").addEventListener("click",()=>{$("#contacts-search-box").hidden=!$("#contacts-search-box").hidden;if(!$("#contacts-search-box").hidden)$("#contacts-search").focus()});
-$("#contacts-menu-toggle").addEventListener("click",()=>toast("Contact options"));$("#invite-contact").addEventListener("click",()=>{const msg=encodeURIComponent("Join me on ZakiChat and let's chat!");location.href="https://wa.me/?text="+msg});$("#add-contact").addEventListener("click",()=>{const phone=prompt("Enter the person's phone number");if(phone?.trim())toast("Search for "+phone.trim()+" in contacts to start a conversation.")});document.addEventListener("DOMContentLoaded",init)})();
-</script></body></html>
+(function(){
+ const $=s=>document.querySelector(s);let client=null,user=null,people=[],foundProfile=null,lookupTimer=0,lookupSequence=0;
+ const toast=m=>{const t=$("#tg-toast");t.textContent=m;t.classList.add("is-visible");setTimeout(()=>t.classList.remove("is-visible"),2500)};
+ const label=p=>p.display_name||p.profile?.full_name||p.profile?.username||p.profile?.phone||"ZakiChat contact";
+ const profileOf=row=>row.profiles||row.profile||null;
+ const initials=s=>(String(s||"Z").trim().split(/\s+/).map(v=>v[0]).join("").slice(0,2)||"Z").toUpperCase();
+ function render(){const root=$("#contacts-results"),q=$("#contacts-search").value.trim().toLowerCase();root.replaceChildren();const rows=people.filter(row=>{const p=profileOf(row)||{};return [label(row),p.username,p.phone].some(v=>String(v||"").toLowerCase().includes(q))});if(!rows.length){const e=document.createElement("p");e.className="zc-contact-empty";e.textContent=q?"No saved contacts match that search.":"Your saved contacts will appear here. Tap Add contact to find someone by phone number.";root.append(e);return}const heading=document.createElement("h2");heading.className="zc-section-label";heading.textContent="My contacts · "+rows.length;root.append(heading);for(const row of rows){const p=profileOf(row);if(!p)continue;const b=document.createElement("button");b.type="button";b.className="zc-person";const av=document.createElement("span");av.className="zc-person-avatar";if(p.avatar_url){const img=document.createElement("img");img.src=p.avatar_url;img.alt="";img.loading="lazy";av.append(img)}else av.textContent=initials(label(row));const copy=document.createElement("span");copy.className="zc-person-copy";const n=document.createElement("strong");n.textContent=label(row);const sub=document.createElement("small");sub.textContent=p.username?"@"+p.username:p.phone||"ZakiChat member";copy.append(n,sub);b.append(av,copy);b.addEventListener("click",async()=>{b.disabled=true;try{const {data,error}=await client.rpc("create_or_get_direct_conversation",{p_other_user_id:p.id});if(error)throw error;if(!data)throw new Error("The conversation was not returned.");location.href="chat.html?id="+encodeURIComponent(data)}catch(e){console.error(e);toast(e.message||"Could not open the conversation.");b.disabled=false}});root.append(b)}}
+ async function loadContacts(){const {data,error}=await client.from("contacts").select("contact_user_id,display_name,profiles!contacts_contact_user_id_fkey(id,username,full_name,phone,avatar_url,is_online)").eq("user_id",user.id).order("created_at",{ascending:false});if(error)throw error;people=data||[];render()}
+ function setLookup(message,kind=""){const el=$("#contact-lookup-state");el.textContent=message;el.className="zc-lookup-state"+(kind?" is-"+kind:"")}
+ function normalizedPhone(){let digits=$("#contact-phone").value.replace(/\D/g,"");digits=digits.replace(/^0+/,"");return digits?$("#contact-country-code").value+digits:""}
+ async function lookupNumber(){const seq=++lookupSequence;foundProfile=null;$("#save-contact-button").disabled=true;const digits=$("#contact-phone").value.replace(/\D/g,"").replace(/^0+/,"");if(digits.length<6){setLookup("Enter the phone number to check ZakiChat registration.");return}const full=normalizedPhone();setLookup("Checking whether this number is registered…");try{let result=await client.from("profiles").select("id,username,full_name,phone,avatar_url").eq("phone",full).neq("id",user.id).maybeSingle();if(result.error)throw result.error;if(!result.data){result=await client.from("profiles").select("id,username,full_name,phone,avatar_url").eq("phone",full.replace(/\D/g,"")).neq("id",user.id).maybeSingle();if(result.error)throw result.error}if(seq!==lookupSequence)return;if(!result.data){setLookup("No ZakiChat account found for "+full+". Check the country code and number, then try again.","error");return}foundProfile=result.data;setLookup("Registered on ZakiChat: "+(result.data.full_name||result.data.username||full)+". You can save this contact.","found");$("#save-contact-button").disabled=false}catch(e){if(seq!==lookupSequence)return;console.error("Contact lookup failed",e);setLookup("Could not check this number right now. Please try again.","error")}}
+ function scheduleLookup(){clearTimeout(lookupTimer);foundProfile=null;$("#save-contact-button").disabled=true;setLookup("Checking the number as you type…");lookupTimer=setTimeout(lookupNumber,450)}
+ function openDialog(){const d=$("#add-contact-dialog");if(d.showModal)d.showModal();$("#contact-display-name").focus()}
+ $("#add-contact").addEventListener("click",openDialog);$("#add-contact-top").addEventListener("click",openDialog);$("#close-add-contact").addEventListener("click",()=>$("#add-contact-dialog").close());
+ $("#contacts-search").addEventListener("input",render);$("#contacts-search-toggle").addEventListener("click",()=>{$("#contacts-search-box").hidden=!$("#contacts-search-box").hidden;if(!$("#contacts-search-box").hidden)$("#contacts-search").focus()});
+ $("#contact-phone").addEventListener("input",scheduleLookup);$("#contact-country-code").addEventListener("change",scheduleLookup);
+ $("#invite-contact").addEventListener("click",()=>{const msg=encodeURIComponent("Join me on ZakiChat and let's chat!");location.href="https://wa.me/?text="+msg});
+ $("#add-contact-form").addEventListener("submit",async e=>{e.preventDefault();if(!foundProfile){await lookupNumber();if(!foundProfile)return}const name=$("#contact-display-name").value.trim();if(!name){$("#contact-display-name").focus();return}const button=$("#save-contact-button");button.disabled=true;button.textContent="Saving…";try{const {error}=await client.from("contacts").insert({user_id:user.id,contact_user_id:foundProfile.id,display_name:name});if(error){if(error.code==="23505")throw new Error("This person is already in your contacts.");throw error}await loadContacts();$("#add-contact-dialog").close();$("#add-contact-form").reset();foundProfile=null;setLookup("Enter a number to check whether it is registered on ZakiChat.");toast("Contact saved");}catch(err){console.error(err);toast(err.message||"Could not save contact.")}finally{button.textContent="Save contact";button.disabled=!foundProfile}});
+ document.addEventListener("DOMContentLoaded",async()=>{try{client=window.ZakiChatAuth?.client;if(!client)throw new Error("Chat services are not ready. Refresh and try again.");const {data:{user:u},error}=await client.auth.getUser();if(error)throw error;if(!u)throw new Error("Please sign in to manage contacts.");user=u;await loadContacts()}catch(e){console.error("Contacts loading failed",e);const root=$("#contacts-results");root.replaceChildren();const p=document.createElement("p");p.className="zc-contact-empty";p.textContent=e.message||"Could not load contacts.";root.append(p)}});
+})();
+</script>
+</body></html>
