@@ -22,6 +22,15 @@
   const phoneInput = document.getElementById("phone");
   const locationInput = document.getElementById("location");
   const bioInput = document.getElementById("bio");
+  const birthdayInput = document.getElementById("birthday");
+  const editInfoButton = document.getElementById("editInfoButton");
+  const closeEditButton = document.getElementById("closeEditButton");
+  const bioPreview = document.getElementById("profileBioPreview");
+  const phoneDisplay = document.getElementById("profilePhoneDisplay");
+  const usernameDisplay = document.getElementById("profileUsernameDisplay");
+  const aboutDisplay = document.getElementById("profileAboutDisplay");
+  const birthdayDisplay = document.getElementById("profileBirthdayDisplay");
+  const locationDisplay = document.getElementById("profileLocationDisplay");
 
   const avatarFileInput =
     document.getElementById("avatarFileInput");
@@ -196,6 +205,13 @@
     );
 
     updatePresence(profile);
+    const about = profile.bio || "Add a little about yourself.";
+    if (bioPreview) bioPreview.textContent = about;
+    if (phoneDisplay) phoneDisplay.textContent = profile.phone || "Not added";
+    if (usernameDisplay) usernameDisplay.textContent = "@" + (profile.username || "username");
+    if (aboutDisplay) aboutDisplay.textContent = about;
+    if (birthdayDisplay) birthdayDisplay.textContent = profile.birthday ? new Date(profile.birthday + "T12:00:00").toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"}) : "Not added";
+    if (locationDisplay) locationDisplay.textContent = profile.location || "Not added";
   }
 
   function updatePresence(profile) {
@@ -268,6 +284,9 @@
 
       bio:
         bioInput.value.trim(),
+
+      birthday:
+        birthdayInput ? birthdayInput.value : "",
 
       avatar_url:
         originalProfile?.avatar_url || null
@@ -797,10 +816,21 @@
     }
 
     if (cancelButton) {
-      cancelButton.addEventListener(
-        "click",
-        cancelChanges
-      );
+      cancelButton.addEventListener("click", function(){ cancelChanges(); if(form) form.hidden = true; });
+    }
+
+    if (editInfoButton && form && isOwnProfile) {
+      editInfoButton.addEventListener("click", function () {
+        form.hidden = !form.hidden;
+        if (!form.hidden) {
+          form.scrollIntoView({behavior:"smooth", block:"start"});
+          setTimeout(function(){ fullNameInput?.focus(); }, 220);
+        }
+      });
+    }
+
+    if (closeEditButton && form) {
+      closeEditButton.addEventListener("click", function(){ form.hidden = true; });
     }
 
     if (bioInput) {
@@ -846,15 +876,9 @@
       );
     }
 
-    if (
-      logoutButton &&
-      isOwnProfile
-    ) {
-      logoutButton.addEventListener(
-        "click",
-        logout
-      );
-    }
+    if (logoutButton && isOwnProfile) logoutButton.addEventListener("click", logout);
+    const menuLogoutButton = document.getElementById("menuLogoutButton");
+    if (menuLogoutButton && isOwnProfile) menuLogoutButton.addEventListener("click", logout);
   }
 
   supabaseClient.auth.onAuthStateChange(
