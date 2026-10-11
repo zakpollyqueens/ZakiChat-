@@ -176,3 +176,46 @@ body.tg-conversation-page #send-button[aria-busy=true]{opacity:.72;transform:sca
 body.tg-conversation-page .tg-send-button,body.tg-conversation-page .tg-composer-icon{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body.tg-conversation-page .tg-composer{padding-bottom:calc(3px + env(safe-area-inset-bottom))}
 @media(max-width:560px){body.tg-conversation-page .tg-composer{padding-bottom:calc(2px + env(safe-area-inset-bottom))}body.tg-conversation-page .tg-composer-icon{flex-basis:30px;width:30px;height:34px}}
+
+/* Individual chat polish: accessible tap targets, clear hierarchy and responsive bubbles. */
+body.tg-conversation-page .tg-chat-header{isolation:isolate}
+body.tg-conversation-page .tg-person-button{min-width:0;flex:1;overflow:hidden;text-align:left}
+body.tg-conversation-page .tg-person-copy{min-width:0}
+body.tg-conversation-page .tg-person-copy strong,body.tg-conversation-page .tg-person-copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.tg-conversation-page .tg-header-actions .tg-icon-btn{position:relative;overflow:hidden}
+body.tg-conversation-page .tg-header-actions .tg-icon-btn:focus-visible,body.tg-conversation-page .tg-composer button:focus-visible,body.tg-conversation-page .tg-message-actions button:focus-visible{outline:2px solid #53e1ff;outline-offset:2px}
+body.tg-conversation-page .tg-message{max-width:min(82%,680px);overflow-wrap:anywhere;word-break:normal;animation:tgMessageIn .2s ease-out both}
+body.tg-conversation-page .tg-message-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.48}
+body.tg-conversation-page .tg-message-image,body.tg-conversation-page .tg-message-video{display:block;width:auto;max-width:100%;max-height:min(46dvh,440px);height:auto;object-fit:contain;border-radius:13px}
+body.tg-conversation-page .tg-file-chip{max-width:100%;min-width:0;overflow-wrap:anywhere}
+body.tg-conversation-page .tg-message-actions{opacity:.82;transition:opacity .18s}
+body.tg-conversation-page .tg-message:hover .tg-message-actions,body.tg-conversation-page .tg-message:focus-within .tg-message-actions{opacity:1}
+body.tg-conversation-page .tg-message-actions button{min-width:32px;min-height:32px;border-radius:10px;touch-action:manipulation}
+body.tg-conversation-page .tg-composer{background:linear-gradient(180deg,rgba(5,16,29,.96),rgba(4,12,23,.99));border-top:1px solid rgba(99,203,238,.12);backdrop-filter:blur(18px)}
+body.tg-conversation-page .tg-input-wrap{box-shadow:inset 0 1px rgba(255,255,255,.025),0 4px 16px rgba(0,0,0,.12)}
+body.tg-conversation-page #message-input{overflow-y:auto;overscroll-behavior:contain}
+body.tg-conversation-page #send-button{box-shadow:0 5px 16px rgba(0,185,239,.22)}
+body.tg-conversation-page #send-button[aria-busy=true]{animation:tgSendPulse .9s ease-in-out infinite}
+body.tg-conversation-page .tg-chat-menu,body.tg-conversation-page .tg-attach-menu,body.tg-conversation-page .tg-emoji-panel,body.tg-conversation-page .tg-info-panel{border:1px solid rgba(88,206,244,.2);box-shadow:0 18px 55px rgba(0,0,0,.42);backdrop-filter:blur(20px)}
+body.tg-conversation-page .tg-chat-menu button,body.tg-conversation-page .tg-attach-menu button{min-height:44px;text-align:left;touch-action:manipulation}
+body.tg-conversation-page .tg-info-panel{max-width:min(360px,calc(100vw - 24px));max-height:calc(var(--tg-viewport-height,100dvh) - 100px);overflow:auto}
+body.tg-conversation-page .tg-info-note{overflow-wrap:anywhere;line-height:1.55}
+body.tg-conversation-page .tg-toast{max-width:calc(100vw - 28px);overflow-wrap:anywhere}
+@keyframes tgMessageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tgSendPulse{0%,100%{box-shadow:0 0 0 rgba(56,220,255,0)}50%{box-shadow:0 0 0 5px rgba(56,220,255,.09)}}
+@media(max-width:560px){
+ body.tg-conversation-page .tg-message{max-width:88%;border-radius:17px}
+ body.tg-conversation-page .tg-chat-header{padding-inline:5px}
+ body.tg-conversation-page .tg-person-button{gap:7px}
+ body.tg-conversation-page .tg-header-actions .tg-icon-btn{min-width:31px;min-height:34px}
+ body.tg-conversation-page .tg-message-actions{opacity:1}
+ body.tg-conversation-page .tg-message-actions button{min-width:34px;min-height:34px}
+ body.tg-conversation-page .tg-chat-menu,body.tg-conversation-page .tg-attach-menu{left:auto;right:8px;max-width:calc(100vw - 16px)}
+ body.tg-conversation-page .tg-emoji-panel{left:8px;right:8px;max-width:calc(100vw - 16px)}
+ body.tg-conversation-page .tg-info-panel{left:8px;right:8px;bottom:calc(12px + env(safe-area-inset-bottom));width:auto}
+}
+@media(min-width:900px){
+ body.tg-conversation-page .tg-conversation-shell{border-inline:1px solid rgba(110,207,240,.12);box-shadow:0 0 80px rgba(0,0,0,.32)}
+ body.tg-conversation-page .tg-message-area{padding-inline:clamp(18px,4vw,46px)}
+}
+@media(prefers-reduced-motion:reduce){body.tg-conversation-page .tg-message,body.tg-conversation-page #send-button[aria-busy=true]{animation:none!important}}
