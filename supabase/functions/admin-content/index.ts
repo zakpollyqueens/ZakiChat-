@@ -114,6 +114,75 @@ Deno.serve(async (req: Request) => {
     const admin = await verifySuperAdmin(clean(body.adminSessionToken, 500));
     if (!admin) return json({ success: false, error: "An active super-administrator session is required." }, 403);
 
+    if (action === "admin-customized-account-list") {
+      const search = clean(body.search, 120).toLowerCase();
+      const [{ data: profiles, error: profileError }, { data: preferences, error: preferenceError }, { data: upgrades, error: upgradeError }, { data: authResult, error: authError }] = await Promise.all([
+        db.from("profiles").select("id, username, full_name, phone, avatar_url, bio, location, birthday, created_at").order("created_at", { ascending: false }).limit(1000),
+        db.from("user_account_preferences").select("user_id, account_mode, updated_at").limit(2000),
+        db.from("user_upgrades").select("id, user_id, plan, status, starts_at, expires_at, price_usd, currency").order("created_at", { ascending: false }).limit(3000),
+        db.auth.admin.listUsers({ page: 1, perPage: 1000 })
+      ]);
+      if (profileError) throw profileError;
+      if (preferenceError) throw preferenceError;
+      if (upgradeError) throw upgradeError;
+      if (authError) throw authError;
+      const prefByUser = new Map((preferences || []).map(row => [row.user_id, row]));
+      const upgradeByUser = new Map<string, Record<string, unknown>[]>();
+      for (const row of upgrades || []) {
+        const list = upgradeByUser.get(row.user_id) || [];
+        list.push(row);
+        upgradeByUser.set(row.user_id, list);
+      }
+      const emailByUser = new Map((authResult?.users || []).map(user => [user.id, user.email || ""]));
+      const now = Date.now();
+      const accounts = (profiles || []).map(profile => {
+        const pref = prefByUser.get(profile.id);
+        const userUpgrades = upgradeByUser.get(profile.id) || [];
+        const active = userUpgrades.filter(item => item.status === "active" && Date.parse(String(item.expires_at)) > now);
+        const mode = pref?.account_mode || "local";
+        return {
+          ...profile, email: emailByUser.get(profile.id) || "", account_mode: mode,
+          preference_updated_at: pref?.updated_at || null, upgrades: userUpgrades,
+          active_plans: active.map(item => item.plan),
+          active_personal: active.some(item => item.plan === "personal_monthly"),
+          active_business: active.some(item => item.plan === "business_monthly"),
+          is_customized: mode === "personal_customized" || mode === "business_customized" || active.length > 0
+        };
+      }).filter(account => account.is_customized)
+        .filter(account => !search || [account.full_name, account.username, account.email, account.phone, account.id, account.account_mode, ...(account.active_plans || [])].join(" ").toLowerCase().includes(search));
+      return json({ success: true, accounts, count: accounts.length });
+    }
+
+    if (action === "admin-customized-account-details") {
+      const userId = clean(body.userId, 80);
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)) {
+        return json({ success: false, error: "A valid account ID is required." }, 400);
+      }
+      const [{ data: profile, error: profileError }, { data: preference, error: preferenceError }, { data: upgrades, error: upgradeError }, { data: posts, error: postsError }, { data: authUser, error: authError }] = await Promise.all([
+        db.from("profiles").select("id, username, full_name, phone, avatar_url, bio, location, birthday, profile_color, cover_url, created_at, updated_at").eq("id", userId).maybeSingle(),
+        db.from("user_account_preferences").select("user_id, account_mode, updated_at").eq("user_id", userId).maybeSingle(),
+        db.from("user_upgrades").select("id, plan, status, starts_at, expires_at, price_usd, currency, source, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
+        db.from("profile_posts").select("id, body, archived, created_at, updated_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
+        db.auth.admin.getUserById(userId)
+      ]);
+      if (profileError) throw profileError;
+      if (preferenceError) throw preferenceError;
+      if (upgradeError) throw upgradeError;
+      if (postsError) throw postsError;
+      if (authError) throw authError;
+      if (!profile) return json({ success: false, error: "The selected ZakiChat profile could not be found." }, 404);
+      const activeUpgrades = (upgrades || []).filter(item => item.status === "active" && Date.parse(String(item.expires_at)) > Date.now());
+      const accountMode = preference?.account_mode || "local";
+      return json({ success: true, account: {
+        ...profile, email: authUser?.user?.email || "", account_mode: accountMode,
+        preference_updated_at: preference?.updated_at || null, upgrades: upgrades || [],
+        active_plans: activeUpgrades.map(item => item.plan),
+        active_personal: activeUpgrades.some(item => item.plan === "personal_monthly"),
+        active_business: activeUpgrades.some(item => item.plan === "business_monthly"),
+        posts: posts || [],
+        business_workspace_note: "The current schema records Customized Business mode and its entitlement. A separate business profile/workspace content model is not present in the current account schema."
+      } });
+    }
     if (action === "admin-users-list") {
       const search = clean(body.search, 120).toLowerCase();
       const status = clean(body.status, 20) || "all";
