@@ -59,14 +59,54 @@
   function load(){try{return Object.assign({},defaults,JSON.parse(localStorage.getItem(KEY)||"{}"));}catch{return Object.assign({},defaults);}}
   function apply(s){
     const root=document.documentElement, t=THEMES[s.theme]||THEMES.dark;
-    root.dataset.zakichatTheme=s.theme;
-    root.dataset.zakichatFont=s.fontFamily;
-    root.dataset.zakichatFontSize=String(s.fontSize||16);
-    ["--bg","--surface","--surface-2","--text","--muted","--line","--primary","--primary-2"].forEach((key,i)=>root.style.setProperty(key,t[i]));
     const font=FONTS.find(f=>f[0]===s.fontFamily)||FONTS[0];
+    const size=Math.max(13,Math.min(22,Number(s.fontSize)||16));
+    root.dataset.zakichatTheme=THEMES[s.theme]?s.theme:"dark";
+    root.dataset.zakichatFont=font[0];
+    root.dataset.zakichatFontSize=String(size);
+    root.style.setProperty("--bg",t[0]);
+    root.style.setProperty("--surface",t[1]);
+    root.style.setProperty("--surface-2",t[2]);
+    root.style.setProperty("--text",t[3]);
+    root.style.setProperty("--muted",t[4]);
+    root.style.setProperty("--line",t[5]);
+    root.style.setProperty("--primary",t[6]);
+    root.style.setProperty("--primary-2",t[7]);
+    /* Bridge the saved appearance into the shared ZakiChat design tokens.
+       The signature stylesheet uses --zk-* tokens and !important body rules;
+       without this bridge, saved themes/fonts appeared selected but not applied. */
+    root.style.setProperty("--zk-bg",t[0]);
+    root.style.setProperty("--zk-bg-2",t[1]);
+    root.style.setProperty("--zk-bg-3",t[2]);
+    root.style.setProperty("--zk-surface",t[1]);
+    root.style.setProperty("--zk-surface-2",t[2]);
+    root.style.setProperty("--zk-cyan",t[6]);
+    root.style.setProperty("--zk-cyan-2",t[7]);
+    root.style.setProperty("--zk-cyan-soft",t[5]);
+    root.style.setProperty("--zk-text",t[3]);
+    root.style.setProperty("--zk-muted",t[4]);
+    root.style.setProperty("--zk-line",t[5]);
+    root.style.setProperty("--zk-line-strong",t[6]);
+    root.style.setProperty("--zk-font",font[2]);
     root.style.setProperty("--zakichat-font-family",font[2]);
-    root.style.setProperty("--zakichat-font-size",Math.max(13,Math.min(22,Number(s.fontSize)||16))+"px");
-    if(document.body)document.body.style.setProperty("--zakichat-wallpaper",s.wallpaper?"url('"+s.wallpaper+"')":"none");
+    root.style.setProperty("--zakichat-font-size",size+"px");
+    root.style.colorScheme=s.theme==="light"?"light":"dark";
+    if(document.body){
+      document.body.style.setProperty("--zakichat-wallpaper",s.wallpaper?"url('"+s.wallpaper+"')":"none");
+      document.body.style.setProperty("font-family",font[2],"important");
+      document.body.style.setProperty("font-size",size+"px","important");
+      if(s.wallpaper){
+        document.body.style.setProperty("background-image","linear-gradient(rgba(4,12,22,.58),rgba(4,12,22,.72)),url('"+s.wallpaper+"')","important");
+        document.body.style.setProperty("background-size","cover","important");
+        document.body.style.setProperty("background-position","center","important");
+        document.body.style.setProperty("background-attachment","fixed","important");
+      }else{
+        document.body.style.removeProperty("background-image");
+        document.body.style.removeProperty("background-size");
+        document.body.style.removeProperty("background-position");
+        document.body.style.removeProperty("background-attachment");
+      }
+    }
     root.dataset.zakichatChatStyle=localStorage.getItem(STYLE_KEY)||"classic";
   }
   function save(changes){settings=Object.assign({},settings,changes);localStorage.setItem(KEY,JSON.stringify(settings));apply(settings);sync();}
