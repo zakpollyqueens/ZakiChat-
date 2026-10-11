@@ -3,6 +3,42 @@
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 let toastTimer=0,recordTimer=0,recordStarted=0,mediaRecorder=null,recordChunks=[],recordStream=null,recordedBlob=null;
+let activeClient=null,activeUser=null,activeConversation=null,activeMembership=null,activePeer=null;
+let chatRows=[],allProfiles=[],activeFilter="all",listSearchTerm="",replyToMessage=null,realtimeChannel=null;
+function setStatus(message){const el=$("#supabase-connection-status");if(el)el.textContent=message}
+async function getCurrentBackend(){
+  const client=window.ZakiChatAuth?.client;
+  if(!client)throw new Error("ZakiChat authentication is not ready. Refresh and sign in again.");
+  const {data,error}=await client.auth.getSession();
+  if(error)throw error;
+  if(!data?.session?.user)throw new Error("Your session has expired. Please sign in again.");
+  activeClient=client;activeUser=data.session.user;
+  return {client,user:activeUser};
+}
+function friendlyError(error,fallback="Something went wrong. Please try again."){
+  console.error("ZakiChat chat error:",error);
+  const message=typeof error==="string"?error:(error?.message||fallback);
+  toast(message.length>180?fallback:message);
+}
+function initials(value){return String(value||"Z").trim().split(/\\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join("").toUpperCase()||"Z"}
+function profileName(profile){return profile?.full_name||profile?.username||profile?.phone||"ZakiChat user"}
+function messagePreview(message){
+  if(!message)return "No messages yet";
+  if(message.deleted_at)return "Message deleted";
+  if(message.message_type==="image")return "📷 Photo";
+  if(message.message_type==="video")return "🎬 Video";
+  if(message.message_type==="audio"||message.message_type==="voice")return "🎙 Voice message";
+  if(message.message_type==="file")return "📎 Attachment";
+  return String(message.body||"Message").replace(/\\s+/g," ").slice(0,100);
+}
+function niceTime(value){
+  if(!value)return "";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return "";
+  const now=new Date();
+  const sameDay=date.toDateString()===now.toDateString();
+  return sameDay?date.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}):date.toLocaleDateString([], {month:"short",day:"numeric"});
+}
 function toast(message){const el=$("#tg-toast");if(!el)return;el.textContent=message;el.classList.add("is-visible");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("is-visible"),2600)}
 function autoGrow(){const input=$("#message-input");if(!input)return;input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px";const has=input.value.trim().length>0;$("#send-button").hidden=!has;$("#mic-button").hidden=has}
 function updateViewport(){const composer=$("#tg-composer");if(!composer)return;const vv=window.visualViewport;const layout=window.innerHeight||document.documentElement.clientHeight;const visibleBottom=vv?vv.height+Math.max(0,vv.offsetTop||0):layout;const overlap=Math.max(0,Math.round(layout-visibleBottom));document.documentElement.style.setProperty("--tg-keyboard-overlap",overlap+"px");if(vv&&overlap>100)setTimeout(()=>{$("#message-area")?.scrollTo({top:$("#message-area").scrollHeight,behavior:"smooth"})},40)}
