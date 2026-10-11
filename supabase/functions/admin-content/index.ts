@@ -150,6 +150,7 @@ Deno.serve(async (req: Request) => {
         };
       }).filter(account => account.is_customized)
         .filter(account => !search || [account.full_name, account.username, account.email, account.phone, account.id, account.account_mode, ...(account.active_plans || [])].join(" ").toLowerCase().includes(search));
+      await audit(admin.userId, "customized_account_directory_viewed", "customized_account_directory", "all", { result_count: accounts.length, filter_applied: Boolean(search) });
       return json({ success: true, accounts, count: accounts.length });
     }
 
@@ -171,6 +172,7 @@ Deno.serve(async (req: Request) => {
       if (postsError) throw postsError;
       if (authError) throw authError;
       if (!profile) return json({ success: false, error: "The selected ZakiChat profile could not be found." }, 404);
+      await audit(admin.userId, "customized_account_details_viewed", "user", userId, { account_mode: preference?.account_mode || "local" });
       const activeUpgrades = (upgrades || []).filter(item => item.status === "active" && Date.parse(String(item.expires_at)) > Date.now());
       const accountMode = preference?.account_mode || "local";
       return json({ success: true, account: {
