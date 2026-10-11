@@ -4,6 +4,7 @@ const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 let toastTimer=0,recordTimer=0,recordStarted=0,mediaRecorder=null,recordChunks=[],recordStream=null,recordedBlob=null,recordMode="audio",keyboardNumbers=false,activePeerReadAt=null,composerFocused=false,baselineViewportHeight=0;
 let activeClient=null,activeUser=null,activeConversation=null,activeMembership=null,activePeer=null,chatRows=[],replyToMessage=null,realtimeChannel=null;
+let activeFilter="all",listSearchTerm="",allProfiles=[];
 async function getCurrentBackend(){
   const client=window.ZakiChatAuth?.client;
   if(!client) throw new Error("Secure chat connection is unavailable. Reload the app and sign in again.");
