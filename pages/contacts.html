@@ -48,6 +48,45 @@ body.zc-contacts-page .tg-shell{background:var(--contacts-bg)!important}
 .zc-save-contact{min-height:46px;border:0;border-radius:13px;background:linear-gradient(110deg,#39dfff,#1596df 60%,#3c75e8);color:#03172a;font-size:14px;font-weight:800}
 .zc-save-contact:disabled{opacity:.45}
 @media(max-width:360px){.zc-phone-row{grid-template-columns:112px minmax(0,1fr)}.zc-shortcut{font-size:12px}}
+
+/* Glassy, lively contacts refresh */
+body.zc-contacts-page,body.zc-contacts-page .tg-shell{background:radial-gradient(ellipse at 12% 0%,rgba(0,214,255,.16),transparent 35%),radial-gradient(ellipse at 100% 38%,rgba(92,90,255,.12),transparent 35%),#061322!important;color:#eaf9ff!important}
+body.zc-contacts-page .tg-shell{isolation:isolate}
+.zc-contacts-head{position:relative;padding:calc(18px + env(safe-area-inset-top)) 17px 12px;background:linear-gradient(145deg,rgba(13,42,66,.93),rgba(7,20,38,.84));border-bottom:1px solid rgba(118,226,255,.14);box-shadow:0 16px 36px rgba(0,0,0,.18);backdrop-filter:blur(22px)}
+.zc-contacts-top{align-items:center;min-height:60px}
+.zc-contact-heading{min-width:0}
+.zc-contacts-eyebrow{display:block;margin-bottom:3px;color:#5de3ff;font-size:10px;font-weight:850;letter-spacing:2px}
+.zc-contacts-top h1{font-size:28px;line-height:1.12;letter-spacing:-.8px;background:linear-gradient(100deg,#fff,#9ceaff 65%,#80aaff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.zc-contact-heading p{margin:6px 0 0;color:#8eacc2;font-size:12px;line-height:1.4}
+.zc-action{width:43px;height:43px;border-color:rgba(106,223,255,.25);border-radius:15px;background:linear-gradient(145deg,rgba(28,75,103,.8),rgba(12,32,53,.85));box-shadow:inset 0 1px 0 #ffffff12,0 7px 20px #0002;transition:transform .2s,box-shadow .2s}
+.zc-action:active{transform:scale(.94)}
+.zc-contacts-search{height:49px;margin:17px 0 10px;padding:0 15px;border-color:rgba(105,220,255,.2);border-radius:17px;background:rgba(9,28,47,.75);box-shadow:inset 0 1px 0 #ffffff08,0 8px 25px #0002;backdrop-filter:blur(14px)}
+.zc-contacts-search:focus-within{border-color:#42dfff8a;box-shadow:0 0 0 3px #45ddff12,0 8px 25px #0002}
+.zc-contacts-search input{color:#eaf9ff}
+.zc-contact-shortcuts{padding:9px 0 13px;border-bottom-color:rgba(105,220,255,.12)}
+.zc-shortcut{gap:12px;padding:9px 8px;border:1px solid rgba(106,223,255,.12);border-radius:17px;background:linear-gradient(115deg,rgba(17,52,78,.7),rgba(17,30,61,.5));box-shadow:inset 0 1px 0 #ffffff08;transition:transform .2s,border-color .2s}
+.zc-shortcut:active{transform:scale(.985);border-color:#45ddff66}
+.zc-shortcut-icon{width:43px;height:43px;border:1px solid #5be6ff35;border-radius:15px;background:linear-gradient(145deg,#22bfe3,#3459bd);color:white;box-shadow:0 6px 18px #00b9ef22}
+.zc-shortcut>span:last-child{display:flex;flex-direction:column;gap:2px}
+.zc-shortcut strong{font-size:13px;color:#eaf9ff}
+.zc-shortcut small{font-size:11px;font-weight:450;color:#8eacc2}
+.zc-contact-results{padding:4px 12px calc(126px + env(safe-area-inset-bottom));overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#24506b transparent}
+.zc-section-label{padding:17px 7px 9px;color:#79a9c2;font-size:10px;letter-spacing:1.6px}
+.zc-person{position:relative;gap:13px;min-height:76px;margin:3px 0;padding:9px 10px;border:1px solid transparent;border-radius:19px;background:linear-gradient(115deg,rgba(16,43,66,.62),rgba(10,26,46,.44));text-align:left;transition:transform .18s,border-color .18s,background .18s;animation:zc-contact-in .35s both}
+.zc-person:active{transform:scale(.985);border-color:#45ddff40;background:rgba(17,54,78,.82)}
+.zc-person-avatar{width:51px;height:51px;border-color:#58dcff50;background:linear-gradient(145deg,#24bcd9,#4753c8 75%);box-shadow:0 5px 15px #0002}
+.zc-person-copy{border-bottom:0;gap:5px}
+.zc-person-copy strong{font-size:14px;color:#e8f7ff}
+.zc-person-copy small{color:#8baabe}
+.zc-contact-empty{margin:22px 2px;padding:28px 20px;border:1px solid rgba(105,220,255,.14);border-radius:22px;background:rgba(13,37,59,.6);color:#9db9cc;line-height:1.75;backdrop-filter:blur(14px)}
+.zc-add-contact-fab{position:fixed;z-index:12;right:18px;bottom:calc(88px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:9px;min-height:54px;padding:0 18px;border:1px solid rgba(255,255,255,.35);border-radius:19px;background:linear-gradient(120deg,#61eaff,#20bde9 48%,#387de9);color:#04182a;font-size:13px;font-weight:850;box-shadow:0 10px 30px #00bde944,inset 0 1px 0 #ffffffb3;transition:transform .2s,box-shadow .2s;animation:zc-fab-float 3s ease-in-out infinite}
+.zc-add-contact-fab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.zc-add-contact-fab:active{transform:scale(.94);box-shadow:0 5px 14px #00bde933}
+@keyframes zc-contact-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes zc-fab-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media(min-width:650px){.zc-contacts-head,.zc-contact-results{padding-left:max(18px,calc((100vw - 620px)/2));padding-right:max(18px,calc((100vw - 620px)/2))}.zc-add-contact-fab{right:max(22px,calc((100vw - 620px)/2))}}
+@media(prefers-reduced-motion:reduce){.zc-person,.zc-add-contact-fab{animation:none;transition:none}}
+
 </style>
 </head>
 <body class="tg-app tg-list-page zc-contacts-page">
@@ -55,14 +94,14 @@ body.zc-contacts-page .tg-shell{background:var(--contacts-bg)!important}
 <header class="zc-contacts-head">
  <div class="zc-contacts-top"><div class="zc-contact-heading"><span class="zc-contacts-eyebrow">YOUR CIRCLE</span><h1>Contacts</h1><p>Good conversations start with your people.</p></div><div class="zc-contact-actions">
   <button class="zc-action" id="contacts-search-toggle" type="button" aria-label="Search contacts" title="Search contacts"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
-  <button class="zc-action" id="add-contact-top" type="button" aria-label="Add contact" title="Add contact"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  
  </div></div>
  <label class="zc-contacts-search" id="contacts-search-box"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg><input id="contacts-search" type="search" placeholder="Find someone in your contacts…" autocomplete="off"></label>
  <div class="zc-contact-shortcuts">
   <button class="zc-shortcut" id="invite-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span><strong>Invite a friend</strong><small>Bring your people to ZakiChat</small></span></button>
  </div>
 </header>
-<section id="contacts-results" class="zc-contact-results" aria-label="Saved contacts"><p class="zc-contact-empty">Loading your contacts…</p></section>
+<section id="contacts-results" class="zc-contact-results" aria-label="Saved contacts"><p class="zc-contact-empty">Loading your contacts…</p></section><button class="zc-add-contact-fab" id="add-contact-top" type="button" aria-label="Add a contact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add contact</span></button>
 <nav class="zc-bottom-nav" aria-label="Main navigation">
  <a href="chats.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span></a>
  <a href="settings.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="m19.4 13.8 1.1.9-1.6 2.8-1.4-.5a7.7 7.7 0 0 1-1.7 1l-.3 1.5a"/></svg><span>Settings</span></a>
