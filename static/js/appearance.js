@@ -90,22 +90,20 @@
     root.style.setProperty("--zk-font",font[2]);
     root.style.setProperty("--zakichat-font-family",font[2]);
     root.style.setProperty("--zakichat-font-size",size+"px");
-    root.style.colorScheme=s.theme==="light"?"light":"dark";
+    root.style.setProperty("color-scheme",s.theme==="light"?"light":"dark","important");
     if(document.body){
       document.body.style.setProperty("--zakichat-wallpaper",s.wallpaper?"url('"+s.wallpaper+"')":"none");
       document.body.style.setProperty("font-family",font[2],"important");
       document.body.style.setProperty("font-size",size+"px","important");
-      if(s.wallpaper){
-        document.body.style.setProperty("background-image","linear-gradient(rgba(4,12,22,.58),rgba(4,12,22,.72)),url('"+s.wallpaper+"')","important");
-        document.body.style.setProperty("background-size","cover","important");
-        document.body.style.setProperty("background-position","center","important");
-        document.body.style.setProperty("background-attachment","fixed","important");
-      }else{
-        document.body.style.removeProperty("background-image");
-        document.body.style.removeProperty("background-size");
-        document.body.style.removeProperty("background-position");
-        document.body.style.removeProperty("background-attachment");
-      }
+      document.body.style.setProperty("color",t[3],"important");
+      document.body.style.setProperty("background-color",t[0],"important");
+      const background=s.wallpaper
+        ?"linear-gradient(rgba(4,12,22,.52),rgba(4,12,22,.7)),url('"+s.wallpaper+"')"
+        :"radial-gradient(ellipse at 90% 0%,"+t[7]+"24,transparent 36%),linear-gradient(155deg,"+t[0]+","+t[1]+" 58%,"+t[2]+")";
+      document.body.style.setProperty("background-image",background,"important");
+      document.body.style.setProperty("background-size",s.wallpaper?"cover":"auto","important");
+      document.body.style.setProperty("background-position","center","important");
+      document.body.style.setProperty("background-attachment",s.wallpaper?"fixed":"scroll","important");
     }
     root.dataset.zakichatChatStyle=localStorage.getItem(STYLE_KEY)||"classic";
   }
