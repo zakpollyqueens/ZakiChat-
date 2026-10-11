@@ -26,8 +26,34 @@ async function checkAccess(){
  }
 }
 function setMediaTitle(title,hint){$("zplayMediaTitle").textContent=title;$("zplayMediaHint").textContent=hint}
+function providerEmbed(raw){
+ try{
+  const u=new URL(raw),host=u.hostname.replace(/^www\./,"").toLowerCase();
+  if(host==="youtu.be"||host==="youtube.com"||host==="m.youtube.com"||host==="music.youtube.com"){
+   let id=host==="youtu.be"?u.pathname.split("/").filter(Boolean)[0]:(u.searchParams.get("v")||u.pathname.match(/\/(?:embed|shorts|live)\/([^/?]+)/)?.[1]);
+   if(id&&/^[a-zA-Z0-9_-]{6,20}$/.test(id))return {url:"https://www.youtube-nocookie.com/embed/"+id,title:"YouTube video",hint:"Embedded from YouTube. Playback and availability are controlled by YouTube."};
+  }
+  if(host==="open.spotify.com"){
+   const parts=u.pathname.split("/").filter(Boolean),kind=parts[0],id=parts[1];
+   if(["track","album","playlist","artist","episode","show"].includes(kind)&&id)return {url:"https://open.spotify.com/embed/"+kind+"/"+encodeURIComponent(id),title:"Spotify "+kind,hint:"Embedded from Spotify. A Spotify account may be required for full playback."};
+  }
+  if(host==="tiktok.com"||host.endsWith(".tiktok.com")){
+   const match=u.pathname.match(/\/video\/(\d+)/);
+   if(match)return {url:"https://www.tiktok.com/embed/v2/"+match[1],title:"TikTok video",hint:"Embedded from TikTok. TikTok controls availability and playback."};
+  }
+ }catch(_){}
+ return null;
+}
 function useMedia(url,title,type){
  const stage=$("zplayMediaStage");stage.replaceChildren();
+ const embed=providerEmbed(url);
+ if(embed){
+  const frame=document.createElement("iframe");frame.src=embed.url;frame.title=embed.title;frame.loading="lazy";frame.referrerPolicy="strict-origin-when-cross-origin";
+  frame.allow="autoplay; encrypted-media; fullscreen; picture-in-picture";frame.allowFullscreen=true;stage.appendChild(frame);
+  $("zplayDisc").classList.remove("is-playing");setMediaTitle(embed.title,embed.hint);
+  $("zplayDownloadNote").textContent="Embedded platform content cannot be downloaded through ZakiPlay unless the provider explicitly offers that option.";
+  return;
+ }
  let media;
  if(type==="audio"){media=document.createElement("audio");media.controls=true;media.autoplay=true}
  else{media=document.createElement("video");media.controls=true;media.playsInline=true;media.autoplay=true}
@@ -67,9 +93,22 @@ $("zplayDownloadUrl").addEventListener("click",async()=>{
 });
 function searchService(){
  const q=$("zplaySearch").value.trim();if(!q){$("zplaySearch").focus();return}
- const query=encodeURIComponent(q);
- const url="https://www.youtube.com/results?search_query="+query;
- window.open(url,"_blank","noopener,noreferrer");
+ const query=encodeURIComponent(q),results=$("zplaySearchResults");
+ const destinations=[
+  ["▶","YouTube","Search videos and music","https://www.youtube.com/results?search_query="+query],
+  ["♫","Spotify","Search tracks, albums and podcasts","https://open.spotify.com/search/"+query],
+  ["♪","TikTok","Search short videos and creators","https://www.tiktok.com/search?q="+query],
+  ["▣","Internet Archive","Find films and media with rights details","https://archive.org/search?query="+query]
+ ];
+ results.replaceChildren();
+ destinations.forEach(([icon,name,detail,url])=>{
+  const a=document.createElement("a");a.className="zplay-search-result";a.href=url;a.target="_blank";a.rel="noopener noreferrer";
+  const symbol=document.createElement("span");symbol.textContent=icon;
+  const copy=document.createElement("span"),strong=document.createElement("strong"),small=document.createElement("small");
+  strong.textContent=name;small.textContent=detail;copy.append(strong,small);
+  const arrow=document.createElement("b");arrow.textContent="↗";a.append(symbol,copy,arrow);results.appendChild(a);
+ });
+ results.hidden=false;
 }
 $("zplaySearchButton").addEventListener("click",searchService);
 $("zplaySearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();searchService()}});
