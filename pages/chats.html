@@ -11,25 +11,15 @@
 <body class="tg-app tg-list-page">
 <main class="tg-shell">
   <header class="tg-list-header">
-    <div class="tg-brand-row">
-      <h1 class="tg-wordmark">ZakiChat</h1>
-      <div class="tg-header-actions">
-        <button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search chats" title="Search">⌕</button>
-        <button class="tg-icon-btn" id="app-lock-button" data-zaki-app-lock type="button" aria-label="App lock" title="App lock">♙</button>
-        <button class="tg-icon-btn" id="top-menu-toggle" type="button" aria-label="More options" title="More options">⋮</button>
-      </div>
-    </div>
+    <div class="tg-brand-row"><h1 class="tg-wordmark">ZakiChat</h1><div class="tg-header-actions tg-list-actions">
+      <button class="tg-icon-btn" id="top-search-toggle" type="button" aria-label="Search chats" title="Search" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
+      <button class="tg-icon-btn" id="app-lock-button" data-zaki-app-lock type="button" aria-label="Lock ZakiChat" title="Lock app"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10" width="15" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg></button>
+      <button class="tg-icon-btn" id="top-menu-toggle" type="button" aria-label="More options" title="More options" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></button>
+    </div></div>
     <label class="tg-search" id="top-search-box"><span aria-hidden="true">⌕</span><input id="chat-search" type="search" placeholder="Search" autocomplete="off"><button id="clear-search" type="button" aria-label="Clear search" hidden>×</button></label>
-    <div class="tg-filter-row" role="group" aria-label="Chat filters">
-      <button class="tg-filter is-active" data-filter="all" type="button">All chats</button>
-      <button class="tg-filter" data-filter="personal" type="button">Personal</button>
-      <button class="tg-filter" data-filter="groups" type="button">Groups</button>
-      <button class="tg-filter" data-filter="channels" type="button">Channels</button>
-    </div>
+    <div class="tg-filter-row" role="group" aria-label="Chat filters"><button class="tg-filter is-active" data-filter="all" type="button">All chats</button><button class="tg-filter" data-filter="personal" type="button">Personal</button><button class="tg-filter" data-filter="groups" type="button">Groups</button><button class="tg-filter" data-filter="channels" type="button">Channels</button></div>
     <div class="tg-backend-status" id="supabase-connection-status" role="status" aria-live="polite">Connecting to ZakiChat services…</div>
-    <div class="tg-top-menu" id="top-menu" hidden>
-      <a href="contacts.html">Contacts</a><a href="profile.html">My Profile</a><a href="settings.html">Settings</a><a href="channels.html">Channels</a><button id="top-menu-lock" type="button">Lock app</button>
-    </div>
+    <div class="tg-top-menu" id="top-menu" hidden><a href="contacts.html">Contacts</a><a href="profile.html">My Profile</a><a href="settings.html">Settings</a><a href="channels.html">Channels</a><button id="top-menu-lock" type="button">Lock app</button></div>
   </header>
 
   <section class="tg-list-content" aria-label="Conversation list">
@@ -60,10 +50,10 @@
   </dialog>
 
   <nav class="tg-bottom-nav" aria-label="Main navigation">
-    <a class="is-current" href="chats.html" aria-current="page"><span aria-hidden="true">☏</span><span>Chats</span></a>
-    <a href="contacts.html"><span aria-hidden="true">☉</span><span>Contacts</span></a>
-    <a href="settings.html"><span aria-hidden="true">⚙</span><span>Settings</span></a>
-    <a href="profile.html"><span aria-hidden="true">●</span><span>Profile</span></a>
+    <a class="is-current" href="chats.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-5 3v-3H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 14h5"/></svg><span>Chats</span></a>
+    <a href="contacts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/><circle cx="12" cy="12" r="10"/></svg><span>Contacts</span></a>
+    <a href="settings.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.7 3.5 10.5 2h3l.8 1.5 2 .9 1.7-.3 1.5 2.6-.9 1.5v2l.9 1.5-1.5 2.6-1.7-.3-2 .9-.8 1.5h-3l-.8-1.5-2-.9-1.7.3-1.5-2.6.9-1.5v-2l-.9-1.5L6 4.1l1.7.3z" transform="translate(0 2)"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></a>
+    <a href="profile.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><circle cx="12" cy="12" r="10"/></svg><span>Profile</span></a>
   </nav>
 </main>
 <section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section><div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
