@@ -20,7 +20,7 @@ function friendlyError(error,fallback="Something went wrong. Please try again.")
   const message=typeof error==="string"?error:(error?.message||fallback);
   toast(message.length>180?fallback:message);
 }
-function initials(value){return String(value||"Z").trim().split(/\\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join("").toUpperCase()||"Z"}
+function initials(value){return String(value||"Z").trim().split(/\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join("").toUpperCase()||"Z"}
 function profileName(profile){return profile?.full_name||profile?.username||profile?.phone||"ZakiChat user"}
 function messagePreview(message){
   if(!message)return "No messages yet";
@@ -29,7 +29,7 @@ function messagePreview(message){
   if(message.message_type==="video")return "🎬 Video";
   if(message.message_type==="audio"||message.message_type==="voice")return "🎙 Voice message";
   if(message.message_type==="file")return "📎 Attachment";
-  return String(message.body||"Message").replace(/\\s+/g," ").slice(0,100);
+  return String(message.body||"Message").replace(/\s+/g," ").slice(0,100);
 }
 function niceTime(value){
   if(!value)return "";
