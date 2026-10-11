@@ -30,7 +30,12 @@
       // Validate the user with Supabase Auth, not only the locally stored session.
       const { data, error } = await client.auth.getUser();
       const user = data?.user;
-      if (error || !user || !user.email || !user.email_confirmed_at) {
+      // New email-based accounts must have a confirmed email. Keep already-authenticated
+      // legacy phone-confirmed sessions working during the migration so existing users
+      // are not unexpectedly locked out of their chats.
+      const verifiedEmail = Boolean(user?.email && user.email_confirmed_at);
+      const legacyVerifiedPhone = Boolean(user?.phone && user.phone_confirmed_at);
+      if (error || !user || (!verifiedEmail && !legacyVerifiedPhone)) {
         await client.auth.signOut({ scope: "local" });
         sendToLogin();
         return;
