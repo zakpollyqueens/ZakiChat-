@@ -123,10 +123,13 @@
         if (error) console.warn("Could not persist Local fallback for expired mode:", error);
       }
 
+      const previousMode = window.ZakiChatMode?.current;
       window.ZakiChatMode = Object.freeze({ current: mode, plans, ready: true });
       document.documentElement.dataset.zakichatAccountMode = mode;
       document.body?.setAttribute("data-zakichat-account-mode", mode);
-      window.dispatchEvent(new CustomEvent("zakichat:modechange", { detail: { mode } }));
+      if (previousMode !== mode) {
+        window.dispatchEvent(new CustomEvent("zakichat:modechange", { detail: { mode } }));
+      }
     } catch (error) {
       console.warn("ZakiChat account mode could not be resolved:", error);
       window.ZakiChatMode = Object.freeze({ current: "local", plans: new Set(), ready: false });
