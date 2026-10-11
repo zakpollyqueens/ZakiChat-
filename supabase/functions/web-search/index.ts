@@ -51,7 +51,7 @@ async function ddg(query:string) {
   return results;
 }
 function attr(tag:string,name:string) {
- const re=new RegExp(name+"\\\\s*=\\\\s*([\\\"'])([\\\\s\\\\S]*?)\\\\1","i");
+ const re=new RegExp(name+"\\s*=\\s*([\"'])([\\s\\S]*?)\\1","i");
  return tag.match(re)?.[2]||"";
 }
 async function bingImages(query:string) {
