@@ -563,7 +563,7 @@
       showUpgradeStatus(
         (result.message || 'Your upgrade request has been recorded.') +
         ' Request reference: ' + result.requestId +
-        '. No charge has been made. Automatic checkout still needs the approved payment-provider credentials and webhook verification.'
+        '. If Pesapal checkout is not configured, no charge has been made. Your upgrade activates only after Pesapal payment verification.'
       );
     } catch (error) {
       console.error('Upgrade request failed:', error);
@@ -582,7 +582,14 @@
       button.dataset.upgradeBound = 'true';
       button.addEventListener('click', () => handleUpgrade(button.dataset.upgradePlan, button));
     });
-    const requested = new URLSearchParams(window.location.search).get('upgrade');
+    const query = new URLSearchParams(window.location.search);
+    const pesapalTrackingId = query.get('OrderTrackingId') || query.get('orderTrackingId');
+    const pesapalReference = query.get('OrderMerchantReference') || query.get('orderMerchantReference');
+    if (pesapalTrackingId && pesapalReference) {
+      showUpgradeStatus('Pesapal returned a payment update. ZakiChat is verifying the transaction securely. Your plan will activate only after Pesapal confirms the payment; please do not pay again while verification is pending.');
+      document.getElementById('paid-upgrades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    const requested = query.get('upgrade');
     if (requested === 'personal_monthly' || requested === 'business_monthly') {
       const selected = document.querySelector('[data-upgrade-plan="' + requested + '"]');
       selected?.classList.add('upgrade-plan-requested');
