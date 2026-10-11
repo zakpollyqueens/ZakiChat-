@@ -87,7 +87,27 @@ function renderDetails(a){
  if(!(a.upgrades||[]).length)entitlement.appendChild(field("Subscription history","No subscription records"));
  (a.upgrades||[]).forEach((u,i)=>{const plan=u.plan==="personal_monthly"?"Customized Personal":u.plan==="business_monthly"?"Customized Business":u.plan;entitlement.appendChild(field("Plan "+(i+1),plan+" · "+u.status+" · "+(u.currency||"USD")+" "+u.price_usd+" · expires "+date(u.expires_at)))});
  grid.appendChild(entitlement);root.appendChild(grid);
- if(isBusiness(a)){const note=document.createElement("div");note.className="detail-note";note.textContent=a.business_workspace_note||"This account is in Customized Business mode. The current app schema tracks the mode and plan entitlement; business-only workspace content can be added when its data model is implemented.";root.appendChild(note)}
+ const workspaces=Array.isArray(a.business_workspaces)?a.business_workspaces:[];
+ if(workspaces.length){
+  const workspacePanel=panel("Business workspaces · "+workspaces.length);
+  workspaces.forEach((w,index)=>{
+   const section=document.createElement("div");section.className="detail-post";
+   const title=document.createElement("h4");title.textContent=w.business_name||w.business_title||("Business workspace "+(index+1));title.style.margin="0 0 8px";
+   section.appendChild(title);
+   [["Business title",w.business_title],["Business email",w.business_email],["Description",w.description],["Business identity enabled",w.business_identity_enabled?"Yes":"No"],["Personal profile name",w.personal_profile_name],["Personal profile bio",w.personal_profile_bio],["Workspace created",date(w.created_at)]].forEach(([k,v])=>section.appendChild(field(k,v)));
+   if(w.logo_url){const logo=document.createElement("img");logo.src=w.logo_url;logo.alt="Business logo";logo.loading="lazy";logo.referrerPolicy="no-referrer";logo.style.cssText="display:block;max-width:100px;max-height:70px;object-fit:contain;margin:10px 0;border-radius:10px";section.appendChild(logo)}
+   const members=(a.business_members||[]).filter(m=>m.business_id===w.id);
+   const memberTitle=document.createElement("h4");memberTitle.textContent="Team members · "+members.length;memberTitle.style.margin="14px 0 8px";section.appendChild(memberTitle);
+   if(!members.length){const empty=document.createElement("p");empty.className="detail-post";empty.textContent="No staff or invitations recorded.";section.appendChild(empty)}
+   members.forEach(m=>{const row=document.createElement("div");row.className="detail-post";const name=document.createElement("p");name.textContent=m.display_name||m.email||m.phone||"Invited member";const meta=document.createElement("small");meta.textContent=[m.role||"member",m.status||"unknown status",m.email,m.phone,date(m.created_at)].filter(Boolean).join(" · ");row.append(name,meta);section.appendChild(row)});
+   workspacePanel.appendChild(section);
+  });
+  root.appendChild(workspacePanel);
+ }else if(isBusiness(a)){
+  const emptyWorkspace=panel("Business workspace");const p=document.createElement("p");p.className="detail-post";p.textContent="No business workspace has been created for this account yet.";emptyWorkspace.appendChild(p);root.appendChild(emptyWorkspace);
+ }
+ if(isBusiness(a)){const note=document.createElement("div");note.className="detail-note";note.textContent=a.business_workspace_note||"Business workspace details are shown when available.";root.appendChild(note)}
+
  const postsPanel=panel("Profile posts");
  const posts=(a.posts||[]).filter(p=>!p.archived);
  if(!posts.length){const p=document.createElement("p");p.className="detail-post";p.textContent="No active profile posts.";postsPanel.appendChild(p)}
