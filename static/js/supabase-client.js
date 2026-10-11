@@ -84,6 +84,7 @@
         .eq("user_id", user.id)
         .eq("status", "active")
         .gt("expires_at", new Date().toISOString())
+      .lte("starts_at", new Date().toISOString())
         .in("plan", ["personal_monthly", "business_monthly"]);
       if (upgradeError) throw upgradeError;
 
