@@ -472,15 +472,22 @@
       }
       empty.hidden = true;
 
-      const recentGroups = [...grouped.entries()].sort((a, b) => {
-        const aLatest = Math.max(...a[1].map(item => new Date(item.created_at).getTime()));
-        const bLatest = Math.max(...b[1].map(item => new Date(item.created_at).getTime()));
-        return bLatest - aLatest;
-      });
+      const recentEntries = [];
+      // Keep every one of the signed-in user's active statuses individually
+      // visible, so a count such as 12 always corresponds to viewable entries.
+      for (const ownStatus of ownStatuses) {
+        recentEntries.push({ userId: this.userId, statuses: [ownStatus], latest: ownStatus, isOwn: true });
+      }
+      // Friends are grouped by person; opening a friend's row opens their
+      // newest status and the existing viewer can move through their updates.
+      for (const [userId, statuses] of contactStatuses) {
+        recentEntries.push({ userId, statuses, latest: statuses[0], isOwn: false });
+      }
+      recentEntries.sort((a, b) => new Date(b.latest.created_at).getTime() - new Date(a.latest.created_at).getTime());
+      count.textContent = String(recentEntries.length);
 
-      for (const [userId, statuses] of recentGroups) {
-        const latest = statuses[0];
-        const isOwn = userId === this.userId;
+      for (const entry of recentEntries) {
+        const { userId, statuses, latest, isOwn } = entry;
         const profile = this.profiles.get(userId);
         const name = isOwn ? 'My status' : this.getProfileName(profile);
         const button = document.createElement('button');
@@ -508,12 +515,12 @@
         subtitle.textContent = this.statusPreview(latest);
         const meta = document.createElement('small');
         meta.className = 'status-recent-meta';
-        meta.textContent = statuses.length + ' active status' + (statuses.length === 1 ? '' : 'es') + (isOwn ? ' · Yours' : '');
+        meta.textContent = isOwn
+          ? this.formatDate(latest.created_at) + ' · Yours · Manage status'
+          : statuses.length + ' active update' + (statuses.length === 1 ? '' : 's');
         info.append(title, subtitle, meta);
         button.append(avatar, info);
-
-        const openLatest = () => this.openViewer(latest, name);
-        button.addEventListener('click', openLatest);
+        button.addEventListener('click', () => this.openViewer(latest, name));
         list.appendChild(button);
       }
     },
