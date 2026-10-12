@@ -151,4 +151,5 @@ body.zc-contacts-page .zc-person.is-selected{border-color:#54e3ff!important;back
  document.addEventListener("DOMContentLoaded",async()=>{try{client=window.ZakiChatAuth?.client;if(!client)throw new Error("Chat services are not ready. Refresh and try again.");const {data:{user:u},error}=await client.auth.getUser();if(error)throw error;if(!u)throw new Error("Please sign in to manage contacts.");user=u;await loadContacts()}catch(e){console.error("Contacts loading failed",e);const root=$("#contacts-results");root.replaceChildren();const p=document.createElement("p");p.className="zc-contact-empty";p.textContent=e.message||"Could not load contacts.";root.append(p)}});
 })();
 </script>
+  <script src="../static/js/nav-profile-sync.js?v=20261012-avatar"></script>
 </body></html>
