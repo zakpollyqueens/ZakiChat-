@@ -10,8 +10,8 @@ android {
         applicationId 'com.zakmolanitech.zakichat'
         minSdk 23
         targetSdk 33
-        versionCode 16
-        versionName 'zc-vr16'
+        versionCode 17
+        versionName 'zc-vr17'
     }
 
     buildTypes {
