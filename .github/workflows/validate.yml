@@ -77,10 +77,7 @@ jobs:
   build-android:
     name: Build ZakiChat Android APK
     needs: validate
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout ZakiChat
         uses: actions/checkout@v4
@@ -127,18 +124,3 @@ jobs:
             android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
           retention-days: 14
-
-      - name: Publish direct APK downloads
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh release create zc-vr15-android \
-            android/app/build/outputs/apk/release/app-release.apk \
-            android/app/build/outputs/apk/debug/app-debug.apk \
-            --title "ZakiChat Android zc-vr15" \
-            --notes "ZakiChat Android test build with the draggable floating bubble and recent chats panel. Test sign-in, messaging, overlay permission, and dismiss-from-Recents behavior on-device." \
-            || gh release upload zc-vr15-android \
-              android/app/build/outputs/apk/release/app-release.apk \
-              android/app/build/outputs/apk/debug/app-debug.apk --clobber
