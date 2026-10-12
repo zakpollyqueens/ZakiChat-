@@ -82,7 +82,9 @@
 
       if (myStatusCard) {
         myStatusCard.addEventListener('click', () => {
-          this.openComposer();
+          const own = this.statuses.filter(status => status.user_id === this.userId);
+          if (own.length) this.openViewer(own[0], 'My Status');
+          else this.openComposer();
         });
 
         myStatusCard.addEventListener('keydown', event => {
@@ -113,6 +115,11 @@
           'click',
           () => this.closeViewer()
         );
+      document.getElementById('statusHeartButton')?.addEventListener('click', () => this.sendStatusReaction('❤️'));
+      document.getElementById('statusReactButton')?.addEventListener('click', () => { const choice = window.prompt('Choose a reaction: ❤️ 😂 😮 😢 🔥 👍'); if (choice && ['❤️','😂','😮','😢','🔥','👍'].includes(choice.trim())) this.sendStatusReaction(choice.trim()); else if (choice) window.alert('Choose one of the listed reactions.'); });
+      document.getElementById('statusViewsButton')?.addEventListener('click', () => this.loadStatusViewers());
+      document.getElementById('statusEditButton')?.addEventListener('click', () => this.editMyStatus());
+      document.getElementById('statusDeleteButton')?.addEventListener('click', () => this.deleteMyStatus());
 
       document
         .getElementById('publishStatusButton')
@@ -456,11 +463,28 @@
             : 'Add a status update';
       }
 
-      if (!contactStatuses.length) {
-        empty.hidden = false;
-        return;
+      const ownList = document.getElementById('myStatusList');
+      const ownEmpty = document.getElementById('myStatusesEmpty');
+      const ownCount = document.getElementById('myStatusesCount');
+      if (ownList) {
+        ownList.innerHTML = '';
+        ownStatuses.forEach(status => {
+          const item = document.createElement('button');
+          item.type = 'button'; item.className = 'status-item my-status-item';
+          const avatar = document.createElement('div'); avatar.className = 'status-avatar';
+          avatar.textContent = status.media_type === 'video' ? '▶' : status.media_type === 'audio' ? '♫' : status.media_path ? '▧' : 'Aa';
+          const info = document.createElement('div'); info.className = 'status-item-info';
+          const title = document.createElement('strong'); title.textContent = status.text || (status.media_type === 'audio' ? 'Voice status' : status.media_type === 'video' ? 'Video status' : 'Photo status');
+          const subtitle = document.createElement('span'); subtitle.textContent = this.formatDate(status.created_at) + ' · Tap to manage, view reactions and viewers';
+          info.append(title, subtitle); item.append(avatar, info);
+          item.addEventListener('click', () => this.openViewer(status, 'My Status')); ownList.append(item);
+        });
       }
-
+      if (ownCount) ownCount.textContent = String(ownStatuses.length);
+      if (ownEmpty) ownEmpty.hidden = ownStatuses.length > 0;
+      if (!contactStatuses.length) {
+        empty.hidden = true; empty.textContent = 'No contact updates yet. Your own statuses are listed above.'; return;
+      }
       empty.hidden = true;
 
       for (
@@ -866,18 +890,53 @@
         }
       }
 
-      document.getElementById(
-        'statusViewer'
-      ).hidden = false;
+      const isMine = status.user_id === this.userId;
+      const actions = document.getElementById('statusViewerActions'); if (actions) actions.hidden = false;
+      const editButton = document.getElementById('statusEditButton'); const deleteButton = document.getElementById('statusDeleteButton'); const viewsButton = document.getElementById('statusViewsButton');
+      if (editButton) editButton.hidden = !isMine; if (deleteButton) deleteButton.hidden = !isMine; if (viewsButton) viewsButton.hidden = !isMine;
+      const viewsPanel = document.getElementById('statusViewsPanel'); if (viewsPanel) { viewsPanel.hidden = true; viewsPanel.innerHTML = ''; }
+      const reactionSummary = document.getElementById('statusReactionSummary'); if (reactionSummary) reactionSummary.textContent = '';
+      document.getElementById('statusViewer').dataset.statusId = status.id; document.getElementById('statusViewer').hidden = false;
+      if (!isMine) await this.recordView(status.id); await this.loadStatusReactions(status.id);
+    },
 
-      if (
-        status.user_id !==
-        this.userId
-      ) {
-        await this.recordView(
-          status.id
-        );
-      }
+    async loadStatusReactions(statusId) {
+      const summary = document.getElementById('statusReactionSummary'); if (!summary) return;
+      try { const { data, error } = await this.db.from('status_reactions').select('reaction,user_id').eq('status_id', statusId); if (error) throw error; const rows = data || []; summary.textContent = '❤️ ' + rows.filter(row => row.reaction === '❤️').length + ' hearts · 😊 ' + rows.filter(row => row.reaction !== '❤️').length + ' other reactions'; }
+      catch (error) { console.warn('Could not load status reactions:', error); summary.textContent = 'Reactions unavailable until the database migration is applied.'; }
+    },
+
+    async sendStatusReaction(reaction) {
+      const statusId = document.getElementById('statusViewer')?.dataset.statusId; if (!statusId) return;
+      try { const { error } = await this.db.from('status_reactions').upsert({ status_id: statusId, user_id: this.userId, reaction }, { onConflict: 'status_id,user_id' }); if (error) throw error; await this.loadStatusReactions(statusId); }
+      catch (error) { console.error('Status reaction failed:', error); window.alert('Could not send reaction. Please try again.'); }
+    },
+
+    async loadStatusViewers() {
+      const statusId = document.getElementById('statusViewer')?.dataset.statusId; const panel = document.getElementById('statusViewsPanel'); if (!statusId || !panel) return;
+      panel.hidden = false; panel.textContent = 'Loading viewers…';
+      try {
+        const { data, error } = await this.db.from('status_views').select('viewer_id,viewed_at').eq('status_id', statusId).order('viewed_at', { ascending: false }); if (error) throw error;
+        const rows = data || []; panel.innerHTML = ''; const heading = document.createElement('strong'); heading.textContent = 'Viewed by ' + rows.length + (rows.length === 1 ? ' person' : ' people'); panel.append(heading);
+        if (!rows.length) { const empty = document.createElement('p'); empty.textContent = 'No views yet.'; panel.append(empty); return; }
+        const ids = [...new Set(rows.map(row => row.viewer_id))]; const { data: profiles, error: profileError } = await this.db.from('profiles').select('id,username,full_name,avatar_url').in('id', ids); if (profileError) throw profileError;
+        const map = new Map((profiles || []).map(profile => [profile.id, profile]));
+        rows.forEach(row => { const p = map.get(row.viewer_id); const line = document.createElement('div'); line.className = 'status-viewer-row'; line.textContent = (p?.full_name || p?.username || 'ZakiChat user') + ' · ' + this.formatDate(row.viewed_at); panel.append(line); });
+      } catch (error) { console.error('Unable to load status viewers:', error); panel.textContent = 'Could not load viewers: ' + (error.message || 'Please try again.'); }
+    },
+
+    async editMyStatus() {
+      const statusId = document.getElementById('statusViewer')?.dataset.statusId; const status = this.statuses.find(item => item.id === statusId && item.user_id === this.userId); if (!status) return;
+      const updatedText = window.prompt('Edit your status text:', status.text || ''); if (updatedText === null) return;
+      try { const { error } = await this.db.from('status_updates').update({ text: updatedText.trim() || null }).eq('id', status.id).eq('user_id', this.userId); if (error) throw error; status.text = updatedText.trim() || null; await this.loadStatuses(); await this.openViewer(status, 'My Status'); }
+      catch (error) { console.error('Status edit failed:', error); window.alert('Could not edit status. Check database update permissions and try again.'); }
+    },
+
+    async deleteMyStatus() {
+      const viewer = document.getElementById('statusViewer'); const statusId = viewer?.dataset.statusId; const status = this.statuses.find(item => item.id === statusId && item.user_id === this.userId); if (!status || !window.confirm('Delete this status permanently?')) return;
+      try { if (status.media_path) { const { error: storageError } = await this.db.storage.from('status-updates').remove([status.media_path]); if (storageError) console.warn('Status media cleanup failed:', storageError); }
+        const { error } = await this.db.from('status_updates').delete().eq('id', status.id).eq('user_id', this.userId); if (error) throw error; this.closeViewer(); await this.loadStatuses(); }
+      catch (error) { console.error('Status delete failed:', error); window.alert('Could not delete status. Please try again.'); }
     },
 
     async recordView(
