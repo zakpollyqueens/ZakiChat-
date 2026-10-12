@@ -5,7 +5,8 @@ const title = document.getElementById("callbackTitle");
 const status = document.getElementById("callbackMessage");
 const profile = document.getElementById("callbackProfile");
 const action = document.getElementById("returnToApp");
-const PENDING = "zakichat_pending_email_registration";\nconst PENDING_ADD_ACCOUNT = "zakichat_pending_add_account_storage_key";
+const PENDING = "zakichat_pending_email_registration";
+const PENDING_ADD_ACCOUNT = "zakichat_pending_add_account_storage_key";
 const PAYMENT_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
 function show(text, type) { status.textContent = text; status.className = "auth-message " + (type || ""); }
 async function finish() {
