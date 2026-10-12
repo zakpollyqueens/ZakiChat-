@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>Floating Chat Bubble | ZakiChat</title>
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/signature-theme.css">
+<style>
+:root{color-scheme:dark;--cyan:#19d8f2}
+body{margin:0;background:#07111f;color:#f3f8ff;font-family:system-ui,-apple-system,sans-serif}
+.bubble-settings{max-width:720px;margin:auto;padding:22px 16px 48px}
+.back{display:inline-flex;color:#a8eefa;text-decoration:none;margin-bottom:24px;font-weight:700}
+.hero{padding:25px;border:1px solid #1b4a66;border-radius:24px;background:radial-gradient(circle at 100% 0,#123d5b 0,transparent 48%),linear-gradient(145deg,#0c2035,#081421);box-shadow:0 20px 55px #0005}
+.badge{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(140deg,#19d8f2,#0a5b96 60%,#07111f);border:2px solid #e7fcff;color:white;font-weight:900;font-size:19px;box-shadow:0 0 28px #19d8f244}
+h1{font-size:29px;line-height:1.15;margin:18px 0 10px}p{color:#b9c9d9;line-height:1.6}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid #ffffff16}.toggle-row strong{display:block}.toggle-row small{display:block;color:#9fb2c6;margin-top:5px;line-height:1.4}
+.switch{width:56px;height:32px;position:relative;flex-shrink:0}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#334155;border-radius:99px;transition:.2s;cursor:pointer}.slider:before{content:"";position:absolute;width:24px;height:24px;left:4px;top:4px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:#0aa6c5}.switch input:checked+.slider:before{transform:translateX(24px)}button{width:100%;margin-top:18px;padding:14px 16px;border:0;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer}.primary{background:linear-gradient(100deg,#19d8f2,#0c91c2);color:#03111d}.secondary{background:#13263a;border:1px solid #31506b;color:#d9f7ff}.status{padding:12px 14px;border-radius:12px;background:#0d2438;color:#c8f8ff;font-size:13px;margin-top:16px}.hint{font-size:13px;margin-top:16px}.preview{display:flex;align-items:center;gap:14px;margin-top:18px;padding:15px;border:1px solid #ffffff18;border-radius:16px;background:#07111f88}.preview .mini{width:46px;height:46px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(140deg,#19d8f2,#0a5b96,#07111f);font-weight:900;border:2px solid white}.preview small{display:block;color:#99b4c8;margin-top:4px}
+</style>
+</head>
+<body>
+<main class="bubble-settings">
+<a class="back" href="settings.html">← Back to Settings</a>
+<section class="hero">
+<div class="badge">ZAK</div>
+<h1>Floating Chat Bubble</h1>
+<p>Keep ZakiChat within reach while you use other apps. Tap the floating bubble to open your recent conversations in a compact panel.</p>
+<div class="preview"><div class="mini">ZAK</div><div><strong>Your chat shortcut</strong><small>Designed to sit around the middle edge of your screen.</small></div></div>
+<div class="toggle-row"><div><strong>Enable floating bubble</strong><small>Show the bubble after you leave ZakiChat. Android's “Display over other apps” permission is required.</small></div><label class="switch"><input id="bubbleEnabled" type="checkbox" checked><span class="slider"></span></label></div>
+<button id="permissionButton" class="primary" type="button">Allow display over other apps</button>
+<div id="bubbleStatus" class="status" role="status" aria-live="polite">Checking Android support…</div>
+<p class="hint">The bubble is designed to close when you dismiss ZakiChat from Recent Apps. Some Android manufacturers may manage background apps differently.</p>
+</section>
+</main>
+<script>
+(function(){
+ const toggle=document.getElementById('bubbleEnabled');
+ const permission=document.getElementById('permissionButton');
+ const status=document.getElementById('bubbleStatus');
+ const native=window.ZakiChatNative;
+ if(!native){
+   toggle.disabled=true;
+   status.textContent='This control works in the ZakiChat Android app. In a browser, websites cannot display a bubble over other apps.';
+   permission.textContent='Android permission is available in the installed app';
+   permission.disabled=true;
+   return;
+ }
+ function refresh(){
+   toggle.checked=!!native.isFloatingBubbleEnabled();
+   const allowed=!!native.canDrawFloatingBubble();
+   status.textContent=allowed?'Overlay permission is granted. The bubble appears when you leave ZakiChat.':'Overlay permission is not granted yet. Enable it in Android Settings.';
+   permission.textContent=allowed?'Overlay permission enabled':'Allow display over other apps';
+ }
+ toggle.addEventListener('change',()=>{native.setFloatingBubbleEnabled(toggle.checked);status.textContent=toggle.checked?'Floating bubble enabled. Grant overlay permission if Android asks.':'Floating bubble disabled.';setTimeout(refresh,600)});
+ permission.addEventListener('click',()=>{native.requestFloatingBubblePermission();status.textContent='Android Settings opened. Allow ZakiChat, then return here.'});
+ refresh();
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+})();
+</script>
+</body>
+</html>
