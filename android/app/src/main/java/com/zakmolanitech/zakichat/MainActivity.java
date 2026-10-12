@@ -12,6 +12,8 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.JavascriptInterface;
+import android.content.SharedPreferences;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity {
         webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
         webView.getSettings().setAllowFileAccess(false);
         webView.getSettings().setAllowContentAccess(true);
+        webView.addJavascriptInterface(new NativeBridge(), "ZakiChatNative");
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient() {
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
@@ -83,10 +86,36 @@ public class MainActivity extends Activity {
     @Override protected void onStop() {
         super.onStop();
         if (isFinishing()) return;
-        if (Settings.canDrawOverlays(this)) {
+        if (Settings.canDrawOverlays(this) && getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true)) {
             Intent service = new Intent(this, FloatingBubbleService.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(service);
             else startService(service);
+        }
+    }
+
+
+    public class NativeBridge {
+        @JavascriptInterface public boolean isFloatingBubbleEnabled() {
+            return getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true);
+        }
+        @JavascriptInterface public boolean canDrawFloatingBubble() {
+            return Settings.canDrawOverlays(MainActivity.this);
+        }
+        @JavascriptInterface public void setFloatingBubbleEnabled(boolean enabled) {
+            runOnUiThread(() -> {
+                getPreferences(MODE_PRIVATE).edit().putBoolean("floating_bubble_enabled", enabled).apply();
+                if (!enabled) stopService(new Intent(MainActivity.this, FloatingBubbleService.class));
+                else if (!Settings.canDrawOverlays(MainActivity.this)) requestFloatingBubblePermission();
+            });
+        }
+        @JavascriptInterface public void requestFloatingBubblePermission() {
+            runOnUiThread(() -> {
+                if (!Settings.canDrawOverlays(MainActivity.this)) {
+                    Intent i = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                    startActivity(i);
+                }
+            });
         }
     }
 
