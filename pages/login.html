@@ -26,7 +26,8 @@
       <p id="loginMessage" class="auth-message" role="status" aria-live="polite"></p>
     </form>
     <div class="auth-divider"><span>OR</span></div>
-    <p class="auth-switch">Don't have an account? <a href="signup.html">Create one</a></p>
+    <p class="auth-switch">Don't have an account? <a id="loginCreateAccountLink" href="signup.html">Create one</a></p>
+    <p id="addAccountHint" class="auth-help" hidden>Your existing account is being kept. Sign in here to add another saved account on this device.</p>
   </section>
   <p class="auth-footer">© 2026 ZakiChat · A Zakmolanitech Solutions project</p>
 </main>
@@ -34,7 +35,17 @@
 <script src="../static/js/config.js"></script>
 <script src="../static/js/account-manager.js"></script>
 <script src="../static/js/supabase-client.js"></script>
-<script src="../static/js/auth.js?v=zc-email-only-20261011-2"></script>
+<script>
+  if (new URLSearchParams(location.search).get("addAccount") === "1") {
+    const link = document.getElementById("loginCreateAccountLink");
+    if (link) link.href = "signup.html?addAccount=1";
+    const hint = document.getElementById("addAccountHint");
+    if (hint) hint.hidden = false;
+    const heading = document.querySelector(".auth-heading h1");
+    if (heading) heading.textContent = "Add another ZakiChat account";
+  }
+</script>
+<script src="../static/js/auth.js?v=zc-multi-account-20261012-1"></script>
 
 <script src="../static/js/service-worker.js" defer></script>
 </body></html>
