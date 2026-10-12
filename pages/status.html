@@ -657,72 +657,84 @@
 
   </div>
 
-  <!-- Signed-in users can download the current Android app release. -->
-  <a
-    class="zc-mobile-app-download"
-    id="zcMobileAppDownload"
-    href="https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk"
-    aria-label="Download our ZakiChat mobile application"
-    title="Download our mobile application"
-  >
+  <!-- Cross-device session authorization: the user must explicitly approve access. -->
+  <button class="zc-mobile-app-download" id="zcMobileAppAuthorize" type="button"
+    aria-label="Give access to the ZakiChat mobile application" title="Give access to mobile application">
     <span class="zc-mobile-app-download-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M12 3.5v10m0 0 4-4m-4 4-4-4M5 15.5v3A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5v10m0 0 4-4m-4 4-4-4M5 15.5v3A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
     <span class="zc-mobile-app-download-copy">
-      <strong>Download our mobile application</strong>
-      <small>Get ZakiChat for Android</small>
+      <strong>Give access to mobile application</strong>
+      <small>Open your account in ZakiChat for Android</small>
     </span>
     <span class="zc-mobile-app-download-arrow" aria-hidden="true">›</span>
-  </a>
+  </button>
+
+  <div class="zc-mobile-auth-modal" id="zcMobileAuthModal" hidden role="dialog" aria-modal="true" aria-labelledby="zcMobileAuthTitle">
+    <button type="button" class="zc-mobile-auth-backdrop" data-zc-mobile-close aria-label="Close authorization dialog"></button>
+    <section class="zc-mobile-auth-card">
+      <div class="zc-mobile-auth-symbol" aria-hidden="true">↗</div>
+      <p class="zc-mobile-auth-eyebrow">SECURE ACCOUNT HANDOFF</p>
+      <h2 id="zcMobileAuthTitle">Give access to ZakiChat mobile</h2>
+      <p>Authorize this phone to open your existing ZakiChat account. You will not need to create another account or type your password into the app again.</p>
+      <div class="zc-mobile-auth-account" id="zcMobileAuthAccount">Checking your signed-in account…</div>
+      <p class="zc-mobile-auth-note">For your security, the approval code works once and expires after 2 minutes. Only approve this on your own phone.</p>
+      <p class="zc-mobile-auth-error" id="zcMobileAuthError" role="alert" hidden></p>
+      <button class="zc-mobile-auth-confirm" id="zcMobileAuthConfirm" type="button">Authorize &amp; open mobile app</button>
+      <a class="zc-mobile-auth-download" href="https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk">Don't have the app? Download the Android APK</a>
+      <button class="zc-mobile-auth-cancel" type="button" data-zc-mobile-close>Cancel</button>
+    </section>
+  </div>
 
   <style>
-    .zc-mobile-app-download {
-      position: fixed;
-      z-index: 1000;
-      right: max(16px, env(safe-area-inset-right));
-      bottom: calc(88px + env(safe-area-inset-bottom));
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: min(340px, calc(100vw - 32px));
-      box-sizing: border-box;
-      padding: 13px 16px;
-      border: 1px solid rgba(110, 235, 255, .52);
-      border-radius: 19px;
-      color: #f3fbff;
-      text-decoration: none;
-      background: linear-gradient(135deg, #09263b 0%, #071321 72%);
-      box-shadow: 0 14px 38px rgba(0, 0, 0, .34), 0 0 24px rgba(0, 198, 235, .17), inset 0 1px rgba(255,255,255,.08);
-      -webkit-tap-highlight-color: transparent;
-      backdrop-filter: blur(16px);
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-    .zc-mobile-app-download:active { transform: scale(.975); }
-    .zc-mobile-app-download-icon {
-      display: grid;
-      place-items: center;
-      flex: 0 0 44px;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      color: #031522;
-      background: linear-gradient(145deg, #83f1ff, #12c5e9 65%, #0097d4);
-      box-shadow: 0 5px 16px rgba(0, 198, 235, .2);
-    }
-    .zc-mobile-app-download-icon svg { width: 24px; height: 24px; }
-    .zc-mobile-app-download-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
-    .zc-mobile-app-download-copy strong { font-size: 13px; line-height: 1.3; font-weight: 800; letter-spacing: -.01em; }
-    .zc-mobile-app-download-copy small { color: #a8c7d8; font-size: 11px; line-height: 1.3; }
-    .zc-mobile-app-download-arrow { color: #75eaff; font-size: 29px; line-height: 1; }
-    @media (min-width: 760px) {
-      .zc-mobile-app-download { right: 28px; bottom: 28px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .zc-mobile-app-download { transition: none; }
-    }
+    .zc-mobile-app-download{position:fixed;z-index:1000;right:max(16px,env(safe-area-inset-right));bottom:calc(88px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;width:min(340px,calc(100vw - 32px));box-sizing:border-box;padding:13px 16px;border:1px solid rgba(110,235,255,.52);border-radius:19px;color:#f3fbff;background:linear-gradient(135deg,#09263b 0%,#071321 72%);box-shadow:0 14px 38px #0005,0 0 24px #00c6eb2b,inset 0 1px #ffffff14;-webkit-tap-highlight-color:transparent;backdrop-filter:blur(16px);transition:transform .18s ease,box-shadow .18s ease;cursor:pointer;text-align:left}
+    .zc-mobile-app-download:active{transform:scale(.975)}.zc-mobile-app-download-icon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:14px;color:#031522;background:linear-gradient(145deg,#83f1ff,#12c5e9 65%,#0097d4);box-shadow:0 5px 16px #00c6eb33}.zc-mobile-app-download-icon svg{width:24px;height:24px}.zc-mobile-app-download-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.zc-mobile-app-download-copy strong{font-size:13px;line-height:1.3;font-weight:800;letter-spacing:-.01em}.zc-mobile-app-download-copy small{color:#a8c7d8;font-size:11px;line-height:1.3}.zc-mobile-app-download-arrow{color:#75eaff;font-size:29px;line-height:1}
+    .zc-mobile-auth-modal[hidden]{display:none!important}.zc-mobile-auth-modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:20px;box-sizing:border-box}.zc-mobile-auth-backdrop{position:absolute;inset:0;border:0;background:#020711d9;backdrop-filter:blur(9px)}.zc-mobile-auth-card{position:relative;width:min(430px,100%);box-sizing:border-box;padding:27px 23px 21px;border:1px solid #71e8ff44;border-radius:25px;background:linear-gradient(150deg,#10283c,#071321 70%);color:#effaff;box-shadow:0 25px 90px #0009}.zc-mobile-auth-symbol{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#83f1ff,#12c5e9);color:#031522;font-size:26px;font-weight:900}.zc-mobile-auth-eyebrow{margin:18px 0 6px;color:#73e9ff;font-size:10px;font-weight:900;letter-spacing:.16em}.zc-mobile-auth-card h2{margin:0 0 10px;font-size:23px;line-height:1.2}.zc-mobile-auth-card>p:not(.zc-mobile-auth-eyebrow){color:#b8cedd;font-size:13px;line-height:1.55}.zc-mobile-auth-account{padding:12px 13px;border:1px solid #74e9ff2b;border-radius:13px;background:#ffffff08;color:#f5fdff;font-size:13px;overflow-wrap:anywhere}.zc-mobile-auth-note{font-size:11px!important}.zc-mobile-auth-error{padding:10px 12px;border-radius:10px;background:#ff56661a;color:#ffadb5!important}.zc-mobile-auth-confirm{width:100%;margin-top:12px;padding:14px;border:0;border-radius:13px;background:linear-gradient(110deg,#77efff,#12c6eb);color:#041522;font-size:14px;font-weight:900;cursor:pointer}.zc-mobile-auth-confirm:disabled{opacity:.55;cursor:wait}.zc-mobile-auth-download,.zc-mobile-auth-cancel{display:block;width:100%;box-sizing:border-box;margin-top:14px;text-align:center;font-size:12px}.zc-mobile-auth-download{color:#8eefff;text-decoration:none}.zc-mobile-auth-cancel{border:0;background:transparent;color:#9eb6c6;padding:8px;cursor:pointer}@media(min-width:760px){.zc-mobile-app-download{right:28px;bottom:28px}}@media(prefers-reduced-motion:reduce){.zc-mobile-app-download{transition:none}}
   </style>
+  <script>
+    (function(){
+      const openBtn=document.getElementById('zcMobileAppAuthorize');
+      const modal=document.getElementById('zcMobileAuthModal');
+      const accountLabel=document.getElementById('zcMobileAuthAccount');
+      const errorBox=document.getElementById('zcMobileAuthError');
+      const confirmBtn=document.getElementById('zcMobileAuthConfirm');
+      const closeButtons=modal.querySelectorAll('[data-zc-mobile-close]');
+      let currentSession=null;
+      function showError(message){errorBox.textContent=message;errorBox.hidden=false}
+      function close(){modal.hidden=true;errorBox.hidden=true}
+      openBtn.addEventListener('click',async()=>{
+        modal.hidden=false;errorBox.hidden=true;accountLabel.textContent='Checking your signed-in account…';
+        try{
+          const client=window.ZakiChatAuth&&window.ZakiChatAuth.client;
+          if(!client)throw new Error('ZakiChat authentication is still loading. Refresh the page and try again.');
+          if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
+          const result=await client.auth.getSession();
+          if(result.error)throw result.error;
+          currentSession=result.data.session;
+          if(!currentSession||!currentSession.user)throw new Error('Please sign in to ZakiChat in your browser first.');
+          accountLabel.textContent='Signed in as '+(currentSession.user.email||'your ZakiChat account');
+        }catch(e){currentSession=null;accountLabel.textContent='No active account detected.';showError(e.message||'Please sign in on the website first.')}
+      });
+      closeButtons.forEach(b=>b.addEventListener('click',close));
+      confirmBtn.addEventListener('click',async()=>{
+        errorBox.hidden=true;
+        if(!currentSession){showError('Sign in to ZakiChat in this browser first, then try again.');return}
+        confirmBtn.disabled=true;confirmBtn.textContent='Authorizing this phone…';
+        try{
+          const response=await fetch('https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/mobile-app-handoff',{
+            method:'POST',headers:{'Content-Type':'application/json','apikey':window.ZakiChatConfig.supabaseKey,'Authorization':'Bearer '+currentSession.access_token},
+            body:JSON.stringify({action:'create'})
+          });
+          const payload=await response.json();
+          if(!response.ok||!payload.success||!payload.appUrl)throw new Error(payload.error||'Could not authorize the mobile app.');
+          window.location.href=payload.appUrl;
+          confirmBtn.textContent='Opening ZakiChat…';
+          setTimeout(()=>{confirmBtn.disabled=false;confirmBtn.textContent='Authorize & open mobile app';showError('If ZakiChat did not open, install the Android APK first. Your approval expires after 2 minutes; you can authorize again.');},1400);
+        }catch(e){showError(e.message||'Authorization failed. Please try again.');confirmBtn.disabled=false;confirmBtn.textContent='Authorize & open mobile app'}
+      });
+      window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+    })();
+  </script>
 
   <!-- =======================================================
        MAIN NAVIGATION
