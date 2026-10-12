@@ -8,6 +8,7 @@ This module packages the existing ZakiChat web application inside an Android Web
 - Drag-to-move behavior and an expandable panel loading the existing Chats page.
 - Floating-bubble setting in ZakiChat Settings, with a native bridge to Android's overlay permission.
 - The existing chat list sorts conversations with unread chats first, then pinned chats, then latest activity.
+- The foreground service is started while the app is visible, hides the bubble while ZakiChat is open, and shows it when the app moves to the background.
 - The bubble service is configured to stop when Android reports the app task was removed from Recents.
 
 ## Build
