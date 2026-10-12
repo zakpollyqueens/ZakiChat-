@@ -21,8 +21,11 @@
     return;
   }
 
+  const pendingAddAccountKey = location.pathname.toLowerCase().endsWith("/auth-callback.html")
+    ? localStorage.getItem("zakichat_pending_add_account_storage_key")
+    : null;
   const storageKey =
-    accounts.getActiveStorageKey();
+    pendingAddAccountKey || accounts.getActiveStorageKey();
 
   const client =
     accounts.createClient(
