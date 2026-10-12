@@ -235,7 +235,7 @@ body.tg-list-page .daily-inspiration.is-offline{opacity:.78;filter:saturate(.65)
  const MINUTE=60000;let timer=0,presencePoll=0,currentText="",lastChange=0,seen=[];
  const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||"null")??fallback}catch(_){return fallback}};
  const save=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch(_){}};
- const saved=read(CURRENT_KEY,null),storedHistory=read(HISTORY_KEY,[]);
+ const legacy=read("zakichat-inspiration-last",null),saved=read(CURRENT_KEY,legacy&&typeof legacy.text==="string"?{text:legacy.text,theme:legacy.theme,kicker:"A LITTLE INSPIRATION"}:null),storedHistory=read(HISTORY_KEY,[]);
  if(Array.isArray(storedHistory))seen=storedHistory.filter(x=>typeof x==="string").slice(-100);
  function messageKey(text){return String(text||"").trim().toLowerCase()}
  function isActuallyOnline(){
@@ -249,7 +249,7 @@ body.tg-list-page .daily-inspiration.is-offline{opacity:.78;filter:saturate(.65)
   bar.className="daily-inspiration theme-"+item[1]+(isActuallyOnline()?"":" is-offline");
   const kicker=bar.querySelector(".inspiration-kicker");if(kicker)kicker.textContent=item[2]||"A LITTLE INSPIRATION";
   if(counter)counter.textContent="✦ "+String(messages.indexOf(item)+1).padStart(3,"0")+" / "+String(messages.length).padStart(3,"0");
-  if(animate&&isActuallyOnline()){bar.classList.remove("is-changing");void bar.offsetWidth;bar.classList.add("is-changing")}
+  if(animate&&isActuallyOnline()){quote.style.removeProperty("animation");bar.classList.remove("is-changing");void bar.offsetWidth;bar.classList.add("is-changing")}
   else{bar.classList.remove("is-changing");quote.style.animation="none";void quote.offsetWidth;quote.style.removeProperty("animation")}
   save(CURRENT_KEY,{text:currentText,theme:item[1],kicker:item[2],shownAt:Date.now()});
  }
@@ -265,7 +265,9 @@ body.tg-list-page .daily-inspiration.is-offline{opacity:.78;filter:saturate(.65)
  function startRotation(){if(timer)clearInterval(timer);timer=0;if(!isActuallyOnline()){bar.classList.add("is-offline");return}bar.classList.remove("is-offline");timer=setInterval(changeMessage,MINUTE)}
  function syncPresence(){const online=isActuallyOnline();if(online){if(!timer)startRotation()}else{if(timer){clearInterval(timer);timer=0}bar.classList.add("is-offline")}}
  if(saved&&typeof saved.text==="string"){
-  currentText=saved.text;quote.textContent=currentText;
+  currentText=saved.text;
+  if(!seen.includes(messageKey(currentText))){seen.push(messageKey(currentText));seen=seen.slice(-100);save(HISTORY_KEY,seen)}
+  quote.textContent=currentText;
   const k=bar.querySelector(".inspiration-kicker");if(k&&saved.kicker)k.textContent=saved.kicker;
   if(Number.isInteger(saved.theme))bar.className="daily-inspiration theme-"+saved.theme+" is-offline";
  }
