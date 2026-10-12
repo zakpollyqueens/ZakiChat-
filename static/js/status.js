@@ -99,7 +99,7 @@
         .getElementById('addStatusButton')
         ?.addEventListener(
           'click',
-          () => this.openComposer()
+          event => { event.stopPropagation(); this.openComposer(); }
         );
 
       document
@@ -928,6 +928,7 @@
     async editMyStatus() {
       const statusId = document.getElementById('statusViewer')?.dataset.statusId; const status = this.statuses.find(item => item.id === statusId && item.user_id === this.userId); if (!status) return;
       const updatedText = window.prompt('Edit your status text:', status.text || ''); if (updatedText === null) return;
+      if (!updatedText.trim() && !status.media_path) { window.alert('A text-only status cannot be empty.'); return; }
       try { const { error } = await this.db.from('status_updates').update({ text: updatedText.trim() || null }).eq('id', status.id).eq('user_id', this.userId); if (error) throw error; status.text = updatedText.trim() || null; await this.loadStatuses(); await this.openViewer(status, 'My Status'); }
       catch (error) { console.error('Status edit failed:', error); window.alert('Could not edit status. Check database update permissions and try again.'); }
     },
