@@ -101,7 +101,7 @@
   }
 
   function setupSignup() {
-    redirectIfSignedIn();
+    if (!addAccountMode) redirectIfSignedIn();
     const phoneWidget = setupPhone();
     const state = { step: 1, username: "", fullName: "", phone: "", location: "", email: "" };
     const steps = Array.from(document.querySelectorAll(".signup-step"));
@@ -276,7 +276,7 @@
     }
   });
   if (isLogin) {
-    redirectIfSignedIn();
+    if (!addAccountMode) redirectIfSignedIn();
     document.getElementById("loginForm")?.addEventListener("submit", login);
     setupForgotPassword();
     togglePassword("togglePassword", "password");
