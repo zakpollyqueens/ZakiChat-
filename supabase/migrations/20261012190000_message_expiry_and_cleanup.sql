@@ -11,7 +11,7 @@ create index if not exists messages_expires_at_idx
 
 -- Messages are written through authenticated, membership-checked chat policies.
 -- Grant access to the new field only to authenticated chat clients.
-revoke all (expires_at) on public.messages from anon;
+revoke all on table public.messages from anon;
 grant select (expires_at) on public.messages to authenticated;
 grant insert (expires_at) on public.messages to authenticated;
 
