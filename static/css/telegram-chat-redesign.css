@@ -238,3 +238,44 @@ body.tg-conversation-page .tg-message-actions button{min-width:32px;min-height:3
  body.tg-conversation-page .tg-message:hover .tg-message-actions{display:none}
  body.tg-conversation-page .tg-message.tg-actions-visible .tg-message-actions{display:flex}
 }
+
+
+/* Telegram-style individual conversation: clean media cards, tighter bubbles and a reachable attachment tray. */
+body.tg-conversation-page .tg-attach-menu{
+ position:fixed!important;left:8px!important;right:auto!important;
+ bottom:calc(56px + env(safe-area-inset-bottom))!important;top:auto!important;
+ z-index:100!important;width:min(360px,calc(100vw - 16px))!important;
+ max-width:calc(100vw - 16px)!important;display:grid;grid-template-columns:1fr 1fr;gap:3px;
+ padding:8px;border-radius:18px;background:rgba(20,34,48,.98);
+ border:1px solid rgba(115,195,225,.2);box-shadow:0 16px 42px rgba(0,0,0,.42);
+}
+body.tg-conversation-page .tg-attach-menu[hidden]{display:none!important}
+body.tg-conversation-page .tg-attach-menu button{min-width:0;min-height:48px;padding:10px;border-radius:12px;font-size:19px}
+body.tg-conversation-page .tg-attach-menu button span{font-size:12px;line-height:1.25}
+body.tg-conversation-page .tg-messages{gap:5px;padding:3px 0 8px}
+body.tg-conversation-page .tg-message{position:relative;max-width:min(78%,560px);width:fit-content;padding:8px 10px 5px;border-radius:15px;box-shadow:0 1px 1px rgba(0,0,0,.12);overflow:visible}
+body.tg-conversation-page .tg-message.incoming{align-self:flex-start;background:#182b3b;color:#f1f7fb;border:1px solid rgba(190,221,239,.035);border-bottom-left-radius:5px}
+body.tg-conversation-page .tg-message.outgoing{align-self:flex-end;background:#174c63;color:#f3fbff;border:1px solid rgba(93,205,239,.075);border-bottom-right-radius:5px}
+body.tg-conversation-page .tg-message-text{font-size:15px;line-height:1.42;white-space:pre-wrap;overflow-wrap:anywhere}
+body.tg-conversation-page .tg-message-meta{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin:3px 0 0 20px;color:rgba(218,237,248,.62);font-size:10px;line-height:1.2}
+body.tg-conversation-page .tg-message.outgoing .tg-read-receipt{color:#9bbaca}
+body.tg-conversation-page .tg-message.outgoing .tg-read-receipt[data-read=true]{color:#45d5f5}
+body.tg-conversation-page .tg-message-actions{display:none;position:absolute;right:5px;bottom:calc(100% - 2px);z-index:5;width:max-content;max-width:calc(100vw - 40px);margin:0;padding:3px;border:1px solid rgba(145,205,229,.16);border-radius:12px;background:rgba(13,30,44,.98);box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:1;backdrop-filter:blur(16px)}
+body.tg-conversation-page .tg-message:hover .tg-message-actions,body.tg-conversation-page .tg-message:focus-within .tg-message-actions,body.tg-conversation-page .tg-message.tg-actions-visible .tg-message-actions{display:flex}
+body.tg-conversation-page .tg-message-actions button{min-width:32px;min-height:32px;font-size:13px}
+body.tg-conversation-page .tg-media-attachment{display:block;max-width:min(72vw,330px);margin:1px 0 3px;border-radius:12px;overflow:hidden}
+body.tg-conversation-page .tg-message-image{display:block;width:100%;max-width:min(72vw,330px);max-height:360px;object-fit:cover;border-radius:12px;margin:0}
+body.tg-conversation-page .tg-message-video{display:block;width:min(72vw,330px);max-width:100%;max-height:360px;object-fit:contain;border-radius:12px;background:#07111d;margin:2px 0}
+body.tg-conversation-page .tg-file-download{display:flex;align-items:center;gap:11px;min-width:min(220px,65vw);max-width:100%;padding:10px 12px;background:rgba(2,12,22,.24);border:1px solid rgba(170,220,240,.1);color:inherit;text-decoration:none;border-radius:12px}
+body.tg-conversation-page .tg-file-download .tg-file-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:10px;background:rgba(75,193,231,.15);color:#8fe4ff;font-size:22px}
+body.tg-conversation-page .tg-file-details{display:flex;flex-direction:column;min-width:0;gap:4px}
+body.tg-conversation-page .tg-file-details strong{font-size:12px;overflow-wrap:anywhere}
+body.tg-conversation-page .tg-file-details small{font-size:10px;color:#a9c6d7}
+body.tg-conversation-page .tg-voice-card{display:grid;grid-template-columns:30px minmax(0,1fr);align-items:center;gap:4px 8px;min-width:min(245px,65vw);padding:8px 10px;background:rgba(1,12,23,.2);border-radius:12px}
+body.tg-conversation-page .tg-voice-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#159ed0;color:white;font-size:12px}
+body.tg-conversation-page .tg-voice-card small{font-size:11px;color:#d4edf7}
+body.tg-conversation-page .tg-voice-card audio{grid-column:1/-1;width:100%;max-width:280px;height:36px}
+body.tg-conversation-page .tg-attachment-error{padding:8px 10px;color:#ffb6c0;font-size:12px;background:rgba(130,30,48,.2);border-radius:10px}
+body.tg-conversation-page .tg-message-deleted{font-style:italic;color:#b8c8d3}
+@media(hover:none){body.tg-conversation-page .tg-message:hover .tg-message-actions{display:none}body.tg-conversation-page .tg-message.tg-actions-visible .tg-message-actions{display:flex}}
+@media(max-width:560px){body.tg-conversation-page .tg-message{max-width:86%;padding:7px 9px 5px}body.tg-conversation-page .tg-message-text{font-size:14.5px}body.tg-conversation-page .tg-attach-menu{bottom:calc(53px + env(safe-area-inset-bottom))!important}body.tg-conversation-page .tg-message-actions{gap:0}body.tg-conversation-page .tg-message-actions button{min-width:27px;min-height:27px}}
