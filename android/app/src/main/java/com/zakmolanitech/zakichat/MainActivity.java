@@ -52,6 +52,7 @@ public class MainActivity extends Activity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storeAuthHandoffFromIntent(getIntent());
         getWindow().setStatusBarColor(Color.rgb(7,17,31));
         getWindow().setNavigationBarColor(Color.rgb(7,17,31));
         assetLoader = new WebViewAssetLoader.Builder()
@@ -118,7 +119,32 @@ public class MainActivity extends Activity {
             }
         });
         setContentView(webView);
-        webView.loadUrl("https://zakichat.local/index.html");
+        webView.loadUrl(hasPendingAuthHandoff() ? "https://zakichat.local/pages/mobile-handoff.html" : "https://zakichat.local/index.html");
+    }
+
+    private void storeAuthHandoffFromIntent(Intent intent) {
+        if (intent == null || intent.getData() == null) return;
+        Uri uri = intent.getData();
+        if (!"zakichat".equals(uri.getScheme()) || !"auth-handoff".equals(uri.getHost())) return;
+        String token = uri.getQueryParameter("token");
+        if (token != null && token.matches("[a-f0-9]{64}")) {
+            getSharedPreferences("mobile_auth_handoff", MODE_PRIVATE)
+                .edit().putString("pending_token", token).apply();
+        }
+    }
+
+    private boolean hasPendingAuthHandoff() {
+        return getSharedPreferences("mobile_auth_handoff", MODE_PRIVATE)
+            .contains("pending_token");
+    }
+
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        storeAuthHandoffFromIntent(intent);
+        if (webView != null && hasPendingAuthHandoff()) {
+            webView.post(() -> webView.loadUrl("https://zakichat.local/pages/mobile-handoff.html"));
+        }
     }
 
     @Override protected void onDestroy() {
@@ -169,6 +195,12 @@ public class MainActivity extends Activity {
 
 
     public class NativeBridge {
+        @JavascriptInterface public String getPendingAuthHandoffToken() {
+            return getSharedPreferences("mobile_auth_handoff", MODE_PRIVATE).getString("pending_token", "");
+        }
+        @JavascriptInterface public void clearPendingAuthHandoffToken() {
+            getSharedPreferences("mobile_auth_handoff", MODE_PRIVATE).edit().remove("pending_token").apply();
+        }
         @JavascriptInterface public String getNetworkUsage() {
             JSONObject result = new JSONObject();
             try {
