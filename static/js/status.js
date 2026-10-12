@@ -2006,12 +2006,12 @@ showComposerError(message) {
   'use strict';
 
   const fallbackLatestRelease = {
-    version: 'zc-vr15',
+    version: 'zc-vr16',
     description:
-      'The latest publicly available ZakiChat version is available for free download.',
+      'ZakiChat zc-vr16 is available as a free Android update. Download the APK and install it over your existing app.',
     channel: 'Stable',
     releaseDate: null,
-    downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/download/zc-vr15-android/app-release.apk'
+    downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk'
   };
 
   const fallbackPaidUpgrades = [
@@ -2090,7 +2090,7 @@ showComposerError(message) {
 
     setReleaseText(
       'updatesLatestVersion',
-      data.version || 'zc-vr15'
+      data.version || 'zc-vr16'
     );
 
     setReleaseText(
@@ -2126,7 +2126,7 @@ showComposerError(message) {
         button.removeAttribute('aria-disabled');
         button.removeAttribute('tabindex');
         button.classList.remove('is-disabled');
-        button.textContent = 'Download Latest Version';
+        button.textContent = 'Update ZakiChat — Free';
       } else {
         button.href = '#';
         button.setAttribute('aria-disabled', 'true');
