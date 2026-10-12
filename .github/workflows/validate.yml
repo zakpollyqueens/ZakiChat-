@@ -75,12 +75,31 @@ jobs:
           PY
 
   build-android:
-    name: Android build workflow smoke test
+    name: Android build environment check
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - name: Confirm Android source is present
+      - name: Checkout ZakiChat
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Check Android SDK availability
+        shell: bash
         run: |
-          test -f android/app/src/main/AndroidManifest.xml
-          test -f android/app/src/main/java/com/zakmolanitech/zakichat/FloatingBubbleService.java
-          echo "Android project files are present."
+          set -euo pipefail
+          java -version
+          echo "ANDROID_HOME=${ANDROID_HOME:-unset}"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-unset}"
+          if command -v sdkmanager >/dev/null 2>&1; then
+            command -v sdkmanager
+          elif [ -n "${ANDROID_HOME:-}" ] && [ -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version
+          else
+            echo "sdkmanager not found on runner"
+            exit 1
+          fi
