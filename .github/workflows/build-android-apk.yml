@@ -108,13 +108,13 @@ jobs:
       - name: Publish direct APK downloads
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65
         with:
-          tag_name: zc-vr16-android-build-${{ github.run_number }}
-          name: ZakiChat zc-vr16 Android Build ${{ github.run_number }}
+          tag_name: zc-vr17-android-build-${{ github.run_number }}
+          name: ZakiChat zc-vr17 Android Build ${{ github.run_number }}
           target_commitish: ${{ github.sha }}
           make_latest: true
           overwrite_files: true
           body: |
-            ZakiChat Android test build (zc-vr16).
+            ZakiChat Android test build (zc-vr17).
 
             Includes the optimized offline Media Studio wallpaper collection and upgraded melodic instrumental ringtones. The release APK size is measured by the build job; 50 MB is a target, not a fabricated size guarantee.
           files: |
