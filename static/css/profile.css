@@ -68,3 +68,8 @@
 .profile-switch-message{margin-top:12px;color:#ffb6b6!important}
 .profile-switch-loading{padding:12px}
 @media(max-width:420px){.profile-switch-dialog{padding:17px;border-radius:20px}.profile-switch-dialog .profile-modal-head{gap:10px}}
+
+.profile-switch-section-title{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#7f9ab4;margin:4px 0 0;padding:0 2px}
+.profile-switch-mode-list{display:grid;gap:10px;margin-bottom:8px}
+.profile-switch-mode .profile-switch-state{white-space:nowrap}
+.profile-switch-mode:disabled{opacity:.72}
