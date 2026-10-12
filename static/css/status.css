@@ -3872,3 +3872,35 @@ body.status-page .channels-updates-arrow{display:grid;place-items:center;flex:0 
 .call-delete-button{border-color:#ff879044!important;color:#ffb7c1!important}.call-delete-button:disabled{opacity:.45;pointer-events:none}
 
 .my-statuses-section{margin:16px 0;padding:14px;border:1px solid #79dcff24;border-radius:18px;background:linear-gradient(145deg,#0c1e31,#0a1929)}.my-status-item .status-avatar{background:linear-gradient(145deg,#0ce0bd,#078fbc);color:#031421}.status-viewer-actions{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0}.status-viewer-actions button{border:1px solid #67dfff48;border-radius:12px;background:linear-gradient(135deg,#102c43,#123c52);color:#dffaff;padding:10px 12px;font-weight:750;cursor:pointer}.status-viewer-actions button:first-child{background:linear-gradient(135deg,#ff4e87,#c52862);color:white}.status-reaction-summary{font-size:13px;color:#9eeeff;padding:6px 0 10px}.status-views-panel{padding:12px;border-radius:14px;background:#061421;border:1px solid #66dfff25;max-height:220px;overflow:auto}.status-viewer-row{padding:9px 0;border-bottom:1px solid #80dcff1a;font-size:12px;color:#d8eff8}.status-views-panel>strong{display:block;margin-bottom:8px;color:#83e8ff}
+
+/* Premium status card and animated action center */
+#myStatusCard{display:flex;align-items:center;gap:14px;padding:15px 16px;border:1px solid #5ce0ff33;border-radius:22px;background:radial-gradient(ellipse at 0 0,#15c4d71f,transparent 56%),linear-gradient(135deg,#0c1f31,#071422);box-shadow:0 12px 34px #0003;transition:transform .22s,border-color .22s,box-shadow .22s;cursor:pointer}
+#myStatusCard:hover,#myStatusCard:focus-visible{transform:translateY(-2px);border-color:#4de2ff8c;box-shadow:0 15px 34px #0005,0 0 0 3px #41d3ff12;outline:none}
+#myStatusCard .my-status-avatar{position:relative;flex:0 0 60px;width:60px;height:60px;display:grid;place-items:center;border-radius:50%;isolation:isolate}
+#myStatusCard .my-status-avatar.has-active-status{padding:3px;background:conic-gradient(#38e6bd,#4cd9ff,#a78bfa,#42f5c8,#38e6bd);animation:ownStatusRingGlow 3.8s linear infinite;box-shadow:0 0 0 2px #34e1cb20,0 0 18px #34e1cb29}
+#myStatusCard .my-status-avatar img{width:100%;height:100%;border:2px solid #081625;border-radius:50%;object-fit:cover}
+#myStatusCard .my-status-plus{position:absolute;right:-1px;bottom:-1px;z-index:2;display:grid;place-items:center;width:22px;height:22px;border:2px solid #0b1c2c;border-radius:50%;background:linear-gradient(135deg,#4de5c1,#30bde8);color:#06202b;font-size:18px;font-weight:900;box-shadow:0 4px 12px #0005}
+#myStatusCard .my-status-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+#myStatusCard .my-status-info strong{font-size:15px;font-weight:850;color:#f0fbff}
+#myStatusCard .my-status-info span{font-size:12px;line-height:1.4;color:#9dbacb}
+#myStatusCard .status-add-button{flex:0 0 39px;width:39px;height:39px;border:1px solid #50e3ff59;border-radius:14px;background:linear-gradient(135deg,#163d56,#0e263d);color:#9cf2ff;font-size:25px;box-shadow:0 5px 17px #0003;transition:transform .2s,filter .2s}
+#myStatusCard .status-add-button:hover{transform:rotate(90deg) scale(1.06);filter:brightness(1.2)}
+#statusViewerActions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin:17px 0 12px;padding:15px;border:1px solid #64dfff2b;border-radius:22px;background:radial-gradient(ellipse at 50% 0,#1f89b026,transparent 68%),linear-gradient(145deg,#0c1d2ff7,#071220fa);box-shadow:0 13px 32px #0004;animation:statusActionsEnter .32s cubic-bezier(.2,.8,.2,1) both}
+#statusViewerActions button{position:relative;display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:43px;padding:10px 14px;overflow:hidden;border:1px solid #67dfff40;border-radius:15px;background:linear-gradient(135deg,#12374e,#10243a);color:#e9faff;font-size:12px;font-weight:850;box-shadow:inset 0 1px #ffffff0a,0 6px 16px #0003;transition:transform .2s,box-shadow .2s,border-color .2s,filter .2s}
+#statusViewerActions button::after{content:"";position:absolute;inset:0;transform:translateX(-120%);background:linear-gradient(100deg,transparent,#ffffff22,transparent);transition:transform .45s}
+#statusViewerActions button:hover::after{transform:translateX(120%)}
+#statusViewerActions button:hover{transform:translateY(-2px);border-color:#5be6ffa6;box-shadow:0 10px 23px #0004,0 0 20px #2bccff17;filter:brightness(1.12)}
+#statusViewerActions button:active{transform:scale(.96)}
+#statusViewerActions #statusHeartButton{background:linear-gradient(125deg,#b72d68,#f04d88);border-color:#ff9ac066;color:#fff}
+#statusViewerActions #statusReactButton{background:linear-gradient(125deg,#174b69,#27396a);border-color:#8dcbff55}
+#statusViewerActions #statusEditButton{background:linear-gradient(125deg,#135746,#123e47);border-color:#74efc25c;color:#baffdf}
+#statusViewerActions #statusDeleteButton{background:linear-gradient(125deg,#51243a,#321b2a);border-color:#ff8a9b66;color:#ffc0ca}
+#statusViewerActions #statusViewsButton{background:linear-gradient(125deg,#29355d,#172846);border-color:#a8b7ff55;color:#d4dcff}
+#statusReactionSummary{margin:10px 0 12px;padding:11px 14px;border:1px solid #64dfff22;border-radius:15px;background:linear-gradient(110deg,#102a3ec7,#0c1a2dc0);color:#b9eefa;text-align:center;font-size:12px;font-weight:750;animation:statusActionsEnter .35s ease both}
+#statusViewsPanel{border:1px solid #64dfff33;border-radius:17px;background:linear-gradient(145deg,#0b1d30,#081625);box-shadow:inset 0 1px #ffffff06;animation:statusActionsEnter .25s ease both}
+.status-recent-meta{display:block;margin-top:3px;color:#6fbdd2;font-size:10px}
+.status-avatar-own{outline:2px solid #3be5bd;outline-offset:2px}
+@keyframes ownStatusRingGlow{to{filter:hue-rotate(360deg)}}
+@keyframes statusActionsEnter{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:480px){#statusViewerActions{gap:7px;padding:11px}#statusViewerActions button{flex:1 1 calc(50% - 7px);min-width:calc(50% - 7px);padding:10px 8px;font-size:11px}#myStatusCard{padding:12px;gap:11px}}
+@media(prefers-reduced-motion:reduce){#myStatusCard,#myStatusCard .my-status-avatar.has-active-status,#statusViewerActions,#statusViewerActions button,#statusReactionSummary{animation:none!important;transition:none!important}}
