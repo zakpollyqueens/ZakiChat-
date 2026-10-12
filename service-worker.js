@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "zakichat-shell-v3";
+const CACHE_NAME = "zakichat-shell-v4";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -8,10 +8,13 @@ const CORE_ASSETS = [
   "/pages/chats.html",
   "/pages/chat.html",
   "/pages/settings.html",
+  "/pages/message-expiry.html",
   "/pages/updates.html",
   "/static/css/main.css",
   "/static/css/signature-theme.css",
   "/static/js/telegram-chat.js",
+  "/static/js/message-expiry.js",
+  "/static/js/data-storage.js",
   "/static/js/zaki-ringtones.js"
 ];
 
