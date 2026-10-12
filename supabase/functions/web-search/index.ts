@@ -1,13 +1,29 @@
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://zakpollyqueens.github.io",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Vary": "Origin"
-};
+const ALLOWED_ORIGINS = new Set([
+  "https://zakpollyqueens.github.io",
+  "https://zakichat.local",
+  "http://zakichat.local",
+  "http://localhost",
+  "http://localhost:3000",
+  "http://localhost:8100",
+  "capacitor://localhost",
+  "ionic://localhost"
+]);
+function corsHeadersFor(origin: string | null) {
+  const allowedOrigin = origin && ALLOWED_ORIGINS.has(origin)
+    ? origin
+    : "https://zakpollyqueens.github.io";
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin"
+  };
+}
 const blocked = /\b(porn(?:ography)?|xxx|hentai|onlyfans|nudes?|erotic|escort|camgirl|adult\s+(?:videos?|content|sites?)|sex\s+(?:tape|videos?|cams?)|live\s+sex)\b/i;
-function json(body: unknown, status=200) {
-  return new Response(JSON.stringify(body), {status, headers:{...corsHeaders,"Content-Type":"application/json","Cache-Control":"no-store"}});
+function json(body: unknown, status=200, origin: string | null = null) {
+  return new Response(JSON.stringify(body), {status, headers:{...corsHeadersFor(origin),"Content-Type":"application/json","Cache-Control":"no-store"}});
 }
 function decodeHtml(value: string) {
   return value.replace(/<!\[CDATA\[|\]\]>/g,"").replace(/<[^>]*>/g," ").replace(/&amp;/gi,"&").replace(/&quot;/gi,'"').replace(/&#0*39;|&#x0*27;/gi,"'").replace(/&lt;/gi,"<").replace(/&gt;/gi,">").replace(/&nbsp;/gi," ").replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16))).replace(/\s+/g," ").trim();
@@ -94,15 +110,15 @@ async function documentSearch(query:string) {
  return docs.length?docs:results;
 }
 Deno.serve(async (req: Request) => {
- if(req.method==="OPTIONS")return new Response("ok",{headers:corsHeaders});
- if(req.method!=="POST")return json({success:false,error:"Method not allowed."},405);
+ if(req.method==="OPTIONS")return new Response("ok",{headers:corsHeadersFor(req.headers.get("Origin"))});
+ if(req.method!=="POST")return json({success:false,error:"Method not allowed."},405,req.headers.get("Origin"));
  const origin=req.headers.get("Origin");
- if(origin&&origin!=="https://zakpollyqueens.github.io")return json({success:false,error:"Origin is not authorized."},403);
- let body:Record<string,unknown>;try{body=await req.json()}catch{return json({success:false,error:"A valid JSON body is required."},400)}
+ if(origin&&!ALLOWED_ORIGINS.has(origin))return json({success:false,error:"Origin is not authorized."},403,origin);
+ let body:Record<string,unknown>;try{body=await req.json()}catch{return json({success:false,error:"A valid JSON body is required."},400,origin)}
  let query=typeof body.query==="string"?body.query.trim().slice(0,160):"";
  const type=typeof body.type==="string"?body.type:"web";
- if(query.length<2)return json({success:false,error:"Enter at least two characters to search."},400);
- if(blocked.test(query))return json({success:false,error:"Adult-content searches are not allowed. Try a different, safe-search phrase."},400);
+ if(query.length<2)return json({success:false,error:"Enter at least two characters to search."},400,origin);
+ if(blocked.test(query))return json({success:false,error:"Adult-content searches are not allowed. Try a different, safe-search phrase."},400,origin);
  query=query.replace(/[\u0000-\u001f]/g," ").replace(/\s+/g," ").trim();
  try {
   let results:any[]=[],provider="Bing";
@@ -114,9 +130,9 @@ Deno.serve(async (req: Request) => {
    try{results=await ddg(scoped);provider="DuckDuckGo"}catch(error){console.warn("DuckDuckGo failed; trying Bing",error)}
    if(!results.length){results=await bingRss(scoped);provider="Bing"}
   }
-  return json({success:true,query,provider,safeSearch:"strict",type,results});
+  return json({success:true,query,provider,safeSearch:"strict",type,results},200,origin);
  } catch(error) {
   console.error("Search provider failed:",type,error);
-  return json({success:false,error:"This search category is temporarily unavailable. Please try again shortly."},502);
+  return json({success:false,error:"This search category is temporarily unavailable. Please try again shortly."},502,origin);
  }
 });
