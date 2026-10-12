@@ -10,7 +10,7 @@
       'The latest publicly available ZakiChat version is available for free download.',
     releaseDate: null,
     channel: 'Stable',
-    downloadUrl: '#'
+    downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/download/zc-vr15-android/app-release.apk'
   };
 
   const fallbackVersions = [
@@ -108,7 +108,7 @@
     }
 
     if (button) {
-      const downloadUrl = data.downloadUrl || '';
+      const downloadUrl = data.downloadUrl || fallbackLatestVersion.downloadUrl;
       if (downloadUrl) {
         button.href = downloadUrl;
         button.removeAttribute('aria-disabled');
@@ -382,7 +382,7 @@
 
       const releases = Array.isArray(payload.releases) ? payload.releases : [];
       if (!releases.length) {
-        renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: '' });
+        renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: fallbackLatestVersion.downloadUrl });
         renderPaidUpgrades(fallbackPaidUpgrades);
         renderVersions([]);
         return;
