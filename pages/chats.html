@@ -124,15 +124,15 @@ body.tg-list-page .daily-inspiration.is-offline{opacity:.68;filter:saturate(.65)
   ["“A little love sent today can last all week.”",13],
   ["“You don’t have to be perfect to make a difference.”",14]
  ];
- let index=0,timer=0;
+ let index=0,timer=0;\n const KEY="zakichat-inspiration-last";\n try{const saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<quotes.length)index=saved.index}catch(_){}
  function render(animate){
-  quote.textContent=quotes[index][0];
+  quote.textContent=quotes[index][0];\n  try{localStorage.setItem(KEY,JSON.stringify({index,text:quotes[index][0],theme:quotes[index][1],savedAt:Date.now()}))}catch(_){}
   bar.className="daily-inspiration theme-"+quotes[index][1]+(navigator.onLine?"":" is-offline");
   if(counter)counter.textContent=String(index+1).padStart(2,"0")+" / "+String(quotes.length).padStart(2,"0");
   if(animate){bar.classList.remove("is-changing");void bar.offsetWidth;bar.classList.add("is-changing");}
  }
  function next(){if(!navigator.onLine){bar.classList.add("is-offline");return}index=(index+1)%quotes.length;render(true)}
- function start(){clearInterval(timer);render(false);if(navigator.onLine)timer=setInterval(next,180000)}
+ function start(){clearInterval(timer);render(false);if(navigator.onLine)timer=setInterval(next,60000)}
  window.addEventListener("online",start);
  window.addEventListener("offline",()=>{clearInterval(timer);bar.classList.add("is-offline")});
  render(true);start();
