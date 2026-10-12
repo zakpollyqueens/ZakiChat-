@@ -2,14 +2,14 @@
 "use strict";
 const KEY="zakichat_sound_settings";
 const categories=["message","voiceCall","videoCall"];
-const defaults={messageTone:"default",voiceCallTone:"default",videoCallTone:"chime",messageVolume:.45,voiceCallVolume:.45,videoCallVolume:.5,messageSounds:true,callSounds:true};
+const defaults={messageTone:"default",voiceCallTone:"default",videoCallTone:"chime",messageVolume:.85,voiceCallVolume:.85,videoCallVolume:.85,messageSounds:true,callSounds:true};
 const names={message:"message",voiceCall:"voice call",videoCall:"video call"};
 const $=id=>document.getElementById(id);
 let settings={...defaults};
-function load(){try{settings={...defaults,...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch(_){settings={...defaults}}}
+function load(){try{const saved=JSON.parse(localStorage.getItem(KEY)||"{}");settings={...defaults,...saved};["messageVolume","voiceCallVolume","videoCallVolume"].forEach(k=>{if(saved[k]!==undefined&&Number(saved[k])<0.6)settings[k]=0.85});}catch(_){settings={...defaults}}}
 function save(){localStorage.setItem(KEY,JSON.stringify(settings))}
 function status(text){const el=$("soundStatus");el.textContent=text;el.hidden=false;clearTimeout(status.timer);status.timer=setTimeout(()=>el.hidden=true,2600)}
-function render(){categories.forEach(kind=>{const select=$(kind+"Tone"),volume=$(kind+"Volume"),fileName=$(kind+"FileName"),remove=document.querySelector('[data-remove-tone="'+kind+'"]');if(select)select.value=settings[kind+"Tone"]||"default";if(volume){volume.value=String(settings[kind+"Volume"]??.45);volume.nextElementSibling.value=Math.round(Number(volume.value)*100)+"%"}if(fileName)fileName.textContent=settings[kind+"FileName"]||"No personal tone selected";if(remove)remove.hidden=!settings[kind+"FileName"]});$("messageSounds").checked=settings.messageSounds!==false;$("callSounds").checked=settings.callSounds!==false}
+function render(){categories.forEach(kind=>{const select=$(kind+"Tone"),volume=$(kind+"Volume"),fileName=$(kind+"FileName"),remove=document.querySelector('[data-remove-tone="'+kind+'"]');if(select)select.value=settings[kind+"Tone"]||"default";if(volume){volume.value=String(settings[kind+"Volume"]??.85);volume.nextElementSibling.value=Math.round(Number(volume.value)*100)+"%"}if(fileName)fileName.textContent=settings[kind+"FileName"]||"No personal tone selected";if(remove)remove.hidden=!settings[kind+"FileName"]});$("messageSounds").checked=settings.messageSounds!==false;$("callSounds").checked=settings.callSounds!==false}
 load();render();
 categories.forEach(kind=>{
  $(kind+"Tone").addEventListener("change",()=>{settings[kind+"Tone"]=$(kind+"Tone").value;save();status("Your "+names[kind]+" tone has been saved.");if(settings[kind+"Tone"]==="custom"&&!settings[kind+"FileName"])$(kind+"File").click()});
