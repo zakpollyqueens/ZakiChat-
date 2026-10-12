@@ -91,6 +91,28 @@ jobs:
       - name: Build installable APKs
         run: gradle -p android assembleDebug assembleRelease --no-daemon
 
+      - name: Prepare verified OTA web bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ota
+          rsync -a --delete \
+            --exclude='.git' --exclude='.github' --exclude='android' \
+            --exclude='supabase' --exclude='node_modules' --exclude='.env' \
+            --exclude='build' --exclude='*.apk' --exclude='*.aab' \
+            ./ build/ota/
+          (cd build/ota && zip -qr ../ota-bundle.zip .)
+          sha256=$(sha256sum build/ota-bundle.zip | awk '{print $1}')
+          echo "OTA bundle SHA-256: $sha256"
+          cat > build/release-notes.md <<EOF
+          ZakiChat Android test build (zc-vr18).
+
+          OTA_VERSION=${GITHUB_SHA}
+          OTA_SHA256=${sha256}
+
+          Compatible installations can apply verified web features from Updates → New Releases without downloading an APK. Native Android changes still require an APK update.
+          EOF
+
       - name: Report APK sizes
         id: sizes
         shell: bash
@@ -113,10 +135,8 @@ jobs:
           target_commitish: ${{ github.sha }}
           make_latest: true
           overwrite_files: true
-          body: |
-            ZakiChat Android test build (zc-vr18).
-
-            Includes the optimized offline Media Studio wallpaper collection and upgraded melodic instrumental ringtones. The release APK size is measured by the build job; 50 MB is a target, not a fabricated size guarantee.
+          body_path: build/release-notes.md
           files: |
             android/app/build/outputs/apk/release/app-release.apk
             android/app/build/outputs/apk/debug/app-debug.apk
+            build/ota-bundle.zip
