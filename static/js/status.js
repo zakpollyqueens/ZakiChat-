@@ -2919,11 +2919,11 @@ showComposerError(message) {
          * RLS and status refresh behavior remain intact.
          */
         if (
-          window.StatusPage &&
-          typeof window.StatusPage.publishStatus ===
+          (window.StatusPage || window.ZakiStatus) &&
+          typeof (window.StatusPage || window.ZakiStatus).publishStatus ===
             "function"
         ) {
-          window.StatusPage.__composerPayload = {
+          (window.StatusPage || window.ZakiStatus).__composerPayload = {
             mode: state.mode,
             text: textValue,
             caption: captionValue,
@@ -2942,8 +2942,8 @@ showComposerError(message) {
               )?.value.trim() || ""
           };
 
-          await window.StatusPage.publishStatus(
-            window.StatusPage.__composerPayload
+          await (window.StatusPage || window.ZakiStatus).publishStatus(
+            (window.StatusPage || window.ZakiStatus).__composerPayload
           );
 
           resetComposer();
@@ -3645,11 +3645,11 @@ showComposerError(message) {
          * RLS and status refresh behavior remain intact.
          */
         if (
-          window.StatusPage &&
-          typeof window.StatusPage.publishStatus ===
+          (window.StatusPage || window.ZakiStatus) &&
+          typeof (window.StatusPage || window.ZakiStatus).publishStatus ===
             "function"
         ) {
-          window.StatusPage.__composerPayload = {
+          (window.StatusPage || window.ZakiStatus).__composerPayload = {
             mode: state.mode,
             text: textValue,
             caption: captionValue,
@@ -3668,8 +3668,8 @@ showComposerError(message) {
               )?.value.trim() || ""
           };
 
-          await window.StatusPage.publishStatus(
-            window.StatusPage.__composerPayload
+          await (window.StatusPage || window.ZakiStatus).publishStatus(
+            (window.StatusPage || window.ZakiStatus).__composerPayload
           );
 
           resetComposer();
