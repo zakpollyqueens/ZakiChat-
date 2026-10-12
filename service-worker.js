@@ -86,14 +86,7 @@ self.addEventListener(
     const replyMode =
       event.action === "reply";
 
-    const targetUrl =
-      actorId
-        ? `/pages/chat.html?user=${encodeURIComponent(
-            actorId
-          )}${replyMode ? `&replyMessageId=${encodeURIComponent(
-            data.messageId || ""
-          )}` : ""}`
-        : "/pages/notifications.html";
+    const targetUrl = data.conversationId ? `/pages/chat.html?id=${encodeURIComponent(data.conversationId)}${replyMode && data.messageId ? `&replyMessageId=${encodeURIComponent(data.messageId)}` : ""}` : actorId ? `/pages/contacts.html?user=${encodeURIComponent(actorId)}` : "/pages/notifications.html";
 
     event.waitUntil(
       self.clients
