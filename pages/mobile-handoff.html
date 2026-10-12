@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07111f">
+<title>Opening your account | ZakiChat</title><link rel="stylesheet" href="../static/css/main.css">
+<style>
+body{min-height:100vh;margin:0;display:grid;place-items:center;padding:22px;box-sizing:border-box;background:radial-gradient(ellipse at top,#123b53,#07111f 65%);color:#f1fbff;font-family:system-ui,-apple-system,sans-serif}.handoff-card{width:min(390px,100%);box-sizing:border-box;padding:30px 24px;border:1px solid #70eaff45;border-radius:25px;background:#0b1b2be8;text-align:center;box-shadow:0 25px 80px #0006}.logo{width:58px;height:58px;margin:0 auto 20px;display:grid;place-items:center;border-radius:19px;background:linear-gradient(145deg,#83f1ff,#12c5e9);color:#031522;font-size:30px;font-weight:900}h1{font-size:23px;margin:0 0 10px}.subtitle{font-size:13px;line-height:1.6;color:#afc8d8}.spinner{width:28px;height:28px;border:3px solid #ffffff20;border-top-color:#72eaff;border-radius:50%;margin:22px auto;animation:spin .8s linear infinite}.error{padding:12px;border:1px solid #ff87904d;border-radius:12px;background:#ff5c6d12;color:#ffb9c0;font-size:13px;line-height:1.5}.retry{display:inline-block;margin-top:15px;color:#8cefff;font-size:13px;text-decoration:none}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.spinner{animation:none}}
+</style></head>
+<body><main class="handoff-card"><div class="logo" aria-hidden="true">Z</div><h1 id="handoffTitle">Opening your ZakiChat account</h1><p class="subtitle" id="handoffMessage">Securely connecting this phone to the account you authorized on the website. Keep your internet connection on.</p><div class="spinner" id="handoffSpinner" aria-hidden="true"></div><p class="error" id="handoffError" hidden role="alert"></p><a class="retry" id="handoffRetry" href="status.html" hidden>Return to Updates and authorize again</a></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../static/js/config.js"></script><script src="../static/js/account-manager.js"></script><script src="../static/js/supabase-client.js"></script>
+<script>
+(async function(){
+const title=document.getElementById('handoffTitle'),message=document.getElementById('handoffMessage'),errorBox=document.getElementById('handoffError'),spinner=document.getElementById('handoffSpinner'),retry=document.getElementById('handoffRetry');
+function fail(text){title.textContent='Could not open your account';message.textContent='Your account has not been removed or changed.';errorBox.textContent=text;errorBox.hidden=false;spinner.hidden=true;retry.hidden=false}
+try{
+if(!window.ZakiChatNative||typeof window.ZakiChatNative.getPendingAuthHandoffToken!=='function')throw new Error('This secure handoff must be opened from the installed ZakiChat Android app. Tap Authorize & open mobile app on the website.');
+const token=window.ZakiChatNative.getPendingAuthHandoffToken();if(!token)throw new Error('No authorization request was found. Return to Updates and authorize this phone again.');
+if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
+const response=await fetch(window.ZakiChatConfig.supabaseUrl+'/functions/v1/mobile-app-handoff',{method:'POST',headers:{'Content-Type':'application/json','apikey':window.ZakiChatConfig.supabaseKey},body:JSON.stringify({action:'consume',token})});
+const payload=await response.json();if(!response.ok||!payload.success||!payload.session)throw new Error(payload.error||'Authorization expired. Return to Updates and try again.');
+const client=window.ZakiChatAuth.client;const {data,error}=await client.auth.setSession({access_token:payload.session.access_token,refresh_token:payload.session.refresh_token});if(error||!data.session)throw error||new Error('Could not save your mobile session.');
+try{await window.ZakiChatAccounts?.registerCurrentSession(client,{storageKey:window.ZakiChatAuth.storageKey,email:data.user?.email||payload.user?.email||'',phone:data.user?.phone||'',displayName:data.user?.user_metadata?.display_name||data.user?.user_metadata?.full_name||data.user?.email||payload.user?.email||'ZakiChat user'})}catch(e){console.warn('Saved-account registry refresh failed:',e)}
+window.ZakiChatNative.clearPendingAuthHandoffToken();title.textContent='You are connected';message.textContent='Your existing account is ready. Opening Chats…';setTimeout(()=>window.location.replace('chats.html'),350);
+}catch(e){console.error('Mobile app handoff failed:',e);fail(e.message||'Please authorize the mobile app again from Updates.')}
+})();
+</script></body></html>
