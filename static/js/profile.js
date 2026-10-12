@@ -20,6 +20,8 @@
   const usernameInput = document.getElementById("username");
   const fullNameInput = document.getElementById("fullName");
   const phoneInput = document.getElementById("phone");
+  const contactEmailInput = document.getElementById("contactEmail");
+  const emailDisplay = document.getElementById("profileEmailDisplay");
   const locationInput = document.getElementById("location");
   const bioInput = document.getElementById("bio");
   const birthdayInput = document.getElementById("birthday");
@@ -254,6 +256,8 @@
 
     phoneInput.value =
       profile.phone || "";
+    if (contactEmailInput) contactEmailInput.value = profile.contact_email || "";
+    if (emailDisplay) emailDisplay.textContent = profile.contact_email || "Not added";
 
     locationInput.value =
       profile.location || "";
@@ -278,6 +282,9 @@
 
       phone:
         phoneInput.value.trim(),
+
+      contact_email:
+        contactEmailInput ? contactEmailInput.value.trim() : "",
 
       location:
         locationInput.value.trim(),
@@ -398,6 +405,18 @@
     }
   }
 
+
+  const inviteButton = document.getElementById("inviteFriendsButton");
+  inviteButton?.addEventListener("click", async () => {
+    const inviteUrl = new URL("signup.html", window.location.href).href;
+    const invite = { title: "Join me on ZakiChat", text: "Connect with me on ZakiChat for chats, calls, status updates and communities.", url: inviteUrl };
+    try {
+      if (navigator.share) await navigator.share(invite);
+      else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(inviteUrl); showToast("ZakiChat invite link copied. Share it in WhatsApp, Telegram or any messaging app."); }
+      else { window.prompt("Copy this ZakiChat invite link", inviteUrl); }
+    } catch (error) { if (error?.name !== "AbortError") { try { window.prompt("Copy this ZakiChat invite link", inviteUrl); } catch (_) {} } }
+  });
+
   async function loadProfile() {
     clearMessage();
 
@@ -438,7 +457,7 @@
     } = await supabaseClient
       .from("profiles")
       .select(
-        "id,username,full_name,phone,avatar_url,bio,is_online,last_seen,location,birthday,profile_color,cover_url,created_at,updated_at"
+        "id,username,full_name,phone,contact_email,avatar_url,bio,is_online,last_seen,location,birthday,profile_color,cover_url,created_at,updated_at"
       )
       .eq("id", profileId)
       .maybeSingle();
@@ -506,6 +525,12 @@
       return;
     }
 
+    if (values.contact_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.contact_email)) {
+      showMessage("Enter a valid additional contact email.", "error");
+      contactEmailInput?.focus();
+      return;
+    }
+
     if (values.full_name.length > 80) {
       showMessage(
         "Full name is too long.",
@@ -559,6 +584,7 @@
         username: values.username,
         full_name: values.full_name || null,
         phone: values.phone || null,
+        contact_email: values.contact_email || null,
         location: values.location || null,
         birthday: values.birthday || null,
         bio: values.bio || null,
