@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../static/css/telegram-chat.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
 <link rel="stylesheet" href="../static/css/keyboard.css">
-<link rel="stylesheet" href="../static/css/telegram-chat-redesign.css?v=20261012-avatar-video-attachments">
+<link rel="stylesheet" href="../static/css/telegram-chat-redesign.css?v=20261012-premium-chat-menu">
 </head>
 <body class="tg-app tg-conversation-page">
 <main class="tg-conversation-shell" id="tg-conversation-shell">
@@ -23,22 +23,28 @@
     <div class="tg-header-actions">
       <button class="tg-icon-btn tg-call-action" type="button" data-action="call" aria-label="Voice call" title="Voice call"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.8 9.2 3.2l2.1 5-2 1.6a15 15 0 0 0 4.9 4.9l1.6-2 5 2.1-.6 2.6a2 2 0 0 1-2 1.6A15.7 15.7 0 0 1 5 5.8a2 2 0 0 1 1.6-2Z"/></svg></button>
       <button class="tg-icon-btn tg-video-action" type="button" data-action="video" aria-label="Video call" title="Video call"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3z"/></svg></button>
-      <button class="tg-icon-btn" type="button" id="chat-menu-button" aria-label="More conversation options" title="More options">⋮</button>
+      <button class="tg-icon-btn" type="button" id="chat-menu-button" aria-label="More conversation options" title="More options" aria-haspopup="menu" aria-expanded="false">⋮</button>
     </div>
   </header>
 
-  <div class="tg-chat-menu" id="chat-menu" hidden>
-    <button type="button" data-action="search">⌕ <span>Search in chat</span></button>
-    <button type="button" data-action="mute">♩ <span>Mute notifications</span></button>
-    <button type="button" data-action="pin">⌖ <span>Pin chat</span></button>
-    <button type="button" data-action="archive">▣ <span>Archive chat</span></button>
-    <button type="button" data-action="edit-group" data-group-only hidden>✎ <span>Edit group info</span></button>
-    <button type="button" data-action="manage-members" data-group-only hidden>♙ <span>Manage group members</span></button>
-    <button type="button" data-action="leave-group" data-group-only hidden>↩ <span>Leave group</span></button>
-    <button type="button" data-action="wallpaper">▧ <span>Change chat wallpaper</span></button>
-    <button type="button" data-action="clear">⌫ <span>Clear history for me</span></button>
-    <button type="button" data-action="delete-chat" class="tg-menu-danger">× <span>Delete chat</span></button>
-    <button type="button" data-action="info">ⓘ <span>Conversation details</span></button>
+  <div class="tg-chat-menu" id="chat-menu" hidden role="menu" aria-label="Conversation actions">
+    <div class="tg-menu-heading"><span class="tg-menu-heading-icon">⋮</span><span><strong>Chat options</strong><small>Manage this conversation</small></span></div>
+    <div class="tg-menu-section-label">QUICK ACTIONS</div>
+    <button type="button" role="menuitem" data-action="search"><span class="tg-menu-icon menu-search">⌕</span><span class="tg-menu-copy"><strong>Search in chat</strong><small>Find a message</small></span><kbd>⌕</kbd></button>
+    <button type="button" role="menuitem" data-action="mute"><span class="tg-menu-icon menu-mute">♫</span><span class="tg-menu-copy"><strong data-menu-label="mute">Mute notifications</strong><small>Control chat alerts</small></span></button>
+    <button type="button" role="menuitem" data-action="pin"><span class="tg-menu-icon menu-pin">⌖</span><span class="tg-menu-copy"><strong data-menu-label="pin">Pin chat</strong><small>Keep it easy to find</small></span></button>
+    <button type="button" role="menuitem" data-action="archive"><span class="tg-menu-icon menu-archive">▣</span><span class="tg-menu-copy"><strong>Archive chat</strong><small>Move it out of Chats</small></span></button>
+    <div class="tg-menu-divider"></div>
+    <div class="tg-menu-section-label">PERSONALIZE</div>
+    <button type="button" role="menuitem" data-action="wallpaper"><span class="tg-menu-icon menu-wallpaper">▧</span><span class="tg-menu-copy"><strong>Chat wallpaper</strong><small>Change this chat's look</small></span></button>
+    <button type="button" role="menuitem" data-action="info"><span class="tg-menu-icon menu-info">ⓘ</span><span class="tg-menu-copy"><strong>Conversation details</strong><small>View profile and chat info</small></span></button>
+    <button type="button" role="menuitem" data-action="edit-group" data-group-only hidden><span class="tg-menu-icon menu-edit">✎</span><span class="tg-menu-copy"><strong>Edit group info</strong><small>Change group name</small></span></button>
+    <button type="button" role="menuitem" data-action="manage-members" data-group-only hidden><span class="tg-menu-icon menu-members">♙</span><span class="tg-menu-copy"><strong>Manage members</strong><small>Review group membership</small></span></button>
+    <button type="button" role="menuitem" data-action="leave-group" data-group-only hidden class="tg-menu-warning"><span class="tg-menu-icon menu-leave">↩</span><span class="tg-menu-copy"><strong>Leave group</strong><small>Leave this group conversation</small></span></button>
+    <div class="tg-menu-divider"></div>
+    <div class="tg-menu-section-label">CHAT MANAGEMENT</div>
+    <button type="button" role="menuitem" data-action="clear" class="tg-menu-warning"><span class="tg-menu-icon menu-clear">⌫</span><span class="tg-menu-copy"><strong>Clear chat history</strong><small>Clear messages from your view</small></span></button>
+    <button type="button" role="menuitem" data-action="delete-chat" class="tg-menu-danger"><span class="tg-menu-icon menu-delete">×</span><span class="tg-menu-copy"><strong>Delete chat</strong><small>Remove this chat from your list</small></span></button>
   </div>
 
   <section class="tg-message-area" id="message-area" aria-label="Conversation messages">
@@ -101,7 +107,7 @@
 <script src="../static/js/supabase-client.js"></script>
 <script src="../static/js/appearance.js"></script>
 <script src="../static/js/auth-guard.js"></script>
-<script src="../static/js/telegram-chat.js?v=20261012-avatar-video-attachments"></script>
+<script src="../static/js/telegram-chat.js?v=20261012-premium-chat-menu"></script>
 <script src="../static/js/keyboard.js"></script>
 </body>
 </html>
