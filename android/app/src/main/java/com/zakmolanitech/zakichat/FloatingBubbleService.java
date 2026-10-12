@@ -22,6 +22,8 @@ import androidx.core.app.NotificationCompat;
 
 public class FloatingBubbleService extends Service {
     private static final String CHANNEL = "zakichat_floating_bubble";
+    public static final String ACTION_SHOW_BUBBLE = "com.zakmolanitech.zakichat.SHOW_BUBBLE";
+    public static final String ACTION_HIDE_BUBBLE = "com.zakmolanitech.zakichat.HIDE_BUBBLE";
     private WindowManager windowManager;
     private TextView bubble;
     private WindowManager.LayoutParams params;
@@ -40,7 +42,6 @@ public class FloatingBubbleService extends Service {
             .setContentText("Tap the floating ZAK bubble to open recent chats.")
             .setContentIntent(pi).setOngoing(true).build();
         startForeground(1501, notification);
-        showBubble();
     }
 
     private void createChannel() {
@@ -106,7 +107,12 @@ public class FloatingBubbleService extends Service {
 
     private int dp(int value) { return (int)(value * getResources().getDisplayMetrics().density + 0.5f); }
 
-    @Override public int onStartCommand(Intent intent, int flags, int startId) { return START_NOT_STICKY; }
+    @Override public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent == null ? ACTION_SHOW_BUBBLE : intent.getAction();
+        if (ACTION_HIDE_BUBBLE.equals(action)) removeBubble();
+        else showBubble();
+        return START_NOT_STICKY;
+    }
 
     @Override public void onTaskRemoved(Intent rootIntent) {
         removeBubble();
