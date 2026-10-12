@@ -24,6 +24,9 @@
   let started = false;
 
   function updatePresenceUI(isOnline) {
+    const viewedProfileId = document.body?.dataset?.viewedProfileId;
+    if (viewedProfileId && currentUser && viewedProfileId !== currentUser.id) return;
+
     const presence =
       document.getElementById("profilePresence");
 
