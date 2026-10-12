@@ -397,7 +397,7 @@
         channel: latest.channel
           ? latest.channel.charAt(0).toUpperCase() + latest.channel.slice(1)
           : 'Stable',
-        downloadUrl: latest.downloadUrl || ''
+        downloadUrl: latest.downloadUrl || 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest'
       });
 
       renderPaidUpgrades(fallbackPaidUpgrades);
@@ -453,7 +453,7 @@
       }
     } catch (error) {
       console.error('Unable to load published ZakiChat releases:', error);
-      renderLatestVersion({ ...fallbackLatestVersion, downloadUrl: '' });
+      renderLatestVersion(fallbackLatestVersion);
       renderPaidUpgrades(fallbackPaidUpgrades);
       renderVersions([]);
     }
