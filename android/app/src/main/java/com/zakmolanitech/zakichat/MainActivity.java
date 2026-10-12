@@ -81,6 +81,13 @@ public class MainActivity extends Activity {
                     }).show();
             }
         }
+
+        if (Settings.canDrawOverlays(this) && getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true)) {
+            Intent service = new Intent(this, FloatingBubbleService.class);
+            service.setAction(FloatingBubbleService.ACTION_HIDE_BUBBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(service);
+            else startService(service);
+        }
     }
 
     @Override protected void onStop() {
@@ -88,8 +95,8 @@ public class MainActivity extends Activity {
         if (isFinishing()) return;
         if (Settings.canDrawOverlays(this) && getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true)) {
             Intent service = new Intent(this, FloatingBubbleService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(service);
-            else startService(service);
+            service.setAction(FloatingBubbleService.ACTION_SHOW_BUBBLE);
+            startService(service);
         }
     }
 
@@ -104,8 +111,16 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void setFloatingBubbleEnabled(boolean enabled) {
             runOnUiThread(() -> {
                 getPreferences(MODE_PRIVATE).edit().putBoolean("floating_bubble_enabled", enabled).apply();
-                if (!enabled) stopService(new Intent(MainActivity.this, FloatingBubbleService.class));
-                else if (!Settings.canDrawOverlays(MainActivity.this)) requestFloatingBubblePermission();
+                if (!enabled) {
+                    stopService(new Intent(MainActivity.this, FloatingBubbleService.class));
+                } else if (!Settings.canDrawOverlays(MainActivity.this)) {
+                    requestFloatingBubblePermission();
+                } else {
+                    Intent service = new Intent(MainActivity.this, FloatingBubbleService.class);
+                    service.setAction(FloatingBubbleService.ACTION_HIDE_BUBBLE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(service);
+                    else startService(service);
+                }
             });
         }
         @JavascriptInterface public void requestFloatingBubblePermission() {
