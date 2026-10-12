@@ -74,13 +74,6 @@ jobs:
           print('All local HTML href/src references exist.')
           PY
 
-  build-android:
-    name: Build Android APK
-    needs: validate
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
       - name: Checkout ZakiChat
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
