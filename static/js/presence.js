@@ -66,7 +66,10 @@
         "Presence update failed:",
         error
       );
-
+      presenceOnline = false;
+      window.dispatchEvent(new CustomEvent("zakichat:presence-change", {
+        detail: { isOnline: false }
+      }));
       return false;
     }
 
