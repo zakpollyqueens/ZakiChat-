@@ -17,6 +17,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            // CI-signed test build for direct installation. Replace with a private release keystore before production distribution.
+            signingConfig signingConfigs.debug
         }
         debug {
             applicationIdSuffix '.debug'
