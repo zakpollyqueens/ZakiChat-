@@ -10,6 +10,8 @@ import android.net.TrafficStats;
 import org.json.JSONObject;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -35,6 +37,13 @@ public class MainActivity extends Activity {
     private boolean askedForOverlay = false;
     private static final int FILE_CHOOSER_REQUEST_CODE = 9301;
     private ValueCallback<Uri[]> filePathCallback;
+    private final Handler networkUsageHandler = new Handler(Looper.getMainLooper());
+    private final Runnable networkUsageSampler = new Runnable() {
+        @Override public void run() {
+            new NativeBridge().getNetworkUsage();
+            networkUsageHandler.postDelayed(this, 5000L);
+        }
+    };
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +97,8 @@ public class MainActivity extends Activity {
 
     @Override protected void onResume() {
         super.onResume();
+        networkUsageHandler.removeCallbacks(networkUsageSampler);
+        networkUsageHandler.post(networkUsageSampler);
         if (!askedForOverlay) {
             askedForOverlay = true;
             if (!Settings.canDrawOverlays(this)) {
@@ -112,6 +123,7 @@ public class MainActivity extends Activity {
     }
 
     @Override protected void onStop() {
+        networkUsageHandler.removeCallbacks(networkUsageSampler);
         super.onStop();
         if (isFinishing()) return;
         if (Settings.canDrawOverlays(this) && getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true)) {
