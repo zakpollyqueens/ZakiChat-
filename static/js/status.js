@@ -81,16 +81,21 @@
         document.getElementById('myStatusCard');
 
       if (myStatusCard) {
-        myStatusCard.addEventListener('click', () => {
-          const own = this.statuses.filter(status => status.user_id === this.userId);
+        myStatusCard.addEventListener('click', event => {
+          if (event.target.closest('#addStatusButton')) return;
+          const own = this.statuses.filter(status => status.user_id === this.userId)
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
           if (own.length) this.openViewer(own[0], 'My Status');
           else this.openComposer();
         });
-
         myStatusCard.addEventListener('keydown', event => {
+          if (event.target.closest('#addStatusButton')) return;
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
-            this.openComposer();
+            const own = this.statuses.filter(status => status.user_id === this.userId)
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            if (own.length) this.openViewer(own[0], 'My Status');
+            else this.openComposer();
           }
         });
       }
@@ -249,6 +254,9 @@
 
       const initials =
         this.getInitials(name);
+      const hasActiveStatus = this.statuses.some(status => status.user_id === this.userId);
+      avatar.classList.toggle('has-active-status', hasActiveStatus);
+      avatar.setAttribute('aria-label', hasActiveStatus ? 'View your active status' : 'Add a status');
 
       avatar.innerHTML = '';
 
@@ -816,9 +824,17 @@
       }
 
       const isMine = status.user_id === this.userId;
-      const actions = document.getElementById('statusViewerActions'); if (actions) actions.hidden = false;
-      const editButton = document.getElementById('statusEditButton'); const deleteButton = document.getElementById('statusDeleteButton'); const viewsButton = document.getElementById('statusViewsButton');
-      if (editButton) editButton.hidden = !isMine; if (deleteButton) deleteButton.hidden = !isMine; if (viewsButton) viewsButton.hidden = !isMine;
+      const actions = document.getElementById('statusViewerActions'); if (actions) { actions.hidden = false; actions.classList.toggle('is-own-status', isMine); }
+      const heartButton = document.getElementById('statusHeartButton');
+      const reactButton = document.getElementById('statusReactButton');
+      const editButton = document.getElementById('statusEditButton');
+      const deleteButton = document.getElementById('statusDeleteButton');
+      const viewsButton = document.getElementById('statusViewsButton');
+      if (heartButton) heartButton.hidden = isMine;
+      if (reactButton) reactButton.hidden = isMine;
+      if (editButton) editButton.hidden = !isMine;
+      if (deleteButton) deleteButton.hidden = !isMine;
+      if (viewsButton) viewsButton.hidden = !isMine;
       const viewsPanel = document.getElementById('statusViewsPanel'); if (viewsPanel) { viewsPanel.hidden = true; viewsPanel.innerHTML = ''; }
       const reactionSummary = document.getElementById('statusReactionSummary'); if (reactionSummary) reactionSummary.textContent = '';
       document.getElementById('statusViewer').dataset.statusId = status.id; document.getElementById('statusViewer').hidden = false;
