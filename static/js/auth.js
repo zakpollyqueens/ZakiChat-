@@ -48,6 +48,7 @@
     return value;
   }
   async function currentSession() {
+    if (window.ZakiChatAuth?.ready) await window.ZakiChatAuth.ready;
     const { data, error } = await client.auth.getSession();
     if (error) throw error;
     return data.session;
@@ -55,7 +56,25 @@
   async function redirectIfSignedIn() {
     try {
       const session = await currentSession();
-      if (session?.user?.email && session.user.email_confirmed_at) chats();
+      // Restore a valid session already saved in this app/browser profile.
+      if (session?.user) {
+        try {
+          await window.ZakiChatAccounts?.registerCurrentSession(client, {
+            storageKey: addAccountMode ? pendingAddStorageKey : window.ZakiChatAuth?.storageKey,
+            email: session.user.email || "",
+            phone: session.user.phone || "",
+            displayName:
+              session.user.user_metadata?.display_name ||
+              session.user.user_metadata?.full_name ||
+              session.user.email ||
+              session.user.phone ||
+              "ZakiChat user"
+          });
+        } catch (registryError) {
+          console.warn("Could not refresh saved-account details:", registryError);
+        }
+        chats();
+      }
     } catch (e) { console.warn("Could not check existing session:", e); }
   }
 
