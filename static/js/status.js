@@ -576,7 +576,7 @@
       }
     },
 
-    async publishStatus() {
+    async publishStatus(payload = null) {
       const textarea =
         document.getElementById(
           'statusText'
@@ -593,11 +593,12 @@
         );
 
       const text =
-        textarea.value.trim();
+        String(payload?.text ?? payload?.caption ?? textarea.value ?? '').trim();
 
-      const file =
-        mediaInput.files?.[0] ||
-        null;
+      let file = payload?.file || mediaInput.files?.[0] || null;
+      if (!file && payload?.voiceBlob instanceof Blob) {
+        file = new File([payload.voiceBlob], 'voice-status.webm', { type: payload.voiceBlob.type || 'audio/webm' });
+      }
 
       this.hideComposerError();
 
@@ -610,15 +611,12 @@
 
       if (
         file &&
-        !file.type.startsWith(
-          'image/'
-        ) &&
-        !file.type.startsWith(
-          'video/'
-        )
+        !file.type.startsWith('image/') &&
+        !file.type.startsWith('video/') &&
+        !file.type.startsWith('audio/')
       ) {
         this.showComposerError(
-          'Only image and video files can be posted.'
+          'Choose a photo, video or recorded voice status.'
         );
         return;
       }
@@ -636,11 +634,7 @@
         const mediaType =
           file
             ? (
-                file.type.startsWith(
-                  'image/'
-                )
-                  ? 'image'
-                  : 'video'
+                file.type.startsWith('image/') ? 'image' : (file.type.startsWith('audio/') ? 'audio' : 'video')
               )
             : null;
 
@@ -710,6 +704,7 @@
 
         textarea.value = '';
         mediaInput.value = '';
+        if (payload) { const textInput = document.getElementById('statusText'); if (textInput) textInput.value = ''; }
 
         document.getElementById(
           'statusCharacterCount'
@@ -858,29 +853,15 @@
             );
 
           } else if (
-            status.media_type ===
-            'video'
+            status.media_type === 'video' || status.media_type === 'audio'
           ) {
-            const video =
-              document.createElement(
-                'video'
-              );
-
-            video.src =
-              data.signedUrl;
-
-            video.controls = true;
-            video.playsInline = true;
-
-            video.style.width =
-              '100%';
-
-            video.style.maxHeight =
-              '65vh';
-
-            content.appendChild(
-              video
-            );
+            const media = document.createElement(status.media_type === 'audio' ? 'audio' : 'video');
+            media.src = data.signedUrl;
+            media.controls = true;
+            media.playsInline = true;
+            media.style.width = '100%';
+            media.style.maxHeight = '65vh';
+            content.appendChild(media);
           }
         }
       }
@@ -1977,8 +1958,9 @@ showComposerError(message) {
     }
   };
 
-  window.ZakiStatus =
-    StatusPage;
+  window.ZakiStatus = StatusPage;
+  // Keep the legacy status engine available to the newer composer UI.
+  window.StatusPage = StatusPage;
 
   document.addEventListener(
     'DOMContentLoaded',
