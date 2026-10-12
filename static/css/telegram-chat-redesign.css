@@ -320,3 +320,39 @@ body.tg-conversation-page .tg-recording-preview[hidden]{display:none!important}
 @media(prefers-reduced-motion:reduce){body.tg-conversation-page .tg-attach-menu button,body.tg-conversation-page .tg-record-dot,body.tg-conversation-page #attach-button,body.tg-conversation-page #emoji-button,body.tg-conversation-page #send-button,body.tg-conversation-page #mic-button,body.tg-conversation-page #record-mode-button{animation:none!important;transition:none!important}}
 
 body.tg-conversation-page .tg-recording-bar[hidden]{display:none!important}
+
+
+/* Premium Telegram-inspired hamburger menu: polished hierarchy, vivid icons and reliable mobile taps. */
+body.tg-conversation-page .tg-chat-menu{position:fixed;top:calc(60px + env(safe-area-inset-top));right:10px;z-index:150;width:min(324px,calc(100vw - 20px));max-height:calc(var(--tg-viewport-height,100dvh) - 90px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding:9px;border:1px solid rgba(107,211,244,.24);border-radius:22px;background:linear-gradient(155deg,rgba(17,37,55,.985),rgba(6,17,30,.99));box-shadow:0 24px 70px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.055);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);transform-origin:top right;animation:tgMenuOpen .16s ease-out both}
+body.tg-conversation-page .tg-chat-menu[hidden]{display:none!important}
+body.tg-conversation-page .tg-menu-heading{display:flex;align-items:center;gap:11px;padding:8px 8px 13px}
+body.tg-conversation-page .tg-menu-heading-icon{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border-radius:14px;background:linear-gradient(145deg,#12a9d6,#2857a4);color:#fff;font-size:24px;box-shadow:0 6px 18px rgba(15,163,216,.2)}
+body.tg-conversation-page .tg-menu-heading>span:last-child{display:flex;flex-direction:column;gap:3px}
+body.tg-conversation-page .tg-menu-heading strong{font-size:14px;color:#f2faff;letter-spacing:.01em}
+body.tg-conversation-page .tg-menu-heading small{font-size:11px;color:#8faec1}
+body.tg-conversation-page .tg-menu-section-label{padding:8px 10px 5px;font-size:9px;font-weight:800;letter-spacing:.13em;color:#7097ad}
+body.tg-conversation-page .tg-chat-menu button{display:flex;align-items:center;gap:11px;width:100%;min-height:58px;margin:2px 0;padding:8px 9px;border:1px solid transparent;border-radius:14px;background:transparent;color:#eaf7ff;text-align:left;white-space:normal;transition:background .16s,border-color .16s,transform .16s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body.tg-conversation-page .tg-chat-menu button:hover{background:rgba(86,192,231,.075);border-color:rgba(100,203,237,.1)}
+body.tg-conversation-page .tg-chat-menu button:active{transform:scale(.985);background:rgba(49,174,218,.15)}
+body.tg-conversation-page .tg-chat-menu button:focus-visible{outline:2px solid #62dfff;outline-offset:1px}
+body.tg-conversation-page .tg-menu-icon{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border:1px solid rgba(148,212,238,.13);border-radius:13px;background:linear-gradient(145deg,rgba(44,156,203,.22),rgba(55,81,150,.2));color:#9ce8ff;font-size:21px;line-height:1;box-shadow:inset 0 1px rgba(255,255,255,.045)}
+body.tg-conversation-page .tg-menu-copy{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+body.tg-conversation-page .tg-menu-copy strong{font-size:12.5px;font-weight:650;line-height:1.2;color:#edf8ff}
+body.tg-conversation-page .tg-menu-copy small{font-size:10.5px;line-height:1.25;color:#91adbf;font-weight:450}
+body.tg-conversation-page .tg-chat-menu button kbd{display:grid;place-items:center;min-width:24px;height:24px;border:1px solid rgba(143,201,225,.1);border-radius:8px;background:rgba(255,255,255,.035);color:#8eb2c6;font-size:13px}
+body.tg-conversation-page .tg-menu-divider{height:1px;margin:6px 7px;background:linear-gradient(90deg,transparent,rgba(112,199,230,.2),transparent)}
+body.tg-conversation-page .tg-chat-menu .menu-search{color:#9fe9ff;background:linear-gradient(145deg,#125f7d,#253e78)}
+body.tg-conversation-page .tg-chat-menu .menu-mute{color:#d9c5ff;background:linear-gradient(145deg,#60408b,#333363)}
+body.tg-conversation-page .tg-chat-menu .menu-pin{color:#ffe1a0;background:linear-gradient(145deg,#896323,#614b35)}
+body.tg-conversation-page .tg-chat-menu .menu-archive{color:#b9d4ff;background:linear-gradient(145deg,#315f9d,#263d70)}
+body.tg-conversation-page .tg-chat-menu .menu-wallpaper{color:#9debdc;background:linear-gradient(145deg,#16796f,#205365)}
+body.tg-conversation-page .tg-chat-menu .menu-info{color:#a5e8ff;background:linear-gradient(145deg,#146b8a,#284d85)}
+body.tg-conversation-page .tg-chat-menu .menu-edit,body.tg-conversation-page .tg-chat-menu .menu-members{color:#c5d6ff;background:linear-gradient(145deg,#4058a0,#29375f)}
+body.tg-conversation-page .tg-chat-menu .menu-clear{color:#ffd59e;background:linear-gradient(145deg,#885b2c,#67454d)}
+body.tg-conversation-page .tg-chat-menu .menu-delete,body.tg-conversation-page .tg-chat-menu .menu-leave{color:#ffb5c2;background:linear-gradient(145deg,#963b55,#572b50)}
+body.tg-conversation-page .tg-chat-menu button.tg-menu-warning .tg-menu-copy strong{color:#ffd6a7}
+body.tg-conversation-page .tg-chat-menu button.tg-menu-danger .tg-menu-copy strong{color:#ffb6c2}
+body.tg-conversation-page .tg-chat-menu button.tg-menu-danger:hover{background:rgba(232,69,99,.09);border-color:rgba(255,100,127,.13)}
+@keyframes tgMenuOpen{from{opacity:0;transform:translateY(-5px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){body.tg-conversation-page .tg-chat-menu{top:calc(57px + env(safe-area-inset-top));right:7px;width:min(340px,calc(100vw - 14px));max-height:calc(var(--tg-viewport-height,100dvh) - 76px);padding:8px;border-radius:20px}body.tg-conversation-page .tg-menu-heading{padding:7px 7px 10px}body.tg-conversation-page .tg-chat-menu button{min-height:55px;gap:9px;padding:7px}body.tg-conversation-page .tg-menu-icon{flex-basis:36px;width:36px;height:36px;border-radius:12px;font-size:19px}body.tg-conversation-page .tg-menu-copy strong{font-size:12px}body.tg-conversation-page .tg-menu-copy small{font-size:10px}}
+@media(prefers-reduced-motion:reduce){body.tg-conversation-page .tg-chat-menu{animation:none}body.tg-conversation-page .tg-chat-menu button{transition:none}}
