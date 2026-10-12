@@ -19,6 +19,7 @@
   const HEARTBEAT_INTERVAL = 30000;
 
   let currentUser = null;
+  let presenceOnline = false;
   let heartbeatTimer = null;
   let realtimeChannel = null;
   let started = false;
@@ -69,7 +70,11 @@
       return false;
     }
 
-    updatePresenceUI(isOnline);
+    presenceOnline = Boolean(isOnline) && navigator.onLine && document.visibilityState === "visible";
+    updatePresenceUI(presenceOnline);
+    window.dispatchEvent(new CustomEvent("zakichat:presence-change", {
+      detail: { isOnline: presenceOnline }
+    }));
 
     return true;
   }
@@ -271,6 +276,7 @@
   );
 
   window.ZakiChatPresence = Object.freeze({
+    get isOnline() { return Boolean(presenceOnline && navigator.onLine && document.visibilityState === "visible"); },
     start: startPresence,
     stop: stopPresence,
     markOnline: markOnline,
