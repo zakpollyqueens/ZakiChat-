@@ -7,7 +7,7 @@
     <application
         android:allowBackup="false"
         android:label="ZakiChat"
-        android:icon="@drawable/ic_zakichat"
+        android:icon="@drawable/zaki_app_icon"
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
         <activity
