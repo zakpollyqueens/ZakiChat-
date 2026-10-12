@@ -8,3 +8,5 @@ html{min-height:100%;height:auto!important;overflow-y:auto!important;overflow-x:
 .wallpaper-lock-badge{color:#ffdf9a;background:#2a1d31e8}
 .wallpaper-free-badge{color:#b9ffe7;background:#06382fd9}
 .wallpaper-actions #wallpaper-apply{font-weight:900}
+
+html:has(body.tg-wallpaper-page),body.tg-wallpaper-page{height:auto!important;min-height:100%!important;overflow-y:scroll!important;overflow-x:hidden!important;position:relative!important;touch-action:pan-y!important;-webkit-overflow-scrolling:touch!important}body.tg-wallpaper-page .wallpaper-shell,body.tg-wallpaper-page .wallpaper-library,body.tg-wallpaper-page .wallpaper-grid{height:auto!important;max-height:none!important;overflow:visible!important;contain:none!important;touch-action:pan-y!important}body.tg-wallpaper-page .wallpaper-grid{padding-bottom:24px!important}.wallpaper-card.wallpaper-locked{position:relative;filter:saturate(.72)}.wallpaper-lock-badge{position:absolute;top:8px;right:7px;border:1px solid #8be5ff65;border-radius:20px;padding:4px 6px;background:#061321df;color:#c6f5ff;font:800 8px/1.2 system-ui;font-style:normal}
