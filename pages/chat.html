@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../static/css/telegram-chat.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
 <link rel="stylesheet" href="../static/css/keyboard.css">
-<link rel="stylesheet" href="../static/css/telegram-chat-redesign.css?v=20261012-telegram-bubbles-attachments">
+<link rel="stylesheet" href="../static/css/telegram-chat-redesign.css?v=20261012-avatar-video-attachments">
 </head>
 <body class="tg-app tg-conversation-page">
 <main class="tg-conversation-shell" id="tg-conversation-shell">
@@ -69,23 +69,23 @@
       <button class="tg-send-button tg-record-mode-button" id="record-mode-button" type="button" aria-label="Switch to video note" title="Switch voice/video note mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3z"/></svg></button>
     </div>
     <div class="tg-recording-bar" id="recording-bar" hidden>
-      <button type="button" class="tg-record-cancel" id="record-cancel" aria-label="Cancel recording">×</button>
-      <span class="tg-record-dot"></span><span class="tg-record-label">Recording voice message</span><strong id="record-timer">00:00</strong>
-      <button type="button" class="tg-record-send" id="record-send">Send audio</button>
+      <video class="tg-recording-preview" id="recording-preview" autoplay muted playsinline hidden aria-label="Live video recording preview"></video>
+      <div class="tg-recording-status"><span class="tg-record-dot"></span><span class="tg-record-label">Recording voice message</span><strong id="record-timer">00:00</strong></div>
+      <div class="tg-recording-controls"><button type="button" class="tg-record-cancel" id="record-cancel" aria-label="Cancel recording">×</button><button type="button" class="tg-record-send" id="record-send">Stop &amp; send voice</button></div>
     </div>
     <div class="tg-composer-hint" id="composer-hint" aria-live="polite">Enter sends · Shift + Enter adds a line</div>
   </form>
 
   <input id="file-input" type="file" hidden multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
-  <div class="tg-attach-menu" id="attach-menu" hidden>
-    <button type="button" data-file-kind="media">▧ <span>Gallery · photos &amp; videos</span></button>
-    <button type="button" data-file-kind="document">▤ <span>File / document</span></button>
-    <button type="button" data-file-kind="audio">♫ <span>Music / audio</span></button>
-    <button type="button" data-attach-action="location">⌖ <span>Location</span></button>
-    <button type="button" data-attach-action="contact">♙ <span>Contact</span></button>
-    <button type="button" data-attach-action="article">▤ <span>Article / link</span></button>
-    <button type="button" data-attach-action="checklist">☑ <span>Checklist</span></button>
-    <button type="button" data-attach-action="wallet">▣ <span>Wallet note</span></button>
+  <div class="tg-attach-menu" id="attach-menu" hidden aria-label="Attachment options">
+    <button type="button" data-file-kind="media"><span class="tg-attach-icon icon-gallery">▧</span><span class="tg-attach-copy"><strong>Gallery</strong><small>Photos &amp; videos</small></span></button>
+    <button type="button" data-file-kind="document"><span class="tg-attach-icon icon-document">▤</span><span class="tg-attach-copy"><strong>File</strong><small>Documents</small></span></button>
+    <button type="button" data-file-kind="audio"><span class="tg-attach-icon icon-audio">♫</span><span class="tg-attach-copy"><strong>Music</strong><small>Audio files</small></span></button>
+    <button type="button" data-attach-action="location"><span class="tg-attach-icon icon-location">⌖</span><span class="tg-attach-copy"><strong>Location</strong><small>Share a place</small></span></button>
+    <button type="button" data-attach-action="contact"><span class="tg-attach-icon icon-contact">♙</span><span class="tg-attach-copy"><strong>Contact</strong><small>Share a person</small></span></button>
+    <button type="button" data-attach-action="article"><span class="tg-attach-icon icon-link">↗</span><span class="tg-attach-copy"><strong>Link</strong><small>Share an article</small></span></button>
+    <button type="button" data-attach-action="checklist"><span class="tg-attach-icon icon-checklist">☑</span><span class="tg-attach-copy"><strong>Checklist</strong><small>Make a list</small></span></button>
+    <button type="button" data-attach-action="wallet"><span class="tg-attach-icon icon-wallet">▣</span><span class="tg-attach-copy"><strong>Wallet note</strong><small>Private note</small></span></button>
   </div>
   <div class="tg-emoji-panel" id="emoji-panel" hidden aria-label="Emoji picker"></div>
   <aside class="tg-info-panel" id="chat-info-panel" hidden>
@@ -101,7 +101,7 @@
 <script src="../static/js/supabase-client.js"></script>
 <script src="../static/js/appearance.js"></script>
 <script src="../static/js/auth-guard.js"></script>
-<script src="../static/js/telegram-chat.js?v=20261012-telegram-bubbles-attachments"></script>
+<script src="../static/js/telegram-chat.js?v=20261012-avatar-video-attachments"></script>
 <script src="../static/js/keyboard.js"></script>
 </body>
 </html>
