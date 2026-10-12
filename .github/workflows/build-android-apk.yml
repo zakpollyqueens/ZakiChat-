@@ -73,10 +73,10 @@ jobs:
         run: |
           set -euo pipefail
           gh release create zc-vr15-android \
-            android/app/build/outputs/apk/release/app-release-unsigned.apk \
+            android/app/build/outputs/apk/release/app-release.apk \
             android/app/build/outputs/apk/debug/app-debug.apk \
             --title "ZakiChat Android zc-vr15" \
             --notes "ZakiChat Android wrapper with a draggable floating chat bubble and recent chats panel. This build is an initial test build; test sign-in, messaging, overlay permission, and dismiss-from-Recents behavior on-device before relying on it." \
             || gh release upload zc-vr15-android \
-              android/app/build/outputs/apk/release/app-release-unsigned.apk \
+              android/app/build/outputs/apk/release/app-release.apk \
               android/app/build/outputs/apk/debug/app-debug.apk --clobber
