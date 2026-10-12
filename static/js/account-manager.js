@@ -300,7 +300,7 @@
       storageKey
     });
 
-    return getActiveAccount();
+    return readRegistry().find(account => account.userId === user.id) || null;
   }
 
   async function signOutCurrentAccount(
