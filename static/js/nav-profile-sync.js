@@ -22,6 +22,21 @@
 
     if (error || !profile) return;
 
+    const settingsAvatar = document.querySelector('.settings-profile-avatar');
+    if (settingsAvatar) {
+      settingsAvatar.replaceChildren();
+      if (profile.avatar_url) {
+        const settingsImage = document.createElement('img');
+        settingsImage.src = profile.avatar_url;
+        settingsImage.alt = 'Your profile photo';
+        settingsImage.className = 'settings-profile-avatar-image';
+        settingsImage.onerror = () => { settingsAvatar.textContent = initials; };
+        settingsAvatar.appendChild(settingsImage);
+      } else {
+        settingsAvatar.textContent = initials;
+      }
+    }
+
     let icon = profileLink.querySelector('.bottom-nav-icon');
     if (!icon) {
       icon = document.createElement('span');
@@ -33,7 +48,7 @@
     }
     if (!document.getElementById('zc-nav-profile-avatar-style')) {
       const style = document.createElement('style'); style.id = 'zc-nav-profile-avatar-style';
-      style.textContent = '.zc-bottom-nav .bottom-nav-icon,.bottom-nav .bottom-nav-icon{display:grid;place-items:center;width:25px;height:25px;overflow:hidden;border-radius:50%;font-size:11px;font-weight:850;background:linear-gradient(135deg,#173e58,#071624);border:1px solid #5ddfff70;color:#dffaff}.bottom-nav-profile-avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}.zc-bottom-nav a.profile-online .bottom-nav-icon,.bottom-nav a.profile-online .bottom-nav-icon{outline:2px solid #39e9a2;outline-offset:2px}'; document.head.appendChild(style);
+      style.textContent = '.settings-profile-avatar-image{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block}.zc-bottom-nav .bottom-nav-icon,.bottom-nav .bottom-nav-icon{display:grid;place-items:center;width:25px;height:25px;overflow:hidden;border-radius:50%;font-size:11px;font-weight:850;background:linear-gradient(135deg,#173e58,#071624);border:1px solid #5ddfff70;color:#dffaff}.bottom-nav-profile-avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}.zc-bottom-nav a.profile-online .bottom-nav-icon,.bottom-nav a.profile-online .bottom-nav-icon{outline:2px solid #39e9a2;outline-offset:2px}'; document.head.appendChild(style);
     }
 
     const name =
@@ -96,6 +111,8 @@
         payload => {
           const updated = payload.new || {};
           const url = updated.avatar_url;
+          const settingsAvatar = document.querySelector('.settings-profile-avatar');
+          if (settingsAvatar) { settingsAvatar.replaceChildren(); if (url) { const image = document.createElement('img'); image.src = `${url}${url.includes('?') ? '&' : '?'}v=${Date.now()}`; image.alt = 'Your profile photo'; image.className = 'settings-profile-avatar-image'; image.onerror = () => { settingsAvatar.textContent = initials; }; settingsAvatar.appendChild(image); } else { settingsAvatar.textContent = initials; } }
 
           icon.innerHTML = '';
 
