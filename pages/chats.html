@@ -19,10 +19,10 @@ body.tg-list-page .daily-inspiration{position:relative;isolation:isolate;display
 body.tg-list-page .daily-inspiration:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.46;background:radial-gradient(circle at 90% 8%,#ffffff32 0 1px,transparent 2px),radial-gradient(circle at 83% 73%,#ffffff20 0 1px,transparent 2px),radial-gradient(circle at 18% 110%,#ffffff22 0 28px,transparent 29px),repeating-linear-gradient(135deg,#ffffff08 0 1px,transparent 1px 8px);background-size:19px 19px,27px 27px,auto,auto}
 body.tg-list-page .daily-inspiration:after{content:"";position:absolute;z-index:-1;inset:-80% -25%;background:linear-gradient(105deg,transparent 40%,#ffffff0d 50%,transparent 60%);transform:translateX(-45%);animation:inspirationSheen 9s ease-in-out infinite}
 body.tg-list-page .inspiration-sparkle{display:grid;place-items:center;flex:none;width:29px;height:29px;border:1px solid #ffffff30;border-radius:10px;background:#ffffff15;color:#f7f9ff;font-size:16px;text-shadow:0 0 14px #fff8}
-body.tg-list-page .inspiration-copy{display:flex;flex:1;min-width:0;flex-direction:column;justify-content:center;gap:3px}
+body.tg-list-page .inspiration-copy{display:flex;flex:1;min-width:0;flex-direction:column;justify-content:center;gap:3px;overflow:hidden}
 body.tg-list-page .inspiration-kicker{color:#ffffffad;font-size:8px;font-weight:850;letter-spacing:.15em;white-space:nowrap}
-body.tg-list-page .inspiration-quote{display:block;overflow:hidden;color:#fff;font-size:12px;font-weight:720;line-height:1.22;letter-spacing:-.08px;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 8px #0019}
-body.tg-list-page .daily-inspiration.is-changing .inspiration-quote{animation:quoteCardEnter .72s cubic-bezier(.2,.8,.2,1) both}
+body.tg-list-page .inspiration-quote{display:block;position:relative;width:max-content;min-width:max-content;max-width:none;overflow:visible;color:#fff;font-size:12px;font-weight:720;line-height:1.22;letter-spacing:-.08px;text-overflow:clip;white-space:nowrap;text-shadow:0 1px 8px #0019;animation:quoteMarquee 59s linear both}
+body.tg-list-page .daily-inspiration.is-changing .inspiration-quote{animation:quoteMarquee 59s linear both}
 body.tg-list-page .inspiration-index{flex:none;align-self:flex-end;padding-bottom:2px;color:#ffffffb8;font-size:8px;font-weight:750;font-variant-numeric:tabular-nums}
 body.tg-list-page .daily-inspiration.theme-0{background:linear-gradient(120deg,#123d5c,#162f5b 60%,#43326d)}
 body.tg-list-page .daily-inspiration.theme-1{background:linear-gradient(120deg,#123e35,#11615c 60%,#214d71)}
@@ -40,7 +40,7 @@ body.tg-list-page .daily-inspiration.theme-12{background:linear-gradient(120deg,
 body.tg-list-page .daily-inspiration.theme-13{background:linear-gradient(120deg,#452653,#793d81 55%,#a14d67)}
 body.tg-list-page .daily-inspiration.theme-14{background:linear-gradient(120deg,#29394e,#385d72 55%,#1f6d76)}
 body.tg-list-page .daily-inspiration.is-offline{opacity:.68;filter:saturate(.65)}
-@keyframes quoteCardEnter{0%{opacity:0;transform:translateY(7px);filter:blur(2px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes quoteMarquee{0%{transform:translateX(-100%);opacity:.65}5%{opacity:1}100%{transform:translateX(calc(100vw + 120px));opacity:1}}
 @keyframes inspirationSheen{0%,75%,100%{transform:translateX(-45%)}88%{transform:translateX(45%)}}
 @media(max-width:390px){body.tg-list-page .tg-brand-row{gap:6px!important}body.tg-list-page .zaki-glass-brand{flex-basis:40px!important;width:40px!important;height:40px!important}body.tg-list-page .zaki-app-icon{width:36px!important;height:36px!important}body.tg-list-page .daily-inspiration{height:50px;padding:6px 7px;gap:6px;border-radius:13px}body.tg-list-page .inspiration-sparkle{width:24px;height:24px;font-size:13px}body.tg-list-page .inspiration-kicker{font-size:7px}body.tg-list-page .inspiration-quote{font-size:11px}body.tg-list-page .inspiration-index{display:none}body.tg-list-page .tg-list-actions .tg-icon-btn{width:23px;min-width:23px}}
 @media(prefers-reduced-motion:reduce){body.tg-list-page .daily-inspiration:after{animation:none}body.tg-list-page .inspiration-quote{animation:none!important}}
