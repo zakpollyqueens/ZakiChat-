@@ -2,6 +2,9 @@ package com.zakmolanitech.zakichat;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -33,6 +36,8 @@ import androidx.webkit.WebViewAssetLoader;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private BroadcastReceiver mediaControlReceiver;
+    private boolean mediaReceiverRegistered = false;
     private WebViewAssetLoader assetLoader;
     private boolean askedForOverlay = false;
     private static final int FILE_CHOOSER_REQUEST_CODE = 9301;
@@ -62,6 +67,27 @@ public class MainActivity extends Activity {
         webView.getSettings().setAllowFileAccess(false);
         webView.getSettings().setAllowContentAccess(true);
         webView.addJavascriptInterface(new NativeBridge(), "ZakiChatNative");
+
+        mediaControlReceiver = new BroadcastReceiver() {
+            @Override public void onReceive(Context context, Intent intent) {
+                if (webView == null || intent == null) return;
+                String action = intent.getAction();
+                String script = "";
+                if (FloatingBubbleService.ACTION_MEDIA_TOGGLE.equals(action)) {
+                    script = "(function(){var m=[].slice.call(document.querySelectorAll('audio,video'));if(!m.length)return;var playing=m.some(function(x){return !x.paused&&!x.ended});m.forEach(function(x){try{if(playing)x.pause();else x.play().catch(function(){});}catch(e){}});})();";
+                } else if (FloatingBubbleService.ACTION_MEDIA_CLOSE.equals(action)) {
+                    script = "(function(){document.querySelectorAll('audio,video').forEach(function(x){try{x.pause();x.currentTime=0;}catch(e){}});})();";
+                }
+                if (!script.isEmpty()) webView.post(() -> webView.evaluateJavascript(script, null));
+            }
+        };
+        IntentFilter mediaFilter = new IntentFilter();
+        mediaFilter.addAction(FloatingBubbleService.ACTION_MEDIA_TOGGLE);
+        mediaFilter.addAction(FloatingBubbleService.ACTION_MEDIA_CLOSE);
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(mediaControlReceiver, mediaFilter, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(mediaControlReceiver, mediaFilter);
+        mediaReceiverRegistered = true;
+
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
                 if (filePathCallback != null) filePathCallback.onReceiveValue(null);
@@ -93,6 +119,14 @@ public class MainActivity extends Activity {
         });
         setContentView(webView);
         webView.loadUrl("https://zakichat.local/index.html");
+    }
+
+    @Override protected void onDestroy() {
+        if (mediaReceiverRegistered && mediaControlReceiver != null) {
+            try { unregisterReceiver(mediaControlReceiver); } catch (Exception ignored) {}
+            mediaReceiverRegistered = false;
+        }
+        super.onDestroy();
     }
 
     @Override protected void onResume() {
