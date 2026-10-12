@@ -3868,3 +3868,5 @@ body.status-page .channels-updates-arrow{display:grid;place-items:center;flex:0 
 }
 
 .call-delete-button{border-color:#ff718b55!important;color:#ff9aad!important}.call-delete-button:disabled{opacity:.5}
+
+.call-delete-button{border-color:#ff879044!important;color:#ffb7c1!important}.call-delete-button:disabled{opacity:.45;pointer-events:none}
