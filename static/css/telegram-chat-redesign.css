@@ -219,3 +219,22 @@ body.tg-conversation-page .tg-toast{max-width:calc(100vw - 28px);overflow-wrap:a
  body.tg-conversation-page .tg-message-area{padding-inline:clamp(18px,4vw,46px)}
 }
 @media(prefers-reduced-motion:reduce){body.tg-conversation-page .tg-message,body.tg-conversation-page #send-button[aria-busy=true]{animation:none!important}}
+
+
+/* Telegram-like message actions stay out of the way until requested. */
+body.tg-conversation-page .tg-message{overflow:visible}
+body.tg-conversation-page .tg-message-actions{
+ display:none;position:absolute;right:5px;bottom:calc(100% - 2px);z-index:5;
+ width:max-content;max-width:calc(100vw - 40px);margin:0;padding:3px;
+ border:1px solid rgba(145,205,229,.16);border-radius:12px;
+ background:rgba(13,30,44,.98);box-shadow:0 8px 24px rgba(0,0,0,.3);
+ opacity:1;backdrop-filter:blur(16px)
+}
+body.tg-conversation-page .tg-message:hover .tg-message-actions,
+body.tg-conversation-page .tg-message:focus-within .tg-message-actions,
+body.tg-conversation-page .tg-message.tg-actions-visible .tg-message-actions{display:flex}
+body.tg-conversation-page .tg-message-actions button{min-width:32px;min-height:32px;font-size:13px}
+@media(hover:none){
+ body.tg-conversation-page .tg-message:hover .tg-message-actions{display:none}
+ body.tg-conversation-page .tg-message.tg-actions-visible .tg-message-actions{display:flex}
+}
