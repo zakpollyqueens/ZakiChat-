@@ -31,6 +31,19 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.webkit.MimeTypeMap;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import androidx.webkit.WebViewAssetLoader;
 
@@ -55,9 +68,30 @@ public class MainActivity extends Activity {
         storeAuthHandoffFromIntent(getIntent());
         getWindow().setStatusBarColor(Color.rgb(7,17,31));
         getWindow().setNavigationBarColor(Color.rgb(7,17,31));
+        final WebViewAssetLoader.AssetsPathHandler bundledAssets = new WebViewAssetLoader.AssetsPathHandler(this);
         assetLoader = new WebViewAssetLoader.Builder()
             .setDomain("zakichat.local")
-            .addPathHandler("/", new WebViewAssetLoader.AssetsPathHandler(this))
+            .addPathHandler("/", path -> {
+                String safePath = path == null ? "" : path;
+                File activeRoot = new File(getFilesDir(), "ota-active");
+                File candidate = new File(activeRoot, safePath);
+                try {
+                    String root = activeRoot.getCanonicalPath() + File.separator;
+                    String actual = candidate.getCanonicalPath();
+                    if (actual.startsWith(root) && candidate.isFile()) {
+                        String extension = "";
+                        int dot = candidate.getName().lastIndexOf('.');
+                        if (dot >= 0) extension = candidate.getName().substring(dot + 1).toLowerCase(Locale.ROOT);
+                        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                        if (mime == null) mime = "application/octet-stream";
+                        String encoding = ("text".equals(mime.split("/")[0]) ||
+                            "application/javascript".equals(mime) || "application/json".equals(mime) ||
+                            "image/svg+xml".equals(mime)) ? "UTF-8" : null;
+                        return new WebResourceResponse(mime, encoding, new FileInputStream(candidate));
+                    }
+                } catch (Exception ignored) {}
+                return bundledAssets.handle(safePath);
+            })
             .build();
 
         webView = new WebView(this);
@@ -195,6 +229,115 @@ public class MainActivity extends Activity {
 
 
     public class NativeBridge {
+        @JavascriptInterface public String getInstalledOtaVersion() {
+            return getSharedPreferences("zaki_ota", MODE_PRIVATE).getString("version", "");
+        }
+        @JavascriptInterface public void downloadAndApplyOta(String version, String downloadUrl, String expectedSha256) {
+            if (version == null || !version.matches("[A-Za-z0-9._-]{1,100}") ||
+                expectedSha256 == null || !expectedSha256.matches("[a-fA-F0-9]{64}") ||
+                downloadUrl == null ||
+                !downloadUrl.equals("https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/ota-bundle.zip")) {
+                dispatchOtaEvent("error", "The update package details are invalid.");
+                return;
+            }
+            new Thread(() -> {
+                File zip = new File(getCacheDir(), "zaki-ota-download.zip");
+                File staging = new File(getFilesDir(), "ota-staging");
+                File active = new File(getFilesDir(), "ota-active");
+                File backup = new File(getFilesDir(), "ota-backup");
+                try {
+                    dispatchOtaEvent("progress", "Downloading update…");
+                    HttpURLConnection connection = (HttpURLConnection) new URL(downloadUrl).openConnection();
+                    connection.setConnectTimeout(20000);
+                    connection.setReadTimeout(60000);
+                    connection.setInstanceFollowRedirects(true);
+                    connection.setRequestProperty("User-Agent", "ZakiChat-OTA/1.0");
+                    try (InputStream in = new BufferedInputStream(connection.getInputStream());
+                         FileOutputStream out = new FileOutputStream(zip)) {
+                        byte[] buffer = new byte[32768];
+                        int count;
+                        long total = 0;
+                        while ((count = in.read(buffer)) != -1) {
+                            total += count;
+                            if (total > 150L * 1024L * 1024L) throw new Exception("Update package exceeds the 150 MB safety limit.");
+                            out.write(buffer, 0, count);
+                        }
+                    } finally { connection.disconnect(); }
+                    dispatchOtaEvent("progress", "Verifying update…");
+                    if (!sha256File(zip).equalsIgnoreCase(expectedSha256)) throw new Exception("Update verification failed. Nothing was changed.");
+                    deleteRecursively(staging);
+                    if (!staging.mkdirs() && !staging.isDirectory()) throw new Exception("Could not prepare the update.");
+                    unzipSafely(zip, staging);
+                    if (!new File(staging, "index.html").isFile() ||
+                        !new File(staging, "pages/status.html").isFile() ||
+                        !new File(staging, "static/js/status.js").isFile()) {
+                        throw new Exception("The update package is incomplete.");
+                    }
+                    dispatchOtaEvent("progress", "Applying update…");
+                    deleteRecursively(backup);
+                    if (active.exists() && !active.renameTo(backup)) throw new Exception("Could not safely prepare the current version.");
+                    if (!staging.renameTo(active)) {
+                        if (backup.exists()) backup.renameTo(active);
+                        throw new Exception("Could not activate the update. The previous version was preserved.");
+                    }
+                    getSharedPreferences("zaki_ota", MODE_PRIVATE).edit().putString("version", version).apply();
+                    deleteRecursively(backup);
+                    zip.delete();
+                    dispatchOtaEvent("applied", "Update installed. Restarting ZakiChat…");
+                    runOnUiThread(() -> { if (webView != null) webView.postDelayed(() -> webView.loadUrl("https://zakichat.local/index.html"), 900); });
+                } catch (Exception error) {
+                    deleteRecursively(staging);
+                    dispatchOtaEvent("error", error.getMessage() == null ? "Update failed. Your current app is unchanged." : error.getMessage());
+                }
+            }, "ZakiChat-OTA").start();
+        }
+        private void dispatchOtaEvent(String type, String message) {
+            runOnUiThread(() -> {
+                if (webView == null) return;
+                try {
+                    JSONObject detail = new JSONObject();
+                    detail.put("type", type);
+                    detail.put("message", message == null ? "" : message);
+                    webView.evaluateJavascript("window.dispatchEvent(new CustomEvent('zaki-ota-event',{detail:" + detail.toString() + "}));", null);
+                } catch (Exception ignored) {}
+            });
+        }
+        private String sha256File(File file) throws Exception {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            try (InputStream input = new FileInputStream(file)) {
+                byte[] buffer = new byte[32768]; int count;
+                while ((count = input.read(buffer)) != -1) digest.update(buffer, 0, count);
+            }
+            StringBuilder out = new StringBuilder();
+            for (byte b : digest.digest()) out.append(String.format(Locale.ROOT, "%02x", b & 0xff));
+            return out.toString();
+        }
+        private void unzipSafely(File zip, File destination) throws Exception {
+            String root = destination.getCanonicalPath() + File.separator;
+            try (ZipInputStream input = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)))) {
+                ZipEntry entry; byte[] buffer = new byte[32768];
+                while ((entry = input.getNextEntry()) != null) {
+                    File target = new File(destination, entry.getName());
+                    String path = target.getCanonicalPath();
+                    if (!path.startsWith(root)) throw new Exception("The update package contains an unsafe path.");
+                    if (entry.isDirectory()) {
+                        if (!target.mkdirs() && !target.isDirectory()) throw new Exception("Could not extract the update.");
+                    } else {
+                        File parent = target.getParentFile();
+                        if (parent != null && !parent.mkdirs() && !parent.isDirectory()) throw new Exception("Could not extract the update.");
+                        try (BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
+                            int count; while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+                        }
+                    }
+                    input.closeEntry();
+                }
+            }
+        }
+        private void deleteRecursively(File file) {
+            if (file == null || !file.exists()) return;
+            if (file.isDirectory()) { File[] children = file.listFiles(); if (children != null) for (File child : children) deleteRecursively(child); }
+            file.delete();
+        }
         @JavascriptInterface public String getPendingAuthHandoffToken() {
             return getSharedPreferences("mobile_auth_handoff", MODE_PRIVATE).getString("pending_token", "");
         }
