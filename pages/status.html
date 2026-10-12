@@ -73,6 +73,12 @@
       </button>
     </section>
 
+    <section class="my-statuses-section" aria-labelledby="myStatusesHeading">
+      <div class="status-section-heading"><div><span class="status-section-eyebrow">YOUR POSTS</span><h2 id="myStatusesHeading">My uploaded statuses</h2></div><span id="myStatusesCount">0</span></div>
+      <div id="myStatusList" class="status-list"></div>
+      <p id="myStatusesEmpty" class="status-empty">Your active statuses will appear here. Open them to see viewers, reactions, edit text, or delete them.</p>
+    </section>
+
     <!-- =====================================================
          STATUS UPDATES
          ===================================================== -->
@@ -640,10 +646,16 @@
         </button>
       </div>
 
-      <div
-        id="viewerContent"
-        class="status-viewer-content"
-      ></div>
+      <div id="viewerContent" class="status-viewer-content"></div>
+      <div id="statusViewerActions" class="status-viewer-actions" hidden>
+        <button id="statusHeartButton" type="button">♥ Send heart</button>
+        <button id="statusReactButton" type="button">😊 React</button>
+        <button id="statusViewsButton" type="button" hidden>👁 Viewers</button>
+        <button id="statusEditButton" type="button" hidden>✎ Edit</button>
+        <button id="statusDeleteButton" type="button" hidden>🗑 Delete</button>
+      </div>
+      <div id="statusReactionSummary" class="status-reaction-summary" aria-live="polite"></div>
+      <div id="statusViewsPanel" class="status-views-panel" hidden></div>
 
     </div>
 
