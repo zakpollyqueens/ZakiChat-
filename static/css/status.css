@@ -3866,3 +3866,5 @@ body.status-page .channels-updates-arrow{display:grid;place-items:center;flex:0 
  body.status-page .channels-updates-card{min-height:88px;padding:13px;border-radius:16px!important}
  body.status-page .channels-updates-icon{flex-basis:45px;width:45px;height:45px;border-radius:14px!important}
 }
+
+.call-delete-button{border-color:#ff718b55!important;color:#ff9aad!important}.call-delete-button:disabled{opacity:.5}
