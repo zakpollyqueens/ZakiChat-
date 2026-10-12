@@ -40,7 +40,7 @@ jobs:
 
           page = Path("pages/media-studio.html")
           html = page.read_text(encoding="utf-8")
-          urls = re.findall(r'https://images\\.unsplash\\.com/[^"\\s)]+', html)
+          urls = re.findall(r'https://images\.unsplash\.com/[^"\s)]+', html)
           photos = {}
           for url in urls:
               clean = url.split("&amp;")[0]
@@ -70,7 +70,7 @@ jobs:
               html = html.replace(original, local)
               # Also replace equivalent URLs for the same photo that used thumbnail parameters.
               html = re.sub(
-                  r'https://images\\.unsplash\\.com/' + re.escape(photo_id) + r'\\?[^"\\s)]+',
+                  r'https://images\.unsplash\.com/' + re.escape(photo_id) + r'\?[^"\s)]+',
                   local, html
               )
               print(f"[{n}/{len(photos)}] {photo_id}: {destination.stat().st_size:,} bytes")
