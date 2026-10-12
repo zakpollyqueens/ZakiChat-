@@ -65,8 +65,11 @@
     }
   }
 
-  supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === "SIGNED_OUT" || !session) openLogin();
+  // Do not treat Supabase's initial hydration event (which can briefly carry
+  // a null session) as a real logout. protectPage checks the restored session
+  // after auth.ready has completed.
+  supabaseClient.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_OUT") openLogin();
   });
   protectPage();
 })();
