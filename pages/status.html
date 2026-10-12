@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    // The mobile-app authorization control is for the signed-in browser website only.
+    // Android exposes this bridge in the installed app WebView, so hide the control there.
+    if (window.ZakiChatNative) document.documentElement.classList.add('zc-native-app');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07111f">
   <meta
@@ -687,6 +692,8 @@
   </div>
 
   <style>
+    html.zc-native-app #zcMobileAppAuthorize,
+    html.zc-native-app #zcMobileAuthModal { display: none !important; }
     .zc-mobile-app-download{position:fixed;z-index:1000;right:max(16px,env(safe-area-inset-right));bottom:calc(88px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;width:min(340px,calc(100vw - 32px));box-sizing:border-box;padding:13px 16px;border:1px solid rgba(110,235,255,.52);border-radius:19px;color:#f3fbff;background:linear-gradient(135deg,#09263b 0%,#071321 72%);box-shadow:0 14px 38px #0005,0 0 24px #00c6eb2b,inset 0 1px #ffffff14;-webkit-tap-highlight-color:transparent;backdrop-filter:blur(16px);transition:transform .18s ease,box-shadow .18s ease;cursor:pointer;text-align:left}
     .zc-mobile-app-download:active{transform:scale(.975)}.zc-mobile-app-download-icon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:14px;color:#031522;background:linear-gradient(145deg,#83f1ff,#12c5e9 65%,#0097d4);box-shadow:0 5px 16px #00c6eb33}.zc-mobile-app-download-icon svg{width:24px;height:24px}.zc-mobile-app-download-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.zc-mobile-app-download-copy strong{font-size:13px;line-height:1.3;font-weight:800;letter-spacing:-.01em}.zc-mobile-app-download-copy small{color:#a8c7d8;font-size:11px;line-height:1.3}.zc-mobile-app-download-arrow{color:#75eaff;font-size:29px;line-height:1}
     .zc-mobile-auth-modal[hidden]{display:none!important}.zc-mobile-auth-modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:20px;box-sizing:border-box}.zc-mobile-auth-backdrop{position:absolute;inset:0;border:0;background:#020711d9;backdrop-filter:blur(9px)}.zc-mobile-auth-card{position:relative;width:min(430px,100%);box-sizing:border-box;padding:27px 23px 21px;border:1px solid #71e8ff44;border-radius:25px;background:linear-gradient(150deg,#10283c,#071321 70%);color:#effaff;box-shadow:0 25px 90px #0009}.zc-mobile-auth-symbol{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#83f1ff,#12c5e9);color:#031522;font-size:26px;font-weight:900}.zc-mobile-auth-eyebrow{margin:18px 0 6px;color:#73e9ff;font-size:10px;font-weight:900;letter-spacing:.16em}.zc-mobile-auth-card h2{margin:0 0 10px;font-size:23px;line-height:1.2}.zc-mobile-auth-card>p:not(.zc-mobile-auth-eyebrow){color:#b8cedd;font-size:13px;line-height:1.55}.zc-mobile-auth-account{padding:12px 13px;border:1px solid #74e9ff2b;border-radius:13px;background:#ffffff08;color:#f5fdff;font-size:13px;overflow-wrap:anywhere}.zc-mobile-auth-note{font-size:11px!important}.zc-mobile-auth-error{padding:10px 12px;border-radius:10px;background:#ff56661a;color:#ffadb5!important}.zc-mobile-auth-confirm{width:100%;margin-top:12px;padding:14px;border:0;border-radius:13px;background:linear-gradient(110deg,#77efff,#12c6eb);color:#041522;font-size:14px;font-weight:900;cursor:pointer}.zc-mobile-auth-confirm:disabled{opacity:.55;cursor:wait}.zc-mobile-auth-download,.zc-mobile-auth-cancel{display:block;width:100%;box-sizing:border-box;margin-top:14px;text-align:center;font-size:12px}.zc-mobile-auth-download{color:#8eefff;text-decoration:none}.zc-mobile-auth-cancel{border:0;background:transparent;color:#9eb6c6;padding:8px;cursor:pointer}@media(min-width:760px){.zc-mobile-app-download{right:28px;bottom:28px}}@media(prefers-reduced-motion:reduce){.zc-mobile-app-download{transition:none}}
