@@ -4,10 +4,16 @@
     console.error("ZakiChat authentication could not start.");
     return;
   }
-  const client = window.ZakiChatAuth.client;
   const page = location.pathname.toLowerCase();
   const isLogin = page.endsWith("/login.html");
   const isSignup = page.endsWith("/signup.html");
+  const addAccountMode = new URLSearchParams(location.search).get("addAccount") === "1";
+  const pendingAddStorageKey = localStorage.getItem("zakichat_pending_add_account_storage_key");
+  // Add-account signup/sign-in must use a separate Supabase storage slot so the
+  // existing account remains signed in and can be switched back to later.
+  const client = addAccountMode && pendingAddStorageKey
+    ? window.ZakiChatAccounts.createClient(pendingAddStorageKey)
+    : window.ZakiChatAuth.client;
   const PAYMENT_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
   const EMAIL_LOGIN_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/email-login";
   const PENDING_UPGRADE_KEY = "zakichat_pending_upgrade";
