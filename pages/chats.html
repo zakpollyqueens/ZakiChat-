@@ -124,7 +124,9 @@ body.tg-list-page .daily-inspiration.is-offline{opacity:.68;filter:saturate(.65)
   ["“A little love sent today can last all week.”",13],
   ["“You don’t have to be perfect to make a difference.”",14]
  ];
- let index=0,timer=0;\n const KEY="zakichat-inspiration-last";\n try{const saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<quotes.length)index=saved.index}catch(_){}
+ let index=0,timer=0;
+ const KEY="zakichat-inspiration-last";
+ try{const saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<quotes.length)index=saved.index}catch(_){}
  function render(animate){
   quote.textContent=quotes[index][0];\n  try{localStorage.setItem(KEY,JSON.stringify({index,text:quotes[index][0],theme:quotes[index][1],savedAt:Date.now()}))}catch(_){}
   bar.className="daily-inspiration theme-"+quotes[index][1]+(navigator.onLine?"":" is-offline");
