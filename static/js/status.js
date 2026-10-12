@@ -463,140 +463,58 @@
             : 'Add a status update';
       }
 
-      const ownList = document.getElementById('myStatusList');
-      const ownEmpty = document.getElementById('myStatusesEmpty');
-      const ownCount = document.getElementById('myStatusesCount');
-      if (ownList) {
-        ownList.innerHTML = '';
-        ownStatuses.forEach(status => {
-          const item = document.createElement('button');
-          item.type = 'button'; item.className = 'status-item my-status-item';
-          const avatar = document.createElement('div'); avatar.className = 'status-avatar';
-          avatar.textContent = status.media_type === 'video' ? '▶' : status.media_type === 'audio' ? '♫' : status.media_path ? '▧' : 'Aa';
-          const info = document.createElement('div'); info.className = 'status-item-info';
-          const title = document.createElement('strong'); title.textContent = status.text || (status.media_type === 'audio' ? 'Voice status' : status.media_type === 'video' ? 'Video status' : 'Photo status');
-          const subtitle = document.createElement('span'); subtitle.textContent = this.formatDate(status.created_at) + ' · Tap to manage, view reactions and viewers';
-          info.append(title, subtitle); item.append(avatar, info);
-          item.addEventListener('click', () => this.openViewer(status, 'My Status')); ownList.append(item);
-        });
-      }
-      if (ownCount) ownCount.textContent = String(ownStatuses.length);
-      if (ownEmpty) ownEmpty.hidden = ownStatuses.length > 0;
-      if (!contactStatuses.length) {
-        empty.hidden = true; empty.textContent = 'No contact updates yet. Your own statuses are listed above.'; return;
+      // The Recent updates feed is the single source of truth for every active
+      // status, including the signed-in user's own posts.
+      if (!contactStatuses.length && !ownStatuses.length) {
+        empty.hidden = false;
+        empty.textContent = 'No active updates yet. Add a status or check back when your friends share one.';
+        return;
       }
       empty.hidden = true;
 
-      for (
-        const [
-          userId,
-          statuses
-        ] of contactStatuses
-      ) {
-        const latest =
-          statuses[0];
+      const recentGroups = [...grouped.entries()].sort((a, b) => {
+        const aLatest = Math.max(...a[1].map(item => new Date(item.created_at).getTime()));
+        const bLatest = Math.max(...b[1].map(item => new Date(item.created_at).getTime()));
+        return bLatest - aLatest;
+      });
 
-        const profile =
-          this.profiles.get(
-            userId
-          );
-
-        const name =
-          this.getProfileName(
-            profile
-          );
-
-        const button =
-          document.createElement(
-            'button'
-          );
-
+      for (const [userId, statuses] of recentGroups) {
+        const latest = statuses[0];
+        const isOwn = userId === this.userId;
+        const profile = this.profiles.get(userId);
+        const name = isOwn ? 'My status' : this.getProfileName(profile);
+        const button = document.createElement('button');
         button.type = 'button';
-        button.className =
-          'status-item';
+        button.className = 'status-item' + (isOwn ? ' my-status-item' : '');
 
-        const avatar =
-          document.createElement(
-            'div'
-          );
-
-        avatar.className =
-          'status-avatar';
-
-        if (
-          profile?.avatar_url
-        ) {
-          const image =
-            document.createElement(
-              'img'
-            );
-
-          image.src =
-            profile.avatar_url;
-
+        const avatar = document.createElement('div');
+        avatar.className = 'status-avatar' + (isOwn ? ' status-avatar-own' : '');
+        if (profile?.avatar_url) {
+          const image = document.createElement('img');
+          image.src = profile.avatar_url;
           image.alt = '';
           image.width = 48;
           image.height = 48;
-
-          avatar.appendChild(
-            image
-          );
+          avatar.appendChild(image);
         } else {
-          avatar.textContent =
-            this.getInitials(
-              name
-            );
+          avatar.textContent = isOwn ? '＋' : this.getInitials(name);
         }
 
-        const info =
-          document.createElement(
-            'div'
-          );
+        const info = document.createElement('div');
+        info.className = 'status-item-info';
+        const title = document.createElement('strong');
+        title.textContent = name;
+        const subtitle = document.createElement('span');
+        subtitle.textContent = this.statusPreview(latest);
+        const meta = document.createElement('small');
+        meta.className = 'status-recent-meta';
+        meta.textContent = statuses.length + ' active status' + (statuses.length === 1 ? '' : 'es') + (isOwn ? ' · Yours' : '');
+        info.append(title, subtitle, meta);
+        button.append(avatar, info);
 
-        info.className =
-          'status-item-info';
-
-        const title =
-          document.createElement(
-            'strong'
-          );
-
-        title.textContent =
-          name;
-
-        const subtitle =
-          document.createElement(
-            'span'
-          );
-
-        subtitle.textContent =
-          this.statusPreview(
-            latest
-          );
-
-        info.append(
-          title,
-          subtitle
-        );
-
-        button.append(
-          avatar,
-          info
-        );
-
-        button.addEventListener(
-          'click',
-          () => {
-            this.openViewer(
-              latest,
-              name
-            );
-          }
-        );
-
-        list.appendChild(
-          button
-        );
+        const openLatest = () => this.openViewer(latest, name);
+        button.addEventListener('click', openLatest);
+        list.appendChild(button);
       }
     },
 
