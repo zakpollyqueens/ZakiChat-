@@ -3,6 +3,11 @@ package com.zakmolanitech.zakichat;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.TrafficStats;
+import org.json.JSONObject;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -118,6 +123,59 @@ public class MainActivity extends Activity {
 
 
     public class NativeBridge {
+        @JavascriptInterface public String getNetworkUsage() {
+            JSONObject result = new JSONObject();
+            try {
+                final int uid = getApplicationInfo().uid;
+                long rx = TrafficStats.getUidRxBytes(uid);
+                long tx = TrafficStats.getUidTxBytes(uid);
+                if (rx < 0 || tx < 0) {
+                    result.put("supported", false);
+                    result.put("reason", "Android traffic counters are not available on this device.");
+                    return result.toString();
+                }
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                String type = "unknown";
+                if (cm != null) {
+                    Network network = cm.getActiveNetwork();
+                    NetworkCapabilities caps = network == null ? null : cm.getNetworkCapabilities(network);
+                    if (caps != null) {
+                        if (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) type = "wifi";
+                        else if (caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) type = "mobile";
+                        else if (caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) type = "other";
+                    }
+                }
+                SharedPreferences prefs = getSharedPreferences("network_usage_stats", MODE_PRIVATE);
+                long lastRx = prefs.getLong("last_rx", -1L);
+                long lastTx = prefs.getLong("last_tx", -1L);
+                long mobile = prefs.getLong("mobile_bytes", 0L);
+                long wifi = prefs.getLong("wifi_bytes", 0L);
+                long other = prefs.getLong("other_bytes", 0L);
+                if (lastRx >= 0 && lastTx >= 0 && rx >= lastRx && tx >= lastTx) {
+                    long delta = (rx - lastRx) + (tx - lastTx);
+                    if ("mobile".equals(type)) mobile += delta;
+                    else if ("wifi".equals(type)) wifi += delta;
+                    else other += delta;
+                }
+                prefs.edit().putLong("last_rx", rx).putLong("last_tx", tx)
+                    .putLong("mobile_bytes", mobile).putLong("wifi_bytes", wifi)
+                    .putLong("other_bytes", other).apply();
+                result.put("supported", true);
+                result.put("connectionType", type);
+                result.put("mobileBytes", mobile);
+                result.put("wifiBytes", wifi);
+                result.put("otherBytes", other);
+                result.put("totalDeviceCounterBytes", rx + tx);
+                result.put("sampledAt", System.currentTimeMillis());
+                result.put("scope", "android_uid");
+            } catch (Exception error) {
+                try {
+                    result.put("supported", false);
+                    result.put("reason", "Network statistics could not be read.");
+                } catch (Exception ignored) {}
+            }
+            return result.toString();
+        }
         @JavascriptInterface public boolean isFloatingBubbleEnabled() {
             return getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true);
         }
