@@ -33,8 +33,15 @@ android {
 }
 
 configurations.configureEach {
-    // Kotlin 1.8+ folds these JDK-specific stdlib artifacts into kotlin-stdlib.
-    // Excluding the older split jars avoids duplicate classes from transitive AndroidX dependencies.
+    // AndroidX dependencies may still request the legacy split Kotlin stdlib artifacts.
+    // Redirect them to the unified stdlib module so Gradle cannot package duplicate classes.
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.jetbrains.kotlin' &&
+            (details.requested.name == 'kotlin-stdlib-jdk7' || details.requested.name == 'kotlin-stdlib-jdk8')) {
+            details.useTarget('org.jetbrains.kotlin:kotlin-stdlib:1.8.22')
+            details.because('Use unified Kotlin stdlib to avoid duplicate classes')
+        }
+    }
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }
