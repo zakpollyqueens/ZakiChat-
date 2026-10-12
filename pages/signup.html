@@ -309,7 +309,7 @@
 
     <p class="auth-switch">
       Already have an account?
-      <a href="login.html">Sign in</a>
+      <a id="signupSignInLink" href="login.html">Sign in</a>
     </p>
 
   </section>
@@ -325,7 +325,17 @@
 <script src="../static/js/config.js"></script>
   <script src="../static/js/account-manager.js"></script>
 <script src="../static/js/supabase-client.js"></script>
-<script src="../static/js/auth.js?v=zc-email-only-20261011-2"></script>
+<script>
+  if (new URLSearchParams(location.search).get("addAccount") === "1") {
+    const link = document.getElementById("signupSignInLink");
+    if (link) link.href = "login.html?addAccount=1";
+    const heading = document.querySelector(".auth-heading h1");
+    const description = document.getElementById("signupStepDescription");
+    if (heading) heading.textContent = "Create another ZakiChat account";
+    if (description) description.textContent = "Your current account will remain saved. Verify this new account to add it to your account switcher.";
+  }
+</script>
+<script src="../static/js/auth.js?v=zc-multi-account-20261012-1"></script>
 <script src="../static/js/currency-display.js"></script>
 
 <script src="../static/js/service-worker.js" defer></script>
