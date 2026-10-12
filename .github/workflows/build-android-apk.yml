@@ -31,7 +31,7 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Bundle full-resolution offline wallpaper library
+      - name: Bundle optimized offline wallpaper library
         shell: bash
         run: |
           python3 <<'PY'
@@ -58,7 +58,7 @@ jobs:
           for n, (photo_id, original) in enumerate(photos.items(), 1):
               destination = out / f"{photo_id}.jpg"
               if not destination.exists() or destination.stat().st_size < 50000:
-                  query = urllib.parse.urlencode({"fit":"crop","w":"3840","q":"95","fm":"jpg"})
+                  query = urllib.parse.urlencode({"fit":"crop","w":"1600","q":"82","fm":"jpg"})
                   source = f"https://images.unsplash.com/{photo_id}?{query}"
                   request = urllib.request.Request(source, headers={"User-Agent":"ZakiChat-Android-AssetBuilder/1.0"})
                   with urllib.request.urlopen(request, timeout=45) as response:
@@ -116,7 +116,7 @@ jobs:
           body: |
             ZakiChat Android test build (zc-vr16).
 
-            Includes the expanded Media Studio wallpaper collection bundled for offline use and the updated ringtone selector. The release APK size is measured by the build job; 50 MB is a target, not a fabricated size guarantee.
+            Includes the optimized offline Media Studio wallpaper collection and upgraded melodic instrumental ringtones. The release APK size is measured by the build job; 50 MB is a target, not a fabricated size guarantee.
           files: |
             android/app/build/outputs/apk/release/app-release.apk
             android/app/build/outputs/apk/debug/app-debug.apk
