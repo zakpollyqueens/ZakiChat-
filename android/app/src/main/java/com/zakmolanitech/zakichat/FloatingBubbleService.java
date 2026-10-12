@@ -16,7 +16,8 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 import androidx.core.app.NotificationCompat;
 
@@ -25,7 +26,7 @@ public class FloatingBubbleService extends Service {
     public static final String ACTION_SHOW_BUBBLE = "com.zakmolanitech.zakichat.SHOW_BUBBLE";
     public static final String ACTION_HIDE_BUBBLE = "com.zakmolanitech.zakichat.HIDE_BUBBLE";
     private WindowManager windowManager;
-    private TextView bubble;
+    private ImageView bubble;
     private WindowManager.LayoutParams params;
     private float downX, downY, startX, startY;
     private boolean moved;
@@ -56,17 +57,16 @@ public class FloatingBubbleService extends Service {
     private void showBubble() {
         if (!Settings.canDrawOverlays(this) || bubble != null) return;
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        bubble = new TextView(this);
-        bubble.setText("ZAK");
-        bubble.setTextColor(Color.WHITE);
-        bubble.setTextSize(15);
-        bubble.setTypeface(Typeface.DEFAULT_BOLD);
-        bubble.setGravity(Gravity.CENTER);
-        GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-            new int[]{Color.rgb(25,216,242), Color.rgb(10,89,147), Color.rgb(7,17,31)});
+        bubble = new ImageView(this);
+        bubble.setImageResource(R.drawable.zaki_app_icon);
+        bubble.setScaleType(ScaleType.CENTER_CROP);
+        GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
-        bg.setStroke(dp(2), Color.WHITE);
+        bg.setColor(Color.rgb(7, 17, 31));
+        bg.setStroke(dp(2), Color.rgb(25, 216, 242));
         bubble.setBackground(bg);
+        bubble.setClipToOutline(true);
+        bubble.setPadding(dp(3), dp(3), dp(3), dp(3));
         bubble.setElevation(dp(10));
         bubble.setContentDescription("Open ZakiChat recent conversations");
         int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
