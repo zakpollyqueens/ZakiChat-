@@ -2,8 +2,8 @@
   "use strict";
 
   async function init() {
-    const nav = document.querySelector('.bottom-nav');
-    const profileLink = nav?.querySelector('[data-nav-key="profile"]');
+    const nav = document.querySelector('.bottom-nav, .zc-bottom-nav');
+    const profileLink = nav?.querySelector('[data-nav-key="profile"], a[href$="profile.html"]');
 
     if (!profileLink || !window.ZakiChatAuth?.client) return;
 
@@ -22,8 +22,19 @@
 
     if (error || !profile) return;
 
-    const icon = profileLink.querySelector('.bottom-nav-icon');
-    if (!icon) return;
+    let icon = profileLink.querySelector('.bottom-nav-icon');
+    if (!icon) {
+      icon = document.createElement('span');
+      icon.className = 'bottom-nav-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      const oldSvg = profileLink.querySelector('svg');
+      if (oldSvg) oldSvg.replaceWith(icon);
+      else profileLink.insertBefore(icon, profileLink.querySelector('span:not(.bottom-nav-icon)'));
+    }
+    if (!document.getElementById('zc-nav-profile-avatar-style')) {
+      const style = document.createElement('style'); style.id = 'zc-nav-profile-avatar-style';
+      style.textContent = '.zc-bottom-nav .bottom-nav-icon,.bottom-nav .bottom-nav-icon{display:grid;place-items:center;width:25px;height:25px;overflow:hidden;border-radius:50%;font-size:11px;font-weight:850;background:linear-gradient(135deg,#173e58,#071624);border:1px solid #5ddfff70;color:#dffaff}.bottom-nav-profile-avatar{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}.zc-bottom-nav a.profile-online .bottom-nav-icon,.bottom-nav a.profile-online .bottom-nav-icon{outline:2px solid #39e9a2;outline-offset:2px}'; document.head.appendChild(style);
+    }
 
     const name =
       profile.full_name ||
