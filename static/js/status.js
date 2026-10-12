@@ -2005,14 +2005,79 @@ showComposerError(message) {
 (function () {
   'use strict';
 
+  const OTA_RELEASE_API = 'https://api.github.com/repos/zakpollyqueens/ZakiChat-/releases/latest';
+  const OTA_BUNDLE_URL = 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/ota-bundle.zip';
+  let latestOta = null;
+  let otaBusy = false;
   const fallbackLatestRelease = {
     version: 'Latest Android release',
-    description:
-      'Download the latest official ZakiChat Android APK for free. Install it over your existing app to update; your account and cloud-synced messages should remain available.',
+    description: 'Compatible ZakiChat features and fixes can be installed directly inside the app. Native Android changes may still require an APK update.',
     channel: 'Stable',
     releaseDate: null,
     downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk'
   };
+  function isNativeApp() {
+    return !!(window.ZakiChatNative &&
+      typeof window.ZakiChatNative.downloadAndApplyOta === 'function' &&
+      typeof window.ZakiChatNative.getInstalledOtaVersion === 'function');
+  }
+  async function fetchLatestOta() {
+    const response = await fetch(OTA_RELEASE_API, { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' });
+    if (!response.ok) throw new Error('Could not check for ZakiChat updates.');
+    const release = await response.json();
+    const body = String(release.body || '');
+    const versionMatch = body.match(/^OTA_VERSION=([A-Za-z0-9._-]{1,100})$/m);
+    const hashMatch = body.match(/^OTA_SHA256=([a-fA-F0-9]{64})$/m);
+    if (!versionMatch || !hashMatch) throw new Error('The latest release does not contain a valid in-app update package yet.');
+    latestOta = { version: versionMatch[1], sha256: hashMatch[1].toLowerCase(), releaseDate: release.published_at || null, releaseName: release.name || 'ZakiChat update' };
+    return latestOta;
+  }
+  function setOtaButtonState(text, disabled) {
+    const button = document.getElementById('updatesLatestDownload');
+    if (!button) return;
+    button.textContent = text;
+    button.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    button.setAttribute('tabindex', disabled ? '-1' : '0');
+    button.classList.toggle('is-disabled', !!disabled);
+    if (disabled) button.removeAttribute('href'); else button.href = '#';
+  }
+  function bindNativeOtaButton() {
+    const button = document.getElementById('updatesLatestDownload');
+    if (!button || button.dataset.otaBound === 'true') return;
+    button.dataset.otaBound = 'true';
+    button.addEventListener('click', async event => {
+      if (!isNativeApp()) return;
+      event.preventDefault();
+      if (otaBusy) return;
+      otaBusy = true;
+      setOtaButtonState('Checking update…', true);
+      try {
+        const ota = await fetchLatestOta();
+        const installed = String(window.ZakiChatNative.getInstalledOtaVersion() || '');
+        if (installed === ota.version) {
+          setOtaButtonState('You are up to date ✓', true);
+          setReleaseText('updatesLatestDescription', 'You already have the latest in-app features installed.');
+          return;
+        }
+        setOtaButtonState('Downloading update…', true);
+        window.ZakiChatNative.downloadAndApplyOta(ota.version, OTA_BUNDLE_URL, ota.sha256);
+      } catch (error) {
+        setOtaButtonState('Retry in-app update', false);
+        setReleaseText('updatesLatestDescription', error.message || 'Unable to check for updates. Please try again when online.');
+      } finally { otaBusy = false; }
+    });
+    window.addEventListener('zaki-ota-event', event => {
+      const detail = event.detail || {};
+      if (detail.type === 'progress') setOtaButtonState(detail.message || 'Updating…', true);
+      else if (detail.type === 'applied') {
+        setOtaButtonState('Update applied ✓', true);
+        setReleaseText('updatesLatestDescription', detail.message || 'Update installed.');
+      } else if (detail.type === 'error') {
+        setOtaButtonState('Retry in-app update', false);
+        setReleaseText('updatesLatestDescription', detail.message || 'Update failed; your current app is unchanged.');
+      }
+    });
+  }
 
   const fallbackPaidUpgrades = [
   {
@@ -2121,12 +2186,19 @@ showComposerError(message) {
 
     if (button) {
       const downloadUrl = data.downloadUrl || '';
-      if (downloadUrl) {
+      if (isNativeApp()) {
+        button.href = '#';
+        button.removeAttribute('aria-disabled');
+        button.removeAttribute('tabindex');
+        button.classList.remove('is-disabled');
+        button.textContent = 'Check for in-app update';
+        bindNativeOtaButton();
+      } else if (downloadUrl) {
         button.href = downloadUrl;
         button.removeAttribute('aria-disabled');
         button.removeAttribute('tabindex');
         button.classList.remove('is-disabled');
-        button.textContent = 'Update ZakiChat — Free';
+        button.textContent = 'Download Latest APK';
       } else {
         button.href = '#';
         button.setAttribute('aria-disabled', 'true');
@@ -2190,6 +2262,25 @@ showComposerError(message) {
   }
 
   async function loadAdminPublishedReleases() {
+    if (isNativeApp()) {
+      renderLatestRelease(fallbackLatestRelease);
+      renderPaidUpgrades(fallbackPaidUpgrades);
+      try {
+        const ota = await fetchLatestOta();
+        setReleaseText('updatesLatestVersion', ota.releaseName + ' · In-app update');
+        setReleaseText('updatesLatestDate', formatReleaseDate(ota.releaseDate));
+        setReleaseText('updatesLatestDescription', 'Tap Update Now to download and apply verified features inside ZakiChat. No APK download is needed for compatible web updates.');
+        const installed = String(window.ZakiChatNative.getInstalledOtaVersion() || '');
+        setOtaButtonState(installed === ota.version ? 'You are up to date ✓' : 'Update Now', installed === ota.version);
+        bindNativeOtaButton();
+      } catch (error) {
+        console.warn('OTA release check failed:', error);
+        setReleaseText('updatesLatestDescription', 'Connect to the internet and retry to check for the latest in-app features.');
+        setOtaButtonState('Check for in-app update', false);
+        bindNativeOtaButton();
+      }
+      return;
+    }
     const config = window.ZakiChatConfig;
     if (!config?.supabaseUrl || !config?.supabaseKey) {
       renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: fallbackLatestRelease.downloadUrl });
