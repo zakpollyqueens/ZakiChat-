@@ -1,0 +1,122 @@
+name: Build ZakiChat Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zaki-chat-android-apk
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Bundle full-resolution offline wallpaper library
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import os, re, urllib.parse, urllib.request, time
+          from pathlib import Path
+
+          page = Path("pages/media-studio.html")
+          html = page.read_text(encoding="utf-8")
+          urls = re.findall(r'https://images\\.unsplash\\.com/[^"\\s)]+', html)
+          photos = {}
+          for url in urls:
+              clean = url.split("&amp;")[0]
+              path = urllib.parse.urlsplit(clean).path
+              photo_id = path.rsplit("/", 1)[-1]
+              if photo_id.startswith("photo-"):
+                  photos.setdefault(photo_id, clean)
+
+          out = Path("static/media/wallpapers")
+          out.mkdir(parents=True, exist_ok=True)
+          if len(photos) < 20:
+              raise SystemExit(f"Expected a real wallpaper library; only found {len(photos)} source photos.")
+
+          print(f"Bundling {len(photos)} full-resolution wallpaper photos for offline use.")
+          for n, (photo_id, original) in enumerate(photos.items(), 1):
+              destination = out / f"{photo_id}.jpg"
+              if not destination.exists() or destination.stat().st_size < 50000:
+                  query = urllib.parse.urlencode({"fit":"crop","w":"3840","q":"95","fm":"jpg"})
+                  source = f"https://images.unsplash.com/{photo_id}?{query}"
+                  request = urllib.request.Request(source, headers={"User-Agent":"ZakiChat-Android-AssetBuilder/1.0"})
+                  with urllib.request.urlopen(request, timeout=45) as response:
+                      data = response.read()
+                  if len(data) < 50000:
+                      raise SystemExit(f"Wallpaper download too small or invalid: {photo_id} ({len(data)} bytes)")
+                  destination.write_bytes(data)
+              local = f"../static/media/wallpapers/{photo_id}.jpg"
+              html = html.replace(original, local)
+              # Also replace equivalent URLs for the same photo that used thumbnail parameters.
+              html = re.sub(
+                  r'https://images\\.unsplash\\.com/' + re.escape(photo_id) + r'\\?[^"\\s)]+',
+                  local, html
+              )
+              print(f"[{n}/{len(photos)}] {photo_id}: {destination.stat().st_size:,} bytes")
+              time.sleep(0.08)
+          page.write_text(html, encoding="utf-8")
+          total = sum(p.stat().st_size for p in out.glob("*.jpg"))
+          print(f"Offline wallpaper payload: {total:,} bytes ({total / 1_000_000:.2f} MB)")
+          PY
+
+      - name: Copy web application into Android assets
+        run: |
+          mkdir -p android/app/src/main/assets
+          rsync -a --delete \
+            --exclude='.git' --exclude='.github' --exclude='android' \
+            --exclude='supabase' --exclude='node_modules' --exclude='.env' \
+            ./ android/app/src/main/assets/
+
+      - name: Build installable APKs
+        run: gradle -p android assembleDebug assembleRelease --no-daemon
+
+      - name: Report APK sizes
+        id: sizes
+        shell: bash
+        run: |
+          release_bytes=$(stat -c%s android/app/build/outputs/apk/release/app-release.apk)
+          debug_bytes=$(stat -c%s android/app/build/outputs/apk/debug/app-debug.apk)
+          echo "release_mb=$(awk "BEGIN {printf \"%.2f\", $release_bytes/1000000}")" >> "$GITHUB_OUTPUT"
+          echo "debug_mb=$(awk "BEGIN {printf \"%.2f\", $debug_bytes/1000000}")" >> "$GITHUB_OUTPUT"
+          echo "Release APK: $release_bytes bytes ($(awk "BEGIN {printf \"%.2f\", $release_bytes/1000000}") MB)"
+          echo "Debug APK: $debug_bytes bytes ($(awk "BEGIN {printf \"%.2f\", $debug_bytes/1000000}") MB)"
+          if [ "$release_bytes" -lt 40000000 ]; then
+            echo "::warning::Release APK is below 40 MB. The build will report its real size; it will not add fake filler data just to reach 50 MB."
+          fi
+
+      - name: Publish direct APK downloads
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: zc-vr16-android-build-${{ github.run_number }}
+          name: ZakiChat zc-vr16 Android Build ${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          make_latest: true
+          overwrite_files: true
+          body: |
+            ZakiChat Android test build (zc-vr16).
+
+            Includes the expanded Media Studio wallpaper collection bundled for offline use and the updated ringtone selector. The release APK size is measured by the build job; 50 MB is a target, not a fabricated size guarantee.
+          files: |
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/outputs/apk/debug/app-debug.apk
