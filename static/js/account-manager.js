@@ -277,8 +277,7 @@
     const user =
       data.session.user;
 
-    const storageKey =
-      getActiveStorageKey();
+    const storageKey = metadata.storageKey || getActiveStorageKey();
 
     saveAccount({
       userId: user.id,
