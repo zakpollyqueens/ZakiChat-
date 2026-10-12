@@ -17,7 +17,7 @@ body.tg-list-page #top-search-box{display:none;box-sizing:border-box;height:40px
 body.tg-list-page #top-search-box.is-open{display:flex}
 body.tg-list-page #top-search-box input{min-width:0;color:var(--zcl-peach)}
 body.tg-list-page #top-search-box input::placeholder{color:var(--zcl-muted)}
-body.tg-list-page .tg-filter-row,body.tg-list-page .tg-backend-status,body.tg-list-page .tg-archive-row,body.tg-list-page .tg-archive-panel{display:none!important}
+body.tg-list-page .tg-filter-row,body.tg-list-page .tg-backend-status{display:none!important}
 body.tg-list-page .tg-list-content{position:relative;display:block;flex:1;min-height:0;margin:0;padding:0 0 calc(69px + env(safe-area-inset-bottom));overflow-x:hidden;overflow-y:auto;background:var(--zcl-bg)!important;scrollbar-width:none}
 body.tg-list-page .tg-list-content::-webkit-scrollbar{display:none}
 body.tg-list-page #chat-list-results{display:block;width:100%;margin:0;padding:0}
@@ -114,3 +114,16 @@ body.tg-list-page .zaki-keyboard-bottom .zaki-enter-key{background:#087fa8;color
 body.tg-list-page .zaki-keyboard-options{padding:12px;background:#091725;border-radius:12px}
 body.tg-list-page .zaki-keyboard-options p{font-size:12px;line-height:1.45;color:#a8c4d7}
 body.tg-list-page #keyboard-toggle{flex:0 0 30px;width:30px;padding:0;border:0;background:transparent;color:#a8c4d7}
+
+/* Archive access must remain visible; the archive panel is controlled by its hidden attribute. */
+body.tg-list-page .tg-list-content{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+body.tg-list-page .tg-archive-row{display:flex!important;align-items:center;gap:12px;margin:8px 10px;padding:12px 14px;border:1px solid rgba(88,213,255,.16);border-radius:15px;background:linear-gradient(120deg,#102c43,#0a1c2e);color:#e8f8ff;text-decoration:none}
+body.tg-list-page .tg-archive-row .tg-archive-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#173d57;color:#62dfff;font-size:20px}
+body.tg-list-page .tg-archive-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+body.tg-list-page .tg-archive-copy strong{color:#e9f9ff;font-size:13px}
+body.tg-list-page .tg-archive-copy small{color:#8faec2;font-size:11px}
+body.tg-list-page .tg-chevron{color:#6bdfff;font-size:22px}
+body.tg-list-page .tg-archive-panel:not([hidden]){display:block!important;margin:0 10px 8px;padding:18px;border:1px solid rgba(88,213,255,.14);border-radius:15px;background:#0a1c2c;color:#e8f8ff;text-align:center}
+body.tg-list-page .tg-chat-list:not([hidden]){display:flex!important;flex-direction:column}
+body.tg-list-page .tg-chat-row{display:flex!important}
+body.tg-list-page .tg-chat-row[hidden]{display:none!important}
