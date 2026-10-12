@@ -2006,9 +2006,9 @@ showComposerError(message) {
   'use strict';
 
   const fallbackLatestRelease = {
-    version: 'zc-vr16',
+    version: 'Latest Android release',
     description:
-      'ZakiChat zc-vr16 is available as a free Android update. Download the APK and install it over your existing app.',
+      'Download the latest official ZakiChat Android APK for free. Install it over your existing app to update; your account and cloud-synced messages should remain available.',
     channel: 'Stable',
     releaseDate: null,
     downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk'
@@ -2218,7 +2218,7 @@ showComposerError(message) {
       const releases = Array.isArray(payload.releases) ? payload.releases : [];
       const latest = releases.find(item => item.channel === 'stable') || releases[0];
       if (!latest) {
-        renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: '' });
+        renderLatestRelease(fallbackLatestRelease);
       } else {
         renderLatestRelease({
           version: latest.version,
@@ -2232,8 +2232,10 @@ showComposerError(message) {
       }
       renderPaidUpgrades(fallbackPaidUpgrades);
     } catch (error) {
-      console.error('Unable to load published releases on the Updates page:', error);
-      renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: '' });
+      console.error('Unable to load admin-published releases on the Updates page; using the official latest APK release:', error);
+      // Keep the free Android update available even if the optional admin
+      // release-management endpoint is temporarily unavailable.
+      renderLatestRelease(fallbackLatestRelease);
       renderPaidUpgrades(fallbackPaidUpgrades);
     }
   }
