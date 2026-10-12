@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
                 } else if (FloatingBubbleService.ACTION_MEDIA_CLOSE.equals(action)) {
                     script = "(function(){document.querySelectorAll('audio,video').forEach(function(x){try{x.pause();x.currentTime=0;}catch(e){}});})();";
                 }
-                if (!script.isEmpty()) webView.post(() -> webView.evaluateJavascript(script, null));
+                if (!script.isEmpty()) { final String mediaScript = script; webView.post(() -> webView.evaluateJavascript(mediaScript, null)); }
             }
         };
         IntentFilter mediaFilter = new IntentFilter();
