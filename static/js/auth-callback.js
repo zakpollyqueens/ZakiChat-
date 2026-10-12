@@ -5,7 +5,7 @@ const title = document.getElementById("callbackTitle");
 const status = document.getElementById("callbackMessage");
 const profile = document.getElementById("callbackProfile");
 const action = document.getElementById("returnToApp");
-const PENDING = "zakichat_pending_email_registration";
+const PENDING = "zakichat_pending_email_registration";\nconst PENDING_ADD_ACCOUNT = "zakichat_pending_add_account_storage_key";
 const PAYMENT_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
 function show(text, type) { status.textContent = text; status.className = "auth-message " + (type || ""); }
 async function finish() {
@@ -43,7 +43,17 @@ async function finish() {
      }
      localStorage.removeItem(PENDING);
    }
-   await window.ZakiChatAccounts?.registerCurrentSession(client, { email:user.email, phone:meta.phone || pending?.phone || "", displayName:meta.display_name || meta.full_name || user.email });
+   const addAccountStorageKey = localStorage.getItem(PENDING_ADD_ACCOUNT);
+   await window.ZakiChatAccounts?.registerCurrentSession(client, {
+     email:user.email,
+     phone:meta.phone || pending?.phone || "",
+     displayName:meta.display_name || meta.full_name || user.email,
+     ...(addAccountStorageKey ? { storageKey:addAccountStorageKey } : {})
+   });
+   if (addAccountStorageKey) {
+     window.ZakiChatAccounts.setActiveStorageKey(addAccountStorageKey);
+     localStorage.removeItem(PENDING_ADD_ACCOUNT);
+   }
    title.textContent = "Welcome to ZakiChat!";
    show("Your account has been verified successfully. You are signed in.", "success");
    profile.hidden = false;
