@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId 'com.zakmolanitech.zakichat'
         minSdk 23
-        targetSdk 28
+        targetSdk 33
         versionCode 15
         versionName 'zc-vr15'
     }
