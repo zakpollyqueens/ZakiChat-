@@ -430,6 +430,8 @@
         ? currentUser.id
         : viewedUserId;
 
+    document.body.dataset.viewedProfileId = profileId;
+
     const {
       data: profile,
       error
