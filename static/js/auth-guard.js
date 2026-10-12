@@ -1,23 +1,16 @@
 (function () {
   "use strict";
-
   if (!window.supabase || !window.ZakiChatConfig) {
     console.error("ZakiChat auth guard could not start.");
     return;
   }
-
-  const supabaseClient =
-    window.ZakiChatAuth?.client;
-
+  const auth = window.ZakiChatAuth;
+  const supabaseClient = auth?.client;
   if (!supabaseClient) {
-    console.error(
-      "ZakiChat auth guard: centralized Supabase client unavailable."
-    );
+    console.error("ZakiChat auth guard: centralized Supabase client unavailable.");
     return;
   }
 
-  // Load the shared app-lock layer on every page protected by this guard.
-  // The lock overlay persists across navigation and refreshes.
   (function loadAppLock() {
     if (!document.querySelector('link[data-zaki-lock-styles]')) {
       const style = document.createElement("link");
@@ -35,26 +28,45 @@
     }
   })();
 
+  let redirecting = false;
+  function openLogin() {
+    if (redirecting) return;
+    redirecting = true;
+    window.location.replace("login.html");
+  }
+
   async function protectPage() {
-    const { data, error } =
-      await supabaseClient.auth.getSession();
-
-    if (error) {
+    try {
+      if (auth.ready) await auth.ready;
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) throw error;
+      if (!data?.session?.user) {
+        openLogin();
+        return;
+      }
+      try {
+        await window.ZakiChatAccounts?.registerCurrentSession(supabaseClient, {
+          storageKey: auth.storageKey,
+          email: data.session.user.email || "",
+          phone: data.session.user.phone || "",
+          displayName:
+            data.session.user.user_metadata?.display_name ||
+            data.session.user.user_metadata?.full_name ||
+            data.session.user.email ||
+            data.session.user.phone ||
+            "ZakiChat user"
+        });
+      } catch (registryError) {
+        console.warn("Could not refresh the saved-account list:", registryError);
+      }
+    } catch (error) {
       console.error("Auth guard session check failed:", error);
-      window.location.replace("login.html");
-      return;
-    }
-
-    if (!data.session) {
-      window.location.replace("login.html");
+      openLogin();
     }
   }
 
-  supabaseClient.auth.onAuthStateChange(function (event, session) {
-    if (event === "SIGNED_OUT" || !session) {
-      window.location.replace("login.html");
-    }
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT" || !session) openLogin();
   });
-
   protectPage();
 })();
