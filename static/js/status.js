@@ -2010,7 +2010,7 @@ showComposerError(message) {
       'The latest publicly available ZakiChat version is available for free download.',
     channel: 'Stable',
     releaseDate: null,
-    downloadUrl: '#'
+    downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/download/zc-vr15-android/app-release.apk'
   };
 
   const fallbackPaidUpgrades = [
@@ -2191,7 +2191,7 @@ showComposerError(message) {
   async function loadAdminPublishedReleases() {
     const config = window.ZakiChatConfig;
     if (!config?.supabaseUrl || !config?.supabaseKey) {
-      renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: '' });
+      renderLatestRelease({ ...fallbackLatestRelease, downloadUrl: fallbackLatestRelease.downloadUrl });
       renderPaidUpgrades(fallbackPaidUpgrades);
       return;
     }
@@ -2226,7 +2226,7 @@ showComposerError(message) {
             ? latest.channel.charAt(0).toUpperCase() + latest.channel.slice(1)
             : 'Stable',
           releaseDate: latest.publishedAt,
-          downloadUrl: latest.downloadUrl || ''
+          downloadUrl: latest.downloadUrl || fallbackLatestRelease.downloadUrl
         });
       }
       renderPaidUpgrades(fallbackPaidUpgrades);
