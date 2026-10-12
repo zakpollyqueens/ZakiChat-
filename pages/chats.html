@@ -105,40 +105,178 @@ body.tg-list-page .daily-inspiration.is-offline{opacity:.78;filter:saturate(.65)
 <section class="tg-call-overlay" id="tg-call-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tg-call-title"><div class="tg-call-card"><span class="tg-call-avatar" id="tg-call-avatar">Z</span><h2 id="tg-call-title">ZakiChat call</h2><p id="tg-call-status">Connecting…</p><video id="tg-remote-video" autoplay playsinline hidden></video><video id="tg-local-video" autoplay muted playsinline hidden></video><audio id="tg-remote-audio" autoplay hidden></audio><div class="tg-call-actions"><button type="button" id="tg-call-accept" data-call-action="accept">Accept</button><button type="button" id="tg-call-reject" data-call-action="reject">Decline</button><button type="button" id="tg-call-end" data-call-action="end">End call</button></div></div></section><div class="tg-toast" id="tg-toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
+ "use strict";
  const bar=document.getElementById("daily-inspiration"),quote=document.getElementById("inspiration-quote"),counter=document.getElementById("inspiration-index");
  if(!bar||!quote)return;
- const quotes=[
-  ["“Be the reason someone smiles today.”",0],
-  ["“You are capable of more than you imagine.”",1],
-  ["“Love grows when kindness becomes a habit.”",2],
-  ["“Every sunrise is another chance to begin.”",3],
-  ["“A gentle word can brighten someone’s whole day.”",4],
-  ["“Choose love, even in the little things.”",5],
-  ["“Your progress matters, even when it feels small.”",6],
-  ["“Someone is grateful that you are in their world.”",7],
-  ["“Let your heart be brave and your intentions kind.”",8],
-  ["“The best messages make people feel remembered.”",9],
-  ["“Keep going. Your story is still unfolding.”",10],
-  ["“May today bring you peace, courage, and a reason to laugh.”",11],
-  ["“Celebrate how far you’ve come.”",12],
-  ["“A little love sent today can last all week.”",13],
-  ["“You don’t have to be perfect to make a difference.”",14]
+ // Large rotating pool. Each message is tracked so recently shown messages do not repeat.
+ const messages=[
+ ["“Be the reason someone smiles today.”",0,"INSPIRATION"],
+ ["“You are capable of more than you imagine.”",1,"KEEP GROWING"],
+ ["“Love grows when kindness becomes a habit.”",2,"LOVE NOTE"],
+ ["“Every sunrise is another chance to begin.”",3,"NEW BEGINNING"],
+ ["“A gentle word can brighten someone’s whole day.”",4,"KINDNESS"],
+ ["“Choose love, even in the little things.”",5,"LOVE NOTE"],
+ ["“Your progress matters, even when it feels small.”",6,"KEEP GOING"],
+ ["“Someone is grateful that you are in their world.”",7,"A LITTLE REMINDER"],
+ ["“Let your heart be brave and your intentions kind.”",8,"HEART TALK"],
+ ["“The best messages make people feel remembered.”",9,"STAY CONNECTED"],
+ ["“Keep going. Your story is still unfolding.”",10,"YOUR JOURNEY"],
+ ["“May today bring you peace, courage, and a reason to laugh.”",11,"GOOD ENERGY"],
+ ["“Celebrate how far you’ve come.”",12,"YOU’RE GROWING"],
+ ["“A little love sent today can last all week.”",13,"LOVE NOTE"],
+ ["“You don’t have to be perfect to make a difference.”",14,"REMEMBER THIS"],
+ ["“Your effort today is building tomorrow’s confidence.”",0,"DAILY SPARK"],
+ ["“Give yourself the patience you give to others.”",1,"BE GENTLE"],
+ ["“Small steps still take you somewhere beautiful.”",2,"KEEP MOVING"],
+ ["“A peaceful mind is a powerful beginning.”",3,"FIND YOUR CALM"],
+ ["“Let hope have the final word today.”",4,"HOPE"],
+ ["“You deserve the same kindness you give away.”",5,"A NOTE FOR YOU"],
+ ["“The right people make ordinary moments feel special.”",6,"CONNECTION"],
+ ["“Your light does not need permission to shine.”",7,"SHINE ON"],
+ ["“Be proud of the courage it took to start.”",8,"COURAGE"],
+ ["“One thoughtful message can change someone’s day.”",9,"SEND SOME LOVE"],
+ ["“Choose progress over pressure.”",10,"A FRESH THOUGHT"],
+ ["“You are allowed to begin again, as many times as needed.”",11,"RESET"],
+ ["“Make room for joy in the middle of your plans.”",12,"JOY"],
+ ["“Kindness is never wasted.”",13,"GOOD HEART"],
+ ["“The future is shaped by the little things you do consistently.”",14,"BUILD YOUR FUTURE"],
+ ["“May your heart feel lighter and your plans feel possible.”",0,"GOOD WISH"],
+ ["“You can be a work in progress and still be wonderful.”",1,"SELF WORTH"],
+ ["“Listen with care; love often begins there.”",2,"HEART TALK"],
+ ["“Be someone’s calm, not another storm.”",3,"KINDNESS"],
+ ["“Your next chapter can be better than your last.”",4,"NEXT CHAPTER"],
+ ["“There is strength in choosing peace.”",5,"INNER STRENGTH"],
+ ["“Let your actions carry the kindness your words promise.”",6,"LIVE KINDLY"],
+ ["“You matter, even on the days you feel unnoticed.”",7,"YOU MATTER"],
+ ["“A hopeful heart can find a path through uncertainty.”",8,"KEEP FAITH"],
+ ["“Make today meaningful, not merely busy.”",9,"LIVE INTENTIONALLY"],
+ ["“Love is found in patience, honesty, and showing up.”",10,"LOVE NOTE"],
+ ["“You have survived days you once thought were impossible.”",11,"LOOK HOW FAR"],
+ ["“Let your dreams be bigger than your fear.”",12,"DREAM BOLDLY"],
+ ["“Speak to yourself like someone you love.”",13,"SELF KINDNESS"],
+ ["“The smallest act of care can leave the deepest mark.”",14,"CARE MATTERS"],
+ ["“You don’t need all the answers to take the next step.”",0,"ONE STEP"],
+ ["“Protect your peace without closing your heart.”",1,"PEACE"],
+ ["“A good life is built from many ordinary brave moments.”",2,"BRAVE MOMENTS"],
+ ["“Send the message. Make the call. Let people know they matter.”",3,"REACH OUT"],
+ ["“Your kindness is part of the story people remember.”",4,"YOUR LEGACY"],
+ ["“Some of the best things grow quietly.”",5,"TRUST THE PROCESS"],
+ ["“You are not behind; you are learning your own rhythm.”",6,"YOUR PACE"],
+ ["“Be present enough to notice the good around you.”",7,"RIGHT HERE"],
+ ["“Let love be clear in what you say and what you do.”",8,"LOVE NOTE"],
+ ["“A setback is a moment, not your whole identity.”",9,"RISE AGAIN"],
+ ["“Your voice deserves to be heard with respect.”",10,"YOUR VOICE"],
+ ["“Rest is part of the journey, not a failure of it.”",11,"TAKE A BREATH"],
+ ["“Choose the response that future-you will be proud of.”",12,"WISDOM"],
+ ["“The world needs your honest version, not a perfect copy.”",13,"BE YOURSELF"],
+ ["“Make someone feel included today.”",14,"MAKE ROOM"],
+ ["“You can be soft-hearted and still be strong.”",0,"QUIET STRENGTH"],
+ ["“A little gratitude can change the view.”",1,"GRATITUDE"],
+ ["“Keep your promises to yourself, one day at a time.”",2,"SELF TRUST"],
+ ["“Real connection grows when we make time for each other.”",3,"STAY CLOSE"],
+ ["“Your dreams deserve a plan and your plan deserves a start.”",4,"START NOW"],
+ ["“Let the good you do be louder than the doubts you hear.”",5,"KEEP BUILDING"],
+ ["“The way you treat people is a beautiful kind of success.”",6,"SUCCESS"],
+ ["“May you find one unexpected reason to smile today.”",7,"A GOOD WISH"],
+ ["“You can miss the past and still welcome what comes next.”",8,"MOVE FORWARD"],
+ ["“Honesty delivered with care builds lasting trust.”",9,"TRUST"],
+ ["“Love should feel safe enough for both hearts to be honest.”",10,"LOVE NOTE"],
+ ["“Give your goals your attention, not all of your peace.”",11,"BALANCE"],
+ ["“A new idea can begin with one curious question.”",12,"STAY CURIOUS"],
+ ["“You are stronger when you allow good people to support you.”",13,"TOGETHER"],
+ ["“Let today be proof that you can keep choosing better.”",14,"CHOOSE BETTER"],
+ ["“Your future self will thank you for not giving up today.”",0,"DON’T GIVE UP"],
+ ["“Every honest effort adds something to who you are becoming.”",1,"BECOMING"],
+ ["“Be generous with encouragement; you never know who needs it.”",2,"ENCOURAGE"],
+ ["“Love is also remembering the little things.”",3,"LOVE NOTE"],
+ ["“You are allowed to feel deeply and still move forward.”",4,"FEEL AND GROW"],
+ ["“Make your presence a place where others feel respected.”",5,"GOOD PRESENCE"],
+ ["“Let curiosity open doors that fear keeps closed.”",6,"OPEN DOORS"],
+ ["“A clear mind begins with one thing at a time.”",7,"FOCUS"],
+ ["“Someone’s day may be brighter because you showed up.”",8,"SHOW UP"],
+ ["“Keep choosing the kind of life that feels true to you.”",9,"LIVE TRUE"],
+ ["“Be patient with the roots while your life grows.”",10,"GROW QUIETLY"],
+ ["“You can set a boundary and still care about someone.”",11,"HEALTHY LOVE"],
+ ["“Let your next move be guided by purpose, not panic.”",12,"PURPOSE"],
+ ["“A sincere apology and changed actions can heal a lot.”",13,"REPAIR AND GROW"],
+ ["“You bring something to this world that nobody else can copy.”",14,"ONE OF A KIND"],
+ ["“Today is another chance to be proud of how you show up.”",0,"TODAY MATTERS"],
+ ["“May your work be fruitful and your heart stay gentle.”",1,"GOOD WISH"],
+ ["“The strongest relationships make room for truth and tenderness.”",2,"LOVE NOTE"],
+ ["“Celebrate the wins nobody else noticed.”",3,"QUIET WINS"],
+ ["“You can start small and still build something extraordinary.”",4,"BUILD SOMETHING"],
+ ["“When life feels loud, return to what matters most.”",5,"RESET YOUR FOCUS"],
+ ["“Your care is valuable; share it where it is respected.”",6,"VALUE YOUR HEART"],
+ ["“A little courage today can become confidence tomorrow.”",7,"COURAGE"],
+ ["“Make space for the people who make space for you.”",8,"RECIPROCITY"],
+ ["“Your story has room for surprises you cannot see yet.”",9,"STAY OPEN"],
+ ["“Be the safe conversation someone has been hoping for.”",10,"LISTEN WELL"],
+ ["“Progress is often quiet before it becomes visible.”",11,"TRUST YOUR WORK"],
+ ["“A kind heart and a clear boundary can live together.”",12,"WISE KINDNESS"],
+ ["“Let your love be felt in consistency, not only promises.”",13,"LOVE NOTE"],
+ ["“You have permission to outgrow what no longer fits.”",14,"MAKE ROOM"],
+ ["“May your next hour bring clarity, calm, and a small win.”",0,"A MOMENT FOR YOU"],
+ ["“Keep learning; your possibilities are still expanding.”",1,"KEEP LEARNING"],
+ ["“Someone’s trust is a gift. Handle it with care.”",2,"TRUST"],
+ ["“You can turn a difficult lesson into a wiser next step.”",3,"LEARN AND RISE"],
+ ["“Let your first thought be kind, and your next action be brave.”",4,"BRAVE AND KIND"],
+ ["“You are worthy of love that respects your whole self.”",5,"LOVE NOTE"],
+ ["“Give your attention to what you want to help grow.”",6,"GROW GOOD THINGS"],
+ ["“The day can change when you choose a different next step.”",7,"NEW DIRECTION"],
+ ["“Celebrate people while they are here to hear it.”",8,"SAY IT NOW"],
+ ["“Stay hopeful, stay humble, and keep doing the work.”",9,"STEADY HEART"],
+ ["“A genuine connection is worth more than a hundred quick reactions.”",10,"REAL CONNECTION"],
+ ["“You can be proud of yourself and still keep improving.”",11,"KEEP RISING"],
+ ["“Let your choices match the future you are asking for.”",12,"ALIGN YOUR STEPS"],
+ ["“Be present. Be honest. Be kind. Start there.”",13,"A SIMPLE CODE"],
+ ["“ZakiChat: keep people close through kindness and connection.”",14,"ZAKICHAT MOMENT"]
  ];
- let index=0,timer=0;
- const KEY="zakichat-inspiration-last";
- try{const saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<quotes.length)index=saved.index}catch(_){}
- function render(animate){
-  quote.textContent=quotes[index][0];
-  try{localStorage.setItem(KEY,JSON.stringify({index,text:quotes[index][0],theme:quotes[index][1],savedAt:Date.now()}))}catch(_){}
-  bar.className="daily-inspiration theme-"+quotes[index][1]+(navigator.onLine?"":" is-offline");
-  if(counter)counter.textContent=String(index+1).padStart(2,"0")+" / "+String(quotes.length).padStart(2,"0");
-  if(animate){bar.classList.remove("is-changing");void bar.offsetWidth;bar.classList.add("is-changing");}
+ const HISTORY_KEY="zakichat-inspiration-seen-v2",CURRENT_KEY="zakichat-inspiration-current-v2";
+ const MINUTE=60000;let timer=0,presencePoll=0,currentText="",lastChange=0,seen=[];
+ const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||"null")??fallback}catch(_){return fallback}};
+ const save=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch(_){}};
+ const saved=read(CURRENT_KEY,null),storedHistory=read(HISTORY_KEY,[]);
+ if(Array.isArray(storedHistory))seen=storedHistory.filter(x=>typeof x==="string").slice(-100);
+ function messageKey(text){return String(text||"").trim().toLowerCase()}
+ function isActuallyOnline(){
+  if(!navigator.onLine||document.visibilityState!=="visible")return false;
+  // Use the same authenticated online-presence module that updates the user's profile.
+  if(window.ZakiChatPresence&&typeof window.ZakiChatPresence.isOnline==="boolean")return window.ZakiChatPresence.isOnline;
+  return false;
  }
- function next(){if(!navigator.onLine){bar.classList.add("is-offline");return}index=(index+1)%quotes.length;render(true)}
- function start(){clearInterval(timer);render(false);if(navigator.onLine)timer=setInterval(next,60000)}
- window.addEventListener("online",start);
- window.addEventListener("offline",()=>{clearInterval(timer);bar.classList.add("is-offline")});
- render(true);start();
+ function showMessage(item,animate){
+  currentText=item[0];quote.textContent=currentText;
+  bar.className="daily-inspiration theme-"+item[1]+(isActuallyOnline()?"":" is-offline");
+  const kicker=bar.querySelector(".inspiration-kicker");if(kicker)kicker.textContent=item[2]||"A LITTLE INSPIRATION";
+  if(counter)counter.textContent="✦ "+String(messages.indexOf(item)+1).padStart(3,"0")+" / "+String(messages.length).padStart(3,"0");
+  if(animate&&isActuallyOnline()){bar.classList.remove("is-changing");void bar.offsetWidth;bar.classList.add("is-changing")}
+  else{bar.classList.remove("is-changing");quote.style.animation="none";void quote.offsetWidth;quote.style.removeProperty("animation")}
+  save(CURRENT_KEY,{text:currentText,theme:item[1],kicker:item[2],shownAt:Date.now()});
+ }
+ function chooseNext(){
+  const recent=new Set(seen.slice(-Math.min(100,messages.length-1)).map(messageKey));
+  let candidates=messages.filter(item=>!recent.has(messageKey(item[0]))&&messageKey(item[0])!==messageKey(currentText));
+  if(!candidates.length){seen=[];candidates=messages.filter(item=>messageKey(item[0])!==messageKey(currentText))}
+  const item=candidates[Math.floor(Math.random()*candidates.length)];
+  seen.push(messageKey(item[0]));seen=seen.slice(-100);save(HISTORY_KEY,seen);
+  return item;
+ }
+ function changeMessage(){if(!isActuallyOnline())return;const item=chooseNext();lastChange=Date.now();showMessage(item,true)}
+ function startRotation(){if(timer)clearInterval(timer);timer=0;if(!isActuallyOnline()){bar.classList.add("is-offline");return}bar.classList.remove("is-offline");timer=setInterval(changeMessage,MINUTE)}
+ function syncPresence(){const online=isActuallyOnline();if(online){if(!timer)startRotation()}else{if(timer){clearInterval(timer);timer=0}bar.classList.add("is-offline")}}
+ if(saved&&typeof saved.text==="string"){
+  currentText=saved.text;quote.textContent=currentText;
+  const k=bar.querySelector(".inspiration-kicker");if(k&&saved.kicker)k.textContent=saved.kicker;
+  if(Number.isInteger(saved.theme))bar.className="daily-inspiration theme-"+saved.theme+" is-offline";
+ }
+ if(!currentText){const first=messages[0];currentText=first[0];seen.push(messageKey(currentText));save(HISTORY_KEY,seen);showMessage(first,false)}
+ // A presence change event updates immediately; polling covers startup and reconnection races.
+ window.addEventListener("zakichat:presence-change",syncPresence);
+ window.addEventListener("online",syncPresence);
+ window.addEventListener("offline",syncPresence);
+ document.addEventListener("visibilitychange",syncPresence);
+ presencePoll=setInterval(syncPresence,3000);
+ syncPresence();
 })();
 
 (function(){
