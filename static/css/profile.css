@@ -45,3 +45,26 @@
 .profile-zakiplay-card{margin:14px 12px!important}
 .logout-button{display:none!important}
 @media(max-width:360px){.profile-main-actions{gap:4px;padding:4px}.profile-main-actions button,.profile-main-actions a{font-size:10px;padding:0 3px}.profile-main-actions .action-icon{font-size:12px}}
+
+
+/* Saved-account switcher */
+.profile-switch-dialog{width:min(520px,calc(100% - 28px));max-height:min(82vh,760px);overflow:auto;border:1px solid #263c51;border-radius:24px;background:linear-gradient(155deg,#101f31,#08121f 72%);color:#f4f8ff;padding:22px;box-shadow:0 24px 80px #0009}
+.profile-switch-dialog::backdrop{background:#020711c9;backdrop-filter:blur(8px)}
+.profile-switch-dialog .profile-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+.profile-switch-dialog h2{margin:5px 0 8px;font-size:1.45rem}
+.profile-switch-dialog p{color:#a9bbcf;line-height:1.5;margin:0;font-size:.91rem}
+.profile-switch-account-list{display:grid;gap:10px}
+.profile-switch-account{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:13px;border:1px solid #2a4055;border-radius:16px;background:#132438;color:#eef7ff;cursor:pointer}
+.profile-switch-account:focus-visible,.profile-switch-add:focus-visible{outline:2px solid #45d7e9;outline-offset:3px}
+.profile-switch-account:disabled{opacity:.65;cursor:wait}
+.profile-switch-avatar{width:43px;height:43px;flex:0 0 43px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#31d8e8,#2478c7);color:#061522;font-weight:800}
+.profile-switch-copy{display:grid;gap:4px;min-width:0;flex:1}
+.profile-switch-copy strong{overflow-wrap:anywhere}
+.profile-switch-copy small{color:#a9bbcf;overflow-wrap:anywhere}
+.profile-switch-state{font-size:.75rem;color:#5ce0ce;font-weight:700}
+.profile-switch-empty{padding:17px;border:1px dashed #38516a;border-radius:15px;color:#b7c7d9!important}
+.profile-switch-footer{margin-top:15px}
+.profile-switch-add{width:100%;border:1px solid #27c7d8;border-radius:14px;background:#102f43;color:#bdf8ff;padding:13px;font-weight:750;cursor:pointer}
+.profile-switch-message{margin-top:12px;color:#ffb6b6!important}
+.profile-switch-loading{padding:12px}
+@media(max-width:420px){.profile-switch-dialog{padding:17px;border-radius:20px}.profile-switch-dialog .profile-modal-head{gap:10px}}
