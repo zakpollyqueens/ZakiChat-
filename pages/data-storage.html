@@ -119,19 +119,30 @@
         </div>
       </div>
 
-      <div class="usage-row">
-        <span>Mobile data</span>
-        <strong id="mobileUsage">Not available</strong>
+      <div class="network-live-status">
+        <span class="network-live-dot" aria-hidden="true"></span>
+        <span>Current connection</span>
+        <strong id="networkConnection">Checking…</strong>
       </div>
 
       <div class="usage-row">
-        <span>Wi-Fi</span>
-        <strong id="wifiUsage">Not available</strong>
+        <span><span class="network-row-icon">📶</span> Mobile data</span>
+        <strong id="mobileUsage">Calculating…</strong>
       </div>
 
-      <p class="storage-note">
-        Detailed network statistics will become available when supported by the
-        ZakiChat client.
+      <div class="usage-row">
+        <span><span class="network-row-icon">📡</span> Wi-Fi</span>
+        <strong id="wifiUsage">Calculating…</strong>
+      </div>
+
+      <div class="network-total">
+        <span>Tracked network traffic</span>
+        <strong id="networkTotal">Calculating…</strong>
+        <small id="networkUpdated">Collecting usage while ZakiChat is active.</small>
+      </div>
+
+      <p class="storage-note" id="networkUsageNote">
+        Android app traffic is sampled while ZakiChat is open. Mobile/Wi-Fi totals are estimates assigned to the connection active at each sample, and may not include traffic while the app is closed. Browser-only mode uses resource timing estimates when available.
       </p>
     </section>
 
