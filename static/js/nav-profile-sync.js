@@ -22,21 +22,6 @@
 
     if (error || !profile) return;
 
-    const settingsAvatar = document.querySelector('.settings-profile-avatar');
-    if (settingsAvatar) {
-      settingsAvatar.replaceChildren();
-      if (profile.avatar_url) {
-        const settingsImage = document.createElement('img');
-        settingsImage.src = profile.avatar_url;
-        settingsImage.alt = 'Your profile photo';
-        settingsImage.className = 'settings-profile-avatar-image';
-        settingsImage.onerror = () => { settingsAvatar.textContent = initials; };
-        settingsAvatar.appendChild(settingsImage);
-      } else {
-        settingsAvatar.textContent = initials;
-      }
-    }
-
     let icon = profileLink.querySelector('.bottom-nav-icon');
     if (!icon) {
       icon = document.createElement('span');
@@ -64,6 +49,21 @@
       .slice(0, 2)
       .map(part => part.charAt(0).toUpperCase())
       .join('') || '?';
+
+    const settingsAvatar = document.querySelector('.settings-profile-avatar');
+    if (settingsAvatar) {
+      settingsAvatar.replaceChildren();
+      if (profile.avatar_url) {
+        const settingsImage = document.createElement('img');
+        settingsImage.src = profile.avatar_url;
+        settingsImage.alt = 'Your profile photo';
+        settingsImage.className = 'settings-profile-avatar-image';
+        settingsImage.onerror = () => { settingsAvatar.textContent = initials; };
+        settingsAvatar.appendChild(settingsImage);
+      } else {
+        settingsAvatar.textContent = initials;
+      }
+    }
 
     icon.innerHTML = '';
 
