@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071525">
+<title>Sounds & Ringtones | ZakiChat</title>
+<link rel="stylesheet" href="../static/css/main.css">
+<link rel="stylesheet" href="../static/css/responsive.css">
+<link rel="stylesheet" href="../static/css/signature-theme.css">
+<link rel="stylesheet" href="../static/css/sound-settings.css">
+</head>
+<body class="sound-settings-page">
+<main class="sound-shell">
+<header class="sound-header"><a href="settings.html" aria-label="Back to settings">‹</a><div><span class="sound-eyebrow">PERSONALIZE YOUR ALERTS</span><h1>Sounds & Ringtones</h1><p>Choose a tone for every kind of moment.</p></div></header>
+<section class="sound-master-card">
+ <span class="sound-master-icon">♫</span><div class="sound-master-copy"><strong>Message sounds</strong><small>Play a tone when a new message arrives while ZakiChat is open.</small></div><label class="sound-switch"><input id="messageSounds" type="checkbox" checked><span></span></label>
+ <div class="sound-master-divider"></div>
+ <span class="sound-master-icon call">♧</span><div class="sound-master-copy"><strong>Call sounds</strong><small>Play your chosen tone for incoming voice and video calls.</small></div><label class="sound-switch"><input id="callSounds" type="checkbox" checked><span></span></label>
+</section>
+<div class="sound-section-title"><span>YOUR TONE COLLECTION</span><small>12 built-in tones · or choose your own audio</small></div>
+<section class="tone-card" data-tone-card="message">
+<div class="tone-card-head"><span class="tone-icon message">✉</span><div><h2>Message tone</h2><p>For incoming chat messages</p></div></div>
+<label class="tone-select-label" for="messageTone">Choose message tone</label><select class="tone-select" id="messageTone"><option value="default">ZakiChat Glow</option><option value="classic">Classic Double Bell</option><option value="soft">Soft Sunrise</option><option value="digital">Digital Spark</option><option value="bell">Golden Bell</option><option value="pulse">Pulse Beat</option><option value="crystal">Crystal Drop</option><option value="marimba">Marimba Pop</option><option value="sonar">Sonar Wave</option><option value="retro">Retro Arcade</option><option value="zen">Zen Moment</option><option value="chime">Silver Chime</option><option value="arcade">Arcade Burst</option><option value="custom">My phone audio…</option></select>
+<div class="tone-volume"><label for="messageVolume">Volume</label><input id="messageVolume" type="range" min="0" max="1" step=".05" value=".45"><output for="messageVolume">45%</output></div>
+<div class="tone-custom-row"><div class="tone-file-summary"><strong>Use audio from your phone</strong><small id="messageFileName">No personal tone selected</small></div><label class="tone-file-button">Choose audio<input type="file" accept="audio/*" id="messageFile" hidden></label></div>
+<div class="tone-actions"><button type="button" class="tone-test" data-test-tone="message">▶ Preview tone</button><button type="button" class="tone-remove" data-remove-tone="message" hidden>Remove audio</button></div>
+</section>
+<section class="tone-card" data-tone-card="voiceCall">
+<div class="tone-card-head"><span class="tone-icon voice">☎</span><div><h2>Voice call ringtone</h2><p>For incoming voice calls</p></div></div>
+<label class="tone-select-label" for="voiceCallTone">Choose voice call ringtone</label><select class="tone-select" id="voiceCallTone"><option value="default">ZakiChat Glow</option><option value="classic">Classic Double Bell</option><option value="soft">Soft Sunrise</option><option value="digital">Digital Spark</option><option value="bell">Golden Bell</option><option value="pulse">Pulse Beat</option><option value="crystal">Crystal Drop</option><option value="marimba">Marimba Pop</option><option value="sonar">Sonar Wave</option><option value="retro">Retro Arcade</option><option value="zen">Zen Moment</option><option value="chime">Silver Chime</option><option value="arcade">Arcade Burst</option><option value="custom">My phone audio…</option></select>
+<div class="tone-volume"><label for="voiceCallVolume">Volume</label><input id="voiceCallVolume" type="range" min="0" max="1" step=".05" value=".45"><output for="voiceCallVolume">45%</output></div>
+<div class="tone-custom-row"><div class="tone-file-summary"><strong>Use audio from your phone</strong><small id="voiceCallFileName">No personal tone selected</small></div><label class="tone-file-button">Choose audio<input type="file" accept="audio/*" id="voiceCallFile" hidden></label></div>
+<div class="tone-actions"><button type="button" class="tone-test" data-test-tone="voiceCall">▶ Preview ringtone</button><button type="button" class="tone-remove" data-remove-tone="voiceCall" hidden>Remove audio</button></div>
+</section>
+<section class="tone-card" data-tone-card="videoCall">
+<div class="tone-card-head"><span class="tone-icon video">▣</span><div><h2>Video call ringtone</h2><p>Give video calls their own distinct sound</p></div></div>
+<label class="tone-select-label" for="videoCallTone">Choose video call ringtone</label><select class="tone-select" id="videoCallTone"><option value="default">ZakiChat Glow</option><option value="classic">Classic Double Bell</option><option value="soft">Soft Sunrise</option><option value="digital">Digital Spark</option><option value="bell">Golden Bell</option><option value="pulse">Pulse Beat</option><option value="crystal">Crystal Drop</option><option value="marimba">Marimba Pop</option><option value="sonar">Sonar Wave</option><option value="retro">Retro Arcade</option><option value="zen">Zen Moment</option><option value="chime">Silver Chime</option><option value="arcade">Arcade Burst</option><option value="custom">My phone audio…</option></select>
+<div class="tone-volume"><label for="videoCallVolume">Volume</label><input id="videoCallVolume" type="range" min="0" max="1" step=".05" value=".45"><output for="videoCallVolume">45%</output></div>
+<div class="tone-custom-row"><div class="tone-file-summary"><strong>Use audio from your phone</strong><small id="videoCallFileName">No personal tone selected</small></div><label class="tone-file-button">Choose audio<input type="file" accept="audio/*" id="videoCallFile" hidden></label></div>
+<div class="tone-actions"><button type="button" class="tone-test" data-test-tone="videoCall">▶ Preview ringtone</button><button type="button" class="tone-remove" data-remove-tone="videoCall" hidden>Remove audio</button></div>
+</section>
+<aside class="sound-note"><span>ⓘ</span><p>Custom audio is stored in this browser on this device. Message tones play while ZakiChat is open. Android system notification sounds and true floating reply bubbles require native Android notification support; browser settings alone cannot override the phone's notification sound.</p></aside>
+<p id="soundStatus" class="sound-status" role="status" aria-live="polite" hidden></p>
+</main>
+<script src="../static/js/zaki-ringtones.js"></script>
+<script src="../static/js/sound-settings.js"></script>
+</body></html>
