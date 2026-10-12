@@ -234,62 +234,25 @@
     storageKey,
     currentClient = null
   ) {
-    const account =
-      readRegistry().find(
-        item =>
-          item.storageKey === storageKey
-      );
-
+    const account = readRegistry().find(item => item.storageKey === storageKey);
     if (!account) {
-      throw new Error(
-        "The selected ZakiChat account was not found."
-      );
+      throw new Error("The selected ZakiChat account was not found.");
     }
 
-    const currentAccount =
-      getActiveAccount();
-
-    /*
-     * Never switch to the requested account if it is
-     * already the active account.
-     */
-    if (
-      currentAccount &&
-      currentAccount.storageKey === storageKey
-    ) {
-      window.location.reload();
-      return;
+    const currentAccount = getActiveAccount();
+    if (currentAccount && currentAccount.storageKey === storageKey) {
+      return { alreadyActive: true };
     }
 
     /*
-     * Cleanly sign out the CURRENT local Supabase
-     * session before changing the active storage key.
-     *
-     * The account remains in the registry. Its own
-     * storage namespace is preserved so it can be
-     * selected again later.
+     * Each saved account has its own Supabase storageKey and
+     * persisted refresh-token session. Do NOT sign out the old
+     * client here: doing so would destroy the session that makes
+     * switching back possible without another login.
      */
-    if (currentClient) {
-      const {
-        error
-      } = await currentClient.auth.signOut({
-        scope: "local"
-      });
-
-      if (error) {
-        throw error;
-      }
-    }
-
-    /*
-     * Activate the selected account only after the
-     * current session has been locally signed out.
-     */
-    setActiveStorageKey(
-      storageKey
-    );
-
+    setActiveStorageKey(storageKey);
     window.location.reload();
+    return { switched: true };
   }
 
   async function registerCurrentSession(
