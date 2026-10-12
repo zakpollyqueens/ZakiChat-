@@ -15,7 +15,6 @@
     ? window.ZakiChatAccounts.createClient(pendingAddStorageKey)
     : window.ZakiChatAuth.client;
   const PAYMENT_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
-  const EMAIL_LOGIN_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/email-login";
   const PENDING_UPGRADE_KEY = "zakichat_pending_upgrade";
   const PENDING_REGISTRATION_KEY = "zakichat_pending_email_registration";
 
@@ -89,20 +88,39 @@
     if (!password) { message(status, "Enter your password.", "error"); return; }
     loading(button, true, "Sign In");
     try {
-      const cfg = window.ZakiChatConfig;
-      const response = await fetch(EMAIL_LOGIN_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", apikey: cfg.supabaseKey },
-        body: JSON.stringify({ action: "start", email, password })
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok || result.success !== true || result.verificationRequired !== true) {
-        throw new Error(result.error || "Unable to start secure sign-in. Please try again.");
+      // A verified email + correct password is sufficient for standard sign-in.
+      // Do not send a second email link on every login: the legacy email-login
+      // Edge Function used Resend with an unverified gmail.com sender and failed.
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      if (error) {
+        const raw = String(error.message || "");
+        if (/email not confirmed/i.test(raw)) {
+          throw new Error("Please verify your email address first. Open the confirmation email sent when you registered. If it never arrived, email delivery still needs to be configured by ZakiChat support.");
+        }
+        if (/invalid login credentials/i.test(raw)) {
+          throw new Error("The email or password is incorrect. Check your details or use Reset password.");
+        }
+        throw error;
       }
-      message(status, result.message || "A sign-in verification link has been sent to your recovery email. Open it to finish signing in.", "success");
-      // Do not create a browser session here. A session is established only after email confirmation.
-      button.textContent = "Verification Email Sent";
-      button.disabled = true;
+      if (!data.session || !data.user) {
+        throw new Error("Sign-in did not create a session. Please try again.");
+      }
+      try {
+        await window.ZakiChatAccounts?.registerCurrentSession(client, {
+          storageKey: addAccountMode ? pendingAddStorageKey : window.ZakiChatAuth?.storageKey,
+          email: data.user.email || email,
+          phone: data.user.phone || data.user.user_metadata?.phone || "",
+          displayName:
+            data.user.user_metadata?.display_name ||
+            data.user.user_metadata?.full_name ||
+            data.user.email ||
+            "ZakiChat user"
+        });
+      } catch (registryError) {
+        console.warn("Could not refresh saved-account details:", registryError);
+      }
+      message(status, "Signed in successfully. Opening ZakiChat…", "success");
+      setTimeout(chats, 250);
     } catch (e) {
       message(status, e.message || "Unable to sign in. Check your email and password.", "error");
       loading(button, false, "Sign In");
