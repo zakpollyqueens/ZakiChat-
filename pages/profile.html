@@ -27,6 +27,7 @@
           <button type="button" data-profile-action="color"><span class="menu-symbol">◉</span><span>Change Profile Color</span></button>
           <button type="button" data-profile-action="username"><span class="menu-symbol">@</span><span>Change Username</span></button>
           <button type="button" data-profile-action="copy"><span class="menu-symbol">↗</span><span>Copy Link to Profile</span></button>
+          <button type="button" id="inviteFriendsButton"><span class="menu-symbol">✉</span><span>Invite friends to ZakiChat</span></button>
           <button type="button" id="menuSettingsLink" onclick="location.href='settings.html'"><span class="menu-symbol">⚙</span><span>Settings</span></button>
           <button type="button" id="menuLogoutButton"><span class="menu-symbol">⇥</span><span>Log Out</span></button>
         </div>
@@ -58,6 +59,7 @@
 
       <div class="profile-details-list" aria-label="Profile details">
         <div class="profile-detail-row"><span class="detail-icon">☎</span><div><span class="detail-label">Phone number</span><strong id="profilePhoneDisplay">Not added</strong><small>Phone number</small></div></div>
+        <div class="profile-detail-row"><span class="detail-icon">✉</span><div><span class="detail-label">Contact email</span><strong id="profileEmailDisplay">Not added</strong><small>Additional contact email</small></div></div>
         <div class="profile-detail-row"><span class="detail-icon">@</span><div><span class="detail-label">Username</span><strong id="profileUsernameDisplay">@username</strong><small>Public profile username</small></div></div>
         <div class="profile-detail-row"><span class="detail-icon">▤</span><div><span class="detail-label">About</span><strong id="profileAboutDisplay">Add a little about yourself.</strong><small>Bio</small></div></div>
         <div class="profile-detail-row"><span class="detail-icon">▦</span><div><span class="detail-label">Birthday</span><strong id="profileBirthdayDisplay">Not added</strong><small>Birthday</small></div></div>
@@ -70,6 +72,7 @@
           <label class="profile-field"><span>Full name</span><input type="text" id="fullName" maxlength="80" autocomplete="name" placeholder="Your full name"></label>
           <label class="profile-field"><span>Username</span><div class="field-wrap"><span class="field-prefix">@</span><input type="text" id="username" maxlength="30" autocomplete="username" placeholder="username" required></div><small>3–30 letters, numbers, underscores or dots.</small></label>
           <label class="profile-field"><span>Phone number</span><input type="tel" id="phone" maxlength="30" autocomplete="tel" placeholder="+256…"></label>
+          <label class="profile-field"><span>Additional contact email</span><input type="email" id="contactEmail" maxlength="254" autocomplete="email" placeholder="you@example.com"></label>
           <label class="profile-field"><span>Birthday</span><input type="date" id="birthday" autocomplete="bday"></label>
           <label class="profile-field"><span>General location</span><input type="text" id="location" maxlength="100" autocomplete="address-level2" placeholder="City or general area"></label>
           <label class="profile-field profile-field-full"><span>About you</span><textarea id="bio" maxlength="160" rows="3" placeholder="Tell people a little about yourself…"></textarea><div class="character-count"><span id="bioCount">0</span>/160</div></label>
