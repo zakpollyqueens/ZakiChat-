@@ -1130,10 +1130,10 @@
           throw error;
         }
 
-        this.calls =
-          Array.isArray(data)
-            ? data
-            : [];
+        const { data: hiddenRows, error: hiddenError } = await this.db.from('call_history_hidden').select('call_id').eq('user_id', this.userId);
+        if (hiddenError) throw hiddenError;
+        const hiddenCallIds = new Set((hiddenRows || []).map(row => row.call_id));
+        this.calls = (Array.isArray(data) ? data : []).filter(call => !hiddenCallIds.has(call.id));
 
         await this.loadCallProfiles();
         this.renderCalls();
@@ -1552,17 +1552,28 @@ createCallItem(call) {
         }
       );
 
-      actions.append(
-        chatButton,
-        callButton
-      );
-
-      item.append(
-        avatar,
-        main,
-        actions
-      );
-
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'call-action-button call-delete-button';
+      deleteButton.title = 'Remove from my call history';
+      deleteButton.setAttribute('aria-label', 'Delete this call from your history');
+      deleteButton.textContent = '🗑';
+      deleteButton.addEventListener('click', async () => {
+        if (!window.confirm('Remove this call from your call history? It will not delete it from the other participant’s history.')) return;
+        deleteButton.disabled = true;
+        try {
+          const { error } = await this.db.from('call_history_hidden').upsert({ user_id: this.userId, call_id: call.id }, { onConflict: 'user_id,call_id' });
+          if (error) throw error;
+          this.calls = this.calls.filter(entry => entry.id !== call.id);
+          this.renderCalls();
+        } catch (error) {
+          console.error('Could not remove call history item:', error);
+          window.alert(error.message || 'Could not remove this call from your history.');
+          deleteButton.disabled = false;
+        }
+      });
+      actions.append(chatButton, callButton, deleteButton);
+      item.append(avatar, main, actions);
       return item;
     },
 
