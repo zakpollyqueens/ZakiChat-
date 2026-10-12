@@ -469,6 +469,12 @@
 
     fillForm(profile);
 
+    if (isOwnProfile && document.visibilityState === "visible") {
+      window.ZakiChatPresence?.markOnline().catch(function (error) {
+        console.debug("Could not refresh online presence from profile screen", error);
+      });
+    }
+
     if (!isOwnProfile) {
       setViewMode();
     }
