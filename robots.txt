@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Sitemap URL will be added once the production website's canonical domain is confirmed.
