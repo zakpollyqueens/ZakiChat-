@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Zamivox app icon</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#123a59"/><stop offset=".55" stop-color="#07182b"/><stop offset="1" stop-color="#050d19"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b8f8ff"/><stop offset=".4" stop-color="#32e1fa"/><stop offset="1" stop-color="#00a9dc"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#c8efff"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+  </defs>
+  <rect x="18" y="18" width="476" height="476" rx="126" fill="#00101d" opacity=".42"/>
+  <rect x="24" y="20" width="464" height="464" rx="120" fill="url(#bg)" stroke="#7deaff" stroke-opacity=".42" stroke-width="4"/>
+  <path d="M68 112 Q256 28 444 112" fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="256" cy="250" r="152" fill="#1acff4" opacity=".18" filter="url(#glow)"/>
+  <path d="M115 151 H397 V202 L210 313 H397 V365 H115 V314 L302 203 H115 Z" fill="url(#cyan)"/>
+  <path d="M278 365 L359 151 H410 L464 365 H410 L399 322 H333 L317 365 Z" fill="url(#white)" transform="translate(-14 0)"/>
+  <path d="M346 283 H386 L367 219 Z" fill="#0a2b43"/>
+  <path d="M74 106 Q256 48 438 106" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="394" cy="112" r="13" fill="#fff" opacity=".92"/>
+</svg>
