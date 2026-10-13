@@ -10,7 +10,7 @@ const PENDING_ADD_ACCOUNT = "zakichat_pending_add_account_storage_key";
 const PAYMENT_URL = "https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/registration-payment";
 function show(text, type) { status.textContent = text; status.className = "auth-message " + (type || ""); }
 async function finish() {
- if (!client) { title.textContent = "Verification unavailable"; show("Zamivox could not initialize. Return to the application and try again.", "error"); action.hidden = false; return; }
+ if (!client) { title.textContent = "Verification unavailable"; show("Molan Chat could not initialize. Return to the application and try again.", "error"); action.hidden = false; return; }
  try {
    // Supabase's confirmation link normally supplies token_hash + type. PKCE links may instead
    // supply ?code= and are exchanged by the SDK. Never trust profile fields from URL parameters.
@@ -55,18 +55,18 @@ async function finish() {
      window.ZakiChatAccounts.setActiveStorageKey(addAccountStorageKey);
      localStorage.removeItem(PENDING_ADD_ACCOUNT);
    }
-   title.textContent = "Welcome to Zamivox!";
+   title.textContent = "Welcome to Molan Chat!";
    show("Your account has been verified successfully. You are signed in.", "success");
    profile.hidden = false;
    profile.className = "signup-info-box";
    const name = meta.display_name || meta.full_name || user.email;
    const username = meta.username ? "@" + meta.username : "Not set";
    profile.textContent = "Profile: " + name + " · Username: " + username + " · Status: Verified and signed in.";
-   action.href = "chats.html"; action.textContent = "Open Zamivox"; action.hidden = false;
+   action.href = "chats.html"; action.textContent = "Open Molan Chat"; action.hidden = false;
    // Web/PWA returns to chats. Native app deep-link handoff will be added when Android source and verified app links are available.
    setTimeout(() => { location.replace("chats.html"); }, 1400);
  } catch (e) {
-   console.error("Zamivox email callback failed:", e);
+   console.error("Molan Chat email callback failed:", e);
    title.textContent = "We couldn't verify this link";
    show(e.message || "The verification link may have expired. Request a new link and try again.", "error");
    action.href = "login.html"; action.textContent = "Return to sign in"; action.hidden = false;
