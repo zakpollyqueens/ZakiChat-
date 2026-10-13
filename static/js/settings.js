@@ -170,14 +170,14 @@
     const clear = document.getElementById("clearSettingsSearch");
     if (!input || !results || !hint || !clear) return;
 
-    const items = Array.from(document.querySelectorAll(".settings-shell a.settings-item[href]"))
+    const items = Array.from(document.querySelectorAll(".settings-shell a.settings-item[href], .settings-shell a.settings-profile-link[href]"))
       .filter(item => !item.classList.contains("settings-item-disabled"))
       .map(item => {
         const group = item.closest(".settings-group");
-        const title = item.querySelector(".settings-item-copy strong")?.textContent?.trim() || item.textContent.trim();
-        const description = item.querySelector(".settings-item-copy small")?.textContent?.trim() || "";
-        const icon = item.querySelector(".settings-item-icon")?.textContent?.trim() || "⚙️";
-        return { href: item.getAttribute("href"), title, description, icon, category: group?.querySelector("h2")?.textContent?.trim() || "Settings", searchText: (title + " " + description + " " + (group?.querySelector("h2")?.textContent || "")).toLocaleLowerCase() };
+        const title = item.querySelector(".settings-item-copy strong, .settings-profile-copy strong")?.textContent?.trim() || item.textContent.trim();
+        const description = item.querySelector(".settings-item-copy small, .settings-profile-copy span")?.textContent?.trim() || "";
+        const icon = item.querySelector(".settings-item-icon")?.textContent?.trim() || item.querySelector(".settings-profile-avatar")?.textContent?.trim() || "⚙️";
+        return { href: item.getAttribute("href"), title, description, icon, category: group?.querySelector("h2")?.textContent?.trim() || (item.classList.contains("settings-profile-link") ? "Profile" : "Settings"), searchText: (title + " " + description + " " + (group?.querySelector("h2")?.textContent || "")).toLocaleLowerCase() };
       });
 
     const escapeHtml = value => String(value).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" }[ch]));
