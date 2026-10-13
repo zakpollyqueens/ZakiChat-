@@ -225,7 +225,7 @@
           return;
         }
         verificationSent = true;
-        message(status, "Your account details have been submitted. We sent a verification link to " + state.email + ". Open that email and tap Verify My Account, then return to Zamivox. Your account will open after verification.", "success");
+        message(status, "Your account details have been submitted. We sent a verification link to " + state.email + ". Open that email and tap Verify My Account, then return to Molan Chat. Your account will open after verification.", "success");
         button.disabled = true;
         button.textContent = "Verification Email Sent";
       } catch (e) {
@@ -300,7 +300,7 @@
       try {
         const { error } = await client.auth.updateUser({ password });
         if (error) throw error;
-        message(status, "Password updated successfully. You can now open Zamivox.", "success");
+        message(status, "Password updated successfully. You can now open Molan Chat.", "success");
         setTimeout(chats, 700);
       } catch (e) { message(status, e.message || "Could not update the password.", "error"); }
       finally { loading(button, false, "Save New Password"); }
