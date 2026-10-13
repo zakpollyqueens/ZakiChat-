@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="theme-color" content="#10141b">
-  <title>My Profile | ZakiChat</title>
+  <title>My Profile | Zamivox</title>
   <link rel="stylesheet" href="../static/css/main.css">
-  <link rel="icon" href="../static/images/icon.jpg" type="image/jpeg">
+  <link rel="icon" href="../static/images/zamivox-icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../static/css/responsive.css">
   <link rel="stylesheet" href="../static/css/signature-theme.css">
   <link rel="stylesheet" href="../static/css/profile.css">
@@ -16,8 +16,8 @@
     <header class="profile-topbar">
       <a class="profile-back" href="chats.html" aria-label="Back to chats">‹</a>
       <div class="profile-title-lockup">
-        <img class="zc-brand-icon" src="../static/images/icon.jpg" alt="ZakiChat">
-        <div><span class="eyebrow">ZAKICHAT</span><h1>My Profile</h1></div>
+        <img class="zc-brand-icon" src="../static/images/zamivox-icon.svg" alt="Zamivox">
+        <div><span class="eyebrow">ZAMIVOX</span><h1>My Profile</h1></div>
       </div>
       <div class="profile-top-actions">
         <button type="button" class="profile-icon-action" id="profileQrButton" aria-label="My QR code" title="My QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM18 18h3v3h-3zM18 14h3"/></svg></button>
@@ -28,7 +28,7 @@
           <button type="button" data-profile-action="username"><span class="menu-symbol">@</span><span>Change Username</span></button>
           <button type="button" id="profileSwitchAccountButton"><span class="menu-symbol">⇄</span><span>Switch Account</span></button>
           <button type="button" data-profile-action="copy"><span class="menu-symbol">↗</span><span>Copy Link to Profile</span></button>
-          <button type="button" id="inviteFriendsButton"><span class="menu-symbol">✉</span><span>Invite friends to ZakiChat</span></button>
+          <button type="button" id="inviteFriendsButton"><span class="menu-symbol">✉</span><span>Invite friends to Zamivox</span></button>
           <button type="button" id="menuSettingsLink" onclick="location.href='settings.html'"><span class="menu-symbol">⚙</span><span>Settings</span></button>
           <button type="button" id="menuLogoutButton"><span class="menu-symbol">⇥</span><span>Log Out</span></button>
         </div>
@@ -68,7 +68,7 @@
       </div>
 
       <form id="profileForm" class="profile-edit-panel" novalidate hidden>
-        <div class="edit-panel-heading"><div><span class="section-label">PROFILE DETAILS</span><h3>Edit information</h3><p>These details help people recognise you on ZakiChat.</p></div><button type="button" class="close-edit-button" id="closeEditButton" aria-label="Close edit form">×</button></div>
+        <div class="edit-panel-heading"><div><span class="section-label">PROFILE DETAILS</span><h3>Edit information</h3><p>These details help people recognise you on Zamivox.</p></div><button type="button" class="close-edit-button" id="closeEditButton" aria-label="Close edit form">×</button></div>
         <div class="profile-fields">
           <label class="profile-field"><span>Full name</span><input type="text" id="fullName" maxlength="80" autocomplete="name" placeholder="Your full name"></label>
           <label class="profile-field"><span>Username</span><div class="field-wrap"><span class="field-prefix">@</span><input type="text" id="username" maxlength="30" autocomplete="username" placeholder="username" required></div><small>3–30 letters, numbers, underscores or dots.</small></label>
@@ -104,8 +104,8 @@
   <a href="profile.html" class="is-current" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.4-4.1 3-6.2 7.5-6.2s7.1 2.1 7.5 6.2"/></svg><span>Profile</span></a>
 </nav>
 
-  <dialog class="profile-switch-dialog" id="profileSwitchDialog" aria-labelledby="profileSwitchTitle"><div class="profile-modal-head"><div><span class="section-label">YOUR ACCOUNTS</span><h2 id="profileSwitchTitle">Switch account</h2><p>Choose a saved ZakiChat account. Switching keeps each account signed in on this device.</p></div><button type="button" class="profile-modal-close" id="closeProfileSwitchDialog" aria-label="Close">×</button></div><div id="profileSwitchAccountList" class="profile-switch-account-list"><p class="profile-switch-loading">Loading saved accounts…</p></div><div class="profile-switch-footer"><button type="button" class="profile-switch-add" id="profileAddAccountButton">＋ Add another account</button></div><p id="profileSwitchMessage" class="profile-switch-message" role="status" aria-live="polite" hidden></p></dialog>
-  <dialog class="profile-qr-dialog" id="profileQrDialog"><div class="profile-modal-head"><div><span class="section-label">SCAN TO CONNECT</span><h2>Your ZakiChat QR</h2><p>Let someone scan this code to open your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileQrDialog" aria-label="Close">×</button></div><div id="profileQrCode" class="profile-qr-code"></div><p id="profileQrUsername" class="profile-qr-username"></p><button type="button" class="profile-modal-primary" id="shareProfileButton">Share profile link</button></dialog>
+  <dialog class="profile-switch-dialog" id="profileSwitchDialog" aria-labelledby="profileSwitchTitle"><div class="profile-modal-head"><div><span class="section-label">YOUR ACCOUNTS</span><h2 id="profileSwitchTitle">Switch account</h2><p>Choose a saved Zamivox account. Switching keeps each account signed in on this device.</p></div><button type="button" class="profile-modal-close" id="closeProfileSwitchDialog" aria-label="Close">×</button></div><div id="profileSwitchAccountList" class="profile-switch-account-list"><p class="profile-switch-loading">Loading saved accounts…</p></div><div class="profile-switch-footer"><button type="button" class="profile-switch-add" id="profileAddAccountButton">＋ Add another account</button></div><p id="profileSwitchMessage" class="profile-switch-message" role="status" aria-live="polite" hidden></p></dialog>
+  <dialog class="profile-qr-dialog" id="profileQrDialog"><div class="profile-modal-head"><div><span class="section-label">SCAN TO CONNECT</span><h2>Your Zamivox QR</h2><p>Let someone scan this code to open your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileQrDialog" aria-label="Close">×</button></div><div id="profileQrCode" class="profile-qr-code"></div><p id="profileQrUsername" class="profile-qr-username"></p><button type="button" class="profile-modal-primary" id="shareProfileButton">Share profile link</button></dialog>
   <dialog class="profile-color-dialog" id="profileColorDialog"><div class="profile-modal-head"><div><span class="section-label">MAKE IT YOURS</span><h2>Profile color</h2><p>Choose an accent for your profile.</p></div><button type="button" class="profile-modal-close" data-close-dialog="profileColorDialog" aria-label="Close">×</button></div><div class="profile-color-options"><button type="button" data-color="#20c9bd" aria-label="Turquoise" style="--swatch:#20c9bd"></button><button type="button" data-color="#36b8ff" aria-label="Sky blue" style="--swatch:#36b8ff"></button><button type="button" data-color="#8c7bff" aria-label="Violet" style="--swatch:#8c7bff"></button><button type="button" data-color="#ff78b5" aria-label="Pink" style="--swatch:#ff78b5"></button><button type="button" data-color="#ffb454" aria-label="Amber" style="--swatch:#ffb454"></button><button type="button" data-color="#64d98b" aria-label="Green" style="--swatch:#64d98b"></button></div><button type="button" class="profile-modal-primary" data-close-dialog="profileColorDialog">Done</button></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
