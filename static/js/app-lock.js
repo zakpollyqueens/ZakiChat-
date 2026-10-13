@@ -69,6 +69,7 @@
         const error = overlay.querySelector("#zaki-lock-error");
         if (detail.status === "success") {
           setLocked(false);
+          try { window.ZakiChatNative?.clearAppLockRequired?.(); } catch (_) {}
           overlay.hidden = true;
           document.body.classList.remove("zaki-app-is-locked");
           syncButton();
@@ -125,6 +126,7 @@
       const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
       const hash = await hashPasscode(first, salt);
       localStorage.setItem(PASS_KEY, JSON.stringify({salt, hash, version:1}));
+      try { window.ZakiChatNative?.setAppLockEnabled?.(true); } catch (_) {}
       alert("App passcode created. Molan Chat will ask for your passcode or fingerprint when you reopen the app.");
       syncButton();
     } catch (e) { alert(e.message || "Unable to set up app lock."); }
@@ -136,6 +138,7 @@
     showLocked();
   }
   function init() {
+    try { if (window.ZakiChatNative?.isAppLockRequired?.()) setLocked(true); } catch (_) {}
     ensureOverlay();
     iconButton()?.addEventListener("click", toggleLock);
     syncButton();
