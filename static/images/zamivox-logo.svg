@@ -6,8 +6,8 @@
     <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#cdeeff"/></linearGradient>
   </defs>
   <rect x="5" y="5" width="140" height="140" rx="38" fill="#07182b" stroke="#58e6ff" stroke-opacity=".5" stroke-width="2"/>
-  <path d="M32 39 H117 V55 L60 94 H117 V110 H32 V94 L89 55 H32 Z" fill="url(#cyan)"/>
+  <path d="M32 110 V39 H48 L75 67 L102 39 H118 V110 H101 V64 L75 94 L49 64 V110 Z" fill="url(#cyan)"/>
   <path d="M78 110 L101 39 H118 L138 110 H120 L115 95 H96 L91 110 Z" fill="url(#white)" transform="translate(-6 0)"/>
   <path d="M101 80 H111 L106 63 Z" fill="#0a2b43"/>
-  <text x="170" y="91" font-family="Inter,Arial,sans-serif" font-size="66" font-weight="800" letter-spacing="-2" fill="#07182b">Zami<tspan fill="#13bfe7">vox</tspan></text>
+  <text x="170" y="91" font-family="Inter,Arial,sans-serif" font-size="66" font-weight="800" letter-spacing="-2" fill="#07182b">Molan Chat</text>
 </svg>
