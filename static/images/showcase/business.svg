@@ -7,7 +7,7 @@
   </defs>
   <rect width="900" height="560" rx="42" fill="url(#g)"/>
   <rect x="90" y="85" width="720" height="390" rx="30" fill="#081a1e" opacity=".9"/>
-  <text x="140" y="165" fill="#fff" font-family="Arial" font-size="29" font-weight="700">Zamivox Business</text>
+  <text x="140" y="165" fill="#fff" font-family="Arial" font-size="29" font-weight="700">Molan Chat Business</text>
   <text x="140" y="215" fill="#b9e9db" font-family="Arial" font-size="21">Business profiles • Teams • Meetings</text>
   <rect x="140" y="270" width="170" height="120" rx="18" fill="#153c42"/>
   <rect x="330" y="270" width="170" height="120" rx="18" fill="#17354d"/>
