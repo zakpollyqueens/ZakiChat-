@@ -222,6 +222,10 @@ public class MainActivity extends FragmentActivity {
 
     @Override protected void onStop() {
         networkUsageHandler.removeCallbacks(networkUsageSampler);
+        // Lock only when Android backgrounds/stops the app, not on ordinary page navigation.
+        if (webView != null) {
+            webView.evaluateJavascript("(function(){if(localStorage.getItem('zakichat_app_lock_pass_v1'))localStorage.setItem('zakichat_app_locked_v1','1')})()", null);
+        }
         super.onStop();
         if (isFinishing()) return;
         if (Settings.canDrawOverlays(this) && getPreferences(MODE_PRIVATE).getBoolean("floating_bubble_enabled", true)) {
@@ -508,14 +512,6 @@ public class MainActivity extends FragmentActivity {
                 }
             });
         }
-    }
-
-    @Override protected void onStop() {
-        // Lock only when Android backgrounds/stops the app, not on ordinary in-app navigation.
-        if (webView != null) {
-            webView.evaluateJavascript("(function(){if(localStorage.getItem('zakichat_app_lock_pass_v1'))localStorage.setItem('zakichat_app_locked_v1','1')})()", null);
-        }
-        super.onStop();
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
