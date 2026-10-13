@@ -13,7 +13,7 @@
     <path android:fillColor="#8CFFBD" android:fillAlpha="0.23" android:pathData="M18,10 L90,10 Q98,10 98,18 L98,29 Q54,14 10,34 L10,18 Q10,10 18,10 Z" />
     <!-- Chat bubble -->
     <path android:fillColor="#05643D" android:strokeColor="#D7FFEA" android:strokeWidth="2.1" android:pathData="M25,25 L83,25 Q88,25 88,31 L88,59 Q88,65 82,65 L51,65 L38,76 L38,65 L25,65 Q20,65 20,59 L20,31 Q20,25 25,25 Z" />
-    <!-- Signature Z -->
-    <path android:fillColor="#FFFFFF" android:pathData="M31,34 L77,34 L77,40 L44,56 L77,56 L77,62 L31,62 L31,56 L64,40 L31,40 Z" />
+    <!-- Molan Chat M monogram -->
+    <path android:fillColor="#FFFFFF" android:strokeColor="#E2FFF0" android:strokeWidth="0.7" android:pathData="M31,62 L31,34 L39,34 L54,50 L69,34 L77,34 L77,62 L70,62 L70,44 L54,61 L38,44 L38,62 Z" />
     <!-- The launcher icon uses the chat symbol only; the app label is Molan Chat. -->
 </vector>
