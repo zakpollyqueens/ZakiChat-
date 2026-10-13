@@ -222,7 +222,16 @@
           throw new Error("An account already exists for this email. Sign in or use Reset password by email.");
         }
         if (data.session && data.user?.email_confirmed_at) {
-          await window.ZakiChatAccounts?.registerCurrentSession(client, { email: state.email, displayName: state.fullName, phone: state.phone });
+          await window.ZakiChatAccounts?.registerCurrentSession(client, {
+            storageKey: addAccountMode ? pendingAddStorageKey : window.ZakiChatAuth?.storageKey,
+            email: state.email,
+            displayName: state.fullName,
+            phone: state.phone
+          });
+          if (addAccountMode && pendingAddStorageKey) {
+            window.ZakiChatAccounts?.setActiveStorageKey(pendingAddStorageKey);
+            localStorage.removeItem("zakichat_pending_add_account_storage_key");
+          }
           message(status, "Your account is verified. Opening Molan Chat…", "success");
           setTimeout(chats, 350);
           return;
