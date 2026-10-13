@@ -31,7 +31,7 @@
 
     if (error) {
       console.error(
-        "ZakiChat blocked users auth:",
+        "Zamivox blocked users auth:",
         error
       );
       return null;
@@ -60,7 +60,7 @@
       profile?.full_name ||
       profile?.username ||
       profile?.phone ||
-      "ZakiChat user"
+      "Zamivox user"
     );
   }
 
@@ -96,7 +96,7 @@
 
     if (error) {
       console.error(
-        "ZakiChat blocked users load:",
+        "Zamivox blocked users load:",
         error
       );
 
@@ -259,7 +259,7 @@
 
     if (error) {
       console.error(
-        "ZakiChat unblock user:",
+        "Zamivox unblock user:",
         error
       );
 
@@ -278,7 +278,7 @@
 
     const value =
       window.prompt(
-        "Enter the user's ZakiChat username or phone number:"
+        "Enter the user's Zamivox username or phone number:"
       );
 
     const query =
@@ -324,7 +324,7 @@
 
     if (!profile) {
       alert(
-        "No ZakiChat user was found with that username or phone number."
+        "No Zamivox user was found with that username or phone number."
       );
       return;
     }
@@ -357,7 +357,7 @@
 
     if (error) {
       console.error(
-        "ZakiChat block user:",
+        "Zamivox block user:",
         error
       );
 
@@ -374,7 +374,7 @@
   async function init() {
     if (!db) {
       console.error(
-        "ZakiChat Blocked Users: centralized Supabase client unavailable."
+        "Zamivox Blocked Users: centralized Supabase client unavailable."
       );
       return;
     }
