@@ -42,7 +42,7 @@ function renderStatus(status) {
   if (!status) return;
 
   setText("applicationName", status.application_name || "ZakiChat");
-  setText("applicationVersion", status.application_version || "zc-vr15");
+  setText("applicationVersion", status.application_version || "zc-vr18");
   setText(
     "environment",
     status.environment
