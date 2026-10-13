@@ -1,13 +1,13 @@
 (function () {
   "use strict";
   if (!window.supabase || !window.ZakiChatConfig) {
-    console.error("ZakiChat auth guard could not start.");
+    console.error("Zamivox auth guard could not start.");
     return;
   }
   const auth = window.ZakiChatAuth;
   const supabaseClient = auth?.client;
   if (!supabaseClient) {
-    console.error("ZakiChat auth guard: centralized Supabase client unavailable.");
+    console.error("Zamivox auth guard: centralized Supabase client unavailable.");
     return;
   }
 
@@ -54,7 +54,7 @@
             data.session.user.user_metadata?.full_name ||
             data.session.user.email ||
             data.session.user.phone ||
-            "ZakiChat user"
+            "Zamivox user"
         });
       } catch (registryError) {
         console.warn("Could not refresh the saved-account list:", registryError);
