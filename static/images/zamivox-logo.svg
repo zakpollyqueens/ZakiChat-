@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 150" role="img" aria-labelledby="title">
+  <title id="title">Zamivox — connect and communicate</title>
+  <defs>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#aaf5ff"/><stop offset=".5" stop-color="#26d9f6"/><stop offset="1" stop-color="#00a4d6"/></linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#cdeeff"/></linearGradient>
+  </defs>
+  <rect x="5" y="5" width="140" height="140" rx="38" fill="#07182b" stroke="#58e6ff" stroke-opacity=".5" stroke-width="2"/>
+  <path d="M32 39 H117 V55 L60 94 H117 V110 H32 V94 L89 55 H32 Z" fill="url(#cyan)"/>
+  <path d="M78 110 L101 39 H118 L138 110 H120 L115 95 H96 L91 110 Z" fill="url(#white)" transform="translate(-6 0)"/>
+  <path d="M101 80 H111 L106 63 Z" fill="#0a2b43"/>
+  <text x="170" y="91" font-family="Inter,Arial,sans-serif" font-size="66" font-weight="800" letter-spacing="-2" fill="#07182b">Zami<tspan fill="#13bfe7">vox</tspan></text>
+</svg>
