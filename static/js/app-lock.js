@@ -99,7 +99,7 @@
       const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
       const hash = await hashPasscode(first, salt);
       localStorage.setItem(PASS_KEY, JSON.stringify({salt, hash, version:1}));
-      alert("App passcode created. Tap the lock icon any time to lock Zamivox.");
+      alert("App passcode created. Tap the lock icon any time to lock Molan Chat.");
       syncButton();
     } catch (e) { alert(e.message || "Unable to set up app lock."); }
   }
