@@ -1,6 +1,6 @@
-# Zamivox
+# Molan Chat
 
-Zamivox is a modern messaging platform by Zakmolanitech Solutions.
+Molan Chat is a modern messaging platform by Zakmolanitech Solutions.
 
 ## Public entry points
 
