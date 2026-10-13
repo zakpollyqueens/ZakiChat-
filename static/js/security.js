@@ -42,7 +42,7 @@
         };
       } catch (error) {
         console.error(
-          "Zamivox App Lock config read failed:",
+          "Molan Chat App Lock config read failed:",
           error
         );
 
@@ -196,7 +196,7 @@
     async enable(method, secret) {
       if (!this.userId) {
         throw new Error(
-          "No authenticated Zamivox account is active."
+          "No authenticated Molan Chat account is active."
         );
       }
 
@@ -452,7 +452,7 @@
 
       if (error) {
         console.error(
-          "Zamivox Security session check failed:",
+          "Molan Chat Security session check failed:",
           error
         );
 
@@ -479,7 +479,7 @@
     () => {
       Security.init().catch(error => {
         console.error(
-          "Zamivox Security:",
+          "Molan Chat Security:",
           error
         );
       });
