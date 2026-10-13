@@ -1,6 +1,6 @@
 {
-  "name": "Zamivox",
-  "short_name": "Zamivox",
+  "name": "ZamiVox",
+  "short_name": "ZamiVox",
   "description": "Connect and converse instantly with Zamivox.",
   "start_url": "/",
   "scope": "/",
