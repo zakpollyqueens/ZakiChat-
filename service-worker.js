@@ -1,10 +1,11 @@
 "use strict";
 
-const CACHE_NAME = "zakichat-shell-v4";
+const CACHE_NAME = "zamivox-shell-v5";
 const CORE_ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
+  "/static/images/zamivox-icon.svg",
   "/pages/chats.html",
   "/pages/chat.html",
   "/pages/settings.html",
@@ -35,7 +36,7 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key.startsWith("zakichat-shell-") && key !== CACHE_NAME)
+    await Promise.all(keys.filter(key => key.startsWith("zamivox-shell-") && key !== CACHE_NAME)
       .map(key => caches.delete(key)));
     await self.clients.claim();
   })());
@@ -66,7 +67,7 @@ self.addEventListener("fetch", event => {
         const fallback = await cache.match(path);
         if (fallback) return fallback;
         return (await cache.match("/index.html")) ||
-          new Response("ZakiChat is offline. Open the app once while connected to prepare offline access.", {
+          new Response("Zamivox is offline. Open the app once while connected to prepare offline access.", {
             status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" }
           });
       }
@@ -101,14 +102,14 @@ self.addEventListener("push", event => {
   try {
     data = event.data ? event.data.json() : {};
   } catch (error) {
-    data = { title: "ZakiChat", body: event.data ? event.data.text() : "You have a new notification." };
+    data = { title: "Zamivox", body: event.data ? event.data.text() : "You have a new notification." };
   }
 
-  const title = data.title || "ZakiChat";
+  const title = data.title || "Zamivox";
   const options = {
     body: data.body || "You have a new notification.",
-    icon: "/static/images/icon.jpg",
-    badge: "/static/images/icon.jpg",
+    icon: "/static/images/zamivox-icon.svg",
+    badge: "/static/images/zamivox-icon.svg",
     tag: data.notificationId ? `zakichat-${data.notificationId}` : "zakichat-notification",
     renotify: true,
     actions: [{ action: "reply", title: "Reply" }, { action: "open", title: "Open" }],
