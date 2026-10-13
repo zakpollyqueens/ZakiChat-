@@ -45,7 +45,7 @@ public class FloatingBubbleService extends Service {
             PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
         Notification notification = new NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.sym_action_chat)
-            .setContentTitle("Zamivox is active")
+            .setContentTitle("Molan Chat is active")
             .setContentText("Floating chat and media controls are available.")
             .setContentIntent(pi).setOngoing(true).build();
         startForeground(1501, notification);
@@ -53,7 +53,7 @@ public class FloatingBubbleService extends Service {
 
     private void createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL, "Zamivox floating controls", NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel channel = new NotificationChannel(CHANNEL, "Molan Chat floating controls", NotificationManager.IMPORTANCE_LOW);
             channel.setDescription("Floating chat and media controls.");
             NotificationManager nm = getSystemService(NotificationManager.class);
             if (nm != null) nm.createNotificationChannel(channel);
@@ -87,7 +87,7 @@ public class FloatingBubbleService extends Service {
         bubble.setBackground(round(Color.rgb(7,17,31), dp(30), Color.rgb(25,216,242)));
         bubble.setElevation(dp(12));
 
-        playButton = button("▶", "Play or pause Zamivox media");
+        playButton = button("▶", "Play or pause Molan Chat media");
         playButton.setOnClickListener(v -> {
             paused = !paused;
             playButton.setText(paused ? "▶" : "Ⅱ");
