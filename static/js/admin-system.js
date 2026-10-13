@@ -41,7 +41,7 @@ function showSystemError(message) {
 function renderStatus(status) {
   if (!status) return;
 
-  setText("applicationName", status.application_name || "ZakiChat");
+  setText("applicationName", status.application_name || "Molan Chat");
   setText("applicationVersion", status.application_version || "zc-vr18");
   setText(
     "environment",
