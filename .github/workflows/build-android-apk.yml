@@ -140,3 +140,33 @@ jobs:
             android/app/build/outputs/apk/release/app-release.apk
             android/app/build/outputs/apk/debug/app-debug.apk
             build/ota-bundle.zip
+
+      - name: Notify Slack about the build result (optional)
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BUILD_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RELEASE_URL: https://github.com/${{ github.repository }}/releases/latest
+          BUILD_NUMBER: ${{ github.run_number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
+            echo "SLACK_WEBHOOK_URL is not configured; Slack notification skipped."
+            exit 0
+          fi
+          export BUILD_STATUS RUN_URL RELEASE_URL BUILD_NUMBER
+          payload=$(python3 - <<'PY'
+          import json, os
+          status = os.environ.get("BUILD_STATUS", "unknown").upper()
+          emoji = ":white_check_mark:" if status == "SUCCESS" else ":x:"
+          text = (f"{emoji} Zamivox Android build #{os.environ.get('BUILD_NUMBER')} — {status}\\n"
+                  f"Workflow: {os.environ.get('RUN_URL')}\\n"
+                  f"Latest release: {os.environ.get('RELEASE_URL')}")
+          print(json.dumps({"text": text}))
+          PY
+          )
+          curl --fail --silent --show-error --max-time 15 \
+            -H 'Content-Type: application/json' \
+            --data "$payload" "$SLACK_WEBHOOK_URL"
