@@ -4,5 +4,5 @@
 <path android:fillColor="#277D59" android:pathData="M18,9 L90,9 Q99,9 99,18 L99,90 Q99,99 90,99 L18,99 Q9,99 9,90 L9,18 Q9,9 18,9 Z"/>
 <path android:fillColor="#C9F7E0" android:fillAlpha="0.36" android:pathData="M18,9 L90,9 Q99,9 99,18 L99,31 Q55,17 9,38 L9,18 Q9,9 18,9 Z"/>
 <path android:fillColor="#0A3023" android:strokeColor="#A6E8C5" android:strokeWidth="2.2" android:pathData="M25,25 L83,25 Q88,25 88,31 L88,59 Q88,65 82,65 L51,65 L38,76 L38,65 L25,65 Q20,65 20,59 L20,31 Q20,25 25,25 Z"/>
-<path android:fillColor="#F4FFF9" android:pathData="M31,34 L77,34 L77,40 L44,56 L77,56 L77,62 L31,62 L31,56 L64,40 L31,40 Z"/>
+<path android:fillColor="#F4FFF9" android:pathData="M31,62 L31,34 L39,34 L54,50 L69,34 L77,34 L77,62 L70,62 L70,44 L54,61 L38,44 L38,62 Z"/>
 </vector>
