@@ -713,19 +713,19 @@
         modal.hidden=false;errorBox.hidden=true;accountLabel.textContent='Checking your signed-in account…';
         try{
           const client=window.ZakiChatAuth&&window.ZakiChatAuth.client;
-          if(!client)throw new Error('ZakiChat authentication is still loading. Refresh the page and try again.');
+          if(!client)throw new Error('Zamivox authentication is still loading. Refresh the page and try again.');
           if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
           const result=await client.auth.getSession();
           if(result.error)throw result.error;
           currentSession=result.data.session;
-          if(!currentSession||!currentSession.user)throw new Error('Please sign in to ZakiChat in your browser first.');
-          accountLabel.textContent='Signed in as '+(currentSession.user.email||'your ZakiChat account');
+          if(!currentSession||!currentSession.user)throw new Error('Please sign in to Zamivox in your browser first.');
+          accountLabel.textContent='Signed in as '+(currentSession.user.email||'your Zamivox account');
         }catch(e){currentSession=null;accountLabel.textContent='No active account detected.';showError(e.message||'Please sign in on the website first.')}
       });
       closeButtons.forEach(b=>b.addEventListener('click',close));
       confirmBtn.addEventListener('click',async()=>{
         errorBox.hidden=true;
-        if(!currentSession){showError('Sign in to ZakiChat in this browser first, then try again.');return}
+        if(!currentSession){showError('Sign in to Zamivox in this browser first, then try again.');return}
         confirmBtn.disabled=true;confirmBtn.textContent='Authorizing this phone…';
         try{
           const response=await fetch('https://xdpevlurgtvgduwzyoue.supabase.co/functions/v1/mobile-app-handoff',{
@@ -735,8 +735,8 @@
           const payload=await response.json();
           if(!response.ok||!payload.success||!payload.appUrl)throw new Error(payload.error||'Could not authorize the mobile app.');
           window.location.href=payload.appUrl;
-          confirmBtn.textContent='Opening ZakiChat…';
-          setTimeout(()=>{confirmBtn.disabled=false;confirmBtn.textContent='Authorize & open mobile app';showError('If ZakiChat did not open, install the Android APK first. Your approval expires after 2 minutes; you can authorize again.');},1400);
+          confirmBtn.textContent='Opening Zamivox…';
+          setTimeout(()=>{confirmBtn.disabled=false;confirmBtn.textContent='Authorize & open mobile app';showError('If Zamivox did not open, install the Android APK first. Your approval expires after 2 minutes; you can authorize again.');},1400);
         }catch(e){showError(e.message||'Authorization failed. Please try again.');confirmBtn.disabled=false;confirmBtn.textContent='Authorize & open mobile app'}
       });
       window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
