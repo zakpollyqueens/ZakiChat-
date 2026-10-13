@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "molan-chat-shell-v6-brand-refresh";
+const CACHE_NAME = "molan-chat-shell-v7-glass-biometric";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -13,6 +13,8 @@ const CORE_ASSETS = [
   "/pages/updates.html",
   "/static/css/main.css",
   "/static/css/signature-theme.css",
+  "/static/css/glass-ambient.css",
+  "/static/css/app-lock.css",
   "/static/js/telegram-chat.js",
   "/static/js/message-expiry.js",
   "/static/js/data-storage.js",
