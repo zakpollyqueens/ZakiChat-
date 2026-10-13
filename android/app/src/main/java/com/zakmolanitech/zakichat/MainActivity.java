@@ -251,10 +251,15 @@ public class MainActivity extends FragmentActivity {
 
     public class NativeBridge {
         @JavascriptInterface public void setAppLockEnabled(boolean enabled) {
-            getSharedPreferences("molan_app_lock", MODE_PRIVATE).edit()
-                .putBoolean("enabled", enabled)
-                .putBoolean("required", false)
-                .apply();
+            android.content.SharedPreferences.Editor editor = getSharedPreferences("molan_app_lock", MODE_PRIVATE).edit().putBoolean("enabled", enabled);
+            if (!enabled) editor.putBoolean("required", false);
+            editor.apply();
+        }
+        @JavascriptInterface public boolean isAppLockEnabled() {
+            return getSharedPreferences("molan_app_lock", MODE_PRIVATE).getBoolean("enabled", false);
+        }
+        @JavascriptInterface public void requireAppLock() {
+            getSharedPreferences("molan_app_lock", MODE_PRIVATE).edit().putBoolean("required", true).apply();
         }
         @JavascriptInterface public boolean isAppLockRequired() {
             return getSharedPreferences("molan_app_lock", MODE_PRIVATE).getBoolean("required", false);
