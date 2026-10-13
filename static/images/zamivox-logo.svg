@@ -9,5 +9,5 @@
   <path d="M32 39 H117 V55 L60 94 H117 V110 H32 V94 L89 55 H32 Z" fill="url(#cyan)"/>
   <path d="M78 110 L101 39 H118 L138 110 H120 L115 95 H96 L91 110 Z" fill="url(#white)" transform="translate(-6 0)"/>
   <path d="M101 80 H111 L106 63 Z" fill="#0a2b43"/>
-  <text x="170" y="91" font-family="Inter,Arial,sans-serif" font-size="66" font-weight="800" letter-spacing="-2" fill="#07182b">Zami<tspan fill="#13bfe7">vox</tspan></text>
+  <text x="170" y="91" font-family="Inter,Arial,sans-serif" font-size="52" font-weight="800" letter-spacing="-1.5" fill="#07182b">Molan <tspan fill="#13bfe7">Chat</tspan></text>
 </svg>
