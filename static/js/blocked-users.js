@@ -31,7 +31,7 @@
 
     if (error) {
       console.error(
-        "Zamivox blocked users auth:",
+        "Molan Chat blocked users auth:",
         error
       );
       return null;
@@ -60,7 +60,7 @@
       profile?.full_name ||
       profile?.username ||
       profile?.phone ||
-      "Zamivox user"
+      "Molan Chat user"
     );
   }
 
@@ -96,7 +96,7 @@
 
     if (error) {
       console.error(
-        "Zamivox blocked users load:",
+        "Molan Chat blocked users load:",
         error
       );
 
@@ -259,7 +259,7 @@
 
     if (error) {
       console.error(
-        "Zamivox unblock user:",
+        "Molan Chat unblock user:",
         error
       );
 
@@ -278,7 +278,7 @@
 
     const value =
       window.prompt(
-        "Enter the user's Zamivox username or phone number:"
+        "Enter the user's Molan Chat username or phone number:"
       );
 
     const query =
@@ -324,7 +324,7 @@
 
     if (!profile) {
       alert(
-        "No Zamivox user was found with that username or phone number."
+        "No Molan Chat user was found with that username or phone number."
       );
       return;
     }
@@ -357,7 +357,7 @@
 
     if (error) {
       console.error(
-        "Zamivox block user:",
+        "Molan Chat block user:",
         error
       );
 
@@ -374,7 +374,7 @@
   async function init() {
     if (!db) {
       console.error(
-        "Zamivox Blocked Users: centralized Supabase client unavailable."
+        "Molan Chat Blocked Users: centralized Supabase client unavailable."
       );
       return;
     }
