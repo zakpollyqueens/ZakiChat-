@@ -222,9 +222,10 @@ public class MainActivity extends FragmentActivity {
 
     @Override protected void onStop() {
         networkUsageHandler.removeCallbacks(networkUsageSampler);
-        // Lock only when Android backgrounds/stops the app, not on ordinary page navigation.
-        if (webView != null) {
-            webView.evaluateJavascript("(function(){if(localStorage.getItem('zakichat_app_lock_pass_v1'))localStorage.setItem('zakichat_app_locked_v1','1')})()", null);
+        // Persist the relaunch lock natively so it survives process death and WebView teardown.
+        android.content.SharedPreferences appLockPrefs = getSharedPreferences("molan_app_lock", MODE_PRIVATE);
+        if (appLockPrefs.getBoolean("enabled", false)) {
+            appLockPrefs.edit().putBoolean("required", true).apply();
         }
         super.onStop();
         if (isFinishing()) return;
@@ -249,6 +250,18 @@ public class MainActivity extends FragmentActivity {
     }
 
     public class NativeBridge {
+        @JavascriptInterface public void setAppLockEnabled(boolean enabled) {
+            getSharedPreferences("molan_app_lock", MODE_PRIVATE).edit()
+                .putBoolean("enabled", enabled)
+                .putBoolean("required", false)
+                .apply();
+        }
+        @JavascriptInterface public boolean isAppLockRequired() {
+            return getSharedPreferences("molan_app_lock", MODE_PRIVATE).getBoolean("required", false);
+        }
+        @JavascriptInterface public void clearAppLockRequired() {
+            getSharedPreferences("molan_app_lock", MODE_PRIVATE).edit().putBoolean("required", false).apply();
+        }
         @JavascriptInterface public void authenticateBiometric() {
             runOnUiThread(() -> {
                 BiometricManager manager = BiometricManager.from(MainActivity.this);
