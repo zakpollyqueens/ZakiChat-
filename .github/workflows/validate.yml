@@ -1,4 +1,4 @@
-name: Zamivox Validation
+name: Molan Chat Validation
 
 on:
   push:
@@ -75,7 +75,7 @@ jobs:
           PY
 
   build-android:
-    name: Build Zamivox Android APK
+    name: Build Molan Chat Android APK
     needs: validate
     runs-on: ubuntu-latest
     permissions:
