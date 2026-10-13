@@ -409,10 +409,10 @@
   const inviteButton = document.getElementById("inviteFriendsButton");
   inviteButton?.addEventListener("click", async () => {
     const inviteUrl = new URL("signup.html", window.location.href).href;
-    const invite = { title: "Join me on Zamivox", text: "Connect with me on Zamivox for chats, calls, status updates and communities.", url: inviteUrl };
+    const invite = { title: "Join me on Molan Chat", text: "Connect with me on Molan Chat for chats, calls, status updates and communities.", url: inviteUrl };
     try {
       if (navigator.share) await navigator.share(invite);
-      else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(inviteUrl); showToast("Zamivox invite link copied. Share it in WhatsApp, Telegram or any messaging app."); }
+      else if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(inviteUrl); showToast("Molan Chat invite link copied. Share it in WhatsApp, Telegram or any messaging app."); }
       else { window.prompt("Copy this ZakiChat invite link", inviteUrl); }
     } catch (error) { if (error?.name !== "AbortError") { try { window.prompt("Copy this ZakiChat invite link", inviteUrl); } catch (_) {} } }
   });
