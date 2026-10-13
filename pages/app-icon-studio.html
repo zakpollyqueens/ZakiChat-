@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071525"><title>App Icon Studio · Zamivox</title>
+<link rel="stylesheet" href="../static/css/main.css"><link rel="stylesheet" href="../static/css/signature-theme.css">
+<style>
+:root{color-scheme:dark}.icon-studio{max-width:980px;margin:0 auto;padding:24px 18px 110px;color:#eefbf5}.studio-head{display:flex;gap:14px;align-items:center;margin:8px 0 24px}.studio-back{font-size:25px;text-decoration:none;color:#c9ffe1}.studio-head h1{font-size:clamp(27px,5vw,40px);margin:0}.studio-head p{color:#a7c8b9;margin:6px 0 0}.studio-banner{padding:20px;border:1px solid #27d78b55;border-radius:24px;background:radial-gradient(ellipse at top right,#0a8b5b70,transparent 55%),linear-gradient(135deg,#102e28,#071923);box-shadow:0 18px 45px #0004;margin-bottom:20px}.studio-banner strong{color:#8bffc2}.studio-banner p{color:#bed8cc;line-height:1.55}.icon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px}.icon-option{border:1px solid #ffffff20;background:#0c1b27;border-radius:20px;padding:16px 12px;color:#eefbf5;text-align:center;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}.icon-option:hover{transform:translateY(-3px);border-color:#6dffb5}.icon-option[aria-pressed=true]{border:2px solid #45f59e;background:#103629;box-shadow:0 0 0 3px #39e98b20}.icon-preview{width:94px;height:94px;border-radius:23px;margin:0 auto 13px;display:grid;place-items:center;font-size:40px;font-weight:900;letter-spacing:-4px;color:white;box-shadow:inset 0 1px 0 #ffffff7a,0 12px 22px #0006;border:1px solid #ffffff40}.icon-preview.emerald{background:linear-gradient(145deg,#003b27,#16c779 60%,#00492c)}.icon-preview.crystal{background:linear-gradient(145deg,#c7ffe5,#08b878 38%,#07583e 78%,#c4ffe3)}.icon-preview.neon{background:linear-gradient(145deg,#032e21,#00ff91 50%,#005e3b);text-shadow:0 0 14px #fff}.icon-preview.metal{background:linear-gradient(145deg,#d6f7e7,#207e58 28%,#061d17 55%,#57d79c)}.icon-option strong{display:block;font-size:15px}.icon-option small{display:block;color:#a9c6b9;margin-top:5px;line-height:1.35}.studio-status{min-height:24px;margin-top:18px;color:#aaffd0}.studio-note{margin-top:18px;padding:14px;border-radius:14px;background:#ffffff08;color:#a8c1b6;font-size:13px;line-height:1.5}.apply-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0}.apply-button{border:0;border-radius:13px;padding:12px 18px;background:linear-gradient(135deg,#16c779,#057447);font-weight:800;color:#fff;cursor:pointer}.apply-button:disabled{opacity:.5}@media(max-width:440px){.icon-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.icon-preview{width:78px;height:78px}}
+</style></head>
+<body class="tg-app">
+<main class="icon-studio">
+<header class="studio-head"><a class="studio-back" href="settings.html" aria-label="Back to Settings">‹</a><div><h1>App Icon Studio</h1><p>Choose the ZamiVox finish that feels like you.</p></div></header>
+<section class="studio-banner"><strong>YOUR APP. YOUR SIGNATURE.</strong><p>Explore polished green ZamiVox styles with a consistent Z identity. Your choice is saved for this device. On Android, the launcher icon changes when the installed app supports native icon switching.</p></section>
+<div class="apply-row"><span id="selected-label">Selected: Emerald Circuit</span><button class="apply-button" id="apply-icon" type="button">Apply icon</button></div>
+<section class="icon-grid" aria-label="Choose an app icon">
+<button class="icon-option" data-icon="emerald" aria-pressed="true"><span class="icon-preview emerald">Z</span><strong>Emerald Circuit</strong><small>Signature green · glossy</small></button>
+<button class="icon-option" data-icon="crystal" aria-pressed="false"><span class="icon-preview crystal">Z</span><strong>Crystal Green</strong><small>Glass highlights · premium</small></button>
+<button class="icon-option" data-icon="neon" aria-pressed="false"><span class="icon-preview neon">Z</span><strong>Neon Pulse</strong><small>Electric green · bold</small></button>
+<button class="icon-option" data-icon="metal" aria-pressed="false"><span class="icon-preview metal">Z</span><strong>Liquid Metal</strong><small>Metallic emerald · sleek</small></button>
+</section>
+<p id="studio-status" class="studio-status" role="status" aria-live="polite"></p>
+<div class="studio-note">Note: launcher icon switching is available in the Android APK through native launcher aliases. A browser can save your selection for the web experience, but a browser cannot change your Android home-screen icon.</div>
+</main>
+<script src="../static/js/app-icon-studio.js"></script>
+</body></html>
