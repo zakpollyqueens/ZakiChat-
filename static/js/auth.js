@@ -130,11 +130,14 @@
   function setupPhone() {
     const input = document.getElementById("phone");
     if (!input || !window.intlTelInput) return null;
-    return window.intlTelInput(input, {
-      initialCountry: "ug", separateDialCode: true, nationalMode: true,
+    const widget = window.intlTelInput(input, {
+      initialCountry: "ug", countryOrder: ["ug", "ke", "tz"], separateDialCode: true, nationalMode: true,
       autoPlaceholder: "polite", formatOnDisplay: true,
       loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/js/utils.js")
     });
+    // Keep the country selector on Uganda rather than an IP-detected default.
+    widget.setCountry("ug");
+    return widget;
   }
 
   function setupSignup() {
