@@ -59,10 +59,10 @@
       "settings.title": "Settings",
       "settings.language": "App language",
       "settings.languageDescription":
-        "Choose the language you want ZakiChat to use.",
+        "Choose the language you want Zamivox to use.",
       "language.title": "App language",
       "language.description":
-        "Select your preferred language for ZakiChat.",
+        "Select your preferred language for Zamivox.",
       "language.search": "Search languages",
       "language.detected": "Detected from your device",
       "language.selected": "Selected",
@@ -79,10 +79,10 @@
       "settings.title": "Paramètres",
       "settings.language": "Langue de l'application",
       "settings.languageDescription":
-        "Choisissez la langue utilisée par ZakiChat.",
+        "Choisissez la langue utilisée par Zamivox.",
       "language.title": "Langue de l'application",
       "language.description":
-        "Choisissez votre langue préférée pour ZakiChat.",
+        "Choisissez votre langue préférée pour Zamivox.",
       "language.search": "Rechercher une langue",
       "language.detected": "Détectée depuis votre appareil",
       "language.selected": "Sélectionnée",
@@ -98,10 +98,10 @@
       "settings.title": "Ajustes",
       "settings.language": "Idioma de la aplicación",
       "settings.languageDescription":
-        "Elige el idioma que ZakiChat debe utilizar.",
+        "Elige el idioma que Zamivox debe utilizar.",
       "language.title": "Idioma de la aplicación",
       "language.description":
-        "Selecciona tu idioma preferido para ZakiChat.",
+        "Selecciona tu idioma preferido para Zamivox.",
       "language.search": "Buscar idiomas",
       "language.detected": "Detectado desde tu dispositivo",
       "language.selected": "Seleccionado",
@@ -117,10 +117,10 @@
       "settings.title": "Ayarlar",
       "settings.language": "Uygulama dili",
       "settings.languageDescription":
-        "ZakiChat'in kullanacağı dili seçin.",
+        "Zamivox'in kullanacağı dili seçin.",
       "language.title": "Uygulama dili",
       "language.description":
-        "ZakiChat için tercih ettiğiniz dili seçin.",
+        "Zamivox için tercih ettiğiniz dili seçin.",
       "language.search": "Dil ara",
       "language.detected": "Cihazınızdan algılandı",
       "language.selected": "Seçildi",
@@ -136,10 +136,10 @@
       "settings.title": "Mipangilio",
       "settings.language": "Lugha ya programu",
       "settings.languageDescription":
-        "Chagua lugha ambayo ZakiChat itatumia.",
+        "Chagua lugha ambayo Zamivox itatumia.",
       "language.title": "Lugha ya programu",
       "language.description":
-        "Chagua lugha unayopendelea kutumia ZakiChat.",
+        "Chagua lugha unayopendelea kutumia Zamivox.",
       "language.search": "Tafuta lugha",
       "language.detected": "Imetambuliwa kutoka kwenye kifaa chako",
       "language.selected": "Imechaguliwa",
@@ -155,10 +155,10 @@
       "settings.title": "Enteekateeka",
       "settings.language": "Olulimi lwa pulogulaamu",
       "settings.languageDescription":
-        "Londa olulimi lw'oyagala ZakiChat okukozesa.",
+        "Londa olulimi lw'oyagala Zamivox okukozesa.",
       "language.title": "Olulimi lwa pulogulaamu",
       "language.description":
-        "Londa olulimi lw'oyagala okukozesa ZakiChat.",
+        "Londa olulimi lw'oyagala okukozesa Zamivox.",
       "language.search": "Noonya ennimi",
       "language.detected": "Luzuliddwa okuva ku kyuma kyo",
       "language.selected": "Lulondeddwa",
@@ -174,10 +174,10 @@
       "settings.title": "Einstellungen",
       "settings.language": "App-Sprache",
       "settings.languageDescription":
-        "Wähle die Sprache für ZakiChat.",
+        "Wähle die Sprache für Zamivox.",
       "language.title": "App-Sprache",
       "language.description":
-        "Wähle deine bevorzugte Sprache für ZakiChat.",
+        "Wähle deine bevorzugte Sprache für Zamivox.",
       "language.search": "Sprachen suchen",
       "language.detected": "Von deinem Gerät erkannt",
       "language.selected": "Ausgewählt",
@@ -193,10 +193,10 @@
       "settings.title": "Definições",
       "settings.language": "Idioma da aplicação",
       "settings.languageDescription":
-        "Escolha o idioma que o ZakiChat deve utilizar.",
+        "Escolha o idioma que o Zamivox deve utilizar.",
       "language.title": "Idioma da aplicação",
       "language.description":
-        "Selecione o seu idioma preferido para o ZakiChat.",
+        "Selecione o seu idioma preferido para o Zamivox.",
       "language.search": "Pesquisar idiomas",
       "language.detected": "Detetado pelo seu dispositivo",
       "language.selected": "Selecionado",
@@ -212,10 +212,10 @@
       "settings.title": "الإعدادات",
       "settings.language": "لغة التطبيق",
       "settings.languageDescription":
-        "اختر اللغة التي سيستخدمها ZakiChat.",
+        "اختر اللغة التي سيستخدمها Zamivox.",
       "language.title": "لغة التطبيق",
       "language.description":
-        "اختر لغتك المفضلة لاستخدام ZakiChat.",
+        "اختر لغتك المفضلة لاستخدام Zamivox.",
       "language.search": "البحث عن اللغات",
       "language.detected": "تم اكتشافها من جهازك",
       "language.selected": "محددة",
@@ -231,10 +231,10 @@
       "settings.title": "सेटिंग्स",
       "settings.language": "ऐप की भाषा",
       "settings.languageDescription":
-        "ZakiChat में उपयोग की जाने वाली भाषा चुनें।",
+        "Zamivox में उपयोग की जाने वाली भाषा चुनें।",
       "language.title": "ऐप की भाषा",
       "language.description":
-        "ZakiChat के लिए अपनी पसंदीदा भाषा चुनें।",
+        "Zamivox के लिए अपनी पसंदीदा भाषा चुनें।",
       "language.search": "भाषाएँ खोजें",
       "language.detected": "आपके डिवाइस से पहचानी गई",
       "language.selected": "चयनित",
@@ -250,10 +250,10 @@
       "settings.title": "设置",
       "settings.language": "应用语言",
       "settings.languageDescription":
-        "选择 ZakiChat 使用的语言。",
+        "选择 Zamivox 使用的语言。",
       "language.title": "应用语言",
       "language.description":
-        "选择你在 ZakiChat 中偏好的语言。",
+        "选择你在 Zamivox 中偏好的语言。",
       "language.search": "搜索语言",
       "language.detected": "根据你的设备检测",
       "language.selected": "已选择",
@@ -288,10 +288,10 @@
       "settings.title": "설정",
       "settings.language": "앱 언어",
       "settings.languageDescription":
-        "ZakiChat에서 사용할 언어를 선택하세요.",
+        "Zamivox에서 사용할 언어를 선택하세요.",
       "language.title": "앱 언어",
       "language.description":
-        "ZakiChat에서 사용할 언어를 선택하세요.",
+        "Zamivox에서 사용할 언어를 선택하세요.",
       "language.search": "언어 검색",
       "language.detected": "기기에서 감지됨",
       "language.selected": "선택됨",
@@ -307,10 +307,10 @@
       "settings.title": "Настройки",
       "settings.language": "Язык приложения",
       "settings.languageDescription":
-        "Выберите язык, который будет использовать ZakiChat.",
+        "Выберите язык, который будет использовать Zamivox.",
       "language.title": "Язык приложения",
       "language.description":
-        "Выберите предпочитаемый язык ZakiChat.",
+        "Выберите предпочитаемый язык Zamivox.",
       "language.search": "Поиск языков",
       "language.detected": "Определён по вашему устройству",
       "language.selected": "Выбран",
