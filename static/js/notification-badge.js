@@ -17,7 +17,7 @@
 
       if (!this.db) {
         console.error(
-          "ZakiChat Notification Badge: centralized Supabase client unavailable."
+          "Zamivox Notification Badge: centralized Supabase client unavailable."
         );
         return;
       }
@@ -108,7 +108,7 @@
 
       if (error) {
         console.error(
-          "ZakiChat notification badge:",
+          "Zamivox notification badge:",
           error
         );
 
