@@ -1,6 +1,10 @@
 package com.zakmolanitech.zakichat;
 
 import android.app.Activity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,7 +51,7 @@ import java.util.zip.ZipInputStream;
 
 import androidx.webkit.WebViewAssetLoader;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     private WebView webView;
     private BroadcastReceiver mediaControlReceiver;
     private boolean mediaReceiverRegistered = false;
@@ -228,7 +232,56 @@ public class MainActivity extends Activity {
     }
 
 
+    private void dispatchBiometricResult(String status, String message) {
+        runOnUiThread(() -> {
+            if (webView == null) return;
+            try {
+                JSONObject detail = new JSONObject();
+                detail.put("status", status);
+                detail.put("message", message == null ? "" : message);
+                webView.evaluateJavascript("window.dispatchEvent(new CustomEvent('molan-biometric-result',{detail:" + detail.toString() + "}));", null);
+            } catch (Exception ignored) {}
+        });
+    }
+
     public class NativeBridge {
+        @JavascriptInterface public void authenticateBiometric() {
+            runOnUiThread(() -> {
+                BiometricManager manager = BiometricManager.from(MainActivity.this);
+                int availability = manager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG);
+                if (availability != BiometricManager.BIOMETRIC_SUCCESS) {
+                    dispatchBiometricResult("unavailable", "Fingerprint authentication is not set up or supported on this device. Use your Molan Chat passcode.");
+                    return;
+                }
+                BiometricPrompt prompt = new BiometricPrompt(MainActivity.this,
+                    ContextCompat.getMainExecutor(MainActivity.this),
+                    new BiometricPrompt.AuthenticationCallback() {
+                        @Override public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                            dispatchBiometricResult("success", "Fingerprint verified.");
+                        }
+                        @Override public void onAuthenticationFailed() {
+                            dispatchBiometricResult("error", "Fingerprint was not recognised. Try again or use your passcode.");
+                        }
+                        @Override public void onAuthenticationError(int errorCode, CharSequence errString) {
+                            if (errorCode == BiometricPrompt.ERROR_USER_CANCELED ||
+                                errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON ||
+                                errorCode == BiometricPrompt.ERROR_CANCELED) {
+                                dispatchBiometricResult("cancelled", "Use your passcode whenever you prefer.");
+                            } else {
+                                dispatchBiometricResult("unavailable", errString == null ? "Fingerprint authentication is unavailable." : errString.toString());
+                            }
+                        }
+                    });
+                BiometricPrompt.PromptInfo info = new BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Unlock Molan Chat")
+                    .setSubtitle("Confirm your fingerprint to continue")
+                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+                    .setNegativeButtonText("Use passcode")
+                    .build();
+                prompt.authenticate(info);
+            });
+        }
+
         @JavascriptInterface public void setLauncherIcon(String iconStyle) {
             String[] aliases = {
                 "com.zakmolanitech.zakichat.LauncherEmerald",
@@ -455,6 +508,14 @@ public class MainActivity extends Activity {
                 }
             });
         }
+    }
+
+    @Override protected void onStop() {
+        // Lock only when Android backgrounds/stops the app, not on ordinary in-app navigation.
+        if (webView != null) {
+            webView.evaluateJavascript("(function(){if(localStorage.getItem('zakichat_app_lock_pass_v1'))localStorage.setItem('zakichat_app_locked_v1','1')})()", null);
+        }
+        super.onStop();
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
