@@ -15,7 +15,5 @@
     <path android:fillColor="#05643D" android:strokeColor="#FFFFFF" android:strokeWidth="2.8" android:pathData="M25,25 L83,25 Q88,25 88,31 L88,59 Q88,65 82,65 L51,65 L38,76 L38,65 L25,65 Q20,65 20,59 L20,31 Q20,25 25,25 Z" />
     <!-- Molan Chat M monogram -->
     <path android:fillColor="#FFFFFF" android:strokeColor="#E2FFF0" android:strokeWidth="0.7" android:pathData="M31,62 L31,34 L39,34 L54,50 L69,34 L77,34 L77,62 L70,62 L70,44 L54,61 L38,44 L38,62 Z" />
-    <!-- Molan Chat wordmark, drawn as vector strokes so it renders without font dependencies -->
-    <path android:fillColor="#00000000" android:strokeColor="#FFFFFF" android:strokeWidth="1.9" android:strokeLineCap="round" android:strokeLineJoin="round"
-        android:pathData="M24,84 L30,84 L24,91 L30,91 M33,87 Q36,84 39,87 L39,91 M39,87 L39,91 M43,91 L43,86 L46,86 L46,91 M46,87 Q49,84 52,87 L52,91 M56,86 L56,91 M56,83.5 L56,83.5 M60,85 L63,91 L66,85 M69,87 Q72,84 75,87 L75,90 Q72,93 69,90 Z M78,86 L84,91 M84,86 L78,91" />
+    <!-- The app label is Molan Chat; keep the launcher icon focused on the MC monogram. -->
 </vector>
