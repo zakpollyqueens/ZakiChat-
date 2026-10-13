@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "zamivox-shell-v5-molan-brand-refresh";
+const CACHE_NAME = "molan-chat-shell-v6-brand-refresh";
 const CORE_ASSETS = [
   "/",
   "/index.html",
