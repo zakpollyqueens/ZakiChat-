@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="false"
-        android:label="ZamiVox"
+        android:label="Molan Chat"
         android:icon="@drawable/zamivox_app_icon"
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
@@ -27,16 +27,16 @@
                 <data android:scheme="zakichat" android:host="auth-handoff" />
             </intent-filter>
         </activity>
-        <activity-alias android:name=".LauncherEmerald" android:targetActivity=".MainActivity" android:enabled="true" android:exported="true" android:icon="@drawable/zamivox_app_icon" android:label="ZamiVox">
+        <activity-alias android:name=".LauncherEmerald" android:targetActivity=".MainActivity" android:enabled="true" android:exported="true" android:icon="@drawable/zamivox_app_icon" android:label="Molan Chat">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity-alias>
-        <activity-alias android:name=".LauncherCrystal" android:targetActivity=".MainActivity" android:enabled="false" android:exported="true" android:icon="@drawable/zamivox_icon_crystal" android:label="ZamiVox">
+        <activity-alias android:name=".LauncherCrystal" android:targetActivity=".MainActivity" android:enabled="false" android:exported="true" android:icon="@drawable/zamivox_icon_crystal" android:label="Molan Chat">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity-alias>
-        <activity-alias android:name=".LauncherNeon" android:targetActivity=".MainActivity" android:enabled="false" android:exported="true" android:icon="@drawable/zamivox_icon_neon" android:label="ZamiVox">
+        <activity-alias android:name=".LauncherNeon" android:targetActivity=".MainActivity" android:enabled="false" android:exported="true" android:icon="@drawable/zamivox_icon_neon" android:label="Molan Chat">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity-alias>
-        <activity-alias android:name=".LauncherMetal" android:targetActivity=".MainActivity" android:enabled="false" android:exported="true" android:icon="@drawable/zamivox_icon_metal" android:label="ZamiVox">
+        <activity-alias android:name=".LauncherMetal" android:targetActivity=".MainActivity" android:enabled="false" android:exported="true" android:icon="@drawable/zamivox_icon_metal" android:label="Molan Chat">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
         </activity-alias>
         <service
