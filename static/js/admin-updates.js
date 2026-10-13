@@ -124,6 +124,8 @@
       $("noticeForm").reset();
       $("noticeStatus").value = "draft";
       editingNotice = null;
+      const submitButton = $("noticeForm").querySelector('button[type="submit"]');
+      if (submitButton) submitButton.textContent = "Publish Update";
       await loadNotices();
     } catch (error) {
       console.error("Saving notice failed:", error);
