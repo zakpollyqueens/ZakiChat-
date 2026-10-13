@@ -1,0 +1,164 @@
+/* Molan Chat welcome-screen appearance inspired by the approved mobile reference.
+   Scoped to the public landing page; preserves the full desktop layout and other app pages. */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&display=swap');
+
+body:has(> .site-header) {
+  --molan-ink: #050d11;
+  --molan-panel: #071719;
+  --molan-mint: #39bfa0;
+  --molan-teal: #078f94;
+  --molan-peach: #f2c5a3;
+  background:
+    radial-gradient(ellipse at 23% 40%, rgba(19, 115, 88, .18), transparent 40%),
+    radial-gradient(ellipse at 95% 65%, rgba(0, 113, 120, .16), transparent 42%),
+    linear-gradient(145deg, #061012 0%, #03090d 58%, #061619 100%) !important;
+  color: #e8c5ab;
+}
+body:has(> .site-header) .site-header {
+  position: relative;
+  background: rgba(3, 9, 13, .94);
+  border-bottom: 1px solid rgba(69, 186, 164, .17);
+  backdrop-filter: blur(18px);
+}
+body:has(> .site-header) .brand {
+  color: var(--molan-peach);
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+body:has(> .site-header) .brand img {
+  width: 54px;
+  height: 54px;
+}
+body:has(> .site-header) .hero {
+  padding: 74px 0 66px;
+  background:
+    radial-gradient(ellipse at 50% 26%, rgba(18, 113, 80, .16), transparent 48%),
+    radial-gradient(ellipse at 100% 76%, rgba(0, 120, 127, .11), transparent 43%);
+}
+body:has(> .site-header) .hero-grid {
+  display: block;
+  max-width: 900px;
+}
+body:has(> .site-header) .hero-content { text-align: center; }
+body:has(> .site-header) .eyebrow {
+  padding: 10px 20px;
+  border-color: rgba(51, 181, 137, .22);
+  background: rgba(27, 105, 79, .12);
+  color: #45c4ad;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.2rem, 3.5vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+body:has(> .site-header) .status-dot { width: 10px; height: 10px; }
+body:has(> .site-header) .hero h1 {
+  margin: 48px auto 0;
+  max-width: 760px;
+  color: var(--molan-peach);
+  font-family: 'Caveat', cursive;
+  font-size: clamp(3.7rem, 9vw, 5.6rem);
+  font-weight: 700;
+  line-height: .95;
+  letter-spacing: -.025em;
+}
+body:has(> .site-header) .hero h1 span {
+  display: inline-block;
+  margin-top: 8px;
+  background: linear-gradient(100deg, #36b87e, #078f9a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+body:has(> .site-header) .hero-content > p {
+  max-width: 790px;
+  margin: 52px auto 0;
+  color: #b8a99f;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.55rem, 4vw, 2.15rem);
+  line-height: 1.65;
+}
+body:has(> .site-header) .hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  margin-top: 68px;
+}
+body:has(> .site-header) .hero-actions .button {
+  width: 100%;
+  min-height: 88px;
+  border-radius: 26px;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.7rem, 4vw, 2.2rem);
+  font-weight: 600;
+}
+body:has(> .site-header) .hero-actions .button-primary {
+  color: #031211;
+  background: linear-gradient(105deg, #55bda6, #008d91);
+  border: 1px solid rgba(119, 237, 207, .48);
+  box-shadow: 0 12px 34px rgba(0, 160, 139, .13), inset 0 1px rgba(255,255,255,.22);
+}
+body:has(> .site-header) .hero-actions .button-secondary {
+  color: var(--molan-peach);
+  border: 1px solid rgba(48, 170, 157, .34);
+  background: rgba(11, 34, 34, .52);
+}
+body:has(> .site-header) .hero-note {
+  margin-top: 42px;
+  color: #b8a99f;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+}
+body:has(> .site-header) .hero-note span { color: #27b987; font-size: 1.5em; }
+body:has(> .site-header) .hero-visual { display: none; }
+
+@media (max-width: 850px) {
+  body:has(> .site-header) .nav-container {
+    min-height: 88px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+  body:has(> .site-header) .main-nav {
+    width: auto;
+    margin-left: auto;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+  body:has(> .site-header) .main-nav a:not(.nav-button) { display: none !important; }
+  body:has(> .site-header) .main-nav .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 7px 16px;
+    border: 1px solid rgba(48, 170, 157, .34);
+    border-radius: 20px;
+    background: rgba(11, 34, 34, .52);
+    color: var(--molan-peach) !important;
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 560px) {
+  body:has(> .site-header) .container { width: calc(100% - 48px); }
+  body:has(> .site-header) .nav-container { min-height: 86px; gap: 10px; }
+  body:has(> .site-header) .brand { gap: 12px; font-size: 1.85rem; }
+  body:has(> .site-header) .brand img { width: 56px; height: 56px; flex: 0 0 56px; }
+  body:has(> .site-header) .main-nav .nav-button { padding: 6px 13px; font-size: 1.2rem; }
+  body:has(> .site-header) .hero { padding: 68px 0 60px; }
+  body:has(> .site-header) .hero h1 { margin-top: 54px; font-size: clamp(3.5rem, 12vw, 4.4rem); }
+  body:has(> .site-header) .hero-content > p { margin-top: 54px; font-size: clamp(1.55rem, 5.1vw, 1.9rem); line-height: 1.65; }
+  body:has(> .site-header) .hero-actions { margin-top: 66px; gap: 17px; }
+  body:has(> .site-header) .hero-actions .button { min-height: 88px; border-radius: 27px; font-size: 1.8rem; }
+  body:has(> .site-header) .hero-note { margin-top: 42px; font-size: 1.45rem; line-height: 1.45; }
+  body:has(> .site-header) .zc-entry-showcase { padding-top: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(> .site-header) *, body:has(> .site-header) *::before, body:has(> .site-header) *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
