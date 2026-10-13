@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
-<title>Floating Chat Bubble | Zamivox</title>
+<title>Floating Chat Bubble | Molan Chat</title>
 <link rel="stylesheet" href="../static/css/main.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
 <style>
@@ -24,12 +24,12 @@ h1{font-size:29px;line-height:1.15;margin:18px 0 10px}p{color:#b9c9d9;line-heigh
 <section class="hero">
 <div class="badge">ZAK</div>
 <h1>Floating Chat Bubble</h1>
-<p>Keep Zamivox within reach while you use other apps. Tap the floating bubble to open your recent conversations in a compact panel.</p>
+<p>Keep Molan Chat within reach while you use other apps. Tap the floating bubble to open your recent conversations in a compact panel.</p>
 <div class="preview"><div class="mini">ZAK</div><div><strong>Your chat shortcut</strong><small>Designed to sit around the middle edge of your screen.</small></div></div>
-<div class="toggle-row"><div><strong>Enable floating bubble</strong><small>Show the bubble after you leave Zamivox. Android's “Display over other apps” permission is required.</small></div><label class="switch"><input id="bubbleEnabled" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="toggle-row"><div><strong>Enable floating bubble</strong><small>Show the bubble after you leave Molan Chat. Android's “Display over other apps” permission is required.</small></div><label class="switch"><input id="bubbleEnabled" type="checkbox" checked><span class="slider"></span></label></div>
 <button id="permissionButton" class="primary" type="button">Allow display over other apps</button>
 <div id="bubbleStatus" class="status" role="status" aria-live="polite">Checking Android support…</div>
-<p class="hint">The bubble is designed to close when you dismiss Zamivox from Recent Apps. Some Android manufacturers may manage background apps differently.</p>
+<p class="hint">The bubble is designed to close when you dismiss Molan Chat from Recent Apps. Some Android manufacturers may manage background apps differently.</p>
 </section>
 </main>
 <script>
@@ -40,7 +40,7 @@ h1{font-size:29px;line-height:1.15;margin:18px 0 10px}p{color:#b9c9d9;line-heigh
  const native=window.ZakiChatNative;
  if(!native){
    toggle.disabled=true;
-   status.textContent='This control works in the Zamivox Android app. In a browser, websites cannot display a bubble over other apps.';
+   status.textContent='This control works in the Molan Chat Android app. In a browser, websites cannot display a bubble over other apps.';
    permission.textContent='Android permission is available in the installed app';
    permission.disabled=true;
    return;
@@ -48,11 +48,11 @@ h1{font-size:29px;line-height:1.15;margin:18px 0 10px}p{color:#b9c9d9;line-heigh
  function refresh(){
    toggle.checked=!!native.isFloatingBubbleEnabled();
    const allowed=!!native.canDrawFloatingBubble();
-   status.textContent=allowed?'Overlay permission is granted. The bubble appears when you leave Zamivox.':'Overlay permission is not granted yet. Enable it in Android Settings.';
+   status.textContent=allowed?'Overlay permission is granted. The bubble appears when you leave Molan Chat.':'Overlay permission is not granted yet. Enable it in Android Settings.';
    permission.textContent=allowed?'Overlay permission enabled':'Allow display over other apps';
  }
  toggle.addEventListener('change',()=>{native.setFloatingBubbleEnabled(toggle.checked);status.textContent=toggle.checked?'Floating bubble enabled. Grant overlay permission if Android asks.':'Floating bubble disabled.';setTimeout(refresh,600)});
- permission.addEventListener('click',()=>{native.requestFloatingBubblePermission();status.textContent='Android Settings opened. Allow Zamivox, then return here.'});
+ permission.addEventListener('click',()=>{native.requestFloatingBubblePermission();status.textContent='Android Settings opened. Allow Molan Chat, then return here.'});
  refresh();
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 })();
