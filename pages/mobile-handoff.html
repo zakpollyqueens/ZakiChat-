@@ -13,13 +13,13 @@ body{min-height:100vh;margin:0;display:grid;place-items:center;padding:22px;box-
 const title=document.getElementById('handoffTitle'),message=document.getElementById('handoffMessage'),errorBox=document.getElementById('handoffError'),spinner=document.getElementById('handoffSpinner'),retry=document.getElementById('handoffRetry');
 function fail(text){title.textContent='Could not open your account';message.textContent='Your account has not been removed or changed.';errorBox.textContent=text;errorBox.hidden=false;spinner.hidden=true;retry.hidden=false}
 try{
-if(!window.ZakiChatNative||typeof window.ZakiChatNative.getPendingAuthHandoffToken!=='function')throw new Error('This secure handoff must be opened from the installed ZakiChat Android app. Tap Authorize & open mobile app on the website.');
+if(!window.ZakiChatNative||typeof window.ZakiChatNative.getPendingAuthHandoffToken!=='function')throw new Error('This secure handoff must be opened from the installed Zamivox Android app. Tap Authorize & open mobile app on the website.');
 const token=window.ZakiChatNative.getPendingAuthHandoffToken();if(!token)throw new Error('No authorization request was found. Return to Updates and authorize this phone again.');
 if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
 const response=await fetch(window.ZakiChatConfig.supabaseUrl+'/functions/v1/mobile-app-handoff',{method:'POST',headers:{'Content-Type':'application/json','apikey':window.ZakiChatConfig.supabaseKey},body:JSON.stringify({action:'consume',token})});
 const payload=await response.json();if(!response.ok||!payload.success||!payload.session)throw new Error(payload.error||'Authorization expired. Return to Updates and try again.');
 const client=window.ZakiChatAuth.client;const {data,error}=await client.auth.setSession({access_token:payload.session.access_token,refresh_token:payload.session.refresh_token});if(error||!data.session)throw error||new Error('Could not save your mobile session.');
-try{await window.ZakiChatAccounts?.registerCurrentSession(client,{storageKey:window.ZakiChatAuth.storageKey,email:data.user?.email||payload.user?.email||'',phone:data.user?.phone||'',displayName:data.user?.user_metadata?.display_name||data.user?.user_metadata?.full_name||data.user?.email||payload.user?.email||'ZakiChat user'})}catch(e){console.warn('Saved-account registry refresh failed:',e)}
+try{await window.ZakiChatAccounts?.registerCurrentSession(client,{storageKey:window.ZakiChatAuth.storageKey,email:data.user?.email||payload.user?.email||'',phone:data.user?.phone||'',displayName:data.user?.user_metadata?.display_name||data.user?.user_metadata?.full_name||data.user?.email||payload.user?.email||'Zamivox user'})}catch(e){console.warn('Saved-account registry refresh failed:',e)}
 window.ZakiChatNative.clearPendingAuthHandoffToken();title.textContent='You are connected';message.textContent='Your existing account is ready. Opening Chats…';setTimeout(()=>window.location.replace('chats.html'),350);
 }catch(e){console.error('Mobile app handoff failed:',e);fail(e.message||'Please authorize the mobile app again from Updates.')}
 })();
