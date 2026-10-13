@@ -1,0 +1,169 @@
+name: Build and verify ZamiVox review APK
+
+on:
+  push:
+    branches: [security-review-icon-studio]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zaki-chat-android-apk
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Set up Java 17
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          gradle-version: '8.9'
+
+      - name: Bundle optimized offline wallpaper library
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import os, re, urllib.parse, urllib.request, time
+          from pathlib import Path
+
+          page = Path("pages/media-studio.html")
+          html = page.read_text(encoding="utf-8")
+          urls = re.findall(r'https://images\.unsplash\.com/[^"\s)]+', html)
+          photos = {}
+          for url in urls:
+              clean = url.split("&amp;")[0]
+              path = urllib.parse.urlsplit(clean).path
+              photo_id = path.rsplit("/", 1)[-1]
+              if photo_id.startswith("photo-"):
+                  photos.setdefault(photo_id, clean)
+
+          out = Path("static/media/wallpapers")
+          out.mkdir(parents=True, exist_ok=True)
+          if len(photos) < 20:
+              raise SystemExit(f"Expected a real wallpaper library; only found {len(photos)} source photos.")
+
+          print(f"Bundling {len(photos)} full-resolution wallpaper photos for offline use.")
+          for n, (photo_id, original) in enumerate(photos.items(), 1):
+              destination = out / f"{photo_id}.jpg"
+              if not destination.exists() or destination.stat().st_size < 50000:
+                  query = urllib.parse.urlencode({"fit":"crop","w":"1600","q":"82","fm":"jpg"})
+                  source = f"https://images.unsplash.com/{photo_id}?{query}"
+                  request = urllib.request.Request(source, headers={"User-Agent":"ZakiChat-Android-AssetBuilder/1.0"})
+                  with urllib.request.urlopen(request, timeout=45) as response:
+                      data = response.read()
+                  if len(data) < 50000:
+                      raise SystemExit(f"Wallpaper download too small or invalid: {photo_id} ({len(data)} bytes)")
+                  destination.write_bytes(data)
+              local = f"../static/media/wallpapers/{photo_id}.jpg"
+              html = html.replace(original, local)
+              # Also replace equivalent URLs for the same photo that used thumbnail parameters.
+              html = re.sub(
+                  r'https://images\.unsplash\.com/' + re.escape(photo_id) + r'\?[^"\s)]+',
+                  local, html
+              )
+              print(f"[{n}/{len(photos)}] {photo_id}: {destination.stat().st_size:,} bytes")
+              time.sleep(0.08)
+          page.write_text(html, encoding="utf-8")
+          total = sum(p.stat().st_size for p in out.glob("*.jpg"))
+          print(f"Offline wallpaper payload: {total:,} bytes ({total / 1_000_000:.2f} MB)")
+          PY
+
+      - name: Copy web application into Android assets
+        run: |
+          mkdir -p android/app/src/main/assets
+          rsync -a --delete \
+            --exclude='.git' --exclude='.github' --exclude='android' \
+            --exclude='supabase' --exclude='node_modules' --exclude='.env' \
+            ./ android/app/src/main/assets/
+
+      - name: Build installable APKs
+        run: gradle -p android assembleDebug assembleRelease --no-daemon
+
+      - name: Prepare verified OTA web bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ota
+          rsync -a --delete \
+            --exclude='.git' --exclude='.github' --exclude='android' \
+            --exclude='supabase' --exclude='node_modules' --exclude='.env' \
+            --exclude='build' --exclude='*.apk' --exclude='*.aab' \
+            ./ build/ota/
+          (cd build/ota && zip -qr ../ota-bundle.zip .)
+          sha256=$(sha256sum build/ota-bundle.zip | awk '{print $1}')
+          echo "OTA bundle SHA-256: $sha256"
+          cat > build/release-notes.md <<EOF
+          Zamivox Android test build (zc-vr18).
+
+          OTA_VERSION=${GITHUB_SHA}
+          OTA_SHA256=${sha256}
+
+          Compatible installations can apply verified web features from Updates → New Releases without downloading an APK. Native Android changes still require an APK update.
+          EOF
+
+      - name: Report APK sizes
+        id: sizes
+        shell: bash
+        run: |
+          release_bytes=$(stat -c%s android/app/build/outputs/apk/release/app-release.apk)
+          debug_bytes=$(stat -c%s android/app/build/outputs/apk/debug/app-debug.apk)
+          echo "release_mb=$(awk "BEGIN {printf \"%.2f\", $release_bytes/1000000}")" >> "$GITHUB_OUTPUT"
+          echo "debug_mb=$(awk "BEGIN {printf \"%.2f\", $debug_bytes/1000000}")" >> "$GITHUB_OUTPUT"
+          echo "Release APK: $release_bytes bytes ($(awk "BEGIN {printf \"%.2f\", $release_bytes/1000000}") MB)"
+          echo "Debug APK: $debug_bytes bytes ($(awk "BEGIN {printf \"%.2f\", $debug_bytes/1000000}") MB)"
+          if [ "$release_bytes" -lt 40000000 ]; then
+            echo "::warning::Release APK is below 40 MB. The build will report its real size; it will not add fake filler data just to reach 50 MB."
+          fi
+
+      - name: Upload review APKs and OTA bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: zamivox-review-build-${{ github.run_number }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/outputs/apk/debug/app-debug.apk
+            build/ota-bundle.zip
+
+      - name: Notify Slack about the build result (optional)
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BUILD_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RELEASE_URL: https://github.com/${{ github.repository }}/releases/latest
+          BUILD_NUMBER: ${{ github.run_number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
+            echo "SLACK_WEBHOOK_URL is not configured; Slack notification skipped."
+            exit 0
+          fi
+          export BUILD_STATUS RUN_URL RELEASE_URL BUILD_NUMBER
+          payload=$(python3 - <<'PY'
+          import json, os
+          status = os.environ.get("BUILD_STATUS", "unknown").upper()
+          emoji = ":white_check_mark:" if status == "SUCCESS" else ":x:"
+          text = (f"{emoji} Zamivox Android build #{os.environ.get('BUILD_NUMBER')} — {status}\\n"
+                  f"Workflow: {os.environ.get('RUN_URL')}\\n"
+                  f"Latest release: {os.environ.get('RELEASE_URL')}")
+          print(json.dumps({"text": text}))
+          PY
+          )
+          curl --fail --silent --show-error --max-time 15 \
+            -H 'Content-Type: application/json' \
+            --data "$payload" "$SLACK_WEBHOOK_URL"
