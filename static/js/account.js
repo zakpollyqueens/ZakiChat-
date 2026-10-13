@@ -751,35 +751,48 @@
       return;
     }
 
+    try {
+      await window.ZakiChatAccounts?.registerCurrentSession?.(supabaseClient);
+    } catch (registryError) {
+      console.warn("Could not refresh the current saved account before switching:", registryError);
+    }
+
     const accounts =
       window.ZakiChatAccounts
         ?.getAccounts?.() || [];
 
-    const activeAccount =
-      window.ZakiChatAccounts
-        ?.getActiveAccount?.();
-
     const alternatives =
-      accounts.filter(
-        function (account) {
-          return (
-            account.userId !==
-            currentUser.id
-          );
-        }
-      );
+      accounts.filter(account => account.userId !== currentUser.id);
 
     if (!alternatives.length) {
-      showAccountMessage(
-        "There is no other saved ZakiChat account on this device. Sign out first, then sign in with another account.",
-        ""
-      );
-
+      if (window.confirm("There is no other saved account on this device yet. Create another Molan Chat account now? Your current account will remain saved.")) {
+        const manager = window.ZakiChatAccounts;
+        if (!manager?.createStorageKey) {
+          showAccountMessage("Account creation is unavailable right now. Please try again.", "error");
+          return;
+        }
+        const newStorageKey = manager.createStorageKey();
+        localStorage.setItem("zakichat_pending_add_account_storage_key", newStorageKey);
+        window.location.href = "signup.html?addAccount=1";
+      }
       return;
     }
 
-    const selected =
-      alternatives[0];
+    const choices = alternatives.map((account, index) =>
+      (index + 1) + ". " + (account.displayName || account.email || account.phone || "Molan Chat account") +
+      " — " + (account.email || account.phone || account.userId.slice(0, 8))
+    );
+    let selectedIndex = 0;
+    if (alternatives.length > 1) {
+      const answer = window.prompt("Choose the saved account to open:\n\n" + choices.join("\n") + "\n\nEnter the account number:", "1");
+      if (answer === null) return;
+      selectedIndex = Number(answer) - 1;
+      if (!Number.isInteger(selectedIndex) || selectedIndex < 0 || selectedIndex >= alternatives.length) {
+        showAccountMessage("Enter a valid account number from the list.", "error");
+        return;
+      }
+    }
+    const selected = alternatives[selectedIndex];
 
     if (
       !window.ZakiChatAccounts
