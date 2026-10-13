@@ -1,4 +1,4 @@
-# Zamivox source security review
+# Molan Chat source security review
 
 Review date: 2026-10-13  
 Scope: repository source review and cross-file checks for the icon-studio/security-hardening change. This is not a production penetration test.
