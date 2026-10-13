@@ -2,7 +2,7 @@
   "use strict";
 
   if (!window.supabase || !window.ZakiChatConfig) {
-    console.error("ZakiChat People search could not start.");
+    console.error("Zamivox People search could not start.");
     return;
   }
 
@@ -11,7 +11,7 @@
 
   if (!supabaseClient) {
     console.error(
-      "ZakiChat People search: centralized Supabase client unavailable."
+      "Zamivox People search: centralized Supabase client unavailable."
     );
     return;
   }
