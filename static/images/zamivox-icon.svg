@@ -5,7 +5,8 @@
     <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#72ffb4"/><stop offset=".28" stop-color="#16d879"/><stop offset=".68" stop-color="#07894f"/><stop offset="1" stop-color="#03452f"/></linearGradient>
     <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff" stop-opacity=".3"/><stop offset=".46" stop-color="#ffffff" stop-opacity=".04"/><stop offset="1" stop-color="#001d12" stop-opacity=".3"/></linearGradient>
     <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#baffd9"/></linearGradient>
-    <pattern id="code" width="42" height="42" patternUnits="userSpaceOnUse">
+    <style>@keyframes code-flow{to{stroke-dashoffset:-84}}@keyframes soft-pulse{0%,100%{opacity:.72}50%{opacity:1}}.circuit-flow{stroke-dasharray:12 9;animation:code-flow 9s linear infinite}.pulse{transform-box:fill-box;transform-origin:center;animation:soft-pulse 2.4s ease-in-out infinite}</style>
+  <pattern id="code" width="42" height="42" patternUnits="userSpaceOnUse">
       <path d="M7 9h12M7 14h7M29 28h7M29 33h4M18 0v7M0 29h8" fill="none" stroke="#c5ffe0" stroke-opacity=".17" stroke-width="2" stroke-linecap="round"/>
       <circle cx="29" cy="8" r="2" fill="#c5ffe0" fill-opacity=".22"/>
     </pattern>
@@ -15,7 +16,7 @@
   <rect x="24" y="20" width="464" height="464" rx="120" fill="url(#emerald)" stroke="#a6ffd0" stroke-opacity=".78" stroke-width="4"/>
   <rect x="30" y="26" width="452" height="452" rx="114" fill="url(#code)"/>
   <path d="M65 126 Q256 38 447 126" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="13" stroke-linecap="round"/>
-  <path d="M75 148h43v-18h22M438 175h-35v19h-21M75 350h34v-17h20M438 320h-32v20h-20" fill="none" stroke="#b8ffda" stroke-opacity=".36" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M75 148h43v-18h22M438 175h-35v19h-21M75 350h34v-17h20M438 320h-32v20h-20" class="circuit-flow" fill="none" stroke="#b8ffda" stroke-opacity=".48" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="256" cy="242" r="154" fill="#b4ffd7" opacity=".18" filter="url(#shadow)"/>
   <path d="M127 135h258q22 0 22 22v132q0 22-22 22H250l-69 53v-53h-54q-22 0-22-22V157q0-22 22-22z" fill="#03482f" fill-opacity=".55" stroke="#d8ffea" stroke-width="8" stroke-linejoin="round"/>
   <path d="M164 183h184v29L224 289h124v29H164v-29l124-77H164z" fill="url(#mark)"/>
@@ -23,6 +24,6 @@
   <rect x="52" y="390" width="408" height="57" rx="25" fill="#003b27" fill-opacity=".78" stroke="#adffd0" stroke-opacity=".5" stroke-width="2"/>
   <text x="256" y="429" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="39" font-weight="800" letter-spacing="-1.1" fill="#ffffff">Zami<tspan fill="#8dffc0">Vox</tspan></text>
   <path d="M68 82h44M68 94h25M444 82h-34M444 94h-19" stroke="#e5fff0" stroke-opacity=".65" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="414" cy="118" r="8" fill="#ffffff"/><circle cx="414" cy="118" r="15" fill="#ffffff" opacity=".17"/>
+  <circle class="pulse" cx="414" cy="118" r="8" fill="#ffffff"/><circle cx="414" cy="118" r="15" fill="#ffffff" opacity=".17"/>
   <rect x="24" y="20" width="464" height="464" rx="120" fill="url(#glass)"/>
 </svg>
