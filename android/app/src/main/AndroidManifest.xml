@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="false"
-        android:label="Zamivox"
+        android:label="ZamiVox"
         android:icon="@drawable/zamivox_app_icon"
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
