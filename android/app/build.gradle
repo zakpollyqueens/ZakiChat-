@@ -14,7 +14,7 @@ android {
         minSdk 23
         targetSdk 33
         versionCode appVersionCode
-        versionName 'zc-vr19'
+        versionName 'zc-vr18'
     }
 
     buildTypes {
