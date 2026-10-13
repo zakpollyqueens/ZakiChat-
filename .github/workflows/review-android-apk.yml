@@ -130,7 +130,7 @@ jobs:
       - name: Upload review APKs and OTA bundle
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: zamivox-review-build-${{ github.run_number }}
+          name: molan-chat-review-build-${{ github.run_number }}
           if-no-files-found: error
           retention-days: 14
           path: |
