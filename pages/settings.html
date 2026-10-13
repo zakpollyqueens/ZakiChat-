@@ -30,6 +30,18 @@
       </div>
     </header>
 
+    <!-- Search settings -->
+    <section class="settings-search-panel" aria-labelledby="settingsSearchHeading">
+      <label id="settingsSearchHeading" for="settingsHubSearch">Find a setting</label>
+      <div class="settings-search-field">
+        <span aria-hidden="true">⌕</span>
+        <input id="settingsHubSearch" type="search" placeholder="Search settings, e.g. privacy, ringtone…" autocomplete="off" aria-controls="settingsSearchResults">
+        <button type="button" id="clearSettingsSearch" aria-label="Clear settings search" hidden>×</button>
+      </div>
+      <p class="settings-search-hint" id="settingsSearchHint">Search by setting name or description. Matching options will appear below.</p>
+      <div id="settingsSearchResults" class="settings-search-results" role="region" aria-live="polite" aria-label="Matching settings" hidden></div>
+    </section>
+
     <!-- Profile -->
     <section class="settings-profile-card">
       <a href="profile.html" class="settings-profile-link">
