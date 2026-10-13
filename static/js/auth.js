@@ -1,7 +1,7 @@
 (function () {
   "use strict";
   if (!window.ZakiChatAuth?.client || !window.ZakiChatConfig) {
-    console.error("ZakiChat authentication could not start.");
+    console.error("Zamivox authentication could not start.");
     return;
   }
   const page = location.pathname.toLowerCase();
@@ -67,7 +67,7 @@
               session.user.user_metadata?.full_name ||
               session.user.email ||
               session.user.phone ||
-              "ZakiChat user"
+              "Zamivox user"
           });
         } catch (registryError) {
           console.warn("Could not refresh saved-account details:", registryError);
@@ -95,7 +95,7 @@
       if (error) {
         const raw = String(error.message || "");
         if (/email not confirmed/i.test(raw)) {
-          throw new Error("Please verify your email address first. Open the confirmation email sent when you registered. If it never arrived, email delivery still needs to be configured by ZakiChat support.");
+          throw new Error("Please verify your email address first. Open the confirmation email sent when you registered. If it never arrived, email delivery still needs to be configured by Zamivox support.");
         }
         if (/invalid login credentials/i.test(raw)) {
           throw new Error("The email or password is incorrect. Check your details or use Reset password.");
@@ -114,12 +114,12 @@
             data.user.user_metadata?.display_name ||
             data.user.user_metadata?.full_name ||
             data.user.email ||
-            "ZakiChat user"
+            "Zamivox user"
         });
       } catch (registryError) {
         console.warn("Could not refresh saved-account details:", registryError);
       }
-      message(status, "Signed in successfully. Opening ZakiChat…", "success");
+      message(status, "Signed in successfully. Opening Zamivox…", "success");
       setTimeout(chats, 250);
     } catch (e) {
       message(status, e.message || "Unable to sign in. Check your email and password.", "error");
@@ -220,12 +220,12 @@
         }
         if (data.session && data.user?.email_confirmed_at) {
           await window.ZakiChatAccounts?.registerCurrentSession(client, { email: state.email, displayName: state.fullName, phone: state.phone });
-          message(status, "Your account is verified. Opening ZakiChat…", "success");
+          message(status, "Your account is verified. Opening Zamivox…", "success");
           setTimeout(chats, 350);
           return;
         }
         verificationSent = true;
-        message(status, "Your account details have been submitted. We sent a verification link to " + state.email + ". Open that email and tap Verify My Account, then return to ZakiChat. Your account will open after verification.", "success");
+        message(status, "Your account details have been submitted. We sent a verification link to " + state.email + ". Open that email and tap Verify My Account, then return to Zamivox. Your account will open after verification.", "success");
         button.disabled = true;
         button.textContent = "Verification Email Sent";
       } catch (e) {
@@ -237,7 +237,7 @@
         if (timedOut) {
           message(
             status,
-            "ZakiChat did not receive a complete response from the authentication service. Your account may already have been created, so we kept your registration details. Check your email for a verification link before trying again. If no email arrives, try signing in or use Reset password; do not repeatedly create accounts.",
+            "Zamivox did not receive a complete response from the authentication service. Your account may already have been created, so we kept your registration details. Check your email for a verification link before trying again. If no email arrives, try signing in or use Reset password; do not repeatedly create accounts.",
             "error"
           );
         } else {
@@ -300,7 +300,7 @@
       try {
         const { error } = await client.auth.updateUser({ password });
         if (error) throw error;
-        message(status, "Password updated successfully. You can now open ZakiChat.", "success");
+        message(status, "Password updated successfully. You can now open Zamivox.", "success");
         setTimeout(chats, 700);
       } catch (e) { message(status, e.message || "Could not update the password.", "error"); }
       finally { loading(button, false, "Save New Password"); }
