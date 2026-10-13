@@ -1,7 +1,7 @@
 {
-  "name": "ZamiVox",
-  "short_name": "ZamiVox",
-  "description": "Connect and converse instantly with Zamivox.",
+  "name": "Molan Chat",
+  "short_name": "Molan Chat",
+  "description": "Connect and converse instantly with Molan Chat.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
