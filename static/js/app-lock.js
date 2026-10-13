@@ -27,7 +27,7 @@
     if (!button) return;
     const locked = isLocked();
     button.textContent = locked ? ICON_LOCKED : ICON_OPEN;
-    button.setAttribute("aria-label", locked ? "Unlock Zamivox" : "Lock Zamivox");
+    button.setAttribute("aria-label", locked ? "Unlock Molan Chat" : "Lock Molan Chat");
     button.title = locked ? "Unlock app" : "Lock app";
     button.setAttribute("aria-pressed", locked ? "true" : "false");
   }
@@ -41,7 +41,7 @@
     overlay.innerHTML = `
       <div class="zaki-lock-card" role="dialog" aria-modal="true" aria-labelledby="zaki-lock-title">
         <div class="zaki-lock-mark" aria-hidden="true">🔒</div>
-        <h1 id="zaki-lock-title">Zamivox is locked</h1>
+        <h1 id="zaki-lock-title">Molan Chat is locked</h1>
         <p id="zaki-lock-message">Enter your app passcode to continue.</p>
         <form id="zaki-lock-form" autocomplete="off">
           <label for="zaki-lock-passcode">Passcode</label>
@@ -89,7 +89,7 @@
     setTimeout(() => overlay.querySelector("#zaki-lock-passcode")?.focus(), 80);
   }
   async function showSetup() {
-    const first = prompt("Create a 4–12 digit Zamivox app passcode. Keep it private.");
+    const first = prompt("Create a 4–12 digit Molan Chat app passcode. Keep it private.");
     if (first === null) return;
     if (!/^\d{4,12}$/.test(first)) { alert("Choose a passcode containing 4–12 digits."); return; }
     const second = prompt("Enter the same passcode again to confirm.");
@@ -99,7 +99,7 @@
       const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
       const hash = await hashPasscode(first, salt);
       localStorage.setItem(PASS_KEY, JSON.stringify({salt, hash, version:1}));
-      alert("App passcode created. Tap the lock icon any time to lock Zamivox.");
+      alert("App passcode created. Tap the lock icon any time to lock Molan Chat.");
       syncButton();
     } catch (e) { alert(e.message || "Unable to set up app lock."); }
   }
