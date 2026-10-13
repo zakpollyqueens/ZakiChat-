@@ -243,11 +243,16 @@ public class MainActivity extends Activity {
             else if ("metal".equals(iconStyle)) selected = aliases[3];
             else return;
             android.content.pm.PackageManager pm = getPackageManager();
+            // Enable the new launcher entry first so the device never briefly has no launcher icon.
+            pm.setComponentEnabledSetting(
+                new android.content.ComponentName(MainActivity.this, selected),
+                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                android.content.pm.PackageManager.DONT_KILL_APP);
             for (String alias : aliases) {
-                int state = alias.equals(selected)
-                    ? android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                    : android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-                pm.setComponentEnabledSetting(new android.content.ComponentName(MainActivity.this, alias), state,
+                if (alias.equals(selected)) continue;
+                pm.setComponentEnabledSetting(
+                    new android.content.ComponentName(MainActivity.this, alias),
+                    android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     android.content.pm.PackageManager.DONT_KILL_APP);
             }
             getSharedPreferences("zamivox_app", MODE_PRIVATE).edit().putString("launcher_icon", iconStyle).apply();
