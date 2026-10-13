@@ -59,7 +59,7 @@
       "settings.title": "Settings",
       "settings.language": "App language",
       "settings.languageDescription":
-        "Choose the language you want Zamivox to use.",
+        "Choose the language you want Molan Chat to use.",
       "language.title": "App language",
       "language.description":
         "Select your preferred language for Zamivox.",
@@ -98,7 +98,7 @@
       "settings.title": "Ajustes",
       "settings.language": "Idioma de la aplicación",
       "settings.languageDescription":
-        "Elige el idioma que Zamivox debe utilizar.",
+        "Elige el idioma que Molan Chat debe utilizar.",
       "language.title": "Idioma de la aplicación",
       "language.description":
         "Selecciona tu idioma preferido para Zamivox.",
@@ -117,10 +117,10 @@
       "settings.title": "Ayarlar",
       "settings.language": "Uygulama dili",
       "settings.languageDescription":
-        "Zamivox'in kullanacağı dili seçin.",
+        "Molan Chat'in kullanacağı dili seçin.",
       "language.title": "Uygulama dili",
       "language.description":
-        "Zamivox için tercih ettiğiniz dili seçin.",
+        "Molan Chat için tercih ettiğiniz dili seçin.",
       "language.search": "Dil ara",
       "language.detected": "Cihazınızdan algılandı",
       "language.selected": "Seçildi",
@@ -136,7 +136,7 @@
       "settings.title": "Mipangilio",
       "settings.language": "Lugha ya programu",
       "settings.languageDescription":
-        "Chagua lugha ambayo Zamivox itatumia.",
+        "Chagua lugha ambayo Molan Chat itatumia.",
       "language.title": "Lugha ya programu",
       "language.description":
         "Chagua lugha unayopendelea kutumia Zamivox.",
@@ -155,7 +155,7 @@
       "settings.title": "Enteekateeka",
       "settings.language": "Olulimi lwa pulogulaamu",
       "settings.languageDescription":
-        "Londa olulimi lw'oyagala Zamivox okukozesa.",
+        "Londa olulimi lw'oyagala Molan Chat okukozesa.",
       "language.title": "Olulimi lwa pulogulaamu",
       "language.description":
         "Londa olulimi lw'oyagala okukozesa Zamivox.",
@@ -193,7 +193,7 @@
       "settings.title": "Definições",
       "settings.language": "Idioma da aplicação",
       "settings.languageDescription":
-        "Escolha o idioma que o Zamivox deve utilizar.",
+        "Escolha o idioma que o Molan Chat deve utilizar.",
       "language.title": "Idioma da aplicação",
       "language.description":
         "Selecione o seu idioma preferido para o Zamivox.",
@@ -231,10 +231,10 @@
       "settings.title": "सेटिंग्स",
       "settings.language": "ऐप की भाषा",
       "settings.languageDescription":
-        "Zamivox में उपयोग की जाने वाली भाषा चुनें।",
+        "Molan Chat में उपयोग की जाने वाली भाषा चुनें।",
       "language.title": "ऐप की भाषा",
       "language.description":
-        "Zamivox के लिए अपनी पसंदीदा भाषा चुनें।",
+        "Molan Chat के लिए अपनी पसंदीदा भाषा चुनें।",
       "language.search": "भाषाएँ खोजें",
       "language.detected": "आपके डिवाइस से पहचानी गई",
       "language.selected": "चयनित",
@@ -250,10 +250,10 @@
       "settings.title": "设置",
       "settings.language": "应用语言",
       "settings.languageDescription":
-        "选择 Zamivox 使用的语言。",
+        "选择 Molan Chat 使用的语言。",
       "language.title": "应用语言",
       "language.description":
-        "选择你在 Zamivox 中偏好的语言。",
+        "选择你在 Molan Chat 中偏好的语言。",
       "language.search": "搜索语言",
       "language.detected": "根据你的设备检测",
       "language.selected": "已选择",
@@ -269,10 +269,10 @@
       "settings.title": "設定",
       "settings.language": "アプリの言語",
       "settings.languageDescription":
-        "Zamivoxで使用する言語を選択してください。",
+        "Molan Chatで使用する言語を選択してください。",
       "language.title": "アプリの言語",
       "language.description":
-        "Zamivoxで使用する言語を選択してください。",
+        "Molan Chatで使用する言語を選択してください。",
       "language.search": "言語を検索",
       "language.detected": "端末から検出",
       "language.selected": "選択済み",
@@ -288,10 +288,10 @@
       "settings.title": "설정",
       "settings.language": "앱 언어",
       "settings.languageDescription":
-        "Zamivox에서 사용할 언어를 선택하세요.",
+        "Molan Chat에서 사용할 언어를 선택하세요.",
       "language.title": "앱 언어",
       "language.description":
-        "Zamivox에서 사용할 언어를 선택하세요.",
+        "Molan Chat에서 사용할 언어를 선택하세요.",
       "language.search": "언어 검색",
       "language.detected": "기기에서 감지됨",
       "language.selected": "선택됨",
