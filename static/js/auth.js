@@ -8,9 +8,13 @@
   const isLogin = page.endsWith("/login.html");
   const isSignup = page.endsWith("/signup.html");
   const addAccountMode = new URLSearchParams(location.search).get("addAccount") === "1";
-  const pendingAddStorageKey = localStorage.getItem("zakichat_pending_add_account_storage_key");
+  let pendingAddStorageKey = localStorage.getItem("zakichat_pending_add_account_storage_key");
   // Add-account signup/sign-in must use a separate Supabase storage slot so the
   // existing account remains signed in and can be switched back to later.
+  if (addAccountMode && !pendingAddStorageKey) {
+    pendingAddStorageKey = window.ZakiChatAccounts?.createStorageKey?.() || null;
+    if (pendingAddStorageKey) localStorage.setItem("zakichat_pending_add_account_storage_key", pendingAddStorageKey);
+  }
   const client = addAccountMode && pendingAddStorageKey
     ? window.ZakiChatAccounts.createClient(pendingAddStorageKey)
     : window.ZakiChatAuth.client;
@@ -118,6 +122,10 @@
         });
       } catch (registryError) {
         console.warn("Could not refresh saved-account details:", registryError);
+      }
+      if (addAccountMode && pendingAddStorageKey) {
+        window.ZakiChatAccounts?.setActiveStorageKey(pendingAddStorageKey);
+        localStorage.removeItem("zakichat_pending_add_account_storage_key");
       }
       message(status, "Signed in successfully. Opening Molan Chat…", "success");
       setTimeout(chats, 250);
