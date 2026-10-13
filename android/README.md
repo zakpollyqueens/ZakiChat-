@@ -15,7 +15,7 @@ This module packages the existing Molan Chat web application inside an Android W
 The existing Android application ID and local WebView origin are intentionally retained in this first branding pass so current installations, deep links, and sign-in/session storage are not disrupted. A package-ID migration requires a separately planned release.
 
 ## Build
-The workflow `.github/workflows/build-android-apk.yml` copies the website into Android assets, builds the Android APKs, and publishes direct APK assets on the `zc-vr15-android` GitHub Release.
+The workflow `.github/workflows/build-android-apk.yml` copies the website into Android assets, builds the Android APKs, and publishes direct APK assets on versioned GitHub Releases such as `zc-vr18-android-build-<run-number>`. The workflow reads the version from `android/app/build.gradle` so release tags and titles follow the configured app version.
 
 For local builds, install JDK 17, Android SDK Platform 35, Build Tools 35.0.0, and Gradle 8.9. From the repository root, copy the website into `android/app/src/main/assets/` while excluding `.git`, `.github`, `android`, and `supabase`, then run:
 
