@@ -1,11 +1,11 @@
 "use strict";
 
-const CACHE_NAME = "zamivox-shell-v5";
+const CACHE_NAME = "zamivox-shell-v5-molan-brand-refresh";
 const CORE_ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/static/images/zamivox-icon.svg",
+  "/static/images/molan-chat-icon.svg",
   "/pages/chats.html",
   "/pages/chat.html",
   "/pages/settings.html",
@@ -108,8 +108,8 @@ self.addEventListener("push", event => {
   const title = data.title || "Molan Chat";
   const options = {
     body: data.body || "You have a new notification.",
-    icon: "/static/images/zamivox-icon.svg",
-    badge: "/static/images/zamivox-icon.svg",
+    icon: "/static/images/molan-chat-icon.svg",
+    badge: "/static/images/molan-chat-icon.svg",
     tag: data.notificationId ? `zakichat-${data.notificationId}` : "zakichat-notification",
     renotify: true,
     actions: [{ action: "reply", title: "Reply" }, { action: "open", title: "Open" }],
