@@ -51,6 +51,20 @@ async function verifySuperAdmin(token: string) {
   return { userId: admin.user_id as string, role: admin.role as string };
 }
 
+async function verifyAdmin(token: string) {
+  if (!token) return null;
+  const { data: userId, error: sessionError } = await db.rpc("admin_session_user", { p_token: token });
+  if (sessionError || !userId) return null;
+  const { data: admin, error } = await db
+    .from("admin_users")
+    .select("user_id, role, active")
+    .eq("user_id", userId)
+    .eq("active", true)
+    .maybeSingle();
+  if (error || !admin || !["admin", "super_admin"].includes(admin.role)) return null;
+  return { userId: admin.user_id as string, role: admin.role as string };
+}
+
 async function audit(adminId: string, action: string, targetType: string, targetId: string, details: Record<string, unknown>) {
   const { error } = await db.from("admin_audit_logs").insert({
     admin_user_id: adminId,
@@ -111,8 +125,17 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, notices: data || [] });
     }
 
-    const admin = await verifySuperAdmin(clean(body.adminSessionToken, 500));
-    if (!admin) return json({ success: false, error: "An active super-administrator session is required." }, 403);
+    // The Updates editor explicitly supports both admin roles in its UI.
+    // Keep privileged account, billing, and directory operations super-admin-only.
+    const admin = action === "admin-notice-save"
+      ? await verifyAdmin(clean(body.adminSessionToken, 500))
+      : await verifySuperAdmin(clean(body.adminSessionToken, 500));
+    if (!admin) {
+      const message = action === "admin-notice-save"
+        ? "An active administrator session is required."
+        : "An active super-administrator session is required.";
+      return json({ success: false, error: message }, 403);
+    }
 
     if (action === "admin-customized-account-list") {
       const search = clean(body.search, 120).toLowerCase();
