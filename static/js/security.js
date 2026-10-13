@@ -42,7 +42,7 @@
         };
       } catch (error) {
         console.error(
-          "ZakiChat App Lock config read failed:",
+          "Zamivox App Lock config read failed:",
           error
         );
 
@@ -196,7 +196,7 @@
     async enable(method, secret) {
       if (!this.userId) {
         throw new Error(
-          "No authenticated ZakiChat account is active."
+          "No authenticated Zamivox account is active."
         );
       }
 
@@ -452,7 +452,7 @@
 
       if (error) {
         console.error(
-          "ZakiChat Security session check failed:",
+          "Zamivox Security session check failed:",
           error
         );
 
@@ -479,7 +479,7 @@
     () => {
       Security.init().catch(error => {
         console.error(
-          "ZakiChat Security:",
+          "Zamivox Security:",
           error
         );
       });
