@@ -98,6 +98,7 @@
           return;
         }
         setLocked(false);
+        try { window.ZakiChatNative?.clearAppLockRequired?.(); } catch (_) {}
         overlay.hidden = true;
         document.body.classList.remove("zaki-app-is-locked");
         syncButton();
@@ -138,7 +139,17 @@
     showLocked();
   }
   function init() {
-    try { if (window.ZakiChatNative?.isAppLockRequired?.()) setLocked(true); } catch (_) {}
+    try {
+      if (window.ZakiChatNative && getPass()) {
+        if (!window.ZakiChatNative.isAppLockEnabled?.()) {
+          window.ZakiChatNative.setAppLockEnabled?.(true);
+          window.ZakiChatNative.requireAppLock?.();
+        }
+        if (window.ZakiChatNative.isAppLockRequired?.()) setLocked(true);
+      } else if (window.ZakiChatNative?.isAppLockRequired?.()) {
+        setLocked(true);
+      }
+    } catch (_) {}
     ensureOverlay();
     iconButton()?.addEventListener("click", toggleLock);
     syncButton();
