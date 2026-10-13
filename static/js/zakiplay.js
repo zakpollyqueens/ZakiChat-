@@ -16,7 +16,7 @@ async function checkAccess(){
   showContent();
  }catch(error){
   console.error("ZakiPlay account check failed:",error);
-  gate.innerHTML="<strong>We couldn't connect to ZakiChat. Check your connection and try again.</strong><button class='zplay-button' id='zplayRetry' type='button'>Try again</button>";
+  gate.innerHTML="<strong>We couldn't connect to Zamivox. Check your connection and try again.</strong><button class='zplay-button' id='zplayRetry' type='button'>Try again</button>";
   $("zplayRetry")?.addEventListener("click",()=>{gate.innerHTML="<div class='zplay-loader'></div><strong>Opening ZakiPlay…</strong>";checkAccess()});
  }
 }
@@ -64,7 +64,7 @@ function handleFile(file,type){
  if(activeObjectUrl)URL.revokeObjectURL(activeObjectUrl);
  activeObjectUrl=URL.createObjectURL(file);activeUrl=activeObjectUrl;activeFileName=file.name;
  useMedia(activeObjectUrl,file.name,type);
- $("zplayDownloadNote").textContent="Selected files stay on this device; ZakiChat does not upload them.";
+ $("zplayDownloadNote").textContent="Selected files stay on this device; Zamivox does not upload them.";
 }
 $("zplayAudioFile").addEventListener("change",e=>handleFile(e.target.files&&e.target.files[0],"audio"));
 $("zplayVideoFile").addEventListener("change",e=>handleFile(e.target.files&&e.target.files[0],"video"));
