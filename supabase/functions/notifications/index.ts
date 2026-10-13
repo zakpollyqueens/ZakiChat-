@@ -14,6 +14,14 @@ const vapidPrivateKey = Deno.env.get(
 const vapidSubject = Deno.env.get(
   "VAPID_SUBJECT"
 );
+const webhookSecret = Deno.env.get("NOTIFICATIONS_WEBHOOK_SECRET") || "";
+
+function constantTimeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
 
 if (
   !supabaseUrl ||
@@ -75,6 +83,17 @@ const handler = async (
         status: 405
       }
     );
+  }
+
+  if (!webhookSecret) {
+    return Response.json(
+      { error: "Notification webhook authentication is not configured." },
+      { status: 503 }
+    );
+  }
+  const suppliedSecret = request.headers.get("x-zamivox-webhook-secret") || "";
+  if (!constantTimeEqual(suppliedSecret, webhookSecret)) {
+    return Response.json({ error: "Unauthorized webhook request." }, { status: 401 });
   }
 
   try {
