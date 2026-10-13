@@ -21,7 +21,7 @@
     const detail = business
       ? "Your Business plan is active. Set up your business brand, invite your team and start assigning tasks."
       : "Your Personal plan is active. Explore your new fonts, themes, keyboard styles and expanded chat customization.";
-    overlay.innerHTML = "<div class='zaki-upgrade-card'><div class='zaki-upgrade-confetti' aria-hidden='true'></div><div class='zaki-upgrade-loading'><div class='zaki-upgrade-spinner'></div><span class='zaki-upgrade-kicker'>SETTING THINGS UP</span><h2>Preparing your " + title + " experience…</h2><p>Checking your account features and personalizing your Zamivox.</p></div><div class='zaki-upgrade-finished' hidden><div class='zaki-upgrade-success' aria-hidden='true'>✓</div><span class='zaki-upgrade-kicker'>UPGRADE CONFIRMED</span><h2 id='zakiUpgradeTitle'>Congratulations!</h2><p>" + detail + "</p><div class='zaki-upgrade-actions'><a class='zaki-upgrade-primary' href='" + destination + "'>" + (business ? "Set Up Business Workspace" : "Personalize My Account") + "</a><button type='button' class='zaki-upgrade-secondary' data-close-upgrade>Continue to Zamivox</button></div></div></div>";
+    overlay.innerHTML = "<div class='zaki-upgrade-card'><div class='zaki-upgrade-confetti' aria-hidden='true'></div><div class='zaki-upgrade-loading'><div class='zaki-upgrade-spinner'></div><span class='zaki-upgrade-kicker'>SETTING THINGS UP</span><h2>Preparing your " + title + " experience…</h2><p>Checking your account features and personalizing your Molan Chat.</p></div><div class='zaki-upgrade-finished' hidden><div class='zaki-upgrade-success' aria-hidden='true'>✓</div><span class='zaki-upgrade-kicker'>UPGRADE CONFIRMED</span><h2 id='zakiUpgradeTitle'>Congratulations!</h2><p>" + detail + "</p><div class='zaki-upgrade-actions'><a class='zaki-upgrade-primary' href='" + destination + "'>" + (business ? "Set Up Business Workspace" : "Personalize My Account") + "</a><button type='button' class='zaki-upgrade-secondary' data-close-upgrade>Continue to Molan Chat</button></div></div></div>";
     document.body.appendChild(overlay);
     const confetti = overlay.querySelector(".zaki-upgrade-confetti");
     const colors = ["#27d3a2","#18aef0","#facc15","#fb7185","#a78bfa","#ffffff"];
@@ -63,7 +63,7 @@
       addStyles();
       showCelebration(data.plan,user.id);
     } catch(error) {
-      console.warn("Could not check for a newly activated Zamivox upgrade.",error);
+      console.warn("Could not check for a newly activated Molan Chat upgrade.",error);
     }
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
