@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07111f">
-  <title>Business Workspace | ZakiChat</title>
+  <title>Business Workspace | Zamivox</title>
   <link rel="stylesheet" href="../static/css/main.css">
   <link rel="stylesheet" href="../static/css/business.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
@@ -13,13 +13,13 @@
   <main class="business-shell">
     <header class="business-header">
       <a href="settings.html" class="business-back">← Settings</a>
-      <div><span class="business-eyebrow">ZAKICHAT BUSINESS</span><h1>Business workspace</h1><p>Manage your brand, people and work in one place.</p></div>
+      <div><span class="business-eyebrow">ZAMIVOX BUSINESS</span><h1>Business workspace</h1><p>Manage your brand, people and work in one place.</p></div>
       <a href="chats.html" class="business-open-chat">Open chats ↗</a>
     </header>
     <div id="businessNotice" class="business-notice" role="status" aria-live="polite"></div>
     <section id="businessLocked" class="business-panel" hidden>
       <div class="business-lock-icon">🏢</div><span class="business-eyebrow">BUSINESS PLAN</span>
-      <h2>Turn ZakiChat into your team workspace</h2>
+      <h2>Turn Zamivox into your team workspace</h2>
       <p>Customized Business includes a business profile, team invitations, role-based access and task assignments. A verified active Business subscription is required to create and manage a workspace.</p>
       <a class="business-primary" href="about.html?upgrade=business_monthly#paid-upgrades">Explore Customized Business · $10/month</a>
       <p class="business-muted">Payment checkout is not yet configured. This page will not activate a paid plan or charge you until a payment provider is connected and verified.</p><p><a href="login.html">Already have an account? Sign in</a></p>
@@ -35,7 +35,7 @@
         <label>Business title / industry<input id="businessTitle" maxlength="120" placeholder="e.g. Technology and Communications"></label>
         <label>Business email<input id="businessEmail" type="email" required maxlength="254" placeholder="business@example.com"></label>
         <label>About the business<textarea id="businessDescription" rows="3" maxlength="1200" placeholder="What does your business do?"></textarea></label>
-        <label class="business-check-row"><input id="createBusinessIdentity" type="checkbox" checked><span><strong>Use this as my public ZakiChat identity</strong><small>Chats will show the business name and logo instead of your personal display name.</small></span></label>
+        <label class="business-check-row"><input id="createBusinessIdentity" type="checkbox" checked><span><strong>Use this as my public Zamivox identity</strong><small>Chats will show the business name and logo instead of your personal display name.</small></span></label>
         <label>Business logo<input id="businessLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small>PNG, JPG, WEBP or SVG · maximum 5 MB</small></label>
         <button class="business-primary" type="submit">Create Business Workspace</button>
       </form>
@@ -53,13 +53,13 @@
           <label>Business title / industry<input id="editBusinessTitle" maxlength="120"></label>
           <label>Business email<input id="editBusinessEmail" type="email" required maxlength="254"></label>
           <label>About the business<textarea id="editBusinessDescription" rows="3" maxlength="1200"></textarea></label>
-          <label class="business-check-row"><input id="editBusinessIdentity" type="checkbox"><span><strong>Use this as my public ZakiChat identity</strong><small>When enabled, your public profile shows the business name/logo. Turning it off restores your saved personal profile.</small></span></label>
+          <label class="business-check-row"><input id="editBusinessIdentity" type="checkbox"><span><strong>Use this as my public Zamivox identity</strong><small>When enabled, your public profile shows the business name/logo. Turning it off restores your saved personal profile.</small></span></label>
           <label>Replace logo<input id="editBusinessLogo" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"><small>Optional · maximum 5 MB</small></label>
           <button class="business-primary" type="submit">Save Business Profile</button>
         </form>
       </section>
       <section class="business-panel">
-        <div class="business-section-heading"><div><span class="business-eyebrow">PEOPLE</span><h2>Staff and roles</h2><p>Invite a staff member using their ZakiChat phone number in international format.</p></div></div>
+        <div class="business-section-heading"><div><span class="business-eyebrow">PEOPLE</span><h2>Staff and roles</h2><p>Invite a staff member using their Zamivox phone number in international format.</p></div></div>
         <form id="businessInviteForm" class="business-form business-inline-form">
           <label>Staff phone number<input id="staffPhone" type="tel" placeholder="+2567XXXXXXXX" required></label>
           <label>Staff name<input id="staffName" maxlength="100" placeholder="Staff member name"></label>
@@ -85,7 +85,7 @@
         <div id="businessTaskList" class="business-list"></div>
       </section>
     </section>
-    <footer class="business-footer">ZakiChat Business · Team access follows workspace roles and active subscription permissions.</footer>
+    <footer class="business-footer">Zamivox Business · Team access follows workspace roles and active subscription permissions.</footer>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../static/js/config.js"></script>
