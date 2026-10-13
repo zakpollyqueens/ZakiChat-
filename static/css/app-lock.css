@@ -17,3 +17,5 @@
 body.zaki-app-is-locked{overflow:hidden!important}
 @media(max-width:480px){.zaki-lock-card{padding:26px 19px;border-radius:22px}.zaki-app-lock-button{width:36px;height:36px;min-width:36px}}
 @media(prefers-reduced-motion:reduce){.zaki-app-lock-button{transition:none}}
+.zaki-lock-card .zaki-lock-biometric{margin-top:12px;background:linear-gradient(120deg,rgba(15,154,125,.22),rgba(0,185,239,.13));border:1px solid rgba(126,244,209,.42);color:#c9fff1;box-shadow:inset 0 1px rgba(255,255,255,.1)}
+.zaki-lock-card .zaki-lock-biometric[hidden]{display:none!important}
