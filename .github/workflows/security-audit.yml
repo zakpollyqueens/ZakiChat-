@@ -1,4 +1,4 @@
-name: Zamivox Static Security Audit
+name: Molan Chat Static Security Audit
 
 on:
   push:
