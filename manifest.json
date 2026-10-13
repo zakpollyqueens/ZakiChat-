@@ -9,7 +9,7 @@
   "theme_color": "#07111f",
   "icons": [
     {
-      "src": "static/images/zamivox-icon.svg",
+      "src": "static/images/molan-chat-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
