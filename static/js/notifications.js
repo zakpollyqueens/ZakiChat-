@@ -17,7 +17,7 @@
 
       if (!this.db) {
         console.error(
-          "ZakiChat Notifications: centralized Supabase client unavailable."
+          "Zamivox Notifications: centralized Supabase client unavailable."
         );
         return;
       }
@@ -206,7 +206,7 @@
 
       if (error) {
         console.error(
-          "ZakiChat chat notification update:",
+          "Zamivox chat notification update:",
           error
         );
 
@@ -279,7 +279,7 @@
 
       if (error) {
         console.error(
-          "ZakiChat notifications load:",
+          "Zamivox notifications load:",
           error
         );
 
@@ -431,7 +431,7 @@
 
       if (error) {
         console.error(
-          "ZakiChat notifications mark read:",
+          "Zamivox notifications mark read:",
           error
         );
 
