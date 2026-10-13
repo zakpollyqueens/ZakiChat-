@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap URL will be added once the production website's canonical domain is confirmed.
+Sitemap: https://zakpollyqueens.github.io/ZakiChat-/sitemap.xml
