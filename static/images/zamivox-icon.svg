@@ -22,7 +22,7 @@
   <path d="M164 183h184v29L224 289h124v29H164v-29l124-77H164z" fill="url(#mark)"/>
   <path d="M170 179h177" stroke="#ffffff" stroke-opacity=".72" stroke-width="4" stroke-linecap="round"/>
   <rect x="52" y="390" width="408" height="57" rx="25" fill="#003b27" fill-opacity=".78" stroke="#adffd0" stroke-opacity=".5" stroke-width="2"/>
-  <text x="256" y="429" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="39" font-weight="800" letter-spacing="-1.1" fill="#ffffff">Zami<tspan fill="#8dffc0">Vox</tspan></text>
+  <text x="256" y="429" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="800" letter-spacing="-.6" fill="#ffffff">Molan <tspan fill="#8dffc0">Chat</tspan></text>
   <path d="M68 82h44M68 94h25M444 82h-34M444 94h-19" stroke="#e5fff0" stroke-opacity=".65" stroke-width="4" stroke-linecap="round"/>
   <circle class="pulse" cx="414" cy="118" r="8" fill="#ffffff"/><circle cx="414" cy="118" r="15" fill="#ffffff" opacity=".17"/>
   <rect x="24" y="20" width="464" height="464" rx="120" fill="url(#glass)"/>
