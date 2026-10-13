@@ -18,7 +18,7 @@
       try {
         if (!window.supabase || !window.ZakiChatConfig) {
           throw new Error(
-            'Zamivox configuration is unavailable.'
+            'Molan Chat configuration is unavailable.'
           );
         }
 
@@ -250,7 +250,7 @@
       const name =
         profile.full_name ||
         profile.username ||
-        'Zamivox User';
+        'Molan Chat User';
 
       const initials =
         this.getInitials(name);
@@ -862,7 +862,7 @@
         if (!rows.length) { const empty = document.createElement('p'); empty.textContent = 'No views yet.'; panel.append(empty); return; }
         const ids = [...new Set(rows.map(row => row.viewer_id))]; const { data: profiles, error: profileError } = await this.db.from('profiles').select('id,username,full_name,avatar_url').in('id', ids); if (profileError) throw profileError;
         const map = new Map((profiles || []).map(profile => [profile.id, profile]));
-        rows.forEach(row => { const p = map.get(row.viewer_id); const line = document.createElement('div'); line.className = 'status-viewer-row'; line.textContent = (p?.full_name || p?.username || 'Zamivox user') + ' · ' + this.formatDate(row.viewed_at); panel.append(line); });
+        rows.forEach(row => { const p = map.get(row.viewer_id); const line = document.createElement('div'); line.className = 'status-viewer-row'; line.textContent = (p?.full_name || p?.username || 'Molan Chat user') + ' · ' + this.formatDate(row.viewed_at); panel.append(line); });
       } catch (error) { console.error('Unable to load status viewers:', error); panel.textContent = 'Could not load viewers: ' + (error.message || 'Please try again.'); }
     },
 
@@ -1790,13 +1790,13 @@ getDirectionLabel(
 
     getProfileName(profile) {
       if (!profile) {
-        return 'Zamivox user';
+        return 'Molan Chat user';
       }
 
       return (
         profile.full_name ||
         profile.username ||
-        'Zamivox user'
+        'Molan Chat user'
       );
     },
 
@@ -2011,7 +2011,7 @@ showComposerError(message) {
   let otaBusy = false;
   const fallbackLatestRelease = {
     version: 'Latest Android release',
-    description: 'Compatible Zamivox features and fixes can be installed directly inside the app. Native Android changes may still require an APK update.',
+    description: 'Compatible Molan Chat features and fixes can be installed directly inside the app. Native Android changes may still require an APK update.',
     channel: 'Stable',
     releaseDate: null,
     downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk'
@@ -2023,13 +2023,13 @@ showComposerError(message) {
   }
   async function fetchLatestOta() {
     const response = await fetch(OTA_RELEASE_API, { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' });
-    if (!response.ok) throw new Error('Could not check for Zamivox updates.');
+    if (!response.ok) throw new Error('Could not check for Molan Chat updates.');
     const release = await response.json();
     const body = String(release.body || '');
     const versionMatch = body.match(/^OTA_VERSION=([A-Za-z0-9._-]{1,100})$/m);
     const hashMatch = body.match(/^OTA_SHA256=([a-fA-F0-9]{64})$/m);
     if (!versionMatch || !hashMatch) throw new Error('The latest release does not contain a valid in-app update package yet.');
-    latestOta = { version: versionMatch[1], sha256: hashMatch[1].toLowerCase(), releaseDate: release.published_at || null, releaseName: release.name || 'Zamivox update' };
+    latestOta = { version: versionMatch[1], sha256: hashMatch[1].toLowerCase(), releaseDate: release.published_at || null, releaseName: release.name || 'Molan Chat update' };
     return latestOta;
   }
   function setOtaButtonState(text, disabled) {
@@ -2229,7 +2229,7 @@ showComposerError(message) {
 
             <h4>
               ${escapeReleaseHtml(
-                upgrade.title || upgrade.version || 'Zamivox Upgrade'
+                upgrade.title || upgrade.version || 'Molan Chat Upgrade'
               )}
             </h4>
 
@@ -2344,7 +2344,7 @@ showComposerError(message) {
 
 /*
  * ============================================================
- * ZAMIVOX SHOWCASE
+ * Molan Chat SHOWCASE
  * ============================================================
  *
  * Published showcase content comes from:
@@ -2430,7 +2430,7 @@ showComposerError(message) {
     const cards = source.map(function (item) {
       const title =
         escapeHtml(
-          item.title || 'Zamivox Feature'
+          item.title || 'Molan Chat Feature'
         );
 
       const description =
@@ -3292,7 +3292,7 @@ showComposerError(message) {
 })();
 
 /* ============================================================
-   ZAMIVOX AURORA STATUS COMPOSER
+   Molan Chat AURORA STATUS COMPOSER
    ============================================================ */
 
 (function () {
