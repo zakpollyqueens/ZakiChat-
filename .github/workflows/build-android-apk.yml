@@ -1,4 +1,4 @@
-name: Build ZakiChat Android APK
+name: Build Zamivox Android APK
 
 on:
   push:
