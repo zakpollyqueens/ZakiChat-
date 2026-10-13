@@ -1,0 +1,35 @@
+/* Molan Chat glass-ambient visual layer. Kept lightweight and motion-accessible. */
+html:has(body.glass-ambient-page){background:#06101f!important}
+body.glass-ambient-page{position:relative;isolation:isolate;background:transparent!important;min-height:100vh}
+body.glass-ambient-page:before{content:"";position:fixed;inset:-22%;z-index:-1;pointer-events:none;opacity:.82;background:radial-gradient(ellipse at 14% 18%,rgba(0,190,239,.19),transparent 35%),radial-gradient(ellipse at 84% 24%,rgba(111,91,255,.17),transparent 34%),radial-gradient(ellipse at 54% 87%,rgba(13,178,139,.16),transparent 38%),linear-gradient(135deg,#06101f 5%,#091a2b 52%,#071426 100%);background-size:130% 130%;animation:molanGlassDrift 28s ease-in-out infinite alternate}
+body.glass-ambient-page:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.12;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0,rgba(255,255,255,.05) 1px,transparent 1px,transparent 4px);mask-image:linear-gradient(to bottom,transparent,black 20%,black 80%,transparent)}
+@keyframes molanGlassDrift{0%{transform:translate3d(-1.4%,0,0) scale(1);background-position:0% 20%}50%{transform:translate3d(1%,1.2%,0) scale(1.035);background-position:70% 65%}100%{transform:translate3d(0,-1%,0) scale(1.015);background-position:100% 35%}}
+body.glass-ambient-page .auth-card,
+body.glass-ambient-page .settings-section,
+body.glass-ambient-page .settings-card,
+body.glass-ambient-page .settings-panel,
+body.glass-ambient-page .profile-card,
+body.glass-ambient-page .channels-main,
+body.glass-ambient-page .channel-card,
+body.glass-ambient-page .status-section,
+body.glass-ambient-page .status-card,
+body.glass-ambient-page .company-product-feed,
+body.glass-ambient-page .company-feed-card,
+body.glass-ambient-page .daily-inspiration,
+body.glass-ambient-page .tg-chat-item,
+body.glass-ambient-page .tg-chat-row,
+body.glass-ambient-page .contact-card,
+body.glass-ambient-page .zc-contact-row{background-color:rgba(11,29,48,.66)!important;background-image:linear-gradient(135deg,rgba(255,255,255,.065),rgba(255,255,255,.012))!important;border-color:rgba(151,224,255,.18)!important;backdrop-filter:blur(18px) saturate(1.25);-webkit-backdrop-filter:blur(18px) saturate(1.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 12px 34px rgba(0,0,0,.16)}
+body.glass-ambient-page .auth-card,
+body.glass-ambient-page .settings-section,
+body.glass-ambient-page .settings-card,
+body.glass-ambient-page .profile-card,
+body.glass-ambient-page .channel-card,
+body.glass-ambient-page .status-card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+body.glass-ambient-page .auth-card:hover,
+body.glass-ambient-page .settings-section:hover,
+body.glass-ambient-page .settings-card:hover,
+body.glass-ambient-page .profile-card:hover,
+body.glass-ambient-page .channel-card:hover,
+body.glass-ambient-page .status-card:hover{border-color:rgba(89,220,255,.32)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 16px 38px rgba(0,0,0,.22),0 0 22px rgba(0,190,239,.07)}
+@media(prefers-reduced-motion:reduce){body.glass-ambient-page:before{animation:none!important}body.glass-ambient-page .auth-card,body.glass-ambient-page .settings-section,body.glass-ambient-page .settings-card,body.glass-ambient-page .profile-card,body.glass-ambient-page .channel-card,body.glass-ambient-page .status-card{transition:none!important}}
