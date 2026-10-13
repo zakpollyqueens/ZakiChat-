@@ -5,6 +5,11 @@ Scope: repository source review and cross-file checks for the icon-studio/securi
 
 ## Changes made on this branch
 
+- Corrected an invalid pinned `actions/checkout` SHA in the existing Android build and Supabase deployment workflows, and in the new audit workflow. The valid v4.2.2 commit pin is now used so CI can check out the repository.
+- Bumped the Android app version to `zc-vr19` for the next review build.
+- Refined the app icon's double outline and the App Icon Studio option previews.
+- Added an isolated review-build workflow that uploads APKs as temporary artifacts instead of publishing a public release.
+
 - Added four selectable icon finishes (Emerald Circuit, Crystal Green, Neon Pulse, Liquid Metal), the Settings entry, Android launcher aliases, and a native bridge for changing the actual Android launcher icon.
 - Fixed a role mismatch in public notice publishing: the editor already accepts `admin` and `super_admin`, but the server required `super_admin` for every action. Only `admin-notice-save` now accepts either active role; privileged directory, account, billing, and other operations remain super-admin-only.
 - Added fail-closed authentication to the push notification webhook using `NOTIFICATIONS_WEBHOOK_SECRET` and `x-zamivox-webhook-secret`.
