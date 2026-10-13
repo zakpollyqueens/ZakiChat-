@@ -524,3 +524,25 @@ body.status-page .channels-updates-heading p,body.status-page .channels-updates-
 .zc-entry-community{background-image:url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1000&q=85")!important}
 @media(max-width:650px){.zc-entry-feature{min-height:205px!important;padding:20px!important;border-radius:20px!important}.zc-entry-feature p{font-size:.9rem!important;line-height:1.55!important}}
 @media(prefers-reduced-motion:reduce){.zc-entry-feature,.zc-entry-feature>a span{transition:none!important}}
+
+
+/* Official ZakiTech-managed Molan Chat releases and notices */
+.auth-app-download-float{position:fixed;right:16px;bottom:18px;z-index:1000;display:inline-flex;align-items:center;gap:9px;padding:12px 16px;border:1px solid rgba(111,235,204,.42);border-radius:999px;background:linear-gradient(135deg,#0b8c68,#075b49);color:#fff!important;text-decoration:none!important;font-weight:800;font-size:.88rem;box-shadow:0 12px 32px rgba(0,0,0,.36),0 0 24px rgba(39,211,162,.18);transition:transform .18s ease,box-shadow .18s ease}
+.auth-app-download-float:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(0,0,0,.42),0 0 28px rgba(39,211,162,.24)}
+.auth-app-download-float:focus-visible{outline:3px solid #7ef4d1;outline-offset:3px}
+.company-product-feed{margin:26px 0;padding:22px;border:1px solid rgba(96,223,191,.2);border-radius:24px;background:linear-gradient(145deg,rgba(8,29,42,.96),rgba(5,16,29,.98));box-shadow:0 18px 44px rgba(0,0,0,.2)}
+.company-product-feed-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+.company-product-feed-heading h2{margin:5px 0 7px;font-size:clamp(1.15rem,4vw,1.6rem);color:#f4fffc}
+.company-product-feed-heading p{margin:0;color:#9bb9c6;line-height:1.55}
+.company-feed-status{flex:0 0 auto;padding:6px 10px;border-radius:999px;background:rgba(50,200,155,.12);color:#80e9c8;font-size:.75rem;font-weight:800}
+.company-product-feed-list{display:grid;gap:12px}
+.company-feed-card{padding:16px;border:1px solid rgba(132,190,208,.15);border-radius:17px;background:rgba(12,34,49,.72);min-width:0}
+.company-feed-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.company-feed-tag{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:900;color:#7de7c7}
+.company-feed-date{font-size:.76rem;color:#8fa9b9}
+.company-feed-card h3{margin:0 0 7px;color:#f5fbff;font-size:1.03rem}
+.company-feed-card p{margin:0;color:#b4c9d5;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.company-feed-notes{margin-top:10px!important;padding-top:10px;border-top:1px solid rgba(132,190,208,.13);font-size:.88rem}
+.company-feed-download{display:inline-flex;align-items:center;justify-content:center;margin-top:12px;padding:10px 14px;border-radius:12px;background:linear-gradient(135deg,#0b9b70,#087052);color:white!important;text-decoration:none!important;font-weight:800}
+.company-feed-empty{margin:0;padding:16px;border-radius:14px;background:rgba(8,24,37,.7);color:#a9bfcc;line-height:1.6}
+@media(max-width:520px){.company-product-feed{padding:16px;border-radius:20px}.company-product-feed-heading{display:block}.company-feed-status{display:inline-flex;margin-top:12px}.auth-app-download-float{right:12px;bottom:14px;padding:11px 13px;font-size:.8rem}}
