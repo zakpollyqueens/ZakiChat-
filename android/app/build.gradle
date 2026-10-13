@@ -3,7 +3,7 @@ plugins {
 }
 
 def ciBuildNumber = System.getenv('GITHUB_RUN_NUMBER')
-def appVersionCode = ciBuildNumber != null ? 10000 + ciBuildNumber.toInteger() : 18
+def appVersionCode = ciBuildNumber != null ? 10000 + ciBuildNumber.toInteger() : 19
 
 android {
     namespace 'com.zakmolanitech.zakichat'
@@ -14,7 +14,7 @@ android {
         minSdk 23
         targetSdk 33
         versionCode appVersionCode
-        versionName 'zc-vr18'
+        versionName 'zc-vr19'
     }
 
     buildTypes {
