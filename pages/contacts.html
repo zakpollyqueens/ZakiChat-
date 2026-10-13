@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07172b">
-<title>Contacts · ZakiChat</title>
+<title>Contacts · Zamivox</title>
 <link rel="stylesheet" href="../static/css/main.css"><link rel="stylesheet" href="../static/css/telegram-chat.css"><link rel="stylesheet" href="../static/css/telegram-chat-list.css"><link rel="stylesheet" href="../static/css/signature-theme.css">
 <style>
 body.zc-contacts-page{--contacts-bg:#071426;--contacts-panel:#0d2037;--contacts-line:rgba(111,203,232,.13);--contacts-text:#e8f8ff;--contacts-muted:#8da9bd;--contacts-cyan:#45ddff;background:var(--contacts-bg)!important;color:var(--contacts-text)!important}
@@ -94,13 +94,13 @@ body.zc-contacts-page .zc-person.is-selected{border-color:#54e3ff!important;back
 <body class="tg-app tg-list-page zc-contacts-page">
 <main class="tg-shell">
 <header class="zc-contacts-head">
- <div class="zc-contacts-top"><div class="zc-contact-heading"><div class="zc-contact-brandline"><img src="../static/images/icon.jpg" alt="ZakiChat icon" class="zc-brand-icon-small"><span class="zc-contacts-eyebrow">YOUR CIRCLE</span></div><h1>Contacts <span class="zc-contacts-count" id="contacts-count" aria-live="polite">0</span></h1><p id="contacts-count-caption">Your circle is getting started.</p></div><div class="zc-contact-actions">
+ <div class="zc-contacts-top"><div class="zc-contact-heading"><div class="zc-contact-brandline"><img src="../static/images/zamivox-icon.svg" alt="Zamivox icon" class="zc-brand-icon-small"><span class="zc-contacts-eyebrow">YOUR CIRCLE</span></div><h1>Contacts <span class="zc-contacts-count" id="contacts-count" aria-live="polite">0</span></h1><p id="contacts-count-caption">Your circle is getting started.</p></div><div class="zc-contact-actions">
   <button class="zc-action" id="contacts-select-toggle" type="button" aria-label="Select contacts" title="Select contacts">✓</button><button class="zc-action" id="contacts-delete-selected" type="button" aria-label="Delete selected contacts" title="Delete selected contacts" hidden>⌫</button><button class="zc-action" id="contacts-search-toggle" type="button" aria-label="Search contacts" title="Search contacts"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg></button>
   
  </div></div>
  <label class="zc-contacts-search" id="contacts-search-box"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg><input id="contacts-search" type="search" placeholder="Find someone in your contacts…" autocomplete="off"></label>
  <div class="zc-contact-shortcuts">
-  <button class="zc-shortcut" id="invite-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span><strong>Invite a friend</strong><small>Bring your people to ZakiChat</small></span></button>
+  <button class="zc-shortcut" id="invite-contact" type="button"><span class="zc-shortcut-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M19 8v8m-4-4h8"/></svg></span><span><strong>Invite a friend</strong><small>Bring your people to Zamivox</small></span></button>
  </div>
 </header>
 <section id="contacts-results" class="zc-contact-results" aria-label="Saved contacts"><p class="zc-contact-empty">Loading your contacts…</p></section><button class="zc-add-contact-fab" id="add-contact-top" type="button" aria-label="Add a contact"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Add contact</span></button>
@@ -122,7 +122,7 @@ body.zc-contacts-page .zc-person.is-selected{border-color:#54e3ff!important;back
    </select>
    <input id="contact-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="742 956 448" required>
   </div></div>
-  <div id="contact-lookup-state" class="zc-lookup-state" role="status" aria-live="polite">Enter a number to check whether it is registered on ZakiChat.</div>
+  <div id="contact-lookup-state" class="zc-lookup-state" role="status" aria-live="polite">Enter a number to check whether it is registered on Zamivox.</div>
   <button class="zc-save-contact" id="save-contact-button" type="submit" disabled>Save contact</button>
  </form>
 </dialog>
