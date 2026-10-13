@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">Molan Chat app icon</title><desc id="desc">A polished emerald glass chat emblem with a luminous M monogram and connected message nodes.</desc>
+  <title id="title">Molan Chat app icon</title>
+  <desc id="desc">A glossy emerald chat emblem with a bold white M and subtle illuminated code traces.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9BFFD0"/><stop offset=".24" stop-color="#20D98B"/><stop offset=".62" stop-color="#078653"/><stop offset="1" stop-color="#013C2A"/></linearGradient>
-    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity=".36"/><stop offset=".48" stop-color="#FFFFFF" stop-opacity=".035"/><stop offset="1" stop-color="#001E14" stop-opacity=".36"/></linearGradient>
-    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#073F30"/><stop offset="1" stop-color="#001F19"/></linearGradient>
-    <linearGradient id="letter" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#A9FFDA"/></linearGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="13"/></filter>
-    <pattern id="microgrid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M4 9h9m-9 5h5m15 10h6M23 2v5" stroke="#E7FFF3" stroke-opacity=".16" stroke-width="2" stroke-linecap="round"/></pattern>
+    <linearGradient id="shell" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#83FFD0"/><stop offset=".22" stop-color="#22D995"/><stop offset=".58" stop-color="#087A53"/><stop offset="1" stop-color="#003A30"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity=".42"/><stop offset=".45" stop-color="#FFFFFF" stop-opacity=".04"/><stop offset="1" stop-color="#001D18" stop-opacity=".3"/></linearGradient>
+    <linearGradient id="bubble" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#075641"/><stop offset="1" stop-color="#002A2A"/></linearGradient>
+    <linearGradient id="letter" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9FFE8"/></linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>
+    <pattern id="code" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M5 9h12M5 15h7M27 27h8M27 33h4M20 0v7M0 29h8" fill="none" stroke="#E4FFF3" stroke-opacity=".16" stroke-width="2" stroke-linecap="round"/><circle cx="30" cy="8" r="2" fill="#E4FFF3" fill-opacity=".22"/></pattern>
   </defs>
-  <rect x="14" y="14" width="484" height="484" rx="136" fill="#001D14"/>
-  <rect x="21" y="18" width="470" height="470" rx="128" fill="url(#bg)" stroke="#D8FFEA" stroke-width="5"/>
-  <rect x="33" y="30" width="446" height="446" rx="116" fill="url(#microgrid)"/>
-  <path d="M58 125Q256 42 454 125" fill="none" stroke="#FFFFFF" stroke-opacity=".24" stroke-width="12" stroke-linecap="round"/>
-  <path d="M64 176h48v-22h22m252 31h-29v20h-17M64 337h31v-18h24m297-28h-29v18h-17" fill="none" stroke="#B8FFDA" stroke-opacity=".65" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="136" cy="154" r="7" fill="#FFFFFF"/><circle cx="136" cy="154" r="17" fill="#FFFFFF" opacity=".15"/>
-  <circle cx="386" cy="207" r="6" fill="#FFFFFF"/><circle cx="386" cy="207" r="15" fill="#FFFFFF" opacity=".14"/>
-  <circle cx="118" cy="319" r="6" fill="#FFFFFF"/><circle cx="118" cy="319" r="15" fill="#FFFFFF" opacity=".14"/>
-  <path d="M117 137h278q27 0 27 27v139q0 27-27 27H250l-66 48v-48h-67q-27 0-27-27V164q0-27 27-27z" fill="#B7FFD9" opacity=".25" filter="url(#glow)"/>
-  <path d="M117 128h278q27 0 27 27v139q0 27-27 27H250l-66 48v-48h-67q-27 0-27-27V155q0-27 27-27z" fill="url(#bubble)" stroke="#E4FFF0" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M145 280V174h28l83 67 83-67h28v106h-29v-65l-82 65-82-65v65z" fill="url(#letter)" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M61 402h390" stroke="#D8FFEA" stroke-opacity=".42" stroke-width="2"/>
-  <text x="256" y="446" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="37" font-weight="850" letter-spacing="-1.2" fill="#FFFFFF">MOLAN CHAT</text>
-  <rect x="21" y="18" width="470" height="470" rx="128" fill="url(#glass)"/>
+  <rect x="15" y="15" width="482" height="482" rx="140" fill="#001E19"/>
+  <rect x="22" y="19" width="468" height="468" rx="130" fill="url(#shell)" stroke="#D8FFEF" stroke-width="5"/>
+  <rect x="34" y="31" width="444" height="444" rx="117" fill="url(#code)"/>
+  <path d="M58 125Q256 43 454 125" fill="none" stroke="#FFFFFF" stroke-opacity=".28" stroke-width="13" stroke-linecap="round"/>
+  <path d="M65 173h48v-23h23M447 190h-31v20h-19M64 344h35v-19h24M447 325h-32v19h-20" fill="none" stroke="#B8FFDF" stroke-opacity=".68" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="136" cy="151" r="7" fill="#FFFFFF"/><circle cx="136" cy="151" r="17" fill="#FFFFFF" opacity=".15"/>
+  <circle cx="386" cy="210" r="6" fill="#FFFFFF"/><circle cx="386" cy="210" r="15" fill="#FFFFFF" opacity=".14"/>
+  <path d="M118 129h276q27 0 27 27v135q0 27-27 27H251l-67 49v-49h-66q-27 0-27-27V156q0-27 27-27z" fill="#C4FFE2" opacity=".25" filter="url(#glow)"/>
+  <path d="M117 125h278q27 0 27 27v139q0 27-27 27H251l-67 49v-49h-67q-27 0-27-27V152q0-27 27-27z" fill="url(#bubble)" stroke="#E7FFF3" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M143 280V169h29l84 68 84-68h29v111h-30v-67l-83 66-83-66v67z" fill="url(#letter)" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M146 166h220" stroke="#FFFFFF" stroke-opacity=".62" stroke-width="4" stroke-linecap="round"/>
+  <path d="M65 410h382" stroke="#E3FFF2" stroke-opacity=".32" stroke-width="2"/>
+  <rect x="22" y="19" width="468" height="468" rx="130" fill="url(#glass)"/>
 </svg>
