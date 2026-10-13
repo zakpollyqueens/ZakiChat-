@@ -367,3 +367,11 @@ body.tg-conversation-page .tg-voice-content{display:flex;flex:1;flex-direction:c
 body.tg-conversation-page .tg-voice-content>small{font-size:10px;color:#c7e5f2;font-weight:650}
 body.tg-conversation-page .tg-voice-card .tg-audio-preview{display:block;width:min(235px,55vw);height:32px;max-width:100%}
 @media(max-width:420px){body.tg-conversation-page .tg-voice-avatar{flex-basis:31px;width:31px;height:31px}body.tg-conversation-page .tg-voice-card{gap:7px;padding:7px 8px}}
+
+
+/* Message-specific reply target affordance and quiet contact-presence header. */
+body.tg-conversation-page .tg-message-reply{display:block;width:100%;max-width:100%;margin:0 0 8px;padding:7px 10px;border:0;border-left:3px solid #47d8f5;border-radius:0 8px 8px 0;background:rgba(49,185,220,.09);color:#8feaff;text-align:left;font-size:12px;line-height:1.4;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+body.tg-conversation-page .tg-message-reply:active{background:rgba(49,185,220,.18)}
+body.tg-conversation-page .tg-message.tg-message-highlight{outline:2px solid rgba(76,222,255,.9);outline-offset:3px;transition:outline-color .25s}
+body.tg-conversation-page .tg-person-copy small:empty{display:none}
+body.tg-conversation-page .tg-person-copy strong:empty{display:none}
