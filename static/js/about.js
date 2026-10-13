@@ -1,21 +1,21 @@
 (function () {
   'use strict';
 
-  const FALLBACK_VERSION = 'zc-vr15';
+  const FALLBACK_VERSION = 'zc-vr18';
 
   const fallbackLatestVersion = {
-    version: 'zc-vr15',
-    title: 'Molan Chat zc-vr15',
+    version: 'zc-vr18',
+    title: 'Molan Chat zc-vr18',
     description:
       'The latest publicly available Molan Chat version is available for free download.',
     releaseDate: null,
     channel: 'Stable',
-    downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/download/zc-vr15-android/app-release.apk'
+    downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk'
   };
 
   const fallbackVersions = [
     {
-      version: 'zc-vr15',
+      version: 'zc-vr18',
       title: 'Current Version',
       description: 'Current ZakiChat starting release.',
       state: 'Current',
