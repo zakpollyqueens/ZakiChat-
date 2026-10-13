@@ -312,8 +312,8 @@
             body:
               notification.body ||
               "You have a new notification.",
-            icon: "/static/images/icon.jpg",
-            badge: "/static/images/icon.jpg",
+            icon: "/static/images/zamivox-icon.svg",
+            badge: "/static/images/zamivox-icon.svg",
             tag: notification.id
               ? `zakichat-${notification.id}`
               : "zakichat-notification",
