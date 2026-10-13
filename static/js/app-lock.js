@@ -5,6 +5,7 @@
   const OVERLAY_ID = "zakichat-lock-screen";
   const ICON_LOCKED = "🔒";
   const ICON_OPEN = "🔓";
+  const BIOMETRIC_EVENT = "molan-biometric-result";
 
   const enc = new TextEncoder();
   const toHex = bytes => Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2, "0")).join("");
@@ -43,6 +44,7 @@
         <div class="zaki-lock-mark" aria-hidden="true">🔒</div>
         <h1 id="zaki-lock-title">Molan Chat is locked</h1>
         <p id="zaki-lock-message">Enter your app passcode to continue.</p>
+        <button type="button" id="zaki-lock-biometric" class="zaki-lock-biometric" hidden>Unlock with fingerprint</button>
         <form id="zaki-lock-form" autocomplete="off">
           <label for="zaki-lock-passcode">Passcode</label>
           <input id="zaki-lock-passcode" name="passcode" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="current-password" required>
@@ -51,6 +53,30 @@
         </form>
       </div>`;
     document.body.appendChild(overlay);
+    const biometricButton = overlay.querySelector("#zaki-lock-biometric");
+    if (window.ZakiChatNative && typeof window.ZakiChatNative.authenticateBiometric === "function") {
+      biometricButton.hidden = false;
+      biometricButton.addEventListener("click", () => {
+        const error = overlay.querySelector("#zaki-lock-error");
+        error.textContent = "";
+        biometricButton.disabled = true;
+        try { window.ZakiChatNative.authenticateBiometric(); }
+        catch (_) { error.textContent = "Fingerprint unlock is unavailable. Use your passcode."; biometricButton.disabled = false; }
+      });
+      window.addEventListener(BIOMETRIC_EVENT, event => {
+        biometricButton.disabled = false;
+        const detail = event.detail || {};
+        const error = overlay.querySelector("#zaki-lock-error");
+        if (detail.status === "success") {
+          setLocked(false);
+          overlay.hidden = true;
+          document.body.classList.remove("zaki-app-is-locked");
+          syncButton();
+        } else if (detail.status === "unavailable" || detail.status === "error") {
+          error.textContent = detail.message || "Fingerprint unlock failed. Use your passcode.";
+        }
+      });
+    }
     overlay.querySelector("#zaki-lock-form").addEventListener("submit", async event => {
       event.preventDefault();
       const input = overlay.querySelector("#zaki-lock-passcode");
@@ -99,7 +125,7 @@
       const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
       const hash = await hashPasscode(first, salt);
       localStorage.setItem(PASS_KEY, JSON.stringify({salt, hash, version:1}));
-      alert("App passcode created. Tap the lock icon any time to lock Molan Chat.");
+      alert("App passcode created. Molan Chat will ask for your passcode or fingerprint when you reopen the app.");
       syncButton();
     } catch (e) { alert(e.message || "Unable to set up app lock."); }
   }
