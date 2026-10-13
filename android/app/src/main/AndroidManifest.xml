@@ -7,8 +7,8 @@
 
     <application
         android:allowBackup="false"
-        android:label="ZakiChat"
-        android:icon="@drawable/zaki_app_icon"
+        android:label="Zamivox"
+        android:icon="@drawable/zamivox_app_icon"
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
         <activity
