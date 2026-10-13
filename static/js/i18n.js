@@ -269,10 +269,10 @@
       "settings.title": "設定",
       "settings.language": "アプリの言語",
       "settings.languageDescription":
-        "ZakiChatで使用する言語を選択してください。",
+        "Zamivoxで使用する言語を選択してください。",
       "language.title": "アプリの言語",
       "language.description":
-        "ZakiChatで使用する言語を選択してください。",
+        "Zamivoxで使用する言語を選択してください。",
       "language.search": "言語を検索",
       "language.detected": "端末から検出",
       "language.selected": "選択済み",
