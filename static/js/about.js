@@ -5,9 +5,9 @@
 
   const fallbackLatestVersion = {
     version: 'zc-vr15',
-    title: 'ZakiChat zc-vr15',
+    title: 'Zamivox zc-vr15',
     description:
-      'The latest publicly available ZakiChat version is available for free download.',
+      'The latest publicly available Zamivox version is available for free download.',
     releaseDate: null,
     channel: 'Stable',
     downloadUrl: 'https://github.com/zakpollyqueens/ZakiChat-/releases/download/zc-vr15-android/app-release.apk'
