@@ -17,7 +17,7 @@
 
       if (!this.db) {
         console.error(
-          "Zamivox Notification Badge: centralized Supabase client unavailable."
+          "Molan Chat Notification Badge: centralized Supabase client unavailable."
         );
         return;
       }
@@ -108,7 +108,7 @@
 
       if (error) {
         console.error(
-          "Zamivox notification badge:",
+          "Molan Chat notification badge:",
           error
         );
 
