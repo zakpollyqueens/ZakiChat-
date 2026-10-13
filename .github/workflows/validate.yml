@@ -1,4 +1,4 @@
-name: ZakiChat Validation
+name: Zamivox Validation
 
 on:
   push:
@@ -75,7 +75,7 @@ jobs:
           PY
 
   build-android:
-    name: Build ZakiChat Android APK
+    name: Build Zamivox Android APK
     needs: validate
     runs-on: ubuntu-latest
     permissions:
