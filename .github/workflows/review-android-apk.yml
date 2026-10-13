@@ -1,4 +1,4 @@
-name: Build and verify ZamiVox review APK
+name: Build and verify Molan Chat review APK
 
 on:
   push:
@@ -105,7 +105,7 @@ jobs:
           sha256=$(sha256sum build/ota-bundle.zip | awk '{print $1}')
           echo "OTA bundle SHA-256: $sha256"
           cat > build/release-notes.md <<EOF
-          Zamivox Android test build (zc-vr19).
+          Molan Chat Android test build (zc-vr19).
 
           OTA_VERSION=${GITHUB_SHA}
           OTA_SHA256=${sha256}
@@ -158,7 +158,7 @@ jobs:
           import json, os
           status = os.environ.get("BUILD_STATUS", "unknown").upper()
           emoji = ":white_check_mark:" if status == "SUCCESS" else ":x:"
-          text = (f"{emoji} Zamivox Android build #{os.environ.get('BUILD_NUMBER')} — {status}\\n"
+          text = (f"{emoji} Molan Chat Android build #{os.environ.get('BUILD_NUMBER')} — {status}\\n"
                   f"Workflow: {os.environ.get('RUN_URL')}\\n"
                   f"Latest release: {os.environ.get('RELEASE_URL')}")
           print(json.dumps({"text": text}))
