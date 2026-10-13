@@ -22,7 +22,7 @@
 
   async function session() {
     const client = window.ZakiChatAuth?.client;
-    if (!client) throw new Error("ZakiChat authentication is not ready.");
+    if (!client) throw new Error("Zamivox authentication is not ready.");
 
     const { data, error } = await client.auth.getSession();
     if (error) throw error;
