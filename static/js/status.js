@@ -2270,7 +2270,7 @@ showComposerError(message) {
         setReleaseText('updatesLatestVersion', ota.releaseName + ' · In-app update');
         setReleaseText('updatesLatestDate', formatReleaseDate(ota.releaseDate));
         setReleaseText('updatesLatestDescription', 'Tap Update Now to download and apply verified features inside ZakiChat. No APK download is needed for compatible web updates.');
-        const installed = String(window.Molan ChatNative.getInstalledOtaVersion() || '');
+        const installed = String(window.ZakiChatNative.getInstalledOtaVersion() || '');
         setOtaButtonState(installed === ota.version ? 'You are up to date ✓' : 'Update Now', installed === ota.version);
         bindNativeOtaButton();
       } catch (error) {
