@@ -2,7 +2,7 @@
   "use strict";
 
   if (!window.supabase || !window.ZakiChatConfig) {
-    console.error("Zamivox People search could not start.");
+    console.error("Molan Chat People search could not start.");
     return;
   }
 
@@ -11,7 +11,7 @@
 
   if (!supabaseClient) {
     console.error(
-      "Zamivox People search: centralized Supabase client unavailable."
+      "Molan Chat People search: centralized Supabase client unavailable."
     );
     return;
   }
