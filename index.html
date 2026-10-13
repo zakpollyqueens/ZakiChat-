@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <script>document.documentElement.classList.add("molan-startup-pending");</script>
+  <style>
+    html.molan-startup-pending body>*:not(#molan-startup-cover){visibility:hidden!important}
+    #molan-startup-cover{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;justify-items:center;gap:16px;background:radial-gradient(ellipse at 50% 35%,#123b4b,#07111f 68%);color:#f3fbff;font:600 15px system-ui,sans-serif}
+    #molan-startup-cover img{width:92px;height:92px;border-radius:26px;box-shadow:0 12px 42px #00d8ff30}
+    #molan-startup-cover span{letter-spacing:.08em}
+    #molan-startup-cover i{width:32px;height:32px;border:3px solid #ffffff28;border-top-color:#54e6ff;border-radius:50%;animation:molan-start-spin .8s linear infinite}
+    @keyframes molan-start-spin{to{transform:rotate(360deg)}}
+  </style>
   <meta name="description" content="Discover Molan Chat, a modern messaging platform by Zakmolanitech Solutions. Chat, connect with communities, follow updates and download the official Android app.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#07111f">
@@ -37,6 +46,7 @@
 <link rel="stylesheet" href="static/css/signature-theme.css">
 </head>
 <body>
+<div id="molan-startup-cover" role="status" aria-live="polite"><img src="static/images/molan-chat-icon.svg" alt=""><span>MOLAN CHAT</span><i aria-hidden="true"></i></div>
 
 <header class="site-header">
   <div class="container nav-container">
@@ -235,6 +245,33 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="static/js/config.js"></script>
+<script src="static/js/account-manager.js"></script>
+<script src="static/js/supabase-client.js"></script>
+<script>
+(function(){
+  let finished=false;
+  function reveal(){if(finished)return;finished=true;document.documentElement.classList.remove("molan-startup-pending");document.getElementById("molan-startup-cover")?.remove();}
+  const fallback=setTimeout(reveal,5000);
+  (async function(){
+    try{
+      const auth=window.ZakiChatAuth;
+      if(!auth?.client)throw new Error("Auth unavailable");
+      if(auth.ready)await auth.ready;
+      const {data,error}=await auth.client.auth.getSession();
+      if(error)throw error;
+      if(data?.session?.user){
+        clearTimeout(fallback);
+        location.replace("pages/chats.html");
+        return;
+      }
+    }catch(error){console.warn("Startup session check unavailable; showing welcome page.",error)}
+    clearTimeout(fallback);
+    reveal();
+  })();
+})();
+</script>
 <script src="static/js/service-worker.js" defer></script>
 </body>
 </html>
