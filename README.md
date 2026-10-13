@@ -6,9 +6,9 @@ Zamivox is a modern messaging platform by Zakmolanitech Solutions.
 
 - Website homepage: `index.html`
 - Android download page: `download.html`
-- Official Android APK: [Latest release asset](https://github.com/zakpollyqueens/Zamivox-/releases/latest/download/app-release.apk)
-- Release notes and version history: [GitHub Releases](https://github.com/zakpollyqueens/Zamivox-/releases)
-- Support and issue reporting: [GitHub Issues](https://github.com/zakpollyqueens/Zamivox-/issues)
+- Official Android APK: [Latest release asset](https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk)
+- Release notes and version history: [GitHub Releases](https://github.com/zakpollyqueens/ZakiChat-/releases)
+- Support and issue reporting: [GitHub Issues](https://github.com/zakpollyqueens/ZakiChat-/issues)
 
 ## Search indexing
 
