@@ -40,7 +40,7 @@ h1{font-size:29px;line-height:1.15;margin:18px 0 10px}p{color:#b9c9d9;line-heigh
  const native=window.ZakiChatNative;
  if(!native){
    toggle.disabled=true;
-   status.textContent='This control works in the ZakiChat Android app. In a browser, websites cannot display a bubble over other apps.';
+   status.textContent='This control works in the Zamivox Android app. In a browser, websites cannot display a bubble over other apps.';
    permission.textContent='Android permission is available in the installed app';
    permission.disabled=true;
    return;
@@ -48,11 +48,11 @@ h1{font-size:29px;line-height:1.15;margin:18px 0 10px}p{color:#b9c9d9;line-heigh
  function refresh(){
    toggle.checked=!!native.isFloatingBubbleEnabled();
    const allowed=!!native.canDrawFloatingBubble();
-   status.textContent=allowed?'Overlay permission is granted. The bubble appears when you leave ZakiChat.':'Overlay permission is not granted yet. Enable it in Android Settings.';
+   status.textContent=allowed?'Overlay permission is granted. The bubble appears when you leave Zamivox.':'Overlay permission is not granted yet. Enable it in Android Settings.';
    permission.textContent=allowed?'Overlay permission enabled':'Allow display over other apps';
  }
  toggle.addEventListener('change',()=>{native.setFloatingBubbleEnabled(toggle.checked);status.textContent=toggle.checked?'Floating bubble enabled. Grant overlay permission if Android asks.':'Floating bubble disabled.';setTimeout(refresh,600)});
- permission.addEventListener('click',()=>{native.requestFloatingBubblePermission();status.textContent='Android Settings opened. Allow ZakiChat, then return here.'});
+ permission.addEventListener('click',()=>{native.requestFloatingBubblePermission();status.textContent='Android Settings opened. Allow Zamivox, then return here.'});
  refresh();
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 })();
