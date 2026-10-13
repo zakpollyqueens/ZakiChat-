@@ -67,7 +67,7 @@ self.addEventListener("fetch", event => {
         const fallback = await cache.match(path);
         if (fallback) return fallback;
         return (await cache.match("/index.html")) ||
-          new Response("Zamivox is offline. Open the app once while connected to prepare offline access.", {
+          new Response("Molan Chat is offline. Open the app once while connected to prepare offline access.", {
             status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" }
           });
       }
@@ -102,10 +102,10 @@ self.addEventListener("push", event => {
   try {
     data = event.data ? event.data.json() : {};
   } catch (error) {
-    data = { title: "Zamivox", body: event.data ? event.data.text() : "You have a new notification." };
+    data = { title: "Molan Chat", body: event.data ? event.data.text() : "You have a new notification." };
   }
 
-  const title = data.title || "Zamivox";
+  const title = data.title || "Molan Chat";
   const options = {
     body: data.body || "You have a new notification.",
     icon: "/static/images/zamivox-icon.svg",
