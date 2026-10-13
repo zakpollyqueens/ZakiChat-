@@ -229,6 +229,29 @@ public class MainActivity extends Activity {
 
 
     public class NativeBridge {
+        @JavascriptInterface public void setLauncherIcon(String iconStyle) {
+            String[] aliases = {
+                "com.zakmolanitech.zakichat.LauncherEmerald",
+                "com.zakmolanitech.zakichat.LauncherCrystal",
+                "com.zakmolanitech.zakichat.LauncherNeon",
+                "com.zakmolanitech.zakichat.LauncherMetal"
+            };
+            String selected;
+            if ("emerald".equals(iconStyle)) selected = aliases[0];
+            else if ("crystal".equals(iconStyle)) selected = aliases[1];
+            else if ("neon".equals(iconStyle)) selected = aliases[2];
+            else if ("metal".equals(iconStyle)) selected = aliases[3];
+            else return;
+            android.content.pm.PackageManager pm = getPackageManager();
+            for (String alias : aliases) {
+                int state = alias.equals(selected)
+                    ? android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                    : android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+                pm.setComponentEnabledSetting(new android.content.ComponentName(MainActivity.this, alias), state,
+                    android.content.pm.PackageManager.DONT_KILL_APP);
+            }
+            getSharedPreferences("zamivox_app", MODE_PRIVATE).edit().putString("launcher_icon", iconStyle).apply();
+        }
         @JavascriptInterface public String getInstalledOtaVersion() {
             return getSharedPreferences("zaki_ota", MODE_PRIVATE).getString("version", "");
         }
