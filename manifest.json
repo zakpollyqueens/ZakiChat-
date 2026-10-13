@@ -1,7 +1,7 @@
 {
-  "name": "ZakiChat",
-  "short_name": "ZakiChat",
-  "description": "Connect and converse instantly with ZakiChat.",
+  "name": "Zamivox",
+  "short_name": "Zamivox",
+  "description": "Connect and converse instantly with Zamivox.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,9 +9,9 @@
   "theme_color": "#07111f",
   "icons": [
     {
-      "src": "static/images/icon.jpg",
-      "sizes": "1024x1024",
-      "type": "image/jpeg",
+      "src": "static/images/zamivox-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ]
