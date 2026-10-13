@@ -6,7 +6,7 @@
     neon:{label:"Neon Pulse",alias:"com.zakmolanitech.zakichat.LauncherNeon"},
     metal:{label:"Liquid Metal",alias:"com.zakmolanitech.zakichat.LauncherMetal"}
   };
-  const key="zamivox-app-icon";
+  const key="molan-chat-app-icon";
   const buttons=[...document.querySelectorAll("[data-icon]")];
   const status=document.getElementById("studio-status");
   const label=document.getElementById("selected-label");
