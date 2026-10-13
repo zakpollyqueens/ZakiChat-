@@ -32,7 +32,7 @@
 
       if (!this.client) {
         console.error(
-          "Zamivox Settings: centralized Supabase client unavailable."
+          "Molan Chat Settings: centralized Supabase client unavailable."
         );
         return;
       }
@@ -168,7 +168,7 @@
     () => {
       Settings.init().catch(error => {
         console.error(
-          "Zamivox settings:",
+          "Molan Chat settings:",
           error
         );
       });
