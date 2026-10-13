@@ -17,7 +17,7 @@
 
       if (!this.db) {
         console.error(
-          "Zamivox Notifications: centralized Supabase client unavailable."
+          "Molan Chat Notifications: centralized Supabase client unavailable."
         );
         return;
       }
@@ -206,7 +206,7 @@
 
       if (error) {
         console.error(
-          "Zamivox chat notification update:",
+          "Molan Chat chat notification update:",
           error
         );
 
@@ -279,7 +279,7 @@
 
       if (error) {
         console.error(
-          "Zamivox notifications load:",
+          "Molan Chat notifications load:",
           error
         );
 
@@ -431,7 +431,7 @@
 
       if (error) {
         console.error(
-          "Zamivox notifications mark read:",
+          "Molan Chat notifications mark read:",
           error
         );
 
