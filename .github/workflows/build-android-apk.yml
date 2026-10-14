@@ -80,6 +80,12 @@ jobs:
           print(f"Offline wallpaper payload: {total:,} bytes ({total / 1_000_000:.2f} MB)")
           PY
 
+      - name: Stamp this release's OTA version into the app
+        shell: bash
+        run: |
+          mkdir -p static
+          printf '{"version":"%s"}\n' "$GITHUB_SHA" > static/ota-build.json
+
       - name: Copy web application into Android assets
         run: |
           mkdir -p android/app/src/main/assets
