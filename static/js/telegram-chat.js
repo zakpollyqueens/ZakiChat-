@@ -10,12 +10,16 @@ const messageProfileCache=new Map();let listSoundChannel=null;
 async function getCurrentBackend(){
   const client=window.ZakiChatAuth?.client;
   if(!client) throw new Error("Secure chat connection is unavailable. Reload the app and sign in again.");
-  const {data,error}=await client.auth.getUser();
-  if(error) throw error;
-  if(!data?.user) throw new Error("Your session has expired. Please sign in again.");
+  let sessionUser=null;
+  try{const sessionResult=await client.auth.getSession();if(!sessionResult.error)sessionUser=sessionResult.data?.session?.user||null}catch(sessionError){console.debug("Cached auth session unavailable",sessionError)}
+  let resolvedUser=sessionUser;
+  if(navigator.onLine){
+    try{const verified=await client.auth.getUser();if(!verified.error&&verified.data?.user)resolvedUser=verified.data.user;else if(!sessionUser)throw verified.error||new Error("No active session")}catch(authError){if(!sessionUser)throw authError;console.debug("Using cached session for offline-friendly startup",authError)}
+  }
+  if(!resolvedUser)throw new Error("Please sign in online once before using Molan Chat offline.");
   activeClient=client;
-  activeUser=data.user;
-  return {client,user:data.user};
+  activeUser=resolvedUser;
+  return {client,user:resolvedUser};
 }
 function setStatus(message){
   const el=$("#supabase-connection-status");
