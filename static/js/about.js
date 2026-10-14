@@ -460,16 +460,62 @@
   }
 
 
+  async function loadOfficialGitHubRelease() {
+    const api = 'https://api.github.com/repos/zakpollyqueens/ZakiChat-/releases/latest';
+    try {
+      const response = await fetch(api, {
+        headers: { Accept: 'application/vnd.github+json' },
+        cache: 'no-store'
+      });
+      if (!response.ok) throw new Error('Official release lookup returned ' + response.status);
+      const release = await response.json();
+      const tag = String(release.tag_name || release.name || '').trim();
+      const versionMatch = tag.match(/^(zc-vr\\d+(?:[._-][A-Za-z0-9]+)*)/i);
+      const version = versionMatch ? versionMatch[1] : tag;
+      if (!version) throw new Error('The published release has no version tag.');
+      const assets = Array.isArray(release.assets) ? release.assets : [];
+      const apk = assets.find(asset => /^(app-release|molan-chat-release)\\.apk$/i.test(asset.name))
+        || assets.find(asset => /\\.apk$/i.test(asset.name));
+      const notes = String(release.body || '')
+        .split(/\\r?\\n/)
+        .map(line => line.replace(/^\\s*(?:[-*•]|\\d+[.)])\\s*/, '').trim())
+        .filter(line => line && !/^(OTA_VERSION|OTA_SHA256)=/i.test(line));
+      const latest = {
+        version,
+        title: release.name || 'Molan Chat ' + version,
+        description: notes[0] || 'Official published Molan Chat release.',
+        releaseDate: release.published_at || release.created_at || null,
+        channel: release.prerelease ? 'Beta' : 'Stable',
+        downloadUrl: apk?.browser_download_url || 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest'
+      };
+      renderLatestVersion(latest);
+      renderVersions([{
+        version,
+        title: release.prerelease ? 'Latest pre-release' : 'Latest official release',
+        description: latest.description,
+        state: 'Latest',
+        current: true
+      }]);
+      renderNotes(notes);
+      setText('release-channel', latest.channel);
+      window.ZakiChatReleaseInfo = Object.freeze({
+        version,
+        tag,
+        url: release.html_url || 'https://github.com/zakpollyqueens/ZakiChat-/releases/latest',
+        apkUrl: apk?.browser_download_url || '',
+        publishedAt: latest.releaseDate,
+        notes
+      });
+    } catch (error) {
+      console.warn('Official Molan Chat release lookup failed:', error);
+    }
+  }
+
   document.addEventListener(
     'DOMContentLoaded',
     function () {
-
-      setText(
-        'current-year',
-        new Date().getFullYear()
-      );
-
-      loadAdminPublishedInformation();
+      setText('current-year', new Date().getFullYear());
+      loadAdminPublishedInformation().finally(loadOfficialGitHubRelease);
     }
   );
 
