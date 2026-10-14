@@ -50,7 +50,7 @@ begin
   ) values (
     payment_row.user_id,
     payment_row.plan,
-    payment_row.amount,
+    coalesce(nullif(payment_row.metadata->>'usd_amount','')::numeric,payment_row.amount),
     payment_row.currency,
     'active',
     now(),
