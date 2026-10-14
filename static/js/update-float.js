@@ -2,7 +2,6 @@
   "use strict";
 
   const RELEASE_API = "https://api.github.com/repos/zakpollyqueens/ZakiChat-/releases/latest";
-  const OTA_URL = "https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/ota-bundle.zip";
   const ID = "molan-update-float";
   let latest = null;
   let busy = false;
@@ -84,10 +83,22 @@
       const body = String(release.body || "");
       const versionMatch = body.match(/^OTA_VERSION=([A-Za-z0-9._-]{1,100})$/m);
       const hashMatch = body.match(/^OTA_SHA256=([a-fA-F0-9]{64})$/m);
-      if (!versionMatch || !hashMatch) return;
+      const bundle = Array.isArray(release.assets) ? release.assets.find(asset =>
+        asset && asset.name === "ota-bundle.zip" &&
+        typeof asset.browser_download_url === "string" &&
+        /^https:\/\/github\.com\/zakpollyqueens\/ZakiChat-\/releases\/download\/[A-Za-z0-9._-]+\/ota-bundle\.zip$/.test(asset.browser_download_url)
+      ) : null;
+      if (!versionMatch || !hashMatch || !bundle) return;
+      const declaredDigest = String(bundle.digest || "").replace(/^sha256:/i, "").toLowerCase();
+      const expectedDigest = hashMatch[1].toLowerCase();
+      if (declaredDigest && declaredDigest !== expectedDigest) {
+        console.warn("Molan Chat release metadata has mismatched OTA digests.");
+        return;
+      }
       latest = {
         version: versionMatch[1],
-        sha256: hashMatch[1].toLowerCase(),
+        sha256: expectedDigest,
+        url: bundle.browser_download_url,
         name: release.name || "Molan Chat update"
       };
       const installed = String(window.ZakiChatNative.getInstalledOtaVersion() || "");
@@ -107,7 +118,7 @@
     busy = true;
     show("Preparing feature update…", "Your chat will reopen after the feature files are verified.", "Updating…", true, true);
     try {
-      window.ZakiChatNative.downloadAndApplyOta(latest.version, OTA_URL, latest.sha256);
+      window.ZakiChatNative.downloadAndApplyOta(latest.version, latest.url, latest.sha256);
     } catch (error) {
       busy = false;
       show("Update could not start", error.message || "Please try again when connected.", "Retry update", false, false);
