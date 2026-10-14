@@ -2224,8 +2224,11 @@ showComposerError(message) {
 
     container.innerHTML = upgrades
       .map(function (upgrade) {
+        const planId=String(upgrade.id||"");
+        const numericPrice=planId==="personal_monthly"?2:planId==="business_monthly"?10:Number(String(upgrade.price||"").replace(/[^0-9.]/g,""));
+        const planType=planId==="business_monthly"?"business":"personal";
         return `
-          <article class="release-upgrade-item">
+          <article class="release-upgrade-item" data-plan-id="${escapeReleaseHtml(planId)}" data-account-type="${planType}" data-price="${Number.isFinite(numericPrice)?numericPrice:0}">
 
             <h4>
               ${escapeReleaseHtml(
@@ -2239,7 +2242,7 @@ showComposerError(message) {
               )}
             </p>
 
-            <span class="upgrade-price">
+            <span class="upgrade-price" data-upgrade-price>
               Upgrade fee:
               ${escapeReleaseHtml(
                 upgrade.price || 'See upgrade details'
@@ -2248,6 +2251,8 @@ showComposerError(message) {
 
             <a
               class="release-upgrade-button"
+              data-plan-choice="${escapeReleaseHtml(planId)}"
+              data-plan-display-label="Upgrade Now"
               href="${escapeReleaseHtml(
                 upgrade.upgradeUrl || '#'
               )}"
@@ -2259,6 +2264,7 @@ showComposerError(message) {
         `;
       })
       .join('');
+    if(window.ZakiChatCurrency?.refreshPrices)void window.ZakiChatCurrency.refreshPrices();
   }
 
   async function loadAdminPublishedReleases() {
