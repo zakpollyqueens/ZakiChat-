@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
             }
         });
         setContentView(webView);
-        webView.loadUrl(hasPendingAuthHandoff() ? "https://zakichat.local/pages/mobile-handoff.html" : "https://zakichat.local/index.html");
+        webView.loadUrl(hasPendingAuthHandoff() ? "https://zakichat.local/pages/mobile-handoff.html" : "https://zakichat.local/pages/app-start.html");
     }
 
     private void storeAuthHandoffFromIntent(Intent intent) {
