@@ -280,18 +280,27 @@ public class MainActivity extends Activity {
                     connection.setReadTimeout(60000);
                     connection.setInstanceFollowRedirects(true);
                     connection.setRequestProperty("User-Agent", "ZakiChat-OTA/1.0");
+                    long contentLength = connection.getContentLengthLong();
                     try (InputStream in = new BufferedInputStream(connection.getInputStream());
                          FileOutputStream out = new FileOutputStream(zip)) {
                         byte[] buffer = new byte[32768];
                         int count;
                         long total = 0;
+                        int lastPercent = -1;
                         while ((count = in.read(buffer)) != -1) {
                             total += count;
                             if (total > 150L * 1024L * 1024L) throw new Exception("Update package exceeds the 150 MB safety limit.");
                             out.write(buffer, 0, count);
+                            if (contentLength > 0) {
+                                int percent = (int)Math.min(78L, (total * 78L) / contentLength);
+                                if (percent != lastPercent) {
+                                    lastPercent = percent;
+                                    dispatchOtaProgress("Downloading feature files… " + percent + "%", percent);
+                                }
+                            }
                         }
                     } finally { connection.disconnect(); }
-                    dispatchOtaEvent("progress", "Verifying update…");
+                    dispatchOtaProgress("Verifying update…", 82);
                     if (!sha256File(zip).equalsIgnoreCase(expectedSha256)) throw new Exception("Update verification failed. Nothing was changed.");
                     deleteRecursively(staging);
                     if (!staging.mkdirs() && !staging.isDirectory()) throw new Exception("Could not prepare the update.");
@@ -301,7 +310,7 @@ public class MainActivity extends Activity {
                         !new File(staging, "static/js/status.js").isFile()) {
                         throw new Exception("The update package is incomplete.");
                     }
-                    dispatchOtaEvent("progress", "Applying update…");
+                    dispatchOtaProgress("Applying feature update…", 90);
                     deleteRecursively(backup);
                     if (active.exists() && !active.renameTo(backup)) throw new Exception("Could not safely prepare the current version.");
                     if (!staging.renameTo(active)) {
@@ -311,8 +320,10 @@ public class MainActivity extends Activity {
                     getSharedPreferences("zaki_ota", MODE_PRIVATE).edit().putString("version", version).apply();
                     deleteRecursively(backup);
                     zip.delete();
-                    dispatchOtaEvent("applied", "Update installed. Restarting ZakiChat…");
-                    runOnUiThread(() -> { if (webView != null) webView.postDelayed(() -> webView.loadUrl("https://zakichat.local/index.html"), 900); });
+                    dispatchOtaProgress("Finishing update…", 100);
+                    dispatchOtaEvent("applied", "Feature update complete. Returning to your chats…");
+                    final String returnUrl = "https://zakichat.local/pages/chats.html?molanUpdateComplete=1&version=" + Uri.encode(version);
+                    runOnUiThread(() -> { if (webView != null) webView.postDelayed(() -> webView.loadUrl(returnUrl), 3000); });
                 } catch (Exception error) {
                     deleteRecursively(staging);
                     dispatchOtaEvent("error", error.getMessage() == null ? "Update failed. Your current app is unchanged." : error.getMessage());
@@ -320,12 +331,19 @@ public class MainActivity extends Activity {
             }, "ZakiChat-OTA").start();
         }
         private void dispatchOtaEvent(String type, String message) {
+            dispatchOtaEvent(type, message, -1);
+        }
+        private void dispatchOtaProgress(String message, int percent) {
+            dispatchOtaEvent("progress", message, percent);
+        }
+        private void dispatchOtaEvent(String type, String message, int percent) {
             runOnUiThread(() -> {
                 if (webView == null) return;
                 try {
                     JSONObject detail = new JSONObject();
                     detail.put("type", type);
                     detail.put("message", message == null ? "" : message);
+                    if (percent >= 0) detail.put("percent", Math.max(0, Math.min(100, percent)));
                     webView.evaluateJavascript("window.dispatchEvent(new CustomEvent('zaki-ota-event',{detail:" + detail.toString() + "}));", null);
                 } catch (Exception ignored) {}
             });
