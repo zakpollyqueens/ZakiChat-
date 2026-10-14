@@ -13,6 +13,21 @@
       typeof window.ZakiChatNative.downloadAndApplyOta === "function");
   }
 
+  function showUpdateCelebration() {
+    const params = new URLSearchParams(location.search);
+    if (params.get("molanUpdateComplete") !== "1") return;
+    const version = params.get("version") || "the latest version";
+    const overlay = document.createElement("div");
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-live", "polite");
+    overlay.setAttribute("aria-label", "Update complete");
+    overlay.style.cssText = "position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:24px;background:rgba(3,12,25,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)";
+    overlay.innerHTML = '<section style="max-width:360px;width:100%;text-align:center;padding:28px 22px;border:1px solid #7cecff66;border-radius:26px;background:linear-gradient(145deg,#0b233b,#10445a);color:#f2fbff;box-shadow:0 22px 80px #0008"><div style="font-size:48px;line-height:1.2">🎉</div><h2 style="margin:12px 0 8px">Thank you for updating!</h2><p style="margin:0;color:#c8e9f6">Molan Chat is ready on '+version.replace(/[&<>"]/g, "")+'. Your chats and saved sign-in stay with you.</p><div style="height:4px;margin-top:20px;border-radius:5px;background:linear-gradient(90deg,#70e9ff,#b4fff0)"></div></section>';
+    document.body.append(overlay);
+    history.replaceState({}, "", location.pathname + location.hash);
+    setTimeout(() => { overlay.style.transition = "opacity .35s"; overlay.style.opacity = "0"; setTimeout(() => overlay.remove(), 380); }, 2600);
+  }
+
   function ensureUI() {
     if (document.getElementById(ID)) return document.getElementById(ID);
     const style = document.createElement("style");
@@ -80,7 +95,7 @@
         hide();
         return;
       }
-      show("Molan Chat update available", latest.name + " is ready to install.", "Update Now", false, false);
+      show("Molan Chat feature update available", latest.name + " can be added without signing out.", "Update features", false, false);
     } catch (error) {
       // A failed check is not an update; keep the interface unobtrusive.
       console.warn("Molan Chat update check failed:", error);
@@ -90,7 +105,7 @@
   function installUpdate() {
     if (!latest || busy || !nativeReady()) return;
     busy = true;
-    show("Preparing your update…", "Keep Molan Chat open while the update is downloaded and verified.", "Updating…", true, true);
+    show("Preparing feature update…", "Your chat will reopen after the feature files are verified.", "Updating…", true, true);
     try {
       window.ZakiChatNative.downloadAndApplyOta(latest.version, OTA_URL, latest.sha256);
     } catch (error) {
@@ -103,11 +118,11 @@
     const detail = event.detail || {};
     if (detail.type === "progress") {
       busy = true;
-      show("Updating Molan Chat…", detail.message || "Downloading and verifying files.", "Updating…", true, true);
+      show("Updating Molan Chat features…", detail.message || "Downloading and verifying files.", "Updating…", true, true);
     } else if (detail.type === "applied") {
       busy = false;
-      show("Update complete ✓", detail.message || "Molan Chat is up to date.", "Done", true, false);
-      window.setTimeout(hide, 1800);
+      show("Feature update complete ✓", detail.message || "Molan Chat features are up to date.", "Done", true, false);
+      window.setTimeout(hide, 2500);
     } else if (detail.type === "error") {
       busy = false;
       show("Update failed", detail.message || "Your current app was not changed. Try again.", "Retry update", false, false);
@@ -116,9 +131,10 @@
 
   window.addEventListener("online", checkForUpdate);
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => { ensureUI(); checkForUpdate(); });
+    document.addEventListener("DOMContentLoaded", () => { ensureUI(); showUpdateCelebration(); checkForUpdate(); });
   } else {
     ensureUI();
+    showUpdateCelebration();
     checkForUpdate();
   }
 })();
