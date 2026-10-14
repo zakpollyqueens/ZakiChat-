@@ -202,8 +202,10 @@
         const fee = await preflight.json().catch(() => ({}));
         if (!preflight.ok || fee.success !== true) throw new Error(fee.error || "Could not verify your registration fee.");
         if (fee.paymentRequired) {
-          const estimate = window.ZakiChatCurrency ? " (approximately " + window.ZakiChatCurrency.formatUsd(Number(fee.feeUsd), fee.countryCode) + ")" : "";
-          throw new Error("A one-time registration fee of $" + Number(fee.feeUsd).toFixed(2) + " USD" + estimate + " is required for your country. Account creation is paused until payment is verified; automatic checkout is not configured yet.");
+          const localCurrency = window.ZakiChatCurrency?.getCountryCurrency?.(fee.countryCode) || "USD";
+          const localAmount = window.ZakiChatCurrency ? window.ZakiChatCurrency.formatUsd(Number(fee.feeUsd), fee.countryCode) : "";
+          const feeLabel = localCurrency !== "USD" && localAmount ? localAmount + " (USD reference $" + Number(fee.feeUsd).toFixed(2) + ")" : "$" + Number(fee.feeUsd).toFixed(2) + " USD";
+          throw new Error("A one-time registration fee of " + feeLabel + " is required for your country. Account creation is paused until payment is verified; automatic checkout is not configured yet.");
         }
         localStorage.setItem(PENDING_REGISTRATION_KEY, JSON.stringify({
           phone: state.phone, paymentId: fee.paidRegistrationPaymentId || null,
