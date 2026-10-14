@@ -43,7 +43,6 @@
   async function renderPrices(country){
     const currency=currencyByCountry[country]||"USD";
     const priceNodes=document.querySelectorAll("[data-plan-id][data-price]");
-    if(!priceNodes.length)return;
     let rate=1,converted=false;
     if(currency!=="USD"){try{const r=await loadRates();rate=Number(r[currency]);if(!Number.isFinite(rate)||rate<=0)throw Error("Missing exchange rate");converted=true}catch(_){rate=1}}
     priceNodes.forEach(card=>{
