@@ -456,7 +456,7 @@
       if (!response.ok) throw new Error('Official release lookup returned ' + response.status);
       const release = await response.json();
       const tag = String(release.tag_name || release.name || '').trim();
-      const versionMatch = tag.match(/^(zc-vr\d+(?:[._-][A-Za-z0-9]+)*)/i);
+      const versionMatch = tag.match(/^(zc-vr\d+)/i);
       const version = versionMatch ? versionMatch[1] : tag;
       if (!version) throw new Error('The published release has no version tag.');
       const assets = Array.isArray(release.assets) ? release.assets : [];
