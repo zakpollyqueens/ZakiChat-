@@ -61,7 +61,23 @@
       }
     } catch (error) {
       console.error("Auth guard session check failed:", error);
-      openLogin();
+      // A temporary network/storage initialization error is not proof that the
+      // user signed out. Keep the current page and offer a retry; only a
+      // successful getSession() with no user or an explicit SIGNED_OUT event
+      // should send the user to login.
+      let panel = document.getElementById("zaki-session-retry");
+      if (!panel) {
+        panel = document.createElement("section");
+        panel.id = "zaki-session-retry";
+        panel.setAttribute("role", "alert");
+        panel.style.cssText = "position:fixed;z-index:100000;left:16px;right:16px;top:16px;padding:16px;border:1px solid #80dff2;border-radius:16px;background:#0b2035;color:#f4fbff;box-shadow:0 12px 36px #0005;font:14px/1.5 system-ui,sans-serif";
+        panel.innerHTML = '<strong>Reconnecting to Molan Chat</strong><p style="margin:6px 0 12px">Your saved sign-in has not been removed. Check your connection and try again.</p><button type="button" style="padding:9px 14px;border:0;border-radius:10px;background:#7cecff;color:#052035;font-weight:700">Retry</button>';
+        panel.querySelector("button").addEventListener("click", async () => {
+          panel.remove();
+          await protectPage();
+        });
+        document.body.appendChild(panel);
+      }
     }
   }
 
