@@ -230,7 +230,23 @@ public class MainActivity extends Activity {
 
     public class NativeBridge {
         @JavascriptInterface public String getInstalledOtaVersion() {
-            return getSharedPreferences("zaki_ota", MODE_PRIVATE).getString("version", "");
+            String appliedVersion = getSharedPreferences("zaki_ota", MODE_PRIVATE).getString("version", "");
+            if (appliedVersion != null && !appliedVersion.isEmpty()) return appliedVersion;
+            // Fresh APK installs start at the OTA version bundled into that APK.
+            // This prevents showing an update prompt immediately after installation.
+            try (InputStream input = getAssets().open("static/ota-build.json")) {
+                byte[] bytes = new byte[input.available()];
+                int offset = 0;
+                while (offset < bytes.length) {
+                    int read = input.read(bytes, offset, bytes.length - offset);
+                    if (read < 0) break;
+                    offset += read;
+                }
+                JSONObject build = new JSONObject(new String(bytes, 0, offset, java.nio.charset.StandardCharsets.UTF_8));
+                return build.optString("version", "");
+            } catch (Exception ignored) {
+                return "";
+            }
         }
         @JavascriptInterface public void downloadAndApplyOta(String version, String downloadUrl, String expectedSha256) {
             if (version == null || !version.matches("[A-Za-z0-9._-]{1,100}") ||
