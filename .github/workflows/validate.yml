@@ -75,7 +75,7 @@ jobs:
           PY
 
   build-android:
-    name: Build Zamivox Android APK
+    name: Build Molan Chat Android APK
     needs: validate
     runs-on: ubuntu-latest
     permissions:
@@ -128,19 +128,5 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Publish direct APK downloads
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          RELEASE_TAG="zc-vr15-android"
-          APK_RELEASE="android/app/build/outputs/apk/release/app-release.apk"
-          APK_DEBUG="android/app/build/outputs/apk/debug/app-debug.apk"
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" "$APK_RELEASE" "$APK_DEBUG" --clobber
-          else
-            gh release create "$RELEASE_TAG" "$APK_RELEASE" "$APK_DEBUG" \
-              --title "ZakiChat Android zc-vr15" \
-              --notes "Installable ZakiChat Android test APKs. The floating bubble requires Android's Display over other apps permission. Please test sign-in, messaging, bubble behavior, and dismiss-from-Recents behavior on the target phone."
-          fi
+      - name: Keep APKs as build artifacts
+        run: echo "APK build completed; the dedicated Android release workflow publishes the versioned APK and OTA bundle."
