@@ -9,6 +9,7 @@
       last_seen_visibility: "contacts",
       online_visibility: "everyone",
       profile_photo_visibility: "everyone",
+      profile_visibility: "everyone",
       about_visibility: "contacts",
       status_visibility: "contacts",
       read_receipts: true,
@@ -82,6 +83,9 @@
           document.getElementById(
             "profilePhotoVisibility"
           ),
+
+        profileVisibility:
+          document.getElementById("profileVisibility"),
 
         about:
           document.getElementById(
@@ -199,6 +203,11 @@
       );
 
       this.setValue(
+        this.elements.profileVisibility,
+        settings.profile_visibility || "everyone"
+      );
+
+      this.setValue(
         this.elements.about,
         settings.about_visibility
       );
@@ -281,6 +290,9 @@
 
         profile_photo_visibility:
           this.elements.profilePhoto.value,
+
+        profile_visibility:
+          this.elements.profileVisibility?.value || "everyone",
 
         about_visibility:
           this.elements.about.value,
