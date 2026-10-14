@@ -204,7 +204,7 @@
         if (fee.paymentRequired) {
           const localCurrency = window.ZakiChatCurrency?.getCountryCurrency?.(fee.countryCode) || "USD";
           const localAmount = window.ZakiChatCurrency ? window.ZakiChatCurrency.formatUsd(Number(fee.feeUsd), fee.countryCode) : "";
-          const feeLabel = localCurrency !== "USD" && localAmount ? localAmount + " (USD reference $" + Number(fee.feeUsd).toFixed(2) + ")" : "$" + Number(fee.feeUsd).toFixed(2) + " USD";
+          const feeLabel = localCurrency !== "USD" && localAmount && window.ZakiChatCurrency?.hasRate?.(fee.countryCode) ? localAmount + " (USD reference $" + Number(fee.feeUsd).toFixed(2) + ")" : "$" + Number(fee.feeUsd).toFixed(2) + " USD";
           throw new Error("A one-time registration fee of " + feeLabel + " is required for your country. Account creation is paused until payment is verified; automatic checkout is not configured yet.");
         }
         localStorage.setItem(PENDING_REGISTRATION_KEY, JSON.stringify({
