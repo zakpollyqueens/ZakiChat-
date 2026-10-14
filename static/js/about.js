@@ -470,15 +470,15 @@
       if (!response.ok) throw new Error('Official release lookup returned ' + response.status);
       const release = await response.json();
       const tag = String(release.tag_name || release.name || '').trim();
-      const versionMatch = tag.match(/^(zc-vr\\d+(?:[._-][A-Za-z0-9]+)*)/i);
+      const versionMatch = tag.match(/^(zc-vr\d+(?:[._-][A-Za-z0-9]+)*)/i);
       const version = versionMatch ? versionMatch[1] : tag;
       if (!version) throw new Error('The published release has no version tag.');
       const assets = Array.isArray(release.assets) ? release.assets : [];
-      const apk = assets.find(asset => /^(app-release|molan-chat-release)\\.apk$/i.test(asset.name))
-        || assets.find(asset => /\\.apk$/i.test(asset.name));
+      const apk = assets.find(asset => /^(app-release|molan-chat-release)\.apk$/i.test(asset.name))
+        || assets.find(asset => /\.apk$/i.test(asset.name));
       const notes = String(release.body || '')
-        .split(/\\r?\\n/)
-        .map(line => line.replace(/^\\s*(?:[-*•]|\\d+[.)])\\s*/, '').trim())
+        .split(/\r?\n/)
+        .map(line => line.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, '').trim())
         .filter(line => line && !/^(OTA_VERSION|OTA_SHA256)=/i.test(line));
       const latest = {
         version,
