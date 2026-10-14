@@ -16,24 +16,10 @@
   const fallbackVersions = [
     {
       version: 'zc-vr18',
-      title: 'Current Version',
-      description: 'Current ZakiChat starting release.',
+      title: 'Current App Build',
+      description: 'Current Molan Chat Android build while offline.',
       state: 'Current',
       current: true
-    },
-    {
-      version: 'zc-vr14',
-      title: 'Recent Version',
-      description: 'Previous ZakiChat version.',
-      state: 'Previous',
-      current: false
-    },
-    {
-      version: 'zc-vr13',
-      title: 'Former Version',
-      description: 'Earlier ZakiChat version.',
-      state: 'Archived',
-      current: false
     }
   ];
 
