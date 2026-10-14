@@ -47,14 +47,14 @@
     if(currency!=="USD"){try{const r=await loadRates();rate=Number(r[currency]);if(!Number.isFinite(rate)||rate<=0)throw Error("Missing exchange rate");converted=true}catch(_){rate=1}}
     priceNodes.forEach(card=>{
       const usd=Number(card.dataset.price);if(!Number.isFinite(usd))return;
-      const strong=card.querySelector(".upgrade-price strong");if(strong)strong.textContent=fmt(converted?Math.round(usd*rate):usd,converted?currency:"USD");
+      const priceText=fmt(converted?Math.round(usd*rate):usd,converted?currency:"USD");const strong=card.querySelector(".upgrade-price strong");if(strong)strong.textContent=priceText;const priceLabel=card.querySelector("[data-upgrade-price]");if(priceLabel)priceLabel.textContent="Upgrade fee: "+priceText+"/month";
       const button=card.querySelector("[data-upgrade-plan]");if(button){const type=card.dataset.accountType==="business"?"Business":"Personal";button.textContent="Upgrade "+type+" · "+fmt(converted?Math.round(usd*rate):usd,converted?currency:"USD")+"/month"}
     });
     document.querySelectorAll("[data-plan-choice]").forEach(button=>{
-      const plan=button.dataset.planChoice;if(plan==="personal_monthly"||plan==="business_monthly"){const usd=plan==="personal_monthly"?2:10;const label=plan==="personal_monthly"?"Personal":"Business";button.textContent="Choose "+label+" · "+fmt(converted?Math.round(usd*rate):usd,converted?currency:"USD")+"/month"}
+      const plan=button.dataset.planChoice;if(plan==="personal_monthly"||plan==="business_monthly"){const usd=plan==="personal_monthly"?2:10;const label=plan==="personal_monthly"?"Personal":"Business";button.textContent=(button.dataset.planDisplayLabel||("Choose "+label))+" · "+fmt(converted?Math.round(usd*rate):usd,converted?currency:"USD")+"/month"}
     });
     let info=document.getElementById("planCurrencyNote");
-    if(!info){info=document.createElement("p");info.id="planCurrencyNote";info.className="currency-quote-note";const target=document.querySelector(".upgrade-plans-grid")||document.querySelector(".account-plan-showcase");target?.append(info)}
+    if(!info){info=document.createElement("p");info.id="planCurrencyNote";info.className="currency-quote-note";const target=document.querySelector(".upgrade-plans-grid")||document.querySelector(".account-plan-showcase")||document.getElementById("updatesUpgradeList")?.parentElement;target?.append(info)}
     if(info){if(currency==="USD")info.textContent="Prices shown in USD for your registered account country.";else if(converted)info.textContent="Prices converted from USD using the latest available exchange rate"+(rateTime?" ("+rateTime+")":"")+". The final amount is confirmed at secure checkout.";else info.textContent="Live exchange rates are temporarily unavailable. Prices are shown in USD until a rate can be retrieved."}
   }
   async function getAccountCountry(){
@@ -70,7 +70,7 @@
     else if(currency==="USD"){quote.textContent="Registration fee: "+fmt(usd,"USD")+" one-time";if(note)note.textContent="The final fee is confirmed by the secure registration/payment flow."}
     else {try{const r=await loadRates();const rate=Number(r[currency]);if(!Number.isFinite(rate)||rate<=0)throw Error("Missing rate");quote.textContent="Registration fee: "+fmt(Math.round(usd*rate),currency)+" one-time";if(note)note.textContent="Converted from "+fmt(usd,"USD")+" using the latest exchange rate"+(rateTime?" ("+rateTime+")":"")+". Final fees are confirmed by secure checkout."}catch(_){quote.textContent="Registration fee: "+fmt(usd,"USD")+" one-time";if(note)note.textContent="Live exchange rates are temporarily unavailable; this is the USD reference fee."}}
   }
-  window.ZakiChatCurrency={formatUsd:(amount,countryCode)=>{const code=String(countryCode||"").toLowerCase(),currency=currencyByCountry[code]||"USD";if(currency==="USD")return fmt(Number(amount),"USD");return fmt(Math.round(Number(amount)*Number(rates?.[currency]||1)),currency)},getCountryCurrency:country=>currencyByCountry[String(country||"").toLowerCase()]||"USD",countryFromPhone,loadRates,renderPrices,format:fmt};
+  window.ZakiChatCurrency={refreshPrices:async()=>{const country=await getAccountCountry();if(country)await renderPrices(country)},formatUsd:(amount,countryCode)=>{const code=String(countryCode||"").toLowerCase(),currency=currencyByCountry[code]||"USD";if(currency==="USD")return fmt(Number(amount),"USD");return fmt(Math.round(Number(amount)*Number(rates?.[currency]||1)),currency)},getCountryCurrency:country=>currencyByCountry[String(country||"").toLowerCase()]||"USD",countryFromPhone,loadRates,renderPrices,format:fmt};
   async function refresh(){const country=await getAccountCountry();if(country)await renderPrices(country);await renderRegistration()}
   if(input){input.addEventListener("countrychange",()=>{void renderRegistration()});input.addEventListener("change",()=>{void renderRegistration()});input.addEventListener("input",()=>{void renderRegistration()});renderRegistration();let tries=0;const timer=setInterval(()=>{void renderRegistration();if(window.intlTelInputGlobals?.getInstance?.(input)||++tries>=20)clearInterval(timer)},250)}
   document.addEventListener("DOMContentLoaded",()=>{void refresh()});
