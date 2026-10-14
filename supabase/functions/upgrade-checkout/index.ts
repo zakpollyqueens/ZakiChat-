@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { parsePhoneNumberFromString } from "npm:libphonenumber-js@1.11.20";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
@@ -11,6 +12,25 @@ const plans = {
   personal_monthly: { label: "Customized Personal", amount: 2 },
   business_monthly: { label: "Customized Business", amount: 10 }
 };
+const fallbackCurrencies:Record<string,string>={UG:"UGX",KE:"KES",TZ:"TZS",US:"USD",LR:"LRD",EC:"USD",SV:"USD",PA:"USD",GB:"GBP",CA:"CAD",AU:"AUD",NZ:"NZD",ZA:"ZAR",NG:"NGN",GH:"GHS",RW:"RWF",IN:"INR",PK:"PKR",BD:"BDT",LK:"LKR",NP:"NPR",JP:"JPY",CN:"CNY",KR:"KRW",SG:"SGD",MY:"MYR",ID:"IDR",PH:"PHP",TH:"THB",VN:"VND",AE:"AED",SA:"SAR",QA:"QAR",KW:"KWD",BH:"BHD",OM:"OMR",IL:"ILS",TR:"TRY",RU:"RUB",UA:"UAH",CH:"CHF",NO:"NOK",SE:"SEK",DK:"DKK",PL:"PLN",CZ:"CZK",HU:"HUF",RO:"RON",BG:"BGN",BR:"BRL",MX:"MXN",AR:"ARS",CL:"CLP",CO:"COP",PE:"PEN"};
+async function localPrice(usd:number,phone:string){
+ let countryCode="";
+ try{countryCode=parsePhoneNumberFromString(phone||"")?.country||""}catch(_){}
+ if(!countryCode)return {amount:usd,currency:"USD",countryCode:"",fxRate:1,usdAmount:usd,rateTime:""};
+ let currency=fallbackCurrencies[countryCode]||"";
+ if(!currency){
+  try{const cr=await fetch("https://restcountries.com/v3.1/alpha/"+encodeURIComponent(countryCode)+"?fields=currencies",{headers:{Accept:"application/json"}});const data=await cr.json();const first=Array.isArray(data)?data[0]:data;currency=Object.keys(first?.currencies||{})[0]||""}catch(_){}
+ }
+ if(!currency)throw new Error("Could not determine the billing currency for your registered country. Please retry later.");
+ if(currency==="USD")return {amount:usd,currency,countryCode,fxRate:1,usdAmount:usd,rateTime:""};
+ const fx=await fetch("https://open.er-api.com/v6/latest/USD",{headers:{Accept:"application/json"},cache:"no-store"});
+ const data=await fx.json().catch(()=>({}));
+ const rate=Number(data?.rates?.[currency]);
+ if(!fx.ok||data.result!=="success"||!Number.isFinite(rate)||rate<=0)throw new Error("Live exchange rates are temporarily unavailable. Your upgrade has not been charged; please retry later.");
+ const digits=new Intl.NumberFormat("en",{style:"currency",currency}).resolvedOptions().maximumFractionDigits;
+ const factor=10**digits,amount=Math.round(usd*rate*factor)/factor;
+ return {amount,currency,countryCode,fxRate:rate,usdAmount:usd,rateTime:String(data.time_last_update_utc||"")};
+}
 const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS", "Vary": "Origin" };
 function json(body: unknown, status = 200) { return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" } }); }
 function pesapalConfig() {
@@ -83,6 +103,10 @@ Deno.serve(async (req: Request) => {
     const { data: authData, error: authError } = await db.auth.getUser(token);
     if (authError || !authData.user) return json({ success: false, error: "Your sign-in session is invalid or expired. Sign in again." }, 401);
     const user = authData.user;
+    const {data:profile,error:profileError}=await db.from("profiles").select("full_name,phone").eq("id",user.id).maybeSingle();
+    if(profileError)throw profileError;
+    const pricing=await localPrice(plan.amount,String(profile?.phone||user.phone||user.user_metadata?.phone||""));
+    const pricingMetadata={usd_amount:plan.amount,fx_rate:pricing.fxRate,country_code:pricing.countryCode,fx_rate_time:pricing.rateTime,display_currency:pricing.currency};
     const { data: activeUpgrade, error: activeError } = await db.from("user_upgrades").select("id, plan, expires_at").eq("user_id", user.id).eq("status", "active").gt("expires_at", new Date().toISOString()).order("expires_at", { ascending: false }).limit(1).maybeSingle();
     if (activeError) throw activeError;
     if (activeUpgrade?.plan === planId) return json({ success: true, alreadyActive: true, checkoutReady: false, planId, message: "This plan is already active on your account." });
@@ -93,23 +117,26 @@ Deno.serve(async (req: Request) => {
     let payment = existing;
     if (!payment) {
       const { data: inserted, error: insertError } = await db.from("upgrade_payments").insert({
-        user_id: user.id, plan: planId, amount: plan.amount, currency: "USD", status: "pending", payment_type: "automatic", provider: null, payment_method: null,
-        metadata: { request_source: "public_upgrade_button", plan_label: plan.label, billing_interval: "monthly", checkout_state: "awaiting_pesapal_configuration" }
+        user_id: user.id, plan: planId, amount: pricing.amount, currency: pricing.currency, status: "pending", payment_type: "automatic", provider: null, payment_method: null,
+        metadata: { request_source: "public_upgrade_button", plan_label: plan.label, billing_interval: "monthly", checkout_state: "awaiting_pesapal_configuration", ...pricingMetadata }
       }).select("id, plan, amount, currency, status, created_at, provider, metadata").single();
       if (insertError) throw insertError;
       payment = inserted;
+    }
+    if(payment && !payment.provider && !payment.metadata?.redirect_url && (String(payment.currency||"USD")!==pricing.currency||Number(payment.amount)!==pricing.amount)){
+      const {data:repriced,error:repriceError}=await db.from("upgrade_payments").update({amount:pricing.amount,currency:pricing.currency,metadata:{...(payment.metadata||{}),...pricingMetadata,checkout_state:"awaiting_pesapal_configuration"}}).eq("id",payment.id).eq("status","pending").select("id,plan,amount,currency,status,created_at,provider,metadata").single();
+      if(repriceError)throw repriceError;
+      payment=repriced;
     }
     if (payment.provider === "pesapal" && payment.metadata?.redirect_url) {
       return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, status: payment.status, reused: true, checkoutReady: true, checkoutUrl: payment.metadata.redirect_url, message: "Continue to Pesapal to complete your payment." });
     }
     if (!pesapalConfig().configured) {
-      return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, status: payment.status, reused: Boolean(existing), checkoutReady: false, provider: "pesapal", requiredConfiguration: ["PESAPAL_CONSUMER_KEY", "PESAPAL_CONSUMER_SECRET", "PESAPAL_IPN_ID", "PESAPAL_CALLBACK_URL"], message: "Your upgrade request is safely recorded. Pesapal checkout is not active yet; no charge has been made." });
+      return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, usdAmount:plan.amount, countryCode:pricing.countryCode, fxRate:pricing.fxRate, status: payment.status, reused: Boolean(existing), checkoutReady: false, provider: "pesapal", requiredConfiguration: ["PESAPAL_CONSUMER_KEY", "PESAPAL_CONSUMER_SECRET", "PESAPAL_IPN_ID", "PESAPAL_CALLBACK_URL"], message: "Your upgrade request is safely recorded. Pesapal checkout is not active yet; no charge has been made." });
     }
-    const [{ data: profile, error: profileError }] = await Promise.all([db.from("profiles").select("full_name, phone").eq("id", user.id).maybeSingle()]);
-    if (profileError) throw profileError;
     const checkout = await createCheckout(payment, user, profile, plan);
     if (!checkout) return json({ success: true, requestId: payment.id, planId, status: "pending", checkoutReady: false, provider: "pesapal", message: "Your request is recorded; Pesapal credentials still need configuration." });
-    return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, status: payment.status, reused: Boolean(existing), checkoutReady: true, checkoutUrl: checkout.redirectUrl, message: "Continue to Pesapal to complete your payment. Your upgrade activates only after Pesapal confirms payment." });
+    return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, usdAmount:plan.amount, countryCode:pricing.countryCode, fxRate:pricing.fxRate, status: payment.status, reused: Boolean(existing), checkoutReady: true, checkoutUrl: checkout.redirectUrl, message: "Continue to Pesapal to complete your payment. Your upgrade activates only after Pesapal confirms payment." });
   } catch (error) {
     console.error("Pesapal upgrade checkout failed:", error);
     return json({ success: false, error: error instanceof Error ? error.message : "Unable to create secure Pesapal checkout." }, 500);
