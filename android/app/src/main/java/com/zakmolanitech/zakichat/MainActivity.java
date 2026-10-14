@@ -248,6 +248,18 @@ public class MainActivity extends Activity {
                 return "";
             }
         }
+        @JavascriptInterface public void shareText(String text) {
+            if (text == null || text.trim().isEmpty()) return;
+            final String shareContent = text.length() > 5000 ? text.substring(0, 5000) : text;
+            runOnUiThread(() -> {
+                try {
+                    Intent send = new Intent(Intent.ACTION_SEND);
+                    send.setType("text/plain");
+                    send.putExtra(Intent.EXTRA_TEXT, shareContent);
+                    startActivity(Intent.createChooser(send, "Share with"));
+                } catch (Exception ignored) {}
+            });
+        }
         @JavascriptInterface public void downloadAndApplyOta(String version, String downloadUrl, String expectedSha256) {
             if (version == null || !version.matches("[A-Za-z0-9._-]{1,100}") ||
                 expectedSha256 == null || !expectedSha256.matches("[a-fA-F0-9]{64}") ||
