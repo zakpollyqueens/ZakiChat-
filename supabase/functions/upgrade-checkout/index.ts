@@ -63,7 +63,7 @@ async function pesapalToken(base: string) {
   if (!response.ok || !data.token) throw new Error(data?.error?.message || data?.message || "Pesapal authentication failed. Check the server-side credentials and environment.");
   return data.token as string;
 }
-async function createCheckout(payment: any, user: any, profile: any, plan: { label: string; amount: number }) {
+async function createCheckout(payment: any, user: any, profile: any, plan: { label: string; amount: number }, registeredCountryCode: string) {
   const config = pesapalConfig();
   if (!config.configured) return null;
   const token = await pesapalToken(config.base);
@@ -84,7 +84,7 @@ async function createCheckout(payment: any, user: any, profile: any, plan: { lab
     billing_address: {
       email_address: email || undefined,
       phone_number: phone || undefined,
-      country_code: "UG",
+      country_code: registeredCountryCode || "UG",
       first_name: parts[0] || "ZakiChat",
       last_name: parts.slice(1).join(" ") || "Customer"
     }
@@ -149,7 +149,7 @@ Deno.serve(async (req: Request) => {
     if (!pesapalConfig().configured) {
       return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, usdAmount:plan.amount, countryCode:pricing.countryCode, fxRate:pricing.fxRate, status: payment.status, reused: Boolean(existing), checkoutReady: false, provider: "pesapal", requiredConfiguration: ["PESAPAL_CONSUMER_KEY", "PESAPAL_CONSUMER_SECRET", "PESAPAL_IPN_ID", "PESAPAL_CALLBACK_URL"], message: "Your upgrade request is safely recorded. Pesapal checkout is not active yet; no charge has been made." });
     }
-    const checkout = await createCheckout(payment, user, profile, plan);
+    const checkout = await createCheckout(payment, user, profile, plan, pricing.countryCode);
     if (!checkout) return json({ success: true, requestId: payment.id, planId, status: "pending", checkoutReady: false, provider: "pesapal", message: "Your request is recorded; Pesapal credentials still need configuration." });
     return json({ success: true, requestId: payment.id, planId, amount: Number(payment.amount), currency: payment.currency, usdAmount:plan.amount, countryCode:pricing.countryCode, fxRate:pricing.fxRate, status: payment.status, reused: Boolean(existing), checkoutReady: true, checkoutUrl: checkout.redirectUrl, message: "Continue to Pesapal to complete your payment. Your upgrade activates only after Pesapal confirms payment." });
   } catch (error) {
