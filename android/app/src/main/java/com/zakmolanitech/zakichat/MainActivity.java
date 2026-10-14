@@ -264,7 +264,7 @@ public class MainActivity extends Activity {
             if (version == null || !version.matches("[A-Za-z0-9._-]{1,100}") ||
                 expectedSha256 == null || !expectedSha256.matches("[a-fA-F0-9]{64}") ||
                 downloadUrl == null ||
-                !downloadUrl.equals("https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/ota-bundle.zip")) {
+                !downloadUrl.matches("https://github\\.com/zakpollyqueens/ZakiChat-/releases/download/[A-Za-z0-9._-]+/ota-bundle\\.zip")) {
                 dispatchOtaEvent("error", "The update package details are invalid.");
                 return;
             }
