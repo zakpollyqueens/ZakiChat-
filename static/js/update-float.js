@@ -73,7 +73,7 @@
 
   async function checkForUpdate(userRequested = false) {
     if (!nativeReady()) return;
-    if (!navigator.onLine) { show("You’re offline", "Connect to the internet to check for the latest Molan Chat update.", "Check again", false, false); return; }
+    if (!navigator.onLine) { if (userRequested) show("You’re offline", "Connect to the internet to check for the latest Molan Chat update.", "Check again", false, false); else hide(); return; }
     if (userRequested) show("Checking for updates…", "Checking the official Molan Chat release and verifying its package.", "Checking…", true, true);
     try {
       const response = await fetch(RELEASE_API, {
@@ -90,11 +90,13 @@
         typeof asset.browser_download_url === "string" &&
         /^https:\/\/github\.com\/zakpollyqueens\/ZakiChat-\/releases\/download\/[A-Za-z0-9._-]+\/ota-bundle\.zip$/.test(asset.browser_download_url)
       ) : null;
-      if (!versionMatch || !hashMatch || !bundle) { latest = null; show("Update could not be verified", "The latest release does not yet have a complete, verified feature package. Your current app has not been changed.", "Check again", false, false); return; }
+      if (!versionMatch || !hashMatch || !bundle) { latest = null; if (userRequested) show("Update could not be verified", "The latest release does not yet have a complete, verified feature package. Your current app has not been changed.", "Check again", false, false); else hide(); return; }
       const declaredDigest = String(bundle.digest || "").replace(/^sha256:/i, "").toLowerCase();
       const expectedDigest = hashMatch[1].toLowerCase();
       if (declaredDigest && declaredDigest !== expectedDigest) {
         console.warn("Molan Chat release metadata has mismatched OTA digests.");
+        latest = null;
+        if (userRequested) show("Update could not be verified", "The release checksum does not match its package. Nothing was changed.", "Check again", false, false); else hide();
         return;
       }
       latest = {
@@ -106,15 +108,15 @@
       const installed = String(window.ZakiChatNative.getInstalledOtaVersion() || "");
       if (installed === latest.version) {
         latest = null;
-        show("Molan Chat is up to date ✓", "You have the latest verified feature version (" + installed.slice(0, 12) + ").", "Check again", false, false);
+        if (userRequested) show("Molan Chat is up to date ✓", "You have the latest verified feature version (" + installed.slice(0, 12) + ").", "Check again", false, false); else hide();
         return;
       }
       show("Molan Chat update available", latest.name + " is ready. Tap Update Now to download, verify and apply it.", "Update Now", false, false);
     } catch (error) {
-      // A failed check is not an update; keep the interface unobtrusive.
+      // A failed background check is not an update and must not create a banner.
       console.warn("Molan Chat update check failed:", error);
       latest = null;
-      show("Could not check for updates", "Your app is unchanged. Check your connection and try again.", "Retry check", false, false);
+      if (userRequested) show("Could not check for updates", "Your app is unchanged. Check your connection and try again.", "Retry check", false, false); else hide();
     }
   }
 
