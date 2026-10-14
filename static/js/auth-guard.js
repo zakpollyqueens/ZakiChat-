@@ -37,7 +37,15 @@
 
   async function protectPage() {
     try {
-      if (auth.ready) await auth.ready;
+      if (auth.ready) {
+        try {
+          await auth.ready;
+        } catch (readyError) {
+          // Initialization/migration can fail temporarily; still attempt a direct
+          // session read so Retry can recover without reusing a rejected promise.
+          console.warn("Molan Chat auth initialization did not finish:", readyError);
+        }
+      }
       const { data, error } = await supabaseClient.auth.getSession();
       if (error) throw error;
       if (!data?.session?.user) {
