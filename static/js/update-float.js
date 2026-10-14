@@ -52,7 +52,7 @@
     bar.setAttribute("aria-live", "polite");
     bar.innerHTML = '<span class="muf-icon" aria-hidden="true">⇧</span><span class="muf-copy"><strong class="muf-title">Molan Chat update available</strong><span class="muf-detail">A newer version is ready.</span><span class="muf-progress" hidden><i></i></span></span><button class="muf-action" type="button">Update Now</button>';
     document.body.appendChild(bar);
-    bar.querySelector("button").addEventListener("click", installUpdate);
+    bar.querySelector("button").addEventListener("click", () => { if (latest && !busy) installUpdate(); else if (!busy) void checkForUpdate(true); });
     return bar;
   }
 
@@ -71,8 +71,10 @@
     if (bar) bar.classList.remove("is-visible");
   }
 
-  async function checkForUpdate() {
-    if (!nativeReady() || !navigator.onLine) return;
+  async function checkForUpdate(userRequested = false) {
+    if (!nativeReady()) return;
+    if (!navigator.onLine) { show("You’re offline", "Connect to the internet to check for the latest Molan Chat update.", "Check again", false, false); return; }
+    if (userRequested) show("Checking for updates…", "Checking the official Molan Chat release and verifying its package.", "Checking…", true, true);
     try {
       const response = await fetch(RELEASE_API, {
         headers: { Accept: "application/vnd.github+json" },
@@ -88,7 +90,7 @@
         typeof asset.browser_download_url === "string" &&
         /^https:\/\/github\.com\/zakpollyqueens\/ZakiChat-\/releases\/download\/[A-Za-z0-9._-]+\/ota-bundle\.zip$/.test(asset.browser_download_url)
       ) : null;
-      if (!versionMatch || !hashMatch || !bundle) return;
+      if (!versionMatch || !hashMatch || !bundle) { latest = null; show("Update could not be verified", "The latest release does not yet have a complete, verified feature package. Your current app has not been changed.", "Check again", false, false); return; }
       const declaredDigest = String(bundle.digest || "").replace(/^sha256:/i, "").toLowerCase();
       const expectedDigest = hashMatch[1].toLowerCase();
       if (declaredDigest && declaredDigest !== expectedDigest) {
@@ -103,13 +105,16 @@
       };
       const installed = String(window.ZakiChatNative.getInstalledOtaVersion() || "");
       if (installed === latest.version) {
-        hide();
+        latest = null;
+        show("Molan Chat is up to date ✓", "You have the latest verified feature version (" + installed.slice(0, 12) + ").", "Check again", false, false);
         return;
       }
-      show("Molan Chat feature update available", latest.name + " can be added without signing out.", "Update features", false, false);
+      show("Molan Chat update available", latest.name + " is ready. Tap Update Now to download, verify and apply it.", "Update Now", false, false);
     } catch (error) {
       // A failed check is not an update; keep the interface unobtrusive.
       console.warn("Molan Chat update check failed:", error);
+      latest = null;
+      show("Could not check for updates", "Your app is unchanged. Check your connection and try again.", "Retry check", false, false);
     }
   }
 
