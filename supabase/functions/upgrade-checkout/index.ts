@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { parsePhoneNumberFromString } from "npm:libphonenumber-js@1.11.20";
+import { parsePhoneNumberFromString } from "npm:libphonenumber-js@1.11.20";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
@@ -30,6 +31,20 @@ async function localPrice(usd:number,phone:string){
  const digits=new Intl.NumberFormat("en",{style:"currency",currency}).resolvedOptions().maximumFractionDigits;
  const factor=10**digits,amount=Math.round(usd*rate*factor)/factor;
  return {amount,currency,countryCode,fxRate:rate,usdAmount:usd,rateTime:String(data.time_last_update_utc||"")};
+}
+const fallbackCurrencies:Record<string,string>={UG:"UGX",KE:"KES",TZ:"TZS",US:"USD",LR:"LRD",GB:"GBP",CA:"CAD",AU:"AUD",NZ:"NZD",ZA:"ZAR",NG:"NGN",GH:"GHS",RW:"RWF",IN:"INR",PK:"PKR",BD:"BDT",LK:"LKR",NP:"NPR",JP:"JPY",CN:"CNY",KR:"KRW",SG:"SGD",MY:"MYR",ID:"IDR",PH:"PHP",TH:"THB",VN:"VND",AE:"AED",SA:"SAR",QA:"QAR",KW:"KWD",BH:"BHD",OM:"OMR",IL:"ILS",TR:"TRY",RU:"RUB",UA:"UAH",CH:"CHF",NO:"NOK",SE:"SEK",DK:"DKK",PL:"PLN",CZ:"CZK",HU:"HUF",RO:"RON",BG:"BGN",BR:"BRL",MX:"MXN",AR:"ARS",CL:"CLP",CO:"COP",PE:"PEN",EG:"EGP",MA:"MAD",ZM:"ZMW",ZW:"ZWG",MW:"MWK",MZ:"MZN",NA:"NAD",BW:"BWP",CM:"XAF",SN:"XOF",CI:"XOF",ET:"ETB",MU:"MUR",SC:"SCR",AO:"AOA",DZ:"DZD",TN:"TND"};
+async function localPrice(usd:number,phone:string){
+ let countryCode="";try{countryCode=parsePhoneNumberFromString(phone||"")?.country||""}catch(_){}
+ if(!countryCode)return {amount:usd,currency:"USD",countryCode:"",fxRate:1,usdAmount:usd,rateTime:""};
+ let currency=fallbackCurrencies[countryCode]||"";
+ if(!currency){try{const response=await fetch("https://restcountries.com/v3.1/alpha/"+encodeURIComponent(countryCode)+"?fields=currencies");const data=await response.json();currency=Object.keys((Array.isArray(data)?data[0]:data)?.currencies||{})[0]||""}catch(_){}}
+ if(!currency)throw new Error("Could not determine the billing currency for your registered country. Please retry later.");
+ if(currency==="USD")return {amount:usd,currency,countryCode,fxRate:1,usdAmount:usd,rateTime:""};
+ const response=await fetch("https://open.er-api.com/v6/latest/USD",{headers:{Accept:"application/json"},cache:"no-store"});
+ const data=await response.json().catch(()=>({})),rate=Number(data?.rates?.[currency]);
+ if(!response.ok||data.result!=="success"||!Number.isFinite(rate)||rate<=0)throw new Error("Live exchange rates are temporarily unavailable. Your upgrade has not been charged; please retry later.");
+ const digits=new Intl.NumberFormat("en",{style:"currency",currency}).resolvedOptions().maximumFractionDigits,factor=10**digits;
+ return {amount:Math.round(usd*rate*factor)/factor,currency,countryCode,fxRate:rate,usdAmount:usd,rateTime:String(data.time_last_update_utc||"")};
 }
 const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS", "Vary": "Origin" };
 function json(body: unknown, status = 200) { return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" } }); }
