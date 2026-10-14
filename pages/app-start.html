@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Opening Molan Chat</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at top,#123c55,#07111f 66%);color:#effaff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}.card{width:min(100%,390px);padding:30px 24px;text-align:center;border:1px solid #7cecff35;border-radius:26px;background:linear-gradient(145deg,#ffffff12,#ffffff04);box-shadow:0 24px 80px #0006;backdrop-filter:blur(18px)}.logo{width:66px;height:66px;margin:0 auto 18px;display:grid;place-items:center;border-radius:21px;background:linear-gradient(135deg,#c2fbff,#28c5e8 48%,#173c7a);color:#07111f;font-size:25px;font-weight:950;box-shadow:0 12px 36px #26c9e944}.spinner{width:26px;height:26px;border:3px solid #a5f3fc33;border-top-color:#a5f3fc;border-radius:50%;margin:22px auto 0;animation:spin .8s linear infinite}p{color:#a8c3d8;font-size:13px;line-height:1.65}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.spinner{animation:none}}
+</style>
+</head>
+<body>
+<main class="card"><div class="logo">M</div><h1>Welcome back</h1><p id="startupMessage">Checking your saved Molan Chat session…</p><div class="spinner" aria-hidden="true"></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../static/js/config.js"></script>
+<script src="../static/js/account-manager.js"></script>
+<script src="../static/js/supabase-client.js"></script>
+<script>
+(async function(){
+ const message=document.getElementById("startupMessage");
+ const go=path=>window.location.replace(path);
+ try{
+  if(!window.ZakiChatAuth?.client)throw new Error("Authentication is still starting.");
+  if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
+  const {data,error}=await window.ZakiChatAuth.client.auth.getSession();
+  if(error)throw error;
+  if(data?.session?.user?.id){
+   message.textContent="Your account is ready. Opening Chats…";
+   go("chats.html");
+   return;
+  }
+  message.textContent="Please sign in or create your account to continue.";
+  go("login.html");
+ }catch(error){
+  console.error("Molan Chat startup session check failed:",error);
+  message.textContent="Please sign in to reconnect to Molan Chat.";
+  setTimeout(()=>go("login.html"),500);
+ }
+})();
+</script>
+</body>
+</html>
