@@ -48,9 +48,16 @@
       <h1 id="download-title">Take Molan Chat with you.</h1>
       <p>Download Molan Chat for Android from our official GitHub release. Connect with people, take part in conversations and explore updates from your device.</p>
       <div class="download-actions">
-        <a class="download-primary" href="https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk">Download Molan Chat APK</a>
+        <a id="official-apk-download" class="download-primary" href="https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk">Download Latest Official APK</a>
         <a class="download-secondary" href="https://github.com/zakpollyqueens/ZakiChat-/releases">View releases &amp; notes</a>
       </div>
+      <p id="release-status" class="download-note" role="status" aria-live="polite">Checking the latest official Molan Chat release…</p>
+      <section id="latest-release-details" aria-labelledby="latest-release-heading" style="margin:22px 0">
+        <h2 id="latest-release-heading">Latest official release</h2>
+        <p><strong>Version:</strong> <span id="release-version">Checking…</span></p>
+        <p><strong>Published:</strong> <span id="release-date">—</span></p>
+        <p id="release-description">The download button will point to the newest published official Android release.</p>
+      </section>
       <h2>Installation steps</h2>
       <ol>
         <li>Tap the download button and wait for the APK download to finish.</li>
@@ -68,5 +75,55 @@
       <div class="footer-copy">© 2026 Molan Chat. All rights reserved.</div>
     </div>
   </footer>
+  <script>
+    (function () {
+      const repo = "zakpollyqueens/ZakiChat-";
+      const apkButton = document.getElementById("official-apk-download");
+      const status = document.getElementById("release-status");
+      const version = document.getElementById("release-version");
+      const date = document.getElementById("release-date");
+      const description = document.getElementById("release-description");
+      const releasesUrl = "https://github.com/" + repo + "/releases";
+      const fallbackApk = releasesUrl + "/latest/download/app-release.apk";
+
+      function plainText(value) {
+        return String(value || "").replace(/<[^>]*>/g, " ").replace(/\\s+/g, " ").trim();
+      }
+
+      fetch("https://api.github.com/repos/" + repo + "/releases/latest", {
+        headers: { Accept: "application/vnd.github+json" }
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Latest release is not available through the release API.");
+          return response.json();
+        })
+        .then(function (release) {
+          const apk = (release.assets || []).find(function (asset) {
+            return asset.name === "app-release.apk";
+          });
+          apkButton.href = apk ? apk.browser_download_url : fallbackApk;
+          version.textContent = release.tag_name || release.name || "Latest stable release";
+          date.textContent = release.published_at
+            ? new Date(release.published_at).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })
+            : "Date not provided";
+          description.textContent = plainText(release.body) || "Official Molan Chat Android release.";
+          status.textContent = apk
+            ? "Latest official release found. Tap Download Latest Official APK to install it."
+            : "The latest release was found, but its app-release.apk asset was not listed. The button opens the official latest-release download endpoint.";
+          const hash = document.createElement("a");
+          hash.href = release.html_url || releasesUrl;
+          hash.textContent = "Open this release on GitHub";
+          hash.className = "download-secondary";
+          hash.style.marginTop = "10px";
+          hash.style.display = "inline-flex";
+          document.getElementById("latest-release-details").appendChild(hash);
+        })
+        .catch(function () {
+          apkButton.href = fallbackApk;
+          version.textContent = "Latest published release";
+          status.textContent = "Release details could not be loaded right now. The download button still opens the official latest-release APK endpoint.";
+        });
+    })();
+  </script>
 </body>
 </html>
