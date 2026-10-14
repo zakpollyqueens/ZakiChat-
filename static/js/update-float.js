@@ -41,7 +41,7 @@
       #${ID} .muf-action{flex:none;border:0;border-radius:12px;padding:10px 12px;background:linear-gradient(135deg,#7cecff,#46c8ff);color:#052035;font-size:12px;font-weight:900;cursor:pointer}
       #${ID} .muf-action:disabled{opacity:.68;cursor:wait}
       #${ID} .muf-progress{height:3px;margin-top:6px;overflow:hidden;border-radius:4px;background:#ffffff22}
-      #${ID} .muf-progress>i{display:block;width:35%;height:100%;border-radius:4px;background:#78e7ff;animation:molanUpdateProgress 1.25s ease-in-out infinite}
+      #${ID} .muf-progress>i{display:block;width:35%;height:100%;border-radius:4px;background:#78e7ff;animation:molanUpdateProgress 1.25s ease-in-out infinite}#${ID} .muf-progress>i.is-determinate{animation:none;transform:none;transition:width .18s ease;width:0%}
       @keyframes molanUpdateIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       @keyframes molanUpdateProgress{0%{transform:translateX(-110%)}100%{transform:translateX(310%)}}
       @media(prefers-reduced-motion:reduce){#${ID}.is-visible{animation:none}#${ID} .muf-progress>i{animation:none;width:100%}}
@@ -64,7 +64,7 @@
     bar.querySelector(".muf-detail").textContent = detail || "";
     bar.querySelector(".muf-action").textContent = action || "Update Now";
     bar.querySelector(".muf-action").disabled = !!disabled;
-    bar.querySelector(".muf-progress").hidden = !progress;
+    bar.querySelector(".muf-progress").hidden = !progress; if(!progress){const fill=bar.querySelector(".muf-progress>i");fill.classList.remove("is-determinate");fill.style.width="35%";}
   }
 
   function hide() {
@@ -118,7 +118,7 @@
     const detail = event.detail || {};
     if (detail.type === "progress") {
       busy = true;
-      show("Updating Molan Chat features…", detail.message || "Downloading and verifying files.", "Updating…", true, true);
+      show("Updating Molan Chat features…", detail.message || "Downloading and verifying files.", "Updating…", true, true); if(Number.isFinite(Number(detail.percent))){const fill=ensureUI().querySelector(".muf-progress>i");fill.classList.add("is-determinate");fill.style.width=Math.max(0,Math.min(100,Number(detail.percent)))+"%";}
     } else if (detail.type === "applied") {
       busy = false;
       show("Feature update complete ✓", detail.message || "Molan Chat features are up to date.", "Done", true, false);
