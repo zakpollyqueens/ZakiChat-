@@ -337,15 +337,46 @@
   }
   function startRecognition() {
     const Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!Ctor) { addMessage("ai","Voice recognition is not available in this browser. You can type your command, or try the Molan Chat Android app."); return; }
-    stopRecognition(); recognition = new Ctor(); recognition.lang = navigator.language || "en-US"; recognition.interimResults = false; recognition.maxAlternatives = 1;
-    recognition.onstart = () => $("mca-mic").classList.add("recording");
-    recognition.onresult = event => { const transcript = event.results?.[0]?.[0]?.transcript || ""; if (transcript) send(transcript); };
-    recognition.onerror = event => { if (event.error !== "aborted" && event.error !== "no-speech") addMessage("ai","I couldn't hear that command clearly. Please try again."); };
-    recognition.onend = () => { recognition = null; $("mca-mic").classList.remove("recording"); };
-    try { recognition.start(); } catch (_) {}
+    if (!Ctor) {
+      voiceSessionActive=false;
+      answer("Voice recognition is not available in this browser. You can type your command, or try the Molan Chat Android app.");
+      return;
+    }
+    stopRecognition();
+    let heardTranscript=false;
+    const instance=new Ctor();
+    recognition=instance;
+    instance.lang=navigator.language||"en-US";
+    instance.interimResults=false;
+    instance.maxAlternatives=1;
+    instance.onstart=()=>{$("mca-mic").classList.add("recording");$("mca-status").textContent="Listening — speak naturally"};
+    instance.onresult=event=>{
+      const transcript=event.results?.[0]?.[0]?.transcript||"";
+      if(transcript){heardTranscript=true;send(transcript);}
+    };
+    instance.onerror=event=>{
+      if(event.error==="not-allowed"||event.error==="service-not-allowed"){
+        voiceSessionActive=false;
+        answer("Microphone access was denied. Allow microphone access in your browser or Android app settings, then tap the AI assistant again.");
+      }else if(event.error!=="aborted"&&event.error!=="no-speech"){
+        answer("I couldn't hear that command clearly. Please try again.");
+      }
+    };
+    instance.onend=()=>{
+      if(recognition===instance)recognition=null;
+      $("mca-mic").classList.remove("recording");
+      // If the user was silent, keep the active voice session ready. A real
+      // transcript is restarted only after Molano has finished its reply.
+      if(!heardTranscript&&voiceSessionActive&&panel.classList.contains("open")&&hasVoiceEntitlement()){
+        setTimeout(()=>{if(voiceSessionActive&&panel.classList.contains("open")&&hasVoiceEntitlement()&&!busy&&!recognition)startRecognition()},450);
+      }
+    };
+    try{instance.start()}catch(_){if(recognition===instance)recognition=null}
   }
-  function stopRecognition() { if (recognition) { try { recognition.stop(); } catch (_) {} recognition = null; } $("mca-mic").classList.remove("recording"); }
+  function stopRecognition() {
+    if(recognition){const instance=recognition;recognition=null;try{instance.stop()}catch(_){}}
+    $("mca-mic").classList.remove("recording");
+  }
 
   $("mca-launch").addEventListener("click",()=>panel.classList.contains("open")?closePanel():openPanel());
   $("mca-close").addEventListener("click",closePanel);
