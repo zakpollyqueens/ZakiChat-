@@ -6,9 +6,6 @@ const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
 let secretKey: string | undefined;
 if (secretKeysRaw) { try { const parsed = JSON.parse(secretKeysRaw); if (typeof parsed?.default === "string") secretKey = parsed.default; } catch { console.error("SUPABASE_SECRET_KEYS is not valid JSON."); } }
 secretKey ||= Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || undefined;
-const JJUMA_PUBLIC_KEY = Deno.env.get("JJUMA_PUBLIC_API_KEY") || "";
-const JJUMA_SECRET_KEY = Deno.env.get("JJUMA_SECRET_API_KEY") || "";
-const JJUMA_WEBHOOK_SECRET = Deno.env.get("JJUMA_WEBHOOK_SECRET") || "";
 const API_BASE = "https://api.jjuma.com/api/v1";
 if (!SUPABASE_URL || !secretKey) throw new Error("Upgrade checkout requires Supabase server credentials.");
 const db = createClient(SUPABASE_URL, secretKey, { auth: { persistSession: false, autoRefreshToken: false } });
@@ -29,20 +26,20 @@ async function localPrice(usd:number, phone:string) {
   const digits=new Intl.NumberFormat("en",{style:"currency",currency}).resolvedOptions().maximumFractionDigits, factor=10**digits;
   return { amount:Math.round(usd*rate*factor)/factor,currency,countryCode,fxRate:rate,rateTime:String(d.time_last_update_utc||"") };
 }
-async function jjumaCreateCheckout(payment:any,user:any,profile:any,plan:{label:string;amount:number},countryCode:string) {
-  if (!JJUMA_PUBLIC_KEY || !JJUMA_SECRET_KEY || !JJUMA_WEBHOOK_SECRET) throw new Error("JJuma Pay is not configured for Molan Chat yet. Configure JJUMA_PUBLIC_API_KEY, JJUMA_SECRET_API_KEY and JJUMA_WEBHOOK_SECRET in the ZakiChat Supabase project.");
-  const name=String(profile?.full_name||user.user_metadata?.full_name||user.user_metadata?.name||"Molan Chat customer").trim();
+async function jjumaCreateCheckout(payment:any,user:any,profile:any,plan:{label:string;amount:number},countryCode:string,accessToken:string) {
   const phone=String(profile?.phone||user.phone||user.user_metadata?.phone||"").trim();
-  if (!user.email&&!phone) throw new Error("Add an email address or phone number to your account before checkout.");
-  const webhookUrl=Deno.env.get("JJUMA_WEBHOOK_URL")||"https://rcubnewrfieqhwcnvrzs.supabase.co/functions/v1/molan-jjuma-payments?action=webhook";
-  const payload={amount:Number(payment.amount),currency:String(payment.currency).toUpperCase(),email:user.email||undefined,phone_number:phone||undefined,customer_name:name,description:"Molan Chat "+plan.label+" monthly upgrade",return_url:"https://zakpollyqueens.github.io/ZakiChat-/pages/settings.html?upgrade=return",cancel_redirect_url:"https://zakpollyqueens.github.io/ZakiChat-/pages/settings.html?upgrade=cancelled",webhook_url:webhookUrl,external_order_id:payment.id,idempotency_key:payment.id,metadata:{product:"molan_chat_upgrade",user_id:user.id,plan_code:payment.plan,upgrade_payment_id:payment.id,country_code:countryCode,usd_amount:plan.amount}};
-  const response=await fetch(API_BASE+"/payments/create",{method:"POST",headers:{Authorization:"Bearer "+JJUMA_PUBLIC_KEY,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(payload)});
+  const name=String(profile?.full_name||user.user_metadata?.full_name||user.user_metadata?.name||"Molan Chat customer").trim();
+  const response=await fetch("https://rcubnewrfieqhwcnvrzs.supabase.co/functions/v1/molan-jjuma-payments",{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+accessToken,"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({product:"molan_chat_upgrade",user_id:user.id,plan_code:payment.plan,payment_id:payment.id,amount:Number(payment.amount),currency:String(payment.currency).toUpperCase(),usd_amount:plan.amount,phone,customer_name:name})
+  });
   const data=await response.json().catch(()=>({}));
-  if(!response.ok||data?.success!==true||!data?.data?.transaction_id||typeof data?.data?.payment_url!=="string") throw new Error(data?.message||"JJuma Pay could not create checkout.");
-  const url=new URL(data.data.payment_url); if(url.protocol!=="https:"||url.hostname!=="pay.jjuma.com") throw new Error("JJuma Pay returned an untrusted checkout URL.");
-  const tx=String(data.data.transaction_id);
-  const {error}=await db.from("upgrade_payments").update({provider:"jjuma",provider_transaction_id:tx,payment_reference:tx,metadata:{...(payment.metadata||{}),checkout_state:"checkout_created",provider:"jjuma",transaction_id:tx,checkout_url:url.toString(),webhook_url:webhookUrl,product:"molan_chat_upgrade"}}).eq("id",payment.id).eq("status","pending");
-  if(error) throw error;
+  if(!response.ok||data?.success!==true||typeof data?.payment_url!=="string"||!data?.transaction_id)throw new Error(data?.error||"JJuma Pay could not create checkout.");
+  const url=new URL(data.payment_url);if(url.protocol!=="https:"||url.hostname!=="pay.jjuma.com")throw new Error("JJuma Pay returned an untrusted checkout URL.");
+  const tx=String(data.transaction_id);
+  const {error}=await db.from("upgrade_payments").update({provider:"jjuma",provider_transaction_id:tx,payment_reference:tx,metadata:{...(payment.metadata||{}),checkout_state:"checkout_created",provider:"jjuma",transaction_id:tx,checkout_url:url.toString(),product:"molan_chat_upgrade"}}).eq("id",payment.id).eq("status","pending");
+  if(error)throw error;
   return {url:url.toString(),transactionId:tx};
 }
 Deno.serve(async(req:Request)=>{
@@ -67,7 +64,7 @@ Deno.serve(async(req:Request)=>{
   if(payment?.provider==="jjuma"&&payment.metadata?.checkout_url)return json({success:true,requestId:payment.id,planId,amount:Number(payment.amount),currency:payment.currency,status:payment.status,reused:true,checkoutReady:true,provider:"jjuma",checkoutUrl:payment.metadata.checkout_url,message:"Continue to JJuma Pay to complete your upgrade."});
   if(!payment){const {data:inserted,error}=await db.from("upgrade_payments").insert({user_id:user.id,plan:planId,amount:pricing.amount,currency:pricing.currency,status:"pending",payment_type:"automatic",provider:"jjuma",payment_method:null,metadata:{request_source:"public_upgrade_button",plan_label:plan.label,billing_interval:"monthly",checkout_state:"pending_jjuma",...pricingMetadata}}).select("id,plan,amount,currency,status,created_at,provider,provider_transaction_id,payment_reference,metadata").single();if(error)throw error;payment=inserted}
   else if(payment.provider!=="jjuma"||!payment.metadata?.checkout_url){const {data:repriced,error}=await db.from("upgrade_payments").update({provider:"jjuma",amount:pricing.amount,currency:pricing.currency,metadata:{...(payment.metadata||{}),...pricingMetadata,checkout_state:"pending_jjuma"}}).eq("id",payment.id).eq("status","pending").select("id,plan,amount,currency,status,created_at,provider,provider_transaction_id,payment_reference,metadata").single();if(error)throw error;payment=repriced}
-  const checkout=await jjumaCreateCheckout(payment,user,profile,plan,pricing.countryCode);
+  const checkout=await jjumaCreateCheckout(payment,user,profile,plan,pricing.countryCode,token);
   return json({success:true,requestId:payment.id,planId,amount:Number(payment.amount),currency:payment.currency,usdAmount:plan.amount,countryCode:pricing.countryCode,fxRate:pricing.fxRate,status:payment.status,reused:Boolean(existing),checkoutReady:true,provider:"jjuma",checkoutUrl:checkout.url,transactionId:checkout.transactionId,message:"Complete JJuma Pay checkout. Your upgrade activates only after the signed webhook and server-side payment verification."});
  }catch(error){console.error("JJuma upgrade checkout failed:",error);return json({success:false,error:error instanceof Error?error.message:"Unable to create secure JJuma Pay checkout."},500)}
 });
