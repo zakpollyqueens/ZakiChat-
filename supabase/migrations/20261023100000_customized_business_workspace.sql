@@ -15,6 +15,11 @@ create table if not exists public.molan_business_workspaces (
 
 alter table public.molan_business_workspaces enable row level security;
 
+-- Business workspace records never need anonymous API access.
+revoke all on table public.molan_business_workspaces from anon;
+revoke delete, truncate, references, trigger on table public.molan_business_workspaces from authenticated;
+grant select, insert, update on table public.molan_business_workspaces to authenticated;
+
 drop policy if exists "Customized business members read own workspace" on public.molan_business_workspaces;
 create policy "Customized business members read own workspace"
   on public.molan_business_workspaces for select to authenticated
