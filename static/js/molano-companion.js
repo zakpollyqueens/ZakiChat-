@@ -121,16 +121,50 @@
       const auth = window.ZakiChatAuth;
       if (auth?.ready) await auth.ready;
       const client = auth?.client;
-      if (!client) return setTier("local");
-      const {data: sessionData} = await client.auth.getSession();
+      if (!client) { setTier("local"); return tier; }
+      const {data: sessionData, error: sessionError} = await client.auth.getSession();
+      if (sessionError) throw sessionError;
       user = sessionData?.session?.user || null;
-      if (!user) return setTier("local");
-      const {data, error} = await client.from("user_upgrades").select("plan,status,expires_at").eq("user_id", user.id).eq("status", "active").gt("expires_at", new Date().toISOString()).order("expires_at", {ascending:false}).limit(1).maybeSingle();
-      if (!error && data?.plan) setTier(data.plan); else setTier("local");
-    } catch (_) { setTier("local"); }
+      if (!user) { setTier("local"); return tier; }
+      const {data: rows, error} = await client.from("user_upgrades").select("plan,status,expires_at").eq("user_id", user.id).eq("status", "active").gt("expires_at", new Date().toISOString()).order("expires_at", {ascending:false}).limit(10);
+      if (error) throw error;
+      const plans = Array.isArray(rows) ? rows : [];
+      // If an account has more than one valid upgrade row, business access wins.
+      const selected = plans.some(row => ["business_monthly","business_customized"].includes(row.plan))
+        ? "business_monthly"
+        : plans.some(row => ["personal_monthly","personal_customized"].includes(row.plan))
+          ? "personal_monthly"
+          : "local";
+      setTier(selected);
+      return tier;
+    } catch (error) { console.warn("Could not verify Molano companion subscription.",error); setTier("local"); return tier; }
   }
-  function openPanel() { panel.classList.add("open"); $("mca-launch").setAttribute("aria-expanded","true"); setTimeout(()=>input.focus(),100); loadAccount(); }
-  function closePanel() { panel.classList.remove("open"); $("mca-launch").setAttribute("aria-expanded","false"); stopRecognition(); }
+  async function openPanel() {
+    panel.classList.add("open");
+    $("mca-launch").setAttribute("aria-expanded","true");
+    const plan = await loadAccount();
+    if (!panel.classList.contains("open")) return;
+    if (plan === "personal_monthly" || plan === "business_monthly") {
+      const greeting = plan === "business_monthly"
+        ? "Hello, welcome back! I’m Molano, your AI companion for Molan Chat and your business workspace. Tell me what you need, and I’ll explain what I’m about to do before carrying it out."
+        : "Hello! I’m Molano, your personal AI companion. Tell me what you’d like help with, and I’ll guide you through it.";
+      $("mca-status").textContent = "Welcome back — listening after the greeting";
+      speak(greeting, () => {
+        if (panel.classList.contains("open") && (tier === "personal_monthly" || tier === "business_monthly") && !recognition) startRecognition();
+      });
+    } else {
+      $("mca-status").textContent = "Essential help enabled";
+      setTimeout(()=>{ if(panel.classList.contains("open")) input.focus(); },100);
+    }
+  }
+  function closePanel() {
+    panel.classList.remove("open");
+    $("mca-launch").setAttribute("aria-expanded","false");
+    stopRecognition();
+    speechToken++;
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    $("mca-status").textContent = "Molano AI is silent. Tap to speak again.";
+  }
   function requirePremium() {
     addMessage("ai", "I can help with essential Molan Chat questions on a local account. For personalized voice commands, contact assistance and ZakiPlay control, choose Customized Personal or Customized Business in Molan Chat's upgrade section.");
     speak("Personalized voice commands are available with a customized account.");
