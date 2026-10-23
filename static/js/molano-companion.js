@@ -128,6 +128,13 @@
       return {type:"play", song:generic ? "" : requested, reply:generic ? "I’ll open ZakiPlay so you can choose your music." : "I’ll open ZakiPlay and search for " + requested + ". Choose the matching result to start playback."};
     }
     if (/\b(music|song|songs|playlist|zakiplay)\b/.test(t)) return {type:"play", song:"", reply:"I’ll open ZakiPlay so you can choose your music."};
+    const messageWithColon = text.match(/\\b(?:write|compose|draft|send)\\s+(?:a\\s+)?message\\s+(?:for|to)\\s+([\\p{L}][\\p{L} .'-]{0,38}?)\\s*:\\s*(.+)$/iu);
+    if (messageWithColon) return {type:"message", name:messageWithColon[1].trim(), draft:messageWithColon[2].trim(), reply:"I’ll open the right contact and prepare a draft. You can review it before sending."};
+    const messageWithSaying = text.match(/\\b(?:write|compose|draft|send)\\s+(?:a\\s+)?message\\s+(?:for|to)\\s+(.+?)\\s+(?:saying|that says)\\s+(.+)$/iu);
+    if (messageWithSaying) return {type:"message", name:messageWithSaying[1].trim().replace(/[.!?,]+$/, ""), draft:messageWithSaying[2].trim(), reply:"I’ll open the right contact and prepare a draft. You can review it before sending."};
+    const messageSimple = text.match(/\\b(?:write|compose|draft)\\s+(?:a\\s+)?message\\s+(?:for|to)\\s+([\\p{L}][\\p{L} .'-]{0,38})\\s*$/iu);
+    if (messageSimple) return {type:"message", name:messageSimple[1].trim(), draft:"", reply:"I’ll open that contact. Tell me what you’d like the message to say, then review it before sending."};
+    if (/\\b(check|read|show|look for)\\b.*\\b(messages|new messages|unread messages)\\b|\\bcheck my messages\\b/i.test(text)) return {type:"messages", reply:"I’ll open your Chats so you can review your conversations and unread messages."};
     const call = t.match(/\b(?:call|voice call|ring|phone)\s+(?:my friend\s+|contact\s+)?([\p{L}][\p{L} .'-]{0,38})/iu);
     if (call) return {type:"call", name:call[1].trim().replace(/[.!?,]+$/,""), reply:"I'll help you find that contact. Please confirm the correct person in Molan Chat before placing the call."};
     if (/\b(help|how do i|how to)\b/.test(t) && /\b(chat|message|group|status|updates|call|settings|contact)\b/.test(t)) return {type:"help",reply:"You can start a chat from the + menu, find people using search, view statuses in Updates, and change app preferences in Settings. For a call, open the contact or conversation and tap the call control."};
@@ -138,9 +145,11 @@
     if (action.type === "call") {
       const reply = action.reply + " Searching for: " + action.name + ".";
       addMessage("ai",reply); speak(reply);
-      location.href = "search.html?q=" + encodeURIComponent(action.name) + "&from=molano-voice-call";
+      location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&molanoCall=1";
       return true;
     }
+    if (action.type === "message") { addMessage("ai",action.reply); speak(action.reply); location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + (action.draft ? "&draft=" + encodeURIComponent(action.draft) : ""); return true; }
+    if (action.type === "messages") { addMessage("ai",action.reply); speak(action.reply); location.href = "chats.html"; return true; }
     if (action.type === "help") { addMessage("ai",action.reply); speak(action.reply); return true; }
     return false;
   }
