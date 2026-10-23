@@ -595,7 +595,7 @@
       showUpgradeStatus(
         (result.message || 'Your upgrade request has been recorded.') +
         ' Request reference: ' + result.requestId +
-        '. If Pesapal checkout is not configured, no charge has been made. Your upgrade activates only after Pesapal payment verification.'
+        '. If JJuma Pay checkout is unavailable, no charge has been made. Your upgrade activates only after the signed JJuma payment webhook confirms success.'
       );
     } catch (error) {
       console.error('Upgrade request failed:', error);
@@ -615,12 +615,6 @@
       button.addEventListener('click', () => handleUpgrade(button.dataset.upgradePlan, button));
     });
     const query = new URLSearchParams(window.location.search);
-    const pesapalTrackingId = query.get('OrderTrackingId') || query.get('orderTrackingId');
-    const pesapalReference = query.get('OrderMerchantReference') || query.get('orderMerchantReference');
-    if (pesapalTrackingId && pesapalReference) {
-      showUpgradeStatus('Pesapal returned a payment update. ZakiChat is verifying the transaction securely. Your plan will activate only after Pesapal confirms the payment; please do not pay again while verification is pending.');
-      document.getElementById('paid-upgrades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
     const requested = query.get('upgrade');
     if (requested === 'personal_monthly' || requested === 'business_monthly') {
       const selected = document.querySelector('[data-upgrade-plan="' + requested + '"]');
@@ -632,7 +626,7 @@
       }
       showUpgradeStatus(
         (requested === 'personal_monthly' ? 'Customized Personal' : 'Customized Business') +
-        ' selected. Submit the request below to record your plan interest. Automatic payment checkout is not configured yet; no charge will be taken and premium access will not activate until payment is verified.'
+        ' selected. Submit the request below to record your plan interest. Choose your plan to continue to JJuma Pay. Premium access activates only after payment is verified.'
       );
     }
   }
