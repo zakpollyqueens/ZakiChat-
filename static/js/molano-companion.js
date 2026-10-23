@@ -209,7 +209,7 @@
         return;
       }
       if (action) {
-        if (["play","call"].includes(action.type) && !premium) { requirePremium(); return; }
+        if (["play","call","message","messages"].includes(action.type) && !premium) { requirePremium(); return; }
         await performAction(action); return;
       }
       if (!premium && /\b(voice command|call [\p{L}]|play music|zakiplay|navigate to|open my business|manage my business)\b/i.test(text)) { requirePremium(); return; }
