@@ -93,6 +93,8 @@
     $("mca-note").textContent = premium
       ? "Voice commands are enabled. Calls and app actions require your confirmation."
       : "Local access includes essential chat help. Upgrade to Customized Personal or Customized Business for voice commands and personal actions.";
+    const welcome = messages.querySelector(".mca-welcome");
+    if (welcome) welcome.hidden = premium;
     const unlock = $("mca-actions").querySelector('[data-action="upgrade"]');
     if (unlock) unlock.hidden = premium;
     $("mca-mic").disabled = !premium;
