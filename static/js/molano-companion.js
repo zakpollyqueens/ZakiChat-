@@ -63,20 +63,24 @@
   const $ = id => document.getElementById(id);
   const panel = $("mca-panel"), messages = $("mca-messages"), input = $("mca-input");
   const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  function addMessage(role, text) {
+  function addMessage(role, text, afterSpeak) {
     // Customized accounts use Molano as a spoken companion, not a text-message bot.
     // Standard/local accounts keep the readable AI chat experience.
     if (role === "ai" && (tier === "personal_monthly" || tier === "business_monthly")) {
-      speak(text);
+      speak(text, afterSpeak);
       return null;
     }
     const welcome = messages.querySelector(".mca-welcome"); if (welcome) welcome.remove();
     const node = document.createElement("div"); node.className = "mca-bubble " + role; node.textContent = text;
     messages.appendChild(node); messages.scrollTop = messages.scrollHeight;
+    if (typeof afterSpeak === "function") speak(text, afterSpeak);
     return node;
   }
-  function speak(text) {
-    if (!speechEnabled || !("speechSynthesis" in window) || !window.SpeechSynthesisUtterance) return;
+  let speechToken = 0;
+  function speak(text, onend) {
+    const token = ++speechToken;
+    const finish = () => { if (token === speechToken && typeof onend === "function") onend(); };
+    if (!speechEnabled || !("speechSynthesis" in window) || !window.SpeechSynthesisUtterance) { if (onend) setTimeout(finish, 0); return; }
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(String(text).slice(0, 1800));
@@ -84,8 +88,12 @@
       const voices = window.speechSynthesis.getVoices();
       utterance.voice = voices.find(v => v.lang.toLowerCase() === language.toLowerCase()) || voices.find(v => v.lang.toLowerCase().startsWith(language.split("-")[0].toLowerCase())) || null;
       utterance.lang = utterance.voice?.lang || language;
-      utterance.rate = .98; window.speechSynthesis.speak(utterance);
-    } catch (_) {}
+      utterance.rate = .98;
+      utterance.onend = finish;
+      utterance.onerror = finish;
+      window.speechSynthesis.speak(utterance);
+      if (onend) setTimeout(() => { if (token === speechToken && window.speechSynthesis.speaking === false && window.speechSynthesis.pending === false) finish(); }, Math.min(8500, Math.max(1200, String(text).length * 70)));
+    } catch (_) { finish(); }
   }
   function setTier(plan) {
     tier = plan;
@@ -148,17 +156,43 @@
     if (/\b(help|how do i|how to)\b/.test(t) && /\b(chat|message|group|status|updates|call|settings|contact)\b/.test(t)) return {type:"help",reply:"You can start a chat from the + menu, find people using search, view statuses in Updates, and change app preferences in Settings. For a call, open the contact or conversation and tap the call control."};
     return null;
   }
+  function savePendingDraft(name, draft) {
+    if (!user?.id) throw new Error("Sign in again before preparing a private message draft.");
+    const key = "molano-pending-message-draft:" + user.id;
+    localStorage.setItem(key, JSON.stringify({name:String(name||"").trim(),draft:String(draft||"").slice(0,4000),createdAt:new Date().toISOString()}));
+  }
   async function performAction(action) {
-    if (action.type === "play") { addMessage("ai",action.reply); speak(action.reply); location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : ""); return true; }
-    if (action.type === "call") {
-      const reply = action.reply + " Searching for: " + action.name + ".";
-      addMessage("ai",reply); speak(reply);
-      location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&molanoCall=1";
+    if (action.type === "play") {
+      addMessage("ai",action.reply,()=>{location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : "");});
       return true;
     }
-    if (action.type === "message") { if (!action.draft) { pendingComposeRecipient = action.name; const prompt = "What would you like me to write for " + action.name + "? Say the message now, and I’ll prepare a draft for you to review before sending."; addMessage("ai",prompt); speak(prompt); return true; } addMessage("ai",action.reply); speak(action.reply); location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&draft=" + encodeURIComponent(action.draft); return true; }
-    if (action.type === "messages") { addMessage("ai",action.reply); speak(action.reply); location.href = "chats.html"; return true; }
-    if (action.type === "help") { addMessage("ai",action.reply); speak(action.reply); return true; }
+    if (action.type === "call") {
+      const reply = action.reply + " Searching for: " + action.name + ".";
+      addMessage("ai",reply,()=>{location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&molanoCall=1";});
+      return true;
+    }
+    if (action.type === "message") {
+      if (!action.draft) {
+        pendingComposeRecipient = action.name;
+        const prompt = "What would you like me to write for " + action.name + "? Say or type the message, and I’ll prepare a draft for you to review before sending.";
+        addMessage("ai",prompt);
+        return true;
+      }
+      addMessage("ai",action.reply,()=>{
+        try { savePendingDraft(action.name,action.draft); location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name); }
+        catch(error) { addMessage("ai",error.message||"I couldn't save that draft. Please try again."); }
+      });
+      return true;
+    }
+    if (action.type === "messages") {
+      addMessage("ai",action.reply,()=>{location.href = "chats.html";});
+      return true;
+    }
+    if (action.type === "help") {
+      addMessage("ai",action.reply);
+      if (tier === "local") speak(action.reply);
+      return true;
+    }
     return false;
   }
   async function sendImage(file, question) {
@@ -212,8 +246,10 @@
         const recipient = pendingComposeRecipient; pendingComposeRecipient = "";
         if (/^(cancel|never mind|stop)$/i.test(text)) { const cancelled = "Okay, I cancelled the message draft."; addMessage("ai",cancelled); speak(cancelled); return; }
         const reply = "I’ll prepare your message for " + recipient + ". Please review it in the conversation before sending.";
-        addMessage("ai",reply); speak(reply);
-        location.href = "contacts.html?molanoContact=" + encodeURIComponent(recipient) + "&draft=" + encodeURIComponent(text);
+        addMessage("ai",reply,()=>{
+          try { savePendingDraft(recipient,text); location.href = "contacts.html?molanoContact=" + encodeURIComponent(recipient); }
+          catch(error) { addMessage("ai",error.message||"I couldn't save that draft. Please try again."); }
+        });
         return;
       }
       if (action) {
