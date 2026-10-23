@@ -139,8 +139,10 @@
       show("Updating Molan Chat features…", detail.message || "Downloading and verifying files.", "Updating…", true, true); if(Number.isFinite(Number(detail.percent))){const fill=ensureUI().querySelector(".muf-progress>i");fill.classList.add("is-determinate");fill.style.width=Math.max(0,Math.min(100,Number(detail.percent)))+"%";}
     } else if (detail.type === "applied") {
       busy = false;
-      show("Feature update complete ✓", detail.message || "Molan Chat features are up to date.", "Done", true, false);
-      window.setTimeout(hide, 2500);
+      // The native layer has atomically activated the verified package and is reopening Chats.
+      // Do not leave a completed-update floater over the freshly reopened app.
+      hide();
+      latest = null;
     } else if (detail.type === "error") {
       busy = false;
       show("Update failed", detail.message || "Your current app was not changed. Try again.", "Retry update", false, false);
