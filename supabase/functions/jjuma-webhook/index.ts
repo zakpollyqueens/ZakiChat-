@@ -7,7 +7,6 @@ let serviceKey: string | undefined;
 if(secretKeysRaw){try{const parsed=JSON.parse(secretKeysRaw);if(typeof parsed?.default==="string")serviceKey=parsed.default}catch{}}
 serviceKey ||= Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||undefined;
 const WEBHOOK_SECRET=Deno.env.get("JJUMA_WEBHOOK_SECRET")||"";
-const JJUMA_SECRET_KEY=Deno.env.get("JJUMA_SECRET_API_KEY")||"";
 const API_BASE="https://api.jjuma.com/api/v1";
 if(!SUPABASE_URL||!serviceKey)throw new Error("JJuma webhook requires Supabase server credentials.");
 const db=createClient(SUPABASE_URL,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}});
@@ -17,7 +16,7 @@ function signature(timestamp:string,body:string){return createHmac("sha256",WEBH
 Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS")return new Response("ok",{headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST, OPTIONS"}});
  if(req.method!=="POST")return reply({ok:false,error:"Method not allowed."},405);
- if(!WEBHOOK_SECRET||!JJUMA_SECRET_KEY)return reply({ok:false,error:"JJuma webhook secrets are not configured."},503);
+ if(!WEBHOOK_SECRET)return reply({ok:false,error:"JJuma webhook signing secret is not configured."},503);
  const rawBody=await req.text(),supplied=(req.headers.get("X-Jjuma-Signature")||"").replace(/^sha256=/i,"").trim(),timestamp=(req.headers.get("X-Jjuma-Timestamp")||"").trim();
  if(!rawBody||!supplied||!timestamp)return reply({ok:false,error:"Missing signed webhook data."},401);
  const parsedTimestamp=Number(timestamp),timeMs=Number.isFinite(parsedTimestamp)?(parsedTimestamp<1e12?parsedTimestamp*1000:parsedTimestamp):Date.parse(timestamp);
@@ -38,13 +37,8 @@ Deno.serve(async(req:Request)=>{
    return reply({ok:true,payment_status:"failed"});
  }
  if(eventName!=="payment.completed")return reply({ok:true,ignored:true,event:eventName});
- let verification:any;
- try{
-  const response=await fetch(API_BASE+"/payments/verify/"+encodeURIComponent(transactionId),{headers:{Authorization:"Bearer "+JJUMA_SECRET_KEY,Accept:"application/json"}});
-  verification=await response.json().catch(()=>({}));
-  if(!response.ok||verification?.status!=="success"||String(verification?.data?.status??"").toLowerCase()!=="successful")return reply({ok:false,error:"JJuma Pay has not verified this payment as successful."},409);
- }catch{return reply({ok:false,error:"Could not verify payment with JJuma Pay."},502)}
- const verified=verification.data,amount=Number(verified.amount??data.amount),currency=String(verified.currency??data.currency??"").toUpperCase();
+ const verified=data;
+ const amount=Number(verified.amount),currency=String(verified.currency??"").toUpperCase();
  if(!Number.isFinite(amount)||Math.round(amount*100)!==Math.round(Number(payment.amount)*100)||currency!==String(payment.currency).toUpperCase())return reply({ok:false,error:"Verified amount or currency does not match the pending upgrade."},409);
  const {data:result,error:confirmError}=await db.rpc("confirm_jjuma_upgrade",{p_payment_id:payment.id,p_transaction_id:transactionId,p_amount:amount,p_currency:currency,p_payment_method:String(verified.payment_method??data.payment_method??""),p_confirmation_code:String(verified.reference??data.reference??transactionId)});
  if(confirmError){console.error("JJuma upgrade confirmation failed:",confirmError.message);return reply({ok:false,error:"Payment verified but upgrade activation needs retry."},500)}
