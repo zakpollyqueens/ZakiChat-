@@ -587,7 +587,7 @@
       }
 
       if (result.checkoutReady === true && typeof result.checkoutUrl === 'string' && /^https:\/\//i.test(result.checkoutUrl)) {
-        showUpgradeStatus('Secure Pesapal checkout is ready. Opening Pesapal…');
+        showUpgradeStatus('Secure JJuma Pay checkout is ready. Opening JJuma Pay…');
         window.location.assign(result.checkoutUrl);
         return;
       }
