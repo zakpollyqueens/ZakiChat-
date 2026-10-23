@@ -213,6 +213,16 @@
     if (/\b(check|read|show|look for)\b.*\b(messages|new messages|unread messages)\b|\bcheck my messages\b/i.test(text)) return {type:"messages", reply:"I’ll open your Chats so you can review your conversations and unread messages."};
     const call = t.match(/\b(?:call|voice call|ring|phone)\s+(?:my friend\s+|contact\s+)?([\p{L}][\p{L} .'-]{0,38})/iu);
     if (call) return {type:"call", name:call[1].trim().replace(/[.!?,]+$/,""), reply:"I'll help you find that contact. Please confirm the correct person in Molan Chat before placing the call."};
+    const businessRoutes = [
+      {path:"business-profile.html",label:"Business profile",pattern:/\b(?:create|set up|setup|open|edit|update|manage|view|show)\b.*\bbusiness profile\b|\bbusiness profile\b.*\b(?:create|set up|open|edit|update|manage|view|show)\b/i},
+      {path:"business-dashboard.html",label:"Business overview",pattern:/\b(?:open|show|go to|visit|view)\b.*\b(?:business dashboard|business overview|business workspace|business home)\b/i},
+      {path:"business-products.html",label:"Products and services",pattern:/\b(?:open|show|go to|view|manage|add|create)\b.*\b(?:products?|services|catalogue|catalog|inventory|stock)\b/i},
+      {path:"business-customers.html",label:"Business customers",pattern:/\b(?:open|show|go to|view|manage|find)\b.*\b(?:business customers|customer directory|customers|clients)\b/i},
+      {path:"business-orders.html",label:"Orders and sales",pattern:/\b(?:open|show|go to|view|manage|record|add)\b.*\b(?:orders?|sales)\b/i},
+      {path:"business-reports.html",label:"Business reports",pattern:/\b(?:open|show|go to|view)\b.*\b(?:business reports?|analytics|business performance)\b/i}
+    ];
+    const businessRoute = businessRoutes.find(route=>route.pattern.test(text));
+    if (businessRoute) return {type:"business-route",route:businessRoute.path,label:businessRoute.label,reply:"I’ll open "+businessRoute.label+". You can review the information there and save any changes when you are ready."};
     if (/\b(help|how do i|how to)\b/.test(t) && /\b(chat|message|group|status|updates|call|settings|contact)\b/.test(t)) return {type:"help",reply:"You can start a chat from the + menu, find people using search, view statuses in Updates, and change app preferences in Settings. For a call, open the contact or conversation and tap the call control."};
     return null;
   }
@@ -246,6 +256,10 @@
     }
     if (action.type === "messages") {
       answer(action.reply,()=>{location.href = "chats.html";});
+      return true;
+    }
+    if (action.type === "business-route") {
+      answer(action.reply,()=>{location.href = action.route;});
       return true;
     }
     if (action.type === "help") {
@@ -311,6 +325,10 @@
         return;
       }
       if (action) {
+        if (action.type === "business-route" && tier !== "business_monthly") {
+          answer("These business workspace pages require an active Customized Business account. Open Settings and choose Customized Business to unlock them.");
+          return;
+        }
         if (["play","call","message","messages"].includes(action.type) && !premium) { requirePremium(); return; }
         await performAction(action); return;
       }
