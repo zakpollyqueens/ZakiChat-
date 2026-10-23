@@ -86,7 +86,7 @@ $("zplayDownloadUrl").addEventListener("click",async()=>{
   $("zplayDownloadNote").textContent="Download started.";
  }catch(error){$("zplayDownloadNote").textContent=error.message||"This source does not allow direct downloading. Use the official source's download option."; }
 });
-async function loadArchiveOptions(item,container){
+async function loadArchiveOptions(item,container,autoPlay){
  container.textContent="Checking available files and rights…";
  try{
   const response=await fetch("https://archive.org/metadata/"+encodeURIComponent(item.identifier));
@@ -98,7 +98,7 @@ async function loadArchiveOptions(item,container){
   const playable=files.filter(file=>/\.(mp3|m4a|aac|ogg|wav|flac|opus|mp4|m4v|webm|ogv|mov)$/i.test(file.name)&&(!file.size||Number(file.size)<1500000000));
   container.replaceChildren();
   const rights=document.createElement("small");rights.className="zplay-archive-rights";rights.textContent=rightsOkay?"License metadata found: "+license:"No recognized open license was found. Review the record rights before using files.";container.appendChild(rights);
-  if(!rightsOkay||!playable.length){const link=document.createElement("a");link.className="zplay-archive-action";link.href="https://archive.org/details/"+encodeURIComponent(item.identifier);link.target="_blank";link.rel="noopener noreferrer";link.textContent="Review item and rights ↗";container.appendChild(link);return}
+  if(!rightsOkay||!playable.length){if(autoPlay)$("#zplayDownloadNote").textContent="I could not confirm an open-licensed playable file for “"+String(item.title||item.identifier)+"”. Choose another result or use an official service.";const link=document.createElement("a");link.className="zplay-archive-action";link.href="https://archive.org/details/"+encodeURIComponent(item.identifier);link.target="_blank";link.rel="noopener noreferrer";link.textContent="Review item and rights ↗";container.appendChild(link);return}
   const preferred=playable.sort((a,b)=>{const rank=f=>/\.mp3$/i.test(f.name)?0:/\.mp4$/i.test(f.name)?1:/\.m4a$/i.test(f.name)?2:/\.webm$/i.test(f.name)?3:5;return rank(a)-rank(b)})[0];
   const mediaUrl="https://archive.org/download/"+encodeURIComponent(item.identifier)+"/"+preferred.name.split("/").map(encodeURIComponent).join("/");
   const type=/\.(mp3|m4a|aac|ogg|wav|flac|opus)$/i.test(preferred.name)?"audio":"video";
@@ -116,8 +116,8 @@ async function loadArchiveOptions(item,container){
    }catch(error){download.textContent="Open download options ↗";download.onclick=()=>window.open("https://archive.org/details/"+encodeURIComponent(item.identifier),"_blank","noopener,noreferrer");$("zplayDownloadNote").textContent=error.message||"Download unavailable for this source."}
    finally{download.disabled=false}
   });
-  container.append(play,download);
- }catch(error){container.textContent=(error.message||"Unable to check this media record.")+" You can review the item on Internet Archive.";const link=document.createElement("a");link.className="zplay-archive-action";link.href="https://archive.org/details/"+encodeURIComponent(item.identifier);link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open item ↗";container.appendChild(link)}
+  container.append(play,download);if(autoPlay){play.click();}
+ }catch(error){container.textContent=(error.message||"Unable to check this media record.")+" You can review the item on Internet Archive.";if(autoPlay)$("#zplayDownloadNote").textContent="Automatic playback was not available. Choose a listed result or open the official record.";const link=document.createElement("a");link.className="zplay-archive-action";link.href="https://archive.org/details/"+encodeURIComponent(item.identifier);link.target="_blank";link.rel="noopener noreferrer";link.textContent="Open item ↗";container.appendChild(link)}
 }
 function archiveCard(item){
  const card=document.createElement("article");card.className="zplay-archive-card";
@@ -137,12 +137,25 @@ async function searchService(){
  const heading=document.createElement("h3");heading.className="zplay-archive-heading";heading.textContent="Open-license music and movies";results.appendChild(heading);
  const status=document.createElement("p");status.className="zplay-archive-status";status.textContent="Searching Internet Archive for media related to “"+q+"”…";results.appendChild(status);
  try{
-  const queryText=encodeURIComponent(q+" AND (mediatype:movies OR mediatype:audio)");
+  const params=new URLSearchParams(window.location.search),autoPlayRequested=params.get("autoplay")==="1"&&!!params.get("song");
+  const queryText=encodeURIComponent(autoPlayRequested?q+" AND mediatype:audio":q+" AND (mediatype:movies OR mediatype:audio)");
   const url="https://archive.org/advancedsearch.php?q="+queryText+"&fl[]=identifier&fl[]=title&fl[]=creator&fl[]=year&fl[]=mediatype&rows=8&page=1&output=json";
   const response=await fetch(url);if(!response.ok)throw new Error("Media search is temporarily unavailable.");
   const data=await response.json(),docs=data?.response?.docs||[];status.remove();
   if(!docs.length){const empty=document.createElement("p");empty.className="zplay-archive-status";empty.textContent="No matching audio or movie records were returned. Try a shorter search phrase.";results.appendChild(empty);return}
-  docs.forEach(item=>results.appendChild(archiveCard(item)));
+  if(autoPlayRequested){
+   const normalizeTitle=value=>String(value||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+   const wanted=normalizeTitle(q);
+   const target=docs.find(item=>{const title=normalizeTitle(item.title);return title&&wanted&&(title.includes(wanted)||wanted==="music"||wanted==="some music"||wanted==="songs"||wanted===title)})||null;
+   docs.forEach(item=>{
+    const card=archiveCard(item);results.appendChild(card);
+    if(target&&item.identifier===target.identifier){
+     const actions=card.querySelector(".zplay-archive-actions");
+     if(actions)loadArchiveOptions(item,actions,true);
+    }
+   });
+   if(!target){const note=document.createElement("p");note.className="zplay-archive-status";note.textContent="I couldn't find a close title match to play automatically. Choose a result below to check its licence and play it.";results.appendChild(note)}
+  }else docs.forEach(item=>results.appendChild(archiveCard(item)));
   const foot=document.createElement("p");foot.className="zplay-archive-status";foot.textContent="Playback and downloads are offered only when Internet Archive metadata identifies an open license. Some records may not permit in-page playback.";results.appendChild(foot);
  }catch(error){status.textContent=(error.message||"Search failed.")+" Use the official service shortcuts above or open Internet Archive search.";const link=document.createElement("a");link.className="zplay-archive-action";link.href="https://archive.org/search?query="+query;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Search Internet Archive ↗";results.appendChild(link)}
 }
