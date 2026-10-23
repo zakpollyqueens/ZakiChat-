@@ -257,7 +257,7 @@
   async function sendImage(file, question) {
     if (!file || busy) return;
     await loadAccount();
-    if (!/^image\\//i.test(file.type || "") || file.size > 8 * 1024 * 1024) {
+    if (!/^image\//i.test(file.type || "") || file.size > 8 * 1024 * 1024) {
       addMessage("ai", "Please choose a photo smaller than 8 MB.");
       return;
     }
