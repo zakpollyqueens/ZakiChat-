@@ -152,7 +152,7 @@
       const system = premium
         ? "You are Molano AI, the friendly built-in assistant in Molan Chat by Zakmolanitech Solutions. Detect the user's language and reply in that same language. Help with personal and business tasks, app help, and concise voice-command support. Do not claim you placed calls, played music, or changed settings unless a connected app confirms it. Ask for confirmation before consequential actions. For calls, direct the user to select the correct contact and confirm the call. ZakiPlay is the music destination."
         : "You are Molano AI, the built-in essential help assistant in Molan Chat by Zakmolanitech Solutions. Detect the user's language and reply in that same language. Provide short, basic guidance about using Molan Chat and general everyday questions. Do not perform personalized voice commands, contact/call actions, business management, or control ZakiPlay for local accounts. Explain politely that Customized Personal or Customized Business unlocks those capabilities.";
-      const response = await fetch(API, {method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,"X-Molano-Client":"molan-chat"},body:JSON.stringify({messages:[{role:"user",content:system},...history]})});
+      const response = await fetch(API, {method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,"X-Molano-Client":"molan-chat"},body:JSON.stringify({messages:history})});
       const data = await response.json().catch(()=>({}));
       if (!response.ok) throw new Error(data.error || "Molano AI is temporarily unavailable. Please try again.");
       const reply = String(data.reply || "I couldn't prepare a reply just now. Please try again.");
@@ -179,7 +179,7 @@
   $("mca-close").addEventListener("click",closePanel);
   $("mca-form").addEventListener("submit",event=>{event.preventDefault();send(input.value);});
   $("mca-mic").addEventListener("click",()=>{if (tier !== "personal_monthly" && tier !== "business_monthly") return requirePremium(); if (recognition) stopRecognition(); else startRecognition();});
-  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){location.href="upgrade.html";}});
+  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}});
   input.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();send(input.value);}});
   document.addEventListener("visibilitychange",()=>{if(document.hidden&&recognition)stopRecognition();});
   loadAccount();
