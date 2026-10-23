@@ -14,12 +14,14 @@
   style.textContent = `
     #${ROOT_ID}{position:fixed;z-index:10020;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));font-family:inherit;color:#eef8ff}
     #${ROOT_ID} *{box-sizing:border-box}
-    #${ROOT_ID} .mca-launch{width:58px;height:58px;border:1px solid #8af0ff99;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,#a8f8ff,#39c7ed 44%,#174b85 78%,#0a1830);box-shadow:0 8px 28px #12bfe966,0 0 0 5px #3fd6f31a;color:#041629;font-size:22px;font-weight:950;cursor:pointer;position:relative}
+    #${ROOT_ID} .mca-launch{width:58px;height:58px;border:1px solid #8af0ff99;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,#a8f8ff,#39c7ed 44%,#174b85 78%,#0a1830);box-shadow:0 8px 28px #12bfe966,0 0 0 5px #3fd6f31a;color:#041629;font-size:0;font-weight:950;cursor:pointer;position:relative;isolation:isolate}
+    #${ROOT_ID} .mca-launch svg{width:32px;height:32px;display:block;filter:drop-shadow(0 1px 4px #05253c55)}
     #${ROOT_ID} .mca-launch:after{content:"";position:absolute;inset:-5px;border:1px solid #7beaff55;border-radius:50%;animation:mcaPulse 2.8s ease-out infinite}
     #${ROOT_ID} .mca-panel{position:absolute;right:0;bottom:70px;width:min(390px,calc(100vw - 24px));height:min(590px,calc(100dvh - 150px));display:none;flex-direction:column;overflow:hidden;border:1px solid #78dff455;border-radius:24px;background:linear-gradient(155deg,#081a2d,#0c2438 60%,#0b1527);box-shadow:0 24px 80px #0009,inset 0 1px #ffffff19}
     #${ROOT_ID}.mca-panel.open{display:flex;animation:mcaEnter .2s ease-out}
     #${ROOT_ID} .mca-head{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid #ffffff17;background:#ffffff06}
     #${ROOT_ID} .mca-avatar{width:42px;height:42px;flex:none;border-radius:15px;display:grid;place-items:center;color:#06182a;font-weight:950;background:linear-gradient(145deg,#a8f8ff,#39c7ed 54%,#638cff);box-shadow:0 4px 16px #40c9e944}
+    #${ROOT_ID} .mca-avatar svg{width:27px;height:27px;display:block}
     #${ROOT_ID} .mca-brand{min-width:0;flex:1}.mca-brand strong{display:block;font-size:14px}.mca-brand small{display:block;color:#9cc3d7;font-size:11px;margin-top:3px}
     #${ROOT_ID} .mca-close{border:0;background:#ffffff12;color:#e8f8ff;border-radius:10px;width:34px;height:34px;font-size:20px;cursor:pointer}
     #${ROOT_ID} .mca-tier{padding:8px 13px;background:#53d9ee12;color:#a9eafa;font-size:10px;font-weight:800;letter-spacing:.06em;border-bottom:1px solid #ffffff0e}
@@ -48,14 +50,14 @@
   root.id = ROOT_ID;
   root.innerHTML = `
     <section class="mca-panel" id="mca-panel" role="dialog" aria-label="Molano AI assistant" aria-modal="false">
-      <header class="mca-head"><div class="mca-avatar" aria-hidden="true">M</div><div class="mca-brand"><strong>Molano AI</strong><small id="mca-status">Your Molan Chat companion</small></div><button class="mca-close" id="mca-close" aria-label="Close assistant">×</button></header>
+      <header class="mca-head"><div class="mca-avatar" aria-hidden="true"><svg viewBox="0 0 48 48" width="32" height="32" aria-hidden="true" focusable="false"><path d="M24 5.5 28.2 17.2 40 21.5 28.2 25.8 24 37.5 19.8 25.8 8 21.5 19.8 17.2Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M35.5 7.5v8m-4-4h8M11 33v8m-4-4h8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="35.5" cy="7.5" r="2" fill="currentColor"/><circle cx="11" cy="33" r="2" fill="currentColor"/></svg></div><div class="mca-brand"><strong>Molano AI</strong><small id="mca-status">Your Molan Chat companion</small></div><button class="mca-close" id="mca-close" aria-label="Close assistant">×</button></header>
       <div class="mca-tier" id="mca-tier">LOCAL ACCOUNT · ESSENTIAL HELP</div>
       <div class="mca-messages" id="mca-messages" aria-live="polite"><div class="mca-welcome"><div class="star">✦</div><h3>Hi, I'm Molano.</h3><p>Ask me for help with Molan Chat. Personalized accounts can also use voice commands, contact assistance and ZakiPlay.</p></div></div>
       <div class="mca-actions" id="mca-actions"><button class="mca-chip" data-prompt="Help me use Molan Chat">Chat help</button><button class="mca-chip" data-prompt="What can you do?">What can you do?</button><button class="mca-chip" data-action="upgrade">Unlock more</button></div>
       <form class="mca-composer" id="mca-form"><textarea id="mca-input" rows="1" placeholder="Message Molano…" aria-label="Message Molano AI"></textarea><button class="mca-camera" id="mca-camera" type="button" aria-label="Scan a paper" title="Take or upload a photo of a paper">📷</button><button class="mca-mic" id="mca-mic" type="button" aria-label="Voice command" title="Voice command">🎙</button><button class="mca-send" id="mca-send" type="submit" aria-label="Send message">➤</button><input id="mca-image" type="file" accept="image/*" capture="environment" hidden></form>
       <div class="mca-note" id="mca-note">Your chats stay in Molan Chat. AI replies are generated by Molano AI.</div>
     </section>
-    <button class="mca-launch" id="mca-launch" type="button" aria-label="Open Molano AI" title="Talk to Molano AI">M</button>`;
+    <button class="mca-launch" id="mca-launch" type="button" aria-label="Open Molano AI" title="Talk to Molano AI"><svg viewBox="0 0 48 48" width="32" height="32" aria-hidden="true" focusable="false"><path d="M24 5.5 28.2 17.2 40 21.5 28.2 25.8 24 37.5 19.8 25.8 8 21.5 19.8 17.2Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M35.5 7.5v8m-4-4h8M11 33v8m-4-4h8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="35.5" cy="7.5" r="2" fill="currentColor"/><circle cx="11" cy="33" r="2" fill="currentColor"/></svg></button>`;
   document.body.appendChild(root);
 
   const $ = id => document.getElementById(id);
@@ -95,8 +97,14 @@
       : "Local access includes essential chat help. Upgrade to Customized Personal or Customized Business for voice commands and personal actions.";
     const welcome = messages.querySelector(".mca-welcome");
     if (welcome) welcome.hidden = premium;
-    const unlock = $("mca-actions").querySelector('[data-action="upgrade"]');
+    const actions = $("mca-actions");
+    const unlock = actions.querySelector('[data-action="upgrade"]');
     if (unlock) unlock.hidden = premium;
+    let business = actions.querySelector('[data-action="business-workspace"]');
+    if (plan === "business_monthly" && !business) {
+      business = document.createElement("button"); business.type = "button"; business.className = "mca-chip"; business.dataset.action = "business-workspace"; business.textContent = "Business workspace"; actions.appendChild(business);
+    }
+    if (business) business.hidden = plan !== "business_monthly";
     $("mca-mic").disabled = !premium;
     $("mca-mic").title = premium ? "Voice command" : "Voice commands require a customized account";
   }
@@ -251,7 +259,7 @@
   $("mca-mic").addEventListener("click",()=>{if (tier !== "personal_monthly" && tier !== "business_monthly") return requirePremium(); if (recognition) stopRecognition(); else startRecognition();});
   $("mca-camera").addEventListener("click",()=> $("mca-image").click());
   $("mca-image").addEventListener("change",event=>{const file=event.target.files?.[0];if(file)sendImage(file,input.value.trim());event.target.value="";});
-  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}});
+  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}if(button.dataset.action==="business-workspace"){location.href="business-dashboard.html";}});
   input.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();send(input.value);}});
   document.addEventListener("visibilitychange",()=>{if(document.hidden&&recognition)stopRecognition();});
   loadAccount();
