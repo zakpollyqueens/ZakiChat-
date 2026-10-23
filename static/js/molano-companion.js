@@ -223,34 +223,33 @@
   }
   async function performAction(action) {
     if (action.type === "play") {
-      addMessage("ai",action.reply,()=>{location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : "") + (action.autoplay ? (action.song ? "&" : "?") + "autoplay=1" : "");});
+      answer(action.reply,()=>{location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : "") + (action.autoplay ? (action.song ? "&" : "?") + "autoplay=1" : "");});
       return true;
     }
     if (action.type === "call") {
       const reply = action.reply + " Searching for: " + action.name + ".";
-      addMessage("ai",reply,()=>{location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&molanoCall=1";});
+      answer(reply,()=>{location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&molanoCall=1";});
       return true;
     }
     if (action.type === "message") {
       if (!action.draft) {
         pendingComposeRecipient = action.name;
         const prompt = "What would you like me to write for " + action.name + "? Say or type the message, and I’ll prepare a draft for you to review before sending.";
-        addMessage("ai",prompt);
+        answer(prompt);
         return true;
       }
-      addMessage("ai",action.reply,()=>{
+      answer(action.reply,()=>{
         try { savePendingDraft(action.name,action.draft); location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name); }
-        catch(error) { addMessage("ai",error.message||"I couldn't save that draft. Please try again."); }
+        catch(error) { answer(error.message||"I couldn't save that draft. Please try again."); }
       });
       return true;
     }
     if (action.type === "messages") {
-      addMessage("ai",action.reply,()=>{location.href = "chats.html";});
+      answer(action.reply,()=>{location.href = "chats.html";});
       return true;
     }
     if (action.type === "help") {
-      addMessage("ai",action.reply);
-      if (tier === "local") speak(action.reply);
+      answer(action.reply);
       return true;
     }
     return false;
@@ -286,10 +285,9 @@
       const reply = String(data.reply || "I couldn't prepare a solution for that image.");
       history.push({role:"user",content:"[Paper image] "+String(question || "Solve and explain this paper.")},{role:"assistant",content:reply});
       history = history.slice(-12);
-      addMessage("ai", reply);
-      speak(reply);
+      answer(reply);
     } catch (error) {
-      addMessage("ai", error.message || "Paper scanning is temporarily unavailable.");
+      answer(error.message || "Paper scanning is temporarily unavailable.");
     } finally {
       busy = false; $("mca-send").disabled = false; $("mca-camera").disabled = false; $("mca-status").textContent = "Ready when you are";
     }
@@ -304,9 +302,9 @@
       const premium = tier === "personal_monthly" || tier === "business_monthly";
       if (pendingComposeRecipient) {
         const recipient = pendingComposeRecipient; pendingComposeRecipient = "";
-        if (/^(cancel|never mind|stop)$/i.test(text)) { const cancelled = "Okay, I cancelled the message draft."; addMessage("ai",cancelled); speak(cancelled); return; }
+        if (/^(cancel|never mind|stop)$/i.test(text)) { const cancelled = "Okay, I cancelled the message draft."; answer(cancelled); return; }
         const reply = "I’ll prepare your message for " + recipient + ". Please review it in the conversation before sending.";
-        addMessage("ai",reply,()=>{
+        answer(reply,()=>{
           try { savePendingDraft(recipient,text); location.href = "contacts.html?molanoContact=" + encodeURIComponent(recipient); }
           catch(error) { addMessage("ai",error.message||"I couldn't save that draft. Please try again."); }
         });
@@ -330,9 +328,9 @@
       const data = await response.json().catch(()=>({}));
       if (!response.ok) throw new Error(data.error || "Molano AI is temporarily unavailable. Please try again.");
       const reply = String(data.reply || "I couldn't prepare a reply just now. Please try again.");
-      history.push({role:"assistant",content:reply}); history = history.slice(-12); addMessage("ai",reply); speak(reply);
+      history.push({role:"assistant",content:reply}); history = history.slice(-12); answer(reply);
     } catch (error) {
-      addMessage("ai",error.message || "Molano AI is temporarily unavailable. Please try again.");
+      answer(error.message || "Molano AI is temporarily unavailable. Please try again.");
     } finally {
       busy = false; $("mca-send").disabled = false; $("mca-status").textContent = "Ready when you are";
     }
@@ -352,7 +350,7 @@
   $("mca-launch").addEventListener("click",()=>panel.classList.contains("open")?closePanel():openPanel());
   $("mca-close").addEventListener("click",closePanel);
   $("mca-form").addEventListener("submit",event=>{event.preventDefault();send(input.value);});
-  $("mca-mic").addEventListener("click",()=>{if (tier !== "personal_monthly" && tier !== "business_monthly") return requirePremium(); if (recognition) stopRecognition(); else startRecognition();});
+  $("mca-mic").addEventListener("click",()=>{if (!hasVoiceEntitlement()) return requirePremium(); if (recognition) { voiceSessionActive=false; stopRecognition(); speechToken++; if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } else { voiceSessionActive=true; startRecognition(); }});
   $("mca-camera").addEventListener("click",()=> $("mca-image").click());
   $("mca-image").addEventListener("change",event=>{const file=event.target.files?.[0];if(file)sendImage(file,input.value.trim());event.target.value="";});
   $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}if(button.dataset.action==="business-workspace"){location.href="business-dashboard.html";}});
