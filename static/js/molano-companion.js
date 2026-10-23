@@ -137,13 +137,16 @@
   }
   function findAction(text) {
     const t = text.toLowerCase();
-    const playMatch = text.match(/^\s*(?:please\s+)?(?:play|put on|listen to)\s+(.+?)\s*$/i);
+    const directPlay = text.match(/^\s*(?:please\s+)?(?:play|put on|listen to)\s+(.+?)\s*$/i);
+    const naturalListen = text.match(/\b(?:listen to|hear|play|put on)\s+(?:(?:the|this|a|some)\s+)?(?:(?:song|track)\s+(?:called\s+)?)?(.+?)\s*$/i);
+    const playMatch = directPlay || naturalListen;
     if (playMatch) {
-      const requested = playMatch[1].trim().replace(/^(?:the\s+)?(?:song|track|music)\s+/i, "").replace(/[.!?,]+$/, "").trim();
-      const generic = /^(?:music|some music|songs|a song|a playlist|playlist|zakiplay|something)$/i.test(requested);
-      return {type:"play", song:generic ? "" : requested, reply:generic ? "I’ll open ZakiPlay so you can choose your music." : "I’ll open ZakiPlay and search for " + requested + ". Choose the matching result to start playback."};
+      const requested = playMatch[1].trim().replace(/^(?:(?:the|this|a|some)\s+)?(?:song|track|music)\s+/i, "").replace(/^(?:the|this|a|some)\s+/i, "").replace(/[.!?,]+$/, "").trim();
+      const generic = /^(?:music|some music|songs?|a song|a playlist|playlist|zakiplay|something|)$/i.test(requested);
+      const song = generic ? "music" : requested;
+      return {type:"play", song, autoplay:true, reply:generic ? "I’ll open ZakiPlay and look for a track with a confirmed open licence. I’ll start it automatically if a suitable playable track is available." : "I’ll open ZakiPlay and search for " + requested + ". I’ll start playback only if a suitable open-licensed match is available."};
     }
-    if (/\b(music|song|songs|playlist|zakiplay)\b/.test(t)) return {type:"play", song:"", reply:"I’ll open ZakiPlay so you can choose your music."};
+    if (/\b(music|song|songs|playlist|zakiplay)\b/.test(t)) return {type:"play", song:"music", autoplay:true, reply:"I’ll open ZakiPlay and look for a track with a confirmed open licence. I’ll start it automatically if a suitable playable track is available."};
     const messageWithColon = text.match(/\b(?:write|compose|draft|send)\s+(?:a\s+)?message\s+(?:for|to)\s+([\p{L}][\p{L} .'-]{0,38}?)\s*:\s*(.+)$/iu);
     if (messageWithColon) return {type:"message", name:messageWithColon[1].trim(), draft:messageWithColon[2].trim(), reply:"I’ll open the right contact and prepare a draft. You can review it before sending."};
     const messageWithSaying = text.match(/\b(?:write|compose|draft|send)\s+(?:a\s+)?message\s+(?:for|to)\s+(.+?)\s+(?:saying|that says)\s+(.+)$/iu);
@@ -163,7 +166,7 @@
   }
   async function performAction(action) {
     if (action.type === "play") {
-      addMessage("ai",action.reply,()=>{location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : "");});
+      addMessage("ai",action.reply,()=>{location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : "") + (action.autoplay ? (action.song ? "&" : "?") + "autoplay=1" : "");});
       return true;
     }
     if (action.type === "call") {
