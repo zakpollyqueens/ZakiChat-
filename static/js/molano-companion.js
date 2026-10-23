@@ -6,7 +6,7 @@
   const API = "https://molanoai.zakpollyqueens.workers.dev/api/chat";
   const STYLE_ID = "molano-chat-companion-style";
   const ROOT_ID = "molano-chat-companion";
-  let user = null, tier = "local", history = [], busy = false, recognition = null;
+  let user = null, tier = "local", history = [], busy = false, recognition = null, pendingComposeRecipient = "";
   let speechEnabled = true;
 
   const style = document.createElement("style");
@@ -148,7 +148,7 @@
       location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&molanoCall=1";
       return true;
     }
-    if (action.type === "message") { addMessage("ai",action.reply); speak(action.reply); location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + (action.draft ? "&draft=" + encodeURIComponent(action.draft) : ""); return true; }
+    if (action.type === "message") { if (!action.draft) { pendingComposeRecipient = action.name; const prompt = "What would you like me to write for " + action.name + "? Say the message now, and I’ll prepare a draft for you to review before sending."; addMessage("ai",prompt); speak(prompt); return true; } addMessage("ai",action.reply); speak(action.reply); location.href = "contacts.html?molanoContact=" + encodeURIComponent(action.name) + "&draft=" + encodeURIComponent(action.draft); return true; }
     if (action.type === "messages") { addMessage("ai",action.reply); speak(action.reply); location.href = "chats.html"; return true; }
     if (action.type === "help") { addMessage("ai",action.reply); speak(action.reply); return true; }
     return false;
@@ -200,6 +200,14 @@
     try {
       const action = findAction(text);
       const premium = tier === "personal_monthly" || tier === "business_monthly";
+      if (pendingComposeRecipient) {
+        const recipient = pendingComposeRecipient; pendingComposeRecipient = "";
+        if (/^(cancel|never mind|stop)$/i.test(text)) { const cancelled = "Okay, I cancelled the message draft."; addMessage("ai",cancelled); speak(cancelled); return; }
+        const reply = "I’ll prepare your message for " + recipient + ". Please review it in the conversation before sending.";
+        addMessage("ai",reply); speak(reply);
+        location.href = "contacts.html?molanoContact=" + encodeURIComponent(recipient) + "&draft=" + encodeURIComponent(text);
+        return;
+      }
       if (action) {
         if (["play","call"].includes(action.type) && !premium) { requirePremium(); return; }
         await performAction(action); return;
