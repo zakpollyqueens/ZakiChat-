@@ -52,7 +52,7 @@ function useMedia(url,title,type){
  let media;
  if(type==="audio"){media=document.createElement("audio");media.controls=true;media.autoplay=true}
  else{media=document.createElement("video");media.controls=true;media.playsInline=true;media.autoplay=true}
- media.src=url;media.preload="metadata";stage.appendChild(media);
+ media.src=url;media.preload="metadata";stage.appendChild(media);const playAttempt=media.play();if(playAttempt&&typeof playAttempt.catch==="function")playAttempt.catch(()=>{$("zplayDownloadNote").textContent="Your browser blocked automatic playback. Tap Play in the player to start this rights-cleared track.";});
  $("zplayDisc").classList.toggle("is-playing",type==="audio");
  media.addEventListener("play",()=>{$("zplayDisc").classList.toggle("is-playing",type==="audio")});
  media.addEventListener("pause",()=>{$("zplayDisc").classList.remove("is-playing")});
