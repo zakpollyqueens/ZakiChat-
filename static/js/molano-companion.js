@@ -8,6 +8,7 @@
   const ROOT_ID = "molano-chat-companion";
   let user = null, tier = "local", history = [], busy = false, recognition = null, pendingComposeRecipient = "";
   let speechEnabled = true;
+  let voiceSessionActive = false;
 
   const style = document.createElement("style");
   style.id = STYLE_ID;
@@ -95,6 +96,25 @@
       if (onend) setTimeout(() => { if (token === speechToken && window.speechSynthesis.speaking === false && window.speechSynthesis.pending === false) finish(); }, Math.min(8500, Math.max(1200, String(text).length * 70)));
     } catch (_) { finish(); }
   }
+  const hasVoiceEntitlement = () => tier === "personal_monthly" || tier === "business_monthly";
+  function continueVoiceConversation() {
+    if (voiceSessionActive && panel.classList.contains("open") && hasVoiceEntitlement() && !busy && !recognition) {
+      setTimeout(() => {
+        if (voiceSessionActive && panel.classList.contains("open") && hasVoiceEntitlement() && !busy && !recognition) startRecognition();
+      }, 220);
+    }
+  }
+  function answer(text, afterSpeak) {
+    if (hasVoiceEntitlement()) {
+      addMessage("ai", text, () => {
+        if (typeof afterSpeak === "function") afterSpeak();
+        else continueVoiceConversation();
+      });
+    } else {
+      addMessage("ai", text);
+      speak(text, afterSpeak);
+    }
+  }
   function setTier(plan) {
     tier = plan;
     const premium = plan === "personal_monthly" || plan === "business_monthly";
@@ -142,15 +162,17 @@
   async function openPanel() {
     panel.classList.add("open");
     $("mca-launch").setAttribute("aria-expanded","true");
+    voiceSessionActive = false;
     const plan = await loadAccount();
     if (!panel.classList.contains("open")) return;
     if (plan === "personal_monthly" || plan === "business_monthly") {
+      voiceSessionActive = true;
       const greeting = plan === "business_monthly"
         ? "Hello, welcome back! I’m Molano, your AI companion for Molan Chat and your business workspace. Tell me what you need, and I’ll explain what I’m about to do before carrying it out."
         : "Hello! I’m Molano, your personal AI companion. Tell me what you’d like help with, and I’ll guide you through it.";
       $("mca-status").textContent = "Welcome back — listening after the greeting";
       speak(greeting, () => {
-        if (panel.classList.contains("open") && (tier === "personal_monthly" || tier === "business_monthly") && !recognition) startRecognition();
+        if (panel.classList.contains("open") && voiceSessionActive && hasVoiceEntitlement() && !recognition) startRecognition();
       });
     } else {
       $("mca-status").textContent = "Essential help enabled";
@@ -160,6 +182,7 @@
   function closePanel() {
     panel.classList.remove("open");
     $("mca-launch").setAttribute("aria-expanded","false");
+    voiceSessionActive = false;
     stopRecognition();
     speechToken++;
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
