@@ -119,14 +119,20 @@
   }
   function findAction(text) {
     const t = text.toLowerCase();
-    if (/\b(play|start|put on|listen to)\b/.test(t) && /\b(music|song|songs|playlist|zakiplay)\b/.test(t)) return {type:"play", reply:"I'll open ZakiPlay so you can choose and play your music."};
+    const playMatch = text.match(/^\s*(?:please\s+)?(?:play|put on|listen to)\s+(.+?)\s*$/i);
+    if (playMatch) {
+      const requested = playMatch[1].trim().replace(/^(?:the\s+)?(?:song|track|music)\s+/i, "").replace(/[.!?,]+$/, "").trim();
+      const generic = /^(?:music|some music|songs|a song|a playlist|playlist|zakiplay|something)$/i.test(requested);
+      return {type:"play", song:generic ? "" : requested, reply:generic ? "I’ll open ZakiPlay so you can choose your music." : "I’ll open ZakiPlay and search for " + requested + ". Choose the matching result to start playback."};
+    }
+    if (/\b(music|song|songs|playlist|zakiplay)\b/.test(t)) return {type:"play", song:"", reply:"I’ll open ZakiPlay so you can choose your music."};
     const call = t.match(/\b(?:call|voice call|ring|phone)\s+(?:my friend\s+|contact\s+)?([\p{L}][\p{L} .'-]{0,38})/iu);
     if (call) return {type:"call", name:call[1].trim().replace(/[.!?,]+$/,""), reply:"I'll help you find that contact. Please confirm the correct person in Molan Chat before placing the call."};
     if (/\b(help|how do i|how to)\b/.test(t) && /\b(chat|message|group|status|updates|call|settings|contact)\b/.test(t)) return {type:"help",reply:"You can start a chat from the + menu, find people using search, view statuses in Updates, and change app preferences in Settings. For a call, open the contact or conversation and tap the call control."};
     return null;
   }
   async function performAction(action) {
-    if (action.type === "play") { addMessage("ai",action.reply); speak(action.reply); location.href = "zakiplay.html"; return true; }
+    if (action.type === "play") { addMessage("ai",action.reply); speak(action.reply); location.href = "zakiplay.html" + (action.song ? "?song=" + encodeURIComponent(action.song) : ""); return true; }
     if (action.type === "call") {
       const reply = action.reply + " Searching for: " + action.name + ".";
       addMessage("ai",reply); speak(reply);
