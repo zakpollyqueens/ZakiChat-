@@ -111,8 +111,9 @@
         else continueVoiceConversation();
       });
     } else {
+      // Standard accounts use the readable AI chat experience, not voice-command mode.
       addMessage("ai", text);
-      speak(text, afterSpeak);
+      if (typeof afterSpeak === "function") afterSpeak();
     }
   }
   function setTier(plan) {
@@ -190,7 +191,6 @@
   }
   function requirePremium() {
     addMessage("ai", "I can help with essential Molan Chat questions on a local account. For personalized voice commands, contact assistance and ZakiPlay control, choose Customized Personal or Customized Business in Molan Chat's upgrade section.");
-    speak("Personalized voice commands are available with a customized account.");
   }
   function findAction(text) {
     const t = text.toLowerCase();
