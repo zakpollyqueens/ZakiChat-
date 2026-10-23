@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../static/css/settings.css">
 <link rel="stylesheet" href="../static/css/signature-theme.css">
 <style>.settings-brandline{display:flex;align-items:center;gap:9px;margin-bottom:4px}.zc-header-brand-icon{width:36px;height:36px;object-fit:cover;border-radius:11px;border:1px solid #72eaff50;box-shadow:0 5px 16px #00b9ef22}.settings-title .settings-eyebrow{display:inline-block}</style>
+<style id="customized-business-settings-style">.custom-business-intro{margin:0 0 12px;color:#92adbf;font-size:12px;line-height:1.55}.custom-business-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}.custom-business-links a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;border:1px solid rgba(75,204,236,.22);border-radius:12px;background:linear-gradient(135deg,rgba(15,48,72,.96),rgba(10,28,48,.96));color:#c9f5ff;text-decoration:none;font-size:12px;font-weight:700}.custom-business-links a span{color:#62e3f8;font-size:18px}@media(max-width:380px){.custom-business-links{grid-template-columns:1fr}}</style>
 </head>
 
 <body class="settings-page">
@@ -85,6 +86,20 @@
         </span>
         <span class="settings-chevron">›</span>
       </a>
+    </section>
+
+    <!-- Customized Business tools: only active Business subscribers see these shortcuts. -->
+    <section class="settings-group" id="customizedBusinessTools" hidden aria-label="Customized Business workspace">
+      <h2>Customized Business</h2>
+      <p class="custom-business-intro">A business-profile workspace for accounts with an active Customized Business subscription.</p>
+      <a class="settings-item" href="business-dashboard.html"><span class="settings-item-icon">◈</span><span class="settings-item-copy"><strong>Business overview</strong><small>Open the customized business dashboard</small></span><span class="settings-chevron">›</span></a>
+      <div class="custom-business-links">
+        <a href="business-profile.html">Business profile <span>›</span></a>
+        <a href="business-products.html">Products &amp; services <span>›</span></a>
+        <a href="business-customers.html">Customers <span>›</span></a>
+        <a href="business-orders.html">Orders &amp; sales <span>›</span></a>
+        <a href="business-reports.html">Business reports <span>›</span></a>
+      </div>
     </section>
 
     <!-- Chats -->
@@ -315,5 +330,20 @@
   <script src="../static/js/nav-profile-sync.js?v=20261012-avatar"></script>
   <script src="../static/js/backup-restore.js?v=zc-vr19-backup"></script>
   <script src="../static/js/update-float.js?v=zc-vr19-update-float"></script>
+<script id="customized-business-settings-access">
+(async function(){
+ const section=document.getElementById('customizedBusinessTools');
+ if(!section||!window.ZakiChatAuth)return;
+ try{
+  if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
+  const client=window.ZakiChatAuth.client;if(!client)return;
+  const {data:session,error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;
+  const user=session?.session?.user;if(!user)return;
+  const {data:plans,error}=await client.from('user_upgrades').select('plan,status,expires_at').eq('user_id',user.id).eq('status','active').gt('expires_at',new Date().toISOString()).order('expires_at',{ascending:false}).limit(10);
+  if(error)throw error;
+  section.hidden=!(plans||[]).some(p=>['business_monthly','business_customized'].includes(String(p.plan||'')));
+ }catch(error){console.warn('Customized Business menu could not verify subscription access.',error)}
+})();
+</script>
 </body>
 </html>
