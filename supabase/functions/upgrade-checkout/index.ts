@@ -34,7 +34,7 @@ async function jjumaCreateCheckout(payment:any,user:any,profile:any,plan:{label:
   const name=String(profile?.full_name||user.user_metadata?.full_name||user.user_metadata?.name||"Molan Chat customer").trim();
   const phone=String(profile?.phone||user.phone||user.user_metadata?.phone||"").trim();
   if (!user.email&&!phone) throw new Error("Add an email address or phone number to your account before checkout.");
-  const webhookUrl=Deno.env.get("JJUMA_WEBHOOK_URL")||SUPABASE_URL+"/functions/v1/jjuma-webhook";
+  const webhookUrl=Deno.env.get("JJUMA_WEBHOOK_URL")||"https://rcubnewrfieqhwcnvrzs.supabase.co/functions/v1/molan-jjuma-payments?action=webhook";
   const payload={amount:Number(payment.amount),currency:String(payment.currency).toUpperCase(),email:user.email||undefined,phone_number:phone||undefined,customer_name:name,description:"Molan Chat "+plan.label+" monthly upgrade",return_url:"https://zakpollyqueens.github.io/ZakiChat-/pages/settings.html?upgrade=return",cancel_redirect_url:"https://zakpollyqueens.github.io/ZakiChat-/pages/settings.html?upgrade=cancelled",webhook_url:webhookUrl,external_order_id:payment.id,idempotency_key:payment.id,metadata:{product:"molan_chat_upgrade",user_id:user.id,plan_code:payment.plan,upgrade_payment_id:payment.id,country_code:countryCode,usd_amount:plan.amount}};
   const response=await fetch(API_BASE+"/payments/create",{method:"POST",headers:{Authorization:"Bearer "+JJUMA_PUBLIC_KEY,"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(payload)});
   const data=await response.json().catch(()=>({}));
