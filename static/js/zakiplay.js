@@ -149,5 +149,8 @@ async function searchService(){
 $("zplaySearchButton").addEventListener("click",searchService);
 $("zplaySearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();searchService()}});
 window.addEventListener("beforeunload",()=>{if(activeObjectUrl)URL.revokeObjectURL(activeObjectUrl)});
-checkAccess();
+checkAccess().then(()=>{
+ const params=new URLSearchParams(window.location.search),song=String(params.get("song")||"").trim();
+ if(song){const search=$("zplaySearch");if(search){search.value=song;setTimeout(()=>searchService(),180)}}
+});
 })();
