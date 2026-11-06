@@ -2095,25 +2095,7 @@ showComposerError(message) {
       'Additional premium features as released'
     ],
     upgradeUrl: 'about.html?upgrade=personal_monthly#paid-upgrades'
-  },
-  {
-    id: 'business_monthly',
-    title: 'Customized Business',
-    description:
-      'Business features for profiles, teams, employee groups, meetings and business communication.',
-    accountType: 'Business',
-    price: '$10',
-    billingInterval: 'Monthly',
-    features: [
-      'Upgraded Business profile',
-      'Business chat and communication',
-      'Employee and team groups',
-      'Business meetings',
-      'Business-focused communication features'
-    ],
-    upgradeUrl: 'about.html?upgrade=business_monthly#paid-upgrades'
-  }
-];
+  }];
 
   function setReleaseText(id, value) {
     const element = document.getElementById(id);
@@ -2223,10 +2205,11 @@ showComposerError(message) {
     }
 
     container.innerHTML = upgrades
+      .filter(function (upgrade) { return !['business_monthly','business_customized'].includes(String(upgrade.id || '')); })
       .map(function (upgrade) {
         const planId=String(upgrade.id||"");
-        const numericPrice=planId==="personal_monthly"?2:planId==="business_monthly"?10:Number(String(upgrade.price||"").replace(/[^0-9.]/g,""));
-        const planType=planId==="business_monthly"?"business":"personal";
+        const numericPrice=planId==="personal_monthly"?2:Number(String(upgrade.price||"").replace(/[^0-9.]/g,""));
+        const planType="personal";
         return `
           <article class="release-upgrade-item" data-plan-id="${escapeReleaseHtml(planId)}" data-account-type="${planType}" data-price="${Number.isFinite(numericPrice)?numericPrice:0}">
 
@@ -2374,15 +2357,6 @@ showComposerError(message) {
       category: 'Personal',
       image_url: '../static/images/showcase/personal-plus.svg',
       target_url: 'about.html?upgrade=personal_monthly#paid-upgrades'
-    },
-    {
-      id: 'demo-business',
-      title: 'Business Experience',
-      description:
-        'Discover business profiles, teams, communication and meetings.',
-      category: 'Business',
-      image_url: '../static/images/showcase/business.svg',
-      target_url: 'about.html?upgrade=business_monthly#paid-upgrades'
     },
     {
       id: 'demo-security',
