@@ -9,7 +9,7 @@ secretKey ||= Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || undefined;
 const API_BASE = "https://api.jjuma.com/api/v1";
 if (!SUPABASE_URL || !secretKey) throw new Error("Upgrade checkout requires Supabase server credentials.");
 const db = createClient(SUPABASE_URL, secretKey, { auth: { persistSession: false, autoRefreshToken: false } });
-const plans = { personal_monthly: { label: "Customized Personal", amount: 2 }, business_monthly: { label: "Customized Business", amount: 10 } };
+const plans = { personal_monthly: { label: "Customized Personal", amount: 2 } };
 const currencies: Record<string,string> = { UG:"UGX", KE:"KES", TZ:"TZS", US:"USD", GB:"GBP", CA:"CAD", AU:"AUD", NZ:"NZD", ZA:"ZAR", NG:"NGN", GH:"GHS", RW:"RWF", IN:"INR", PK:"PKR", BD:"BDT", JP:"JPY", CN:"CNY", SG:"SGD", MY:"MYR", ID:"IDR", PH:"PHP", TH:"THB", AE:"AED", SA:"SAR", EG:"EGP", ZM:"ZMW", MW:"MWK", MZ:"MZN", NA:"NAD", BW:"BWP", CM:"XAF", SN:"XOF", ET:"ETB" };
 const corsHeaders = { "Access-Control-Allow-Origin":"*", "Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods":"POST, OPTIONS", "Vary":"Origin" };
 function json(body: unknown, status=200) { return new Response(JSON.stringify(body), { status, headers:{...corsHeaders,"Content-Type":"application/json","Cache-Control":"no-store"} }); }

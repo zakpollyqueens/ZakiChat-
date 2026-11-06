@@ -515,8 +515,7 @@
   'use strict';
 
   const upgradePlans = {
-    personal_monthly: { id: 'personal_monthly', accountType: 'Personal', price: 2, currency: 'USD', billingInterval: 'monthly' },
-    business_monthly: { id: 'business_monthly', accountType: 'Business', price: 10, currency: 'USD', billingInterval: 'monthly' }
+    personal_monthly: { id: 'personal_monthly', accountType: 'Personal', price: 2, currency: 'USD', billingInterval: 'monthly' }
   };
 
   function showUpgradeStatus(message, isError = false, showLoginLink = false) {
@@ -616,7 +615,7 @@
     });
     const query = new URLSearchParams(window.location.search);
     const requested = query.get('upgrade');
-    if (requested === 'personal_monthly' || requested === 'business_monthly') {
+    if (requested === 'personal_monthly') {
       const selected = document.querySelector('[data-upgrade-plan="' + requested + '"]');
       selected?.classList.add('upgrade-plan-requested');
       document.getElementById('paid-upgrades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -625,7 +624,7 @@
         setTimeout(() => selected.focus({ preventScroll: true }), 350);
       }
       showUpgradeStatus(
-        (requested === 'personal_monthly' ? 'Customized Personal' : 'Customized Business') +
+        'Customized Personal' +
         ' selected. Submit the request below to record your plan interest. Choose your plan to continue to JJuma Pay. Premium access activates only after payment is verified.'
       );
     }

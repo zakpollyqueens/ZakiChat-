@@ -74,18 +74,11 @@ function clean(value: unknown) {
 }
 
 function validPlan(plan: string) {
-  return (
-    plan === "personal_monthly" ||
-    plan === "business_monthly"
-  );
+  return plan === "personal_monthly";
 }
 
 function planPrice(plan: string) {
-  return plan === "personal_monthly"
-    ? 2
-    : plan === "business_monthly"
-      ? 10
-      : null;
+  return plan === "personal_monthly" ? 2 : null;
 }
 
 function addOneMonth(date = new Date()) {
