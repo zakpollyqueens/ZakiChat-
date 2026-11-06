@@ -4,6 +4,7 @@ Molan Chat is a modern messaging platform by Zakmolanitech Solutions.
 
 ## Public entry points
 
+- Cloudflare website: https://molan-chat.pages.dev/
 - Website homepage: `index.html`
 - Android download page: `download.html`
 - Official Android APK: [Latest release asset](https://github.com/zakpollyqueens/ZakiChat-/releases/latest/download/app-release.apk)
@@ -17,7 +18,6 @@ The homepage includes search metadata and SoftwareApplication structured data. `
 ## Android distribution
 
 Use the signed `app-release.apk` for public installs; `app-debug.apk` is intended for testing. Verify the latest release asset and Android signing/update compatibility before announcing a release.
-
 
 ## Molano AI Keyboard compatibility
 
