@@ -67,7 +67,7 @@
   function addMessage(role, text, afterSpeak) {
     // Customized accounts use Molano as a spoken companion, not a text-message bot.
     // Standard/local accounts keep the readable AI chat experience.
-    if (role === "ai" && (tier === "personal_monthly" || tier === "business_monthly")) {
+    if (role === "ai" && tier === "personal_monthly") {
       speak(text, afterSpeak);
       return null;
     }
@@ -146,7 +146,7 @@
       if (error) throw error;
       const plans = Array.isArray(rows) ? rows : [];
       // If an account has more than one valid upgrade row, business access wins.
-      const selected = plans.some(row => ["personal_monthly","personal_customized"].includes(row.plan)) ? "personal_monthly" : "local";
+      const selected = plans.some(row => ["personal_monthly","personal_customized","business_monthly","business_customized"].includes(row.plan)) ? "personal_monthly" : "local";
       setTier(selected);
       return tier;
     } catch (error) { console.warn("Could not verify Molano companion subscription.",error); setTier("local"); return tier; }
@@ -235,10 +235,6 @@
     }
     if (action.type === "messages") {
       answer(action.reply,()=>{location.href = "chats.html";});
-      return true;
-    }
-    if (action.type === "business-route") {
-      answer(action.reply,()=>{location.href = action.route;});
       return true;
     }
     if (action.type === "help") {
@@ -377,7 +373,7 @@
   $("mca-mic").addEventListener("click",()=>{if (!hasVoiceEntitlement()) return requirePremium(); if (recognition) { voiceSessionActive=false; stopRecognition(); speechToken++; if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } else { voiceSessionActive=true; startRecognition(); }});
   $("mca-camera").addEventListener("click",()=> $("mca-image").click());
   $("mca-image").addEventListener("change",event=>{const file=event.target.files?.[0];if(file)sendImage(file,input.value.trim());event.target.value="";});
-  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}});
+  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal."); location.href="settings.html";}});
   input.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();send(input.value);}});
   document.addEventListener("visibilitychange",()=>{if(document.hidden&&recognition)stopRecognition();});
   loadAccount();
