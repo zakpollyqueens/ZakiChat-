@@ -96,7 +96,7 @@
       if (onend) setTimeout(() => { if (token === speechToken && window.speechSynthesis.speaking === false && window.speechSynthesis.pending === false) finish(); }, Math.min(8500, Math.max(1200, String(text).length * 70)));
     } catch (_) { finish(); }
   }
-  const hasVoiceEntitlement = () => tier === "personal_monthly" || tier === "business_monthly";
+  const hasVoiceEntitlement = () => tier === "personal_monthly";
   function continueVoiceConversation() {
     if (voiceSessionActive && panel.classList.contains("open") && hasVoiceEntitlement() && !busy && !recognition) {
       setTimeout(() => {
@@ -118,22 +118,17 @@
   }
   function setTier(plan) {
     tier = plan;
-    const premium = plan === "personal_monthly" || plan === "business_monthly";
-    $("mca-tier").textContent = premium ? (plan === "business_monthly" ? "CUSTOMIZED BUSINESS · VOICE & PRODUCT ACTIONS" : "CUSTOMIZED PERSONAL · VOICE & PERSONAL ASSISTANCE") : "LOCAL ACCOUNT · ESSENTIAL HELP";
+    const premium = plan === "personal_monthly";
+    $("mca-tier").textContent = premium ? "CUSTOMIZED PERSONAL · VOICE & PERSONAL ASSISTANCE" : "LOCAL ACCOUNT · ESSENTIAL HELP";
     $("mca-status").textContent = premium ? "Personalized companion enabled" : "Essential help enabled";
     $("mca-note").textContent = premium
       ? "Voice commands are enabled. Calls and app actions require your confirmation."
-      : "Local access includes essential chat help. Upgrade to Customized Personal or Customized Business for voice commands and personal actions.";
+      : "Local access includes essential chat help. Upgrade to Customized Personal for voice commands and personal actions.";
     const welcome = messages.querySelector(".mca-welcome");
     if (welcome) welcome.hidden = premium;
     const actions = $("mca-actions");
     const unlock = actions.querySelector('[data-action="upgrade"]');
     if (unlock) unlock.hidden = premium;
-    let business = actions.querySelector('[data-action="business-workspace"]');
-    if (plan === "business_monthly" && !business) {
-      business = document.createElement("button"); business.type = "button"; business.className = "mca-chip"; business.dataset.action = "business-workspace"; business.textContent = "Business workspace"; actions.appendChild(business);
-    }
-    if (business) business.hidden = plan !== "business_monthly";
     $("mca-mic").disabled = !premium;
     $("mca-mic").title = premium ? "Voice command" : "Voice commands require a customized account";
   }
@@ -151,11 +146,7 @@
       if (error) throw error;
       const plans = Array.isArray(rows) ? rows : [];
       // If an account has more than one valid upgrade row, business access wins.
-      const selected = plans.some(row => ["business_monthly","business_customized"].includes(row.plan))
-        ? "business_monthly"
-        : plans.some(row => ["personal_monthly","personal_customized"].includes(row.plan))
-          ? "personal_monthly"
-          : "local";
+      const selected = plans.some(row => ["personal_monthly","personal_customized"].includes(row.plan)) ? "personal_monthly" : "local";
       setTier(selected);
       return tier;
     } catch (error) { console.warn("Could not verify Molano companion subscription.",error); setTier("local"); return tier; }
@@ -166,11 +157,9 @@
     voiceSessionActive = false;
     const plan = await loadAccount();
     if (!panel.classList.contains("open")) return;
-    if (plan === "personal_monthly" || plan === "business_monthly") {
+    if (plan === "personal_monthly") {
       voiceSessionActive = true;
-      const greeting = plan === "business_monthly"
-        ? "Hello, welcome back! I’m Molano, your AI companion for Molan Chat and your business workspace. Tell me what you need, and I’ll explain what I’m about to do before carrying it out."
-        : "Hello! I’m Molano, your personal AI companion. Tell me what you’d like help with, and I’ll guide you through it.";
+      const greeting = "Hello! I’m Molano, your personal AI companion. Tell me what you’d like help with, and I’ll guide you through it.";
       $("mca-status").textContent = "Welcome back — listening after the greeting";
       speak(greeting, () => {
         if (panel.classList.contains("open") && voiceSessionActive && hasVoiceEntitlement() && !recognition) startRecognition();
@@ -190,7 +179,7 @@
     $("mca-status").textContent = "Molano AI is silent. Tap to speak again.";
   }
   function requirePremium() {
-    addMessage("ai", "I can help with essential Molan Chat questions on a local account. For personalized voice commands, contact assistance and ZakiPlay control, choose Customized Personal or Customized Business in Molan Chat's upgrade section.");
+    addMessage("ai", "I can help with essential Molan Chat questions on a local account. For personalized voice commands, contact assistance and ZakiPlay control, choose Customized Personal in Molan Chat's upgrade section.");
   }
   function findAction(text) {
     const t = text.toLowerCase();
@@ -213,16 +202,6 @@
     if (/\b(check|read|show|look for)\b.*\b(messages|new messages|unread messages)\b|\bcheck my messages\b/i.test(text)) return {type:"messages", reply:"I’ll open your Chats so you can review your conversations and unread messages."};
     const call = t.match(/\b(?:call|voice call|ring|phone)\s+(?:my friend\s+|contact\s+)?([\p{L}][\p{L} .'-]{0,38})/iu);
     if (call) return {type:"call", name:call[1].trim().replace(/[.!?,]+$/,""), reply:"I'll help you find that contact. Please confirm the correct person in Molan Chat before placing the call."};
-    const businessRoutes = [
-      {path:"business-profile.html",label:"Business profile",pattern:/\b(?:create|set up|setup|open|edit|update|manage|view|show)\b.*\bbusiness profile\b|\bbusiness profile\b.*\b(?:create|set up|open|edit|update|manage|view|show)\b/i},
-      {path:"business-dashboard.html",label:"Business overview",pattern:/\b(?:open|show|go to|visit|view)\b.*\b(?:business dashboard|business overview|business workspace|business home)\b/i},
-      {path:"business-products.html",label:"Products and services",pattern:/\b(?:open|show|go to|view|manage|add|create)\b.*\b(?:products?|services|catalogue|catalog|inventory|stock)\b/i},
-      {path:"business-customers.html",label:"Business customers",pattern:/\b(?:open|show|go to|view|manage|find)\b.*\b(?:business customers|customer directory|customers|clients)\b/i},
-      {path:"business-orders.html",label:"Orders and sales",pattern:/\b(?:open|show|go to|view|manage|record|add)\b.*\b(?:orders?|sales)\b/i},
-      {path:"business-reports.html",label:"Business reports",pattern:/\b(?:open|show|go to|view)\b.*\b(?:business reports?|analytics|business performance)\b/i}
-    ];
-    const businessRoute = businessRoutes.find(route=>route.pattern.test(text));
-    if (businessRoute) return {type:"business-route",route:businessRoute.path,label:businessRoute.label,reply:"I’ll open "+businessRoute.label+". You can review the information there and save any changes when you are ready."};
     if (/\b(help|how do i|how to)\b/.test(t) && /\b(chat|message|group|status|updates|call|settings|contact)\b/.test(t)) return {type:"help",reply:"You can start a chat from the + menu, find people using search, view statuses in Updates, and change app preferences in Settings. For a call, open the contact or conversation and tap the call control."};
     return null;
   }
@@ -313,7 +292,7 @@
     input.value = ""; busy = true; $("mca-send").disabled = true; $("mca-status").textContent = "Thinking…";
     try {
       const action = findAction(text);
-      const premium = tier === "personal_monthly" || tier === "business_monthly";
+      const premium = tier === "personal_monthly";
       if (pendingComposeRecipient) {
         const recipient = pendingComposeRecipient; pendingComposeRecipient = "";
         if (/^(cancel|never mind|stop)$/i.test(text)) { const cancelled = "Okay, I cancelled the message draft."; answer(cancelled); return; }
@@ -325,10 +304,6 @@
         return;
       }
       if (action) {
-        if (action.type === "business-route" && tier !== "business_monthly") {
-          answer("These business workspace pages require an active Customized Business account. Open Settings and choose Customized Business to unlock them.");
-          return;
-        }
         if (["play","call","message","messages"].includes(action.type) && !premium) { requirePremium(); return; }
         await performAction(action); return;
       }
@@ -340,8 +315,8 @@
       const token = sessionData?.session?.access_token;
       if (!token) { addMessage("ai","Please sign in to Molan Chat to use Molano AI."); return; }
       const system = premium
-        ? "You are Molano AI, the friendly built-in assistant in Molan Chat by Zakmolanitech Solutions. Detect the user's language and reply in that same language. Help with personal and business tasks, app help, and concise voice-command support. Do not claim you placed calls, played music, or changed settings unless a connected app confirms it. Ask for confirmation before consequential actions. For calls, direct the user to select the correct contact and confirm the call. ZakiPlay is the music destination."
-        : "You are Molano AI, the built-in essential help assistant in Molan Chat by Zakmolanitech Solutions. Detect the user's language and reply in that same language. Provide short, basic guidance about using Molan Chat and general everyday questions. Do not perform personalized voice commands, contact/call actions, business management, or control ZakiPlay for local accounts. Explain politely that Customized Personal or Customized Business unlocks those capabilities.";
+        ? "You are Molano AI, the friendly built-in assistant in Molan Chat by Zakmolanitech Solutions. Detect the user's language and reply in that same language. Help with personal tasks, app help, and concise voice-command support. Do not claim you placed calls, played music, or changed settings unless a connected app confirms it. Ask for confirmation before consequential actions. For calls, direct the user to select the correct contact and confirm the call. ZakiPlay is the music destination."
+        : "You are Molano AI, the built-in essential help assistant in Molan Chat by Zakmolanitech Solutions. Detect the user's language and reply in that same language. Provide short, basic guidance about using Molan Chat and general everyday questions. Do not perform personalized voice commands, contact/call actions, or control ZakiPlay for local accounts. Explain politely that Customized Personal unlocks those capabilities.";
       const response = await fetch(API, {method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,"X-Molano-Client":"molan-chat"},body:JSON.stringify({messages:history})});
       const data = await response.json().catch(()=>({}));
       if (!response.ok) throw new Error(data.error || "Molano AI is temporarily unavailable. Please try again.");
@@ -402,7 +377,7 @@
   $("mca-mic").addEventListener("click",()=>{if (!hasVoiceEntitlement()) return requirePremium(); if (recognition) { voiceSessionActive=false; stopRecognition(); speechToken++; if ("speechSynthesis" in window) window.speechSynthesis.cancel(); } else { voiceSessionActive=true; startRecognition(); }});
   $("mca-camera").addEventListener("click",()=> $("mca-image").click());
   $("mca-image").addEventListener("change",event=>{const file=event.target.files?.[0];if(file)sendImage(file,input.value.trim());event.target.value="";});
-  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}if(button.dataset.action==="business-workspace"){location.href="business-dashboard.html";}});
+  $("mca-actions").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;if(button.dataset.prompt)send(button.dataset.prompt);if(button.dataset.action==="upgrade"){addMessage("ai","Open Settings and choose the upgrade/subscription option to select Customized Personal or Customized Business."); location.href="settings.html";}});
   input.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();send(input.value);}});
   document.addEventListener("visibilitychange",()=>{if(document.hidden&&recognition)stopRecognition();});
   loadAccount();
