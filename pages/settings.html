@@ -78,28 +78,6 @@
         <span class="settings-chevron">›</span>
       </a>
 
-      <a class="settings-item" href="business.html">
-        <span class="settings-item-icon">🏢</span>
-        <span class="settings-item-copy">
-          <strong>Business Workspace</strong>
-          <small>Business profile, staff roles, assignments and team tasks</small>
-        </span>
-        <span class="settings-chevron">›</span>
-      </a>
-    </section>
-
-    <!-- Customized Business tools: only active Business subscribers see these shortcuts. -->
-    <section class="settings-group" id="customizedBusinessTools" hidden aria-label="Customized Business workspace">
-      <h2>Customized Business</h2>
-      <p class="custom-business-intro">A business-profile workspace for accounts with an active Customized Business subscription.</p>
-      <a class="settings-item" href="business-dashboard.html"><span class="settings-item-icon">◈</span><span class="settings-item-copy"><strong>Business overview</strong><small>Open the customized business dashboard</small></span><span class="settings-chevron">›</span></a>
-      <div class="custom-business-links">
-        <a href="business-profile.html">Business profile <span>›</span></a>
-        <a href="business-products.html">Products &amp; services <span>›</span></a>
-        <a href="business-customers.html">Customers <span>›</span></a>
-        <a href="business-orders.html">Orders &amp; sales <span>›</span></a>
-        <a href="business-reports.html">Business reports <span>›</span></a>
-      </div>
     </section>
 
     <!-- Chats -->
@@ -330,21 +308,6 @@
   <script src="../static/js/nav-profile-sync.js?v=20261012-avatar"></script>
   <script src="../static/js/backup-restore.js?v=zc-vr19-backup"></script>
   <script src="../static/js/update-float.js?v=zc-vr19-update-float"></script>
-<script id="customized-business-settings-access">
-(async function(){
- const section=document.getElementById('customizedBusinessTools');
- if(!section||!window.ZakiChatAuth)return;
- try{
-  if(window.ZakiChatAuth.ready)await window.ZakiChatAuth.ready;
-  const client=window.ZakiChatAuth.client;if(!client)return;
-  const {data:session,error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;
-  const user=session?.session?.user;if(!user)return;
-  const {data:plans,error}=await client.from('user_upgrades').select('plan,status,expires_at').eq('user_id',user.id).eq('status','active').gt('expires_at',new Date().toISOString()).order('expires_at',{ascending:false}).limit(10);
-  if(error)throw error;
-  section.hidden=!(plans||[]).some(p=>['business_monthly','business_customized'].includes(String(p.plan||'')));
- }catch(error){console.warn('Customized Business menu could not verify subscription access.',error)}
-})();
-</script>
 <script src="../static/js/molano-companion.js?v=20261023-voice-companion-4"></script>
 </body>
 </html>
