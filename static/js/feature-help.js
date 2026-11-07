@@ -23,5 +23,5 @@ document.addEventListener("pointerdown",e=>{if(e.button!==undefined&&e.button!==
 document.addEventListener("pointerup",clear,{capture:true,passive:true});document.addEventListener("pointercancel",clear,{capture:true,passive:true});document.addEventListener("pointerout",e=>{if(active&&e.target===active&&!active.contains(e.relatedTarget))clear()},{capture:true,passive:true});
 document.addEventListener("contextmenu",e=>{if(e.target.closest("button,a[href],[role=button],[data-feature-help]"))e.preventDefault()},{capture:true});
 document.addEventListener("click",e=>{if(fired){e.preventDefault();e.stopImmediatePropagation();fired=false}},{capture:true});
-document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("button,a[href],[role=button],[data-feature-help]").forEach(el=>{if(isHelpTarget(el)&&!el.hasAttribute("title"))el.title="Hold for 2 seconds to open this feature's guide"});});
+const addHelpHints=()=>document.querySelectorAll("button,a[href],[role=button],[data-feature-help]").forEach(el=>{if(isHelpTarget(el)&&!el.hasAttribute("title"))el.title="Hold for 2 seconds to open this feature's guide"});if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",addHelpHints,{once:true});else addHelpHints();
 })();
