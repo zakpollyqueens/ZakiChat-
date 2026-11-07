@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+  const featureHelpScript=document.createElement("script");featureHelpScript.src="../static/js/feature-help.js";featureHelpScript.defer=true;document.head.appendChild(featureHelpScript);
   if (!window.supabase || !window.ZakiChatConfig) {
     console.error("Molan Chat auth guard could not start.");
     return;
