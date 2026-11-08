@@ -90,9 +90,13 @@
 
 
   async function bridgeRequest(payload) {
+    const client = getClient();
+    const { data } = client ? await client.auth.getSession() : { data: { session: null } };
+    const headers = { "Content-Type": "application/json" };
+    if (data?.session?.access_token) headers.Authorization = "Bearer " + data.session.access_token;
     const response = await fetch(BRIDGE_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(payload)
     });
     const data = await response.json().catch(() => ({}));
