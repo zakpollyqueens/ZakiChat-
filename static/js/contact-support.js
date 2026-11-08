@@ -13,6 +13,8 @@
   const counter = document.getElementById("supportCharacterCount");
   const feedback = document.getElementById("supportFeedback");
   const button = document.getElementById("supportSubmitButton");
+  const BRIDGE_URL = "https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-product-bridge";
+  const THREAD_KEY = "molan_chat_zakitech_support_thread_v1";
 
   if (!form || !category || !subject || !message || !button) {
     return;
@@ -86,6 +88,73 @@
     return result.data.user;
   }
 
+
+  async function bridgeRequest(payload) {
+    const response = await fetch(BRIDGE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.success === false) throw new Error(data.error || "ZakiTech support connection failed.");
+    return data;
+  }
+
+  function renderThread(thread) {
+    let host = document.getElementById("zakitechSupportThread");
+    if (!host) {
+      host = document.createElement("section");
+      host.id = "zakitechSupportThread";
+      host.className = "support-compose-card";
+      host.setAttribute("aria-live", "polite");
+      form.closest(".support-compose-card")?.after(host);
+    }
+    host.replaceChildren();
+    const heading = document.createElement("h2");
+    heading.textContent = "Your ZakiTech support conversation";
+    const summary = document.createElement("p");
+    summary.textContent = (thread.ticket?.subject || "Support request") + " · " + (thread.ticket?.status || "new");
+    host.append(heading, summary);
+    (thread.replies || []).forEach(reply => {
+      const item = document.createElement("article");
+      item.className = "support-thread-message";
+      const meta = document.createElement("small");
+      meta.textContent = (reply.sender_name || reply.sender_type || "Support") + " · " + new Date(reply.created_at).toLocaleString();
+      const body = document.createElement("p");
+      body.textContent = reply.body || "";
+      item.append(meta, body);
+      host.append(item);
+    });
+    const replyForm = document.createElement("form");
+    replyForm.className = "support-thread-reply";
+    const input = document.createElement("textarea");
+    input.name = "message"; input.required = true; input.maxLength = 10000;
+    input.placeholder = "Reply to the ZakiTech support team…";
+    const send = document.createElement("button");
+    send.type = "submit"; send.textContent = "Send reply";
+    replyForm.append(input, send);
+    replyForm.addEventListener("submit", async event => {
+      event.preventDefault(); send.disabled = true;
+      try {
+        const saved = JSON.parse(localStorage.getItem(THREAD_KEY) || "{}");
+        await bridgeRequest({action:"reply-support-thread",product_slug:"molan-chat",conversation_id:saved.id,conversation_token:saved.token,message:input.value.trim()});
+        const refreshed = await bridgeRequest({action:"get-support-thread",product_slug:"molan-chat",conversation_id:saved.id,conversation_token:saved.token});
+        renderThread(refreshed);
+      } catch (error) { showFeedback(error.message || "Could not send your reply.", "error"); }
+      finally { send.disabled = false; }
+    });
+    host.append(replyForm);
+  }
+
+  async function restoreThread() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(THREAD_KEY) || "{}");
+      if (!saved.id || !saved.token) return;
+      const thread = await bridgeRequest({action:"get-support-thread",product_slug:"molan-chat",conversation_id:saved.id,conversation_token:saved.token});
+      renderThread(thread);
+    } catch (error) { console.warn("Could not restore ZakiTech support thread:", error.message); }
+  }
+
   message.addEventListener("input", updateCounter);
 
   form.addEventListener("submit", async function (event) {
@@ -142,10 +211,27 @@
         throw error;
       }
 
-      showFeedback(
-        "Your message has been sent successfully. The support team can now view it in the Admin Control Center.",
-        "success"
-      );
+      let centralMessage = "Your message was saved in the Molan Chat support inbox.";
+      try {
+        const bridge = await bridgeRequest({
+          action: "submit-support",
+          product_slug: "molan-chat",
+          sender_name: user.user_metadata?.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Molan Chat customer",
+          sender_email: user.email || "",
+          subject: cleanSubject,
+          message: cleanMessage,
+          category: selectedCategory
+        });
+        localStorage.setItem(THREAD_KEY, JSON.stringify({id:bridge.conversation_id,token:bridge.conversation_token}));
+        const thread = await bridgeRequest({action:"get-support-thread",product_slug:"molan-chat",conversation_id:bridge.conversation_id,conversation_token:bridge.conversation_token});
+        renderThread(thread);
+        centralMessage = "Your message has also reached the ZakiTech Molan Chat Control Station. You can follow staff replies below.";
+      } catch (bridgeError) {
+        console.error("ZakiTech support bridge failed:", bridgeError);
+        centralMessage += " The ZakiTech copy could not be confirmed, so the local Molan Chat team still has your request.";
+      }
+
+      showFeedback(centralMessage, "success");
 
       form.reset();
       updateCounter();
@@ -167,4 +253,5 @@
 
   applyReportPrefill();
   updateCounter();
+  restoreThread();
 })();
