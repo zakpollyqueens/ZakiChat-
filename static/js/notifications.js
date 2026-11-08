@@ -5,6 +5,8 @@
     db: null,
     userId: null,
     notifications: [],
+    companyNotifications: [],
+    session: null,
     realtimeChannel: null,
 
     async init() {
@@ -29,14 +31,13 @@
         return;
       }
 
+      this.session = data.session;
       this.userId = data.session.user.id;
 
       this.bindEvents();
 
       await this.load();
-
-      await this.markAllAsRead();
-
+      await this.loadCompanyNotifications();
       this.subscribe();
     },
 
@@ -291,10 +292,37 @@
       }
 
       this.notifications = data || [];
-
+      await this.loadCompanyNotifications();
       this.render();
-
       this.updateBadge();
+    },
+
+    async loadCompanyNotifications() {
+      if (!this.session?.access_token) return;
+      try {
+        const response = await fetch("https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-product-bridge", {
+          method: "POST",
+          headers: {"Content-Type":"application/json","Authorization":"Bearer "+this.session.access_token},
+          body: JSON.stringify({action:"list-customer-notifications",product_slug:"molan-chat"})
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "Company notifications are unavailable.");
+        this.companyNotifications = (data.notifications || []).map(item => ({...item,source:"zakitech",type:item.notification_type,created_at:item.published_at || item.created_at}));
+      } catch (error) {
+        console.warn("ZakiTech application notices could not be loaded:", error.message);
+        this.companyNotifications = [];
+      }
+    },
+
+    async markCompanyNotificationRead(id) {
+      if (!this.session?.access_token) return;
+      const response = await fetch("https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-product-bridge", {
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":"Bearer "+this.session.access_token},
+        body:JSON.stringify({action:"mark-notification-read",product_slug:"molan-chat",notification_id:id})
+      });
+      if(!response.ok)throw new Error("Could not mark the company notification as read.");
+      this.companyNotifications=this.companyNotifications.map(n=>n.id===id?{...n,read:true}:n);
     },
 
     render() {
@@ -312,14 +340,15 @@
 
       list.innerHTML = "";
 
-      if (!this.notifications.length) {
+      const allNotifications = [...this.companyNotifications, ...this.notifications];
+      if (!allNotifications.length) {
         empty.hidden = false;
         return;
       }
 
       empty.hidden = true;
 
-      this.notifications.forEach(
+      allNotifications.forEach(
         notification => {
           const item =
             document.createElement("article");
@@ -330,8 +359,8 @@
               ? ""
               : " is-unread");
 
-          item.dataset.notificationId =
-            notification.id;
+          item.dataset.notificationId = notification.id;
+          if (notification.source === "zakitech") item.dataset.source = "zakitech";
 
           const icon =
             document.createElement("div");
@@ -376,6 +405,7 @@
           content.appendChild(title);
           content.appendChild(body);
           content.appendChild(meta);
+          if (notification.media_url) { const media = document.createElement("img"); media.src = notification.media_url; media.alt = "Notification attachment"; media.loading = "lazy"; media.style.maxWidth = "100%"; media.style.borderRadius = "12px"; content.appendChild(media); }
 
           item.appendChild(icon);
           item.appendChild(content);
@@ -398,6 +428,13 @@
             );
           }
 
+          if (notification.source === "zakitech") {
+            item.addEventListener("click", async () => {
+              if (notification.read) return;
+              try { await this.markCompanyNotificationRead(notification.id); item.classList.remove("is-unread"); }
+              catch (error) { console.warn(error); }
+            });
+          }
           list.appendChild(item);
         }
       );
@@ -460,11 +497,7 @@
     },
 
     updateBadge() {
-      if (
-        window.ZakiNotificationBadge
-      ) {
-        window.ZakiNotificationBadge.load();
-      }
+      if (window.ZakiNotificationBadge) window.ZakiNotificationBadge.load();
     },
 
     subscribe() {
