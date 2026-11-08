@@ -37,7 +37,6 @@
       this.bindEvents();
 
       await this.load();
-      await this.loadCompanyNotifications();
       this.subscribe();
     },
 
@@ -355,7 +354,7 @@
 
           item.className =
             "notification-card" +
-            (notification.read_at
+            ((notification.read_at || notification.read)
               ? ""
               : " is-unread");
 
@@ -441,59 +440,19 @@
     },
 
     async markAllAsRead() {
-      if (!this.db || !this.userId) {
-        return;
+      if (!this.db || !this.userId) return;
+      const unread = this.notifications.filter(n => !n.read_at);
+      if (unread.length) {
+        const { error } = await this.db.from("notifications").update({read_at:new Date().toISOString()}).eq("user_id",this.userId).is("read_at",null);
+        if (error) { this.showError("We couldn't mark the notifications as read."); return; }
+        const readAt=new Date().toISOString();
+        this.notifications=this.notifications.map(n=>({...n,read_at:n.read_at||readAt}));
       }
-
-      const unread =
-        this.notifications.filter(
-          notification =>
-            !notification.read_at
-        );
-
-      if (!unread.length) {
-        this.updateBadge();
-        return;
+      const unreadCompany=this.companyNotifications.filter(n=>!n.read);
+      for(const notification of unreadCompany){
+        try{await this.markCompanyNotificationRead(notification.id)}catch(error){console.warn("Could not mark company notice as read:",error)}
       }
-
-      const { error } =
-        await this.db
-          .from("notifications")
-          .update({
-            read_at:
-              new Date().toISOString()
-          })
-          .eq("user_id", this.userId)
-          .is("read_at", null);
-
-      if (error) {
-        console.error(
-          "Molan Chat notifications mark read:",
-          error
-        );
-
-        this.showError(
-          "We couldn't mark the notifications as read."
-        );
-
-        return;
-      }
-
-      const readAt =
-        new Date().toISOString();
-
-      this.notifications =
-        this.notifications.map(
-          notification => ({
-            ...notification,
-            read_at:
-              notification.read_at ||
-              readAt
-          })
-        );
-
-      this.render();
-      this.updateBadge();
+      this.render();this.updateBadge();
     },
 
     updateBadge() {
