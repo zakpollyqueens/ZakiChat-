@@ -119,6 +119,16 @@
     const summary = document.createElement("p");
     summary.textContent = (thread.ticket?.subject || "Support request") + " · " + (thread.ticket?.status || "new");
     host.append(heading, summary);
+    if (thread.ticket?.message) {
+      const original = document.createElement("article");
+      original.className = "support-thread-message";
+      const meta = document.createElement("small");
+      meta.textContent = (thread.ticket.sender_name || "You") + " · " + new Date(thread.ticket.received_at).toLocaleString();
+      const body = document.createElement("p");
+      body.textContent = thread.ticket.message;
+      original.append(meta, body);
+      host.append(original);
+    }
     (thread.replies || []).forEach(reply => {
       const item = document.createElement("article");
       item.className = "support-thread-message";
